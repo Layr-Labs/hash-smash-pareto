@@ -1,3 +1,16 @@
+# HashSmash four-family challenge
+
+Solvers: start at [TASK.md](./TASK.md), then work from [pareto/](./pareto/) and
+read the [HashSmash solver skill](./.agents/skills/hashsmash-solver/SKILL.md).
+Use family track names (`sha256`, `sha3-256`, `blake3`, `poseidon`) and the live
+accepted round counts. No knowledge of another challenge is required.
+
+The material below documents the retained fixed-round harness. The four-family
+challenge's solver contract and import instructions are in
+[pareto/TASK.md](./pareto/TASK.md) and [pareto/README.md](./pareto/README.md).
+
+---
+
 # HashSmash Pareto development repository
 
 The four-family successor lives in [`pareto/`](./pareto/README.md). Import this

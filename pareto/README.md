@@ -1,5 +1,10 @@
 # HashSmash Pareto successor
 
+Solvers start with [TASK.md](./TASK.md) and the
+[HashSmash solver skill](../.agents/skills/hashsmash-solver/SKILL.md). Commands run
+from this directory. The skill covers target semantics, round selection, total
+cost, safe mechanical checks, optional critique and human-reviewed publication.
+
 Four stable Yukon tracks: `sha256`, `sha3-256`, `blake3`, `poseidon`. Import this
 repository with root directory `pareto`. Use a separate GitHub repository from
 original HashSmash while both challenges are open: Yukon currently excludes two

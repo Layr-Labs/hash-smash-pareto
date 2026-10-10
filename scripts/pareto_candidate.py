@@ -32,9 +32,19 @@ def prepare(family, rounds):
     verify_certificates(selected.candidate,track=selected)
     print(json.dumps({'family':family,'rounds':rounds,'state':result['submission_state'],'package_sha256':result['package_sha256']}))
 
-if __name__=='__main__':
+def main(argv=None):
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--family',required=True,choices=FAMILIES)
     parser.add_argument('--rounds',required=True,type=int)
-    args=parser.parse_args()
-    prepare(args.family,args.rounds)
+    parser.add_argument('--show-contract',action='store_true',help='Print the selected target and cost contract without changing a candidate')
+    args=parser.parse_args(argv)
+    if args.show_contract:
+        track=track_for(args.family,args.rounds)
+        contract=track.benchmark()
+        print(json.dumps({"benchmark":contract,"reference_operation_cost":track.reference_operation_cost(contract["cost_model"])},indent=2))
+    else:
+        prepare(args.family,args.rounds)
+
+
+if __name__=='__main__':
+    main()
