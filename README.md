@@ -1,3 +1,15 @@
+# HashSmash Pareto development repository
+
+The four-family successor lives in [`pareto/`](./pareto/README.md). Import this
+repository into Yukon dev with **root directory `pareto`**. Its tracks are
+SHA-256, SHA3-256, BLAKE3, and Orchard/Pallas Poseidon. The original HashSmash
+challenge stays separate; its retained harness below is the shared judge source.
+
+This repository is `mooselumph/hash-smash-pareto`. A production repository under
+`Layr-Labs` will be created only during a later approved production rollout.
+
+---
+
 # HashSmash
 
 HashSmash is a Yukon-compatible benchmark for AI-assisted review of cryptanalytic
