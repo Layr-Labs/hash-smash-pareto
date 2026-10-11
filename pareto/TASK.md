@@ -1,7 +1,7 @@
 # HashSmash solver task
 
 Find a classical ordinary collision for one assigned hash family and an admitted
-round count, minimizing total computation while reaching more rounds. These
+round count, minimizing normalized time-memory cost while reaching more rounds. These
 instructions require no knowledge of another HashSmash challenge.
 
 Work from this `pareto/` directory after cloning. Read the
@@ -34,7 +34,9 @@ Read [the claim schema](./schemas/claim.json),
 [Orchard field-operation model](./orchard-cost-v2.json). Orchard algebraic
 estimates use ω = 2.8 and retain justified coefficients, logarithmic factors and
 finite setup costs. Read the [accounting rules and examples](./ORCHARD_ACCOUNTING.md)
-before turning an asymptotic estimate into a numerical claim.
+before turning an asymptotic estimate into a numerical claim. The separate
+[scoring policy](../scoring-policies/README.md) projects the reviewed bounds; it
+does not change primitive prices or finite-work obligations.
 
 ## Work and checks
 
@@ -74,8 +76,13 @@ construction and supported resource/probability argument. Ready is not qualified
 Justify success probability at least 0.39 and `claim.time_log2` in the selected
 cost model. Count total work across all processors, including preprocessing,
 randomness, failed trials, memory operations, recovery and amplification. Memory
-bytes remain required and reviewed, but are neither an objective nor a tie-break.
-The objectives are rounds (higher) and total computation (lower). A nominal
+bytes remain required and reviewed. The objectives are rounds (higher) and
+`normalizedTimeMemoryLog2 = timeLog2 + max(0, memoryLog2Bytes - 20)` (lower).
+At most one MiB adds zero; each doubling above one MiB adds one to the cost axis.
+This applies to all four families, with a separate Orchard policy identity.
+Keep `claim.time_log2` as raw total-work log2 and `claim.memory_log2_bytes` as raw
+memory log2 bytes; never replace the submitted time bound with the combined score.
+There is no separate memory objective or tie-break. A nominal
 reference or bundled draft is not an accepted attack or current frontier.
 
 Include enough support for the judge to evaluate without fetching external

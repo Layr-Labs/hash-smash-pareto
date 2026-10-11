@@ -41,18 +41,25 @@ that operation.
 
 ## Scoring and judge
 
-The tuple is `[rounds, timeLog2]`: maximize rounds and minimize total computation.
-Memory bytes remain required and reviewed, with no new objective or tie-break.
+The tuple is `[rounds, normalizedTimeMemoryLog2]`: maximize rounds and minimize
+`timeLog2 + max(0, memoryLog2Bytes - 20)` in every family, including Orchard.
+Memory up to one MiB (1,048,576 bytes) adds zero; each doubling above that adds one.
+Time remains total work in selected-round target-compression units; raw time and
+memory remain separate reviewed metrics. Memory is part of the cost axis, with
+no additional objective or tie-break. See the [pinned scoring definitions,
+source attribution and transport contract](../scoring-policies/README.md).
 The adapter calls the original intake, certificate and experiment gates, original
-paired committee, original qualification aggregation, and original score builder.
+paired committee, original qualification aggregation, and original score builder,
+then explicitly projects the authenticated raw bounds at the Pareto boundary.
 `judge/`, its prompts and `schemas/claim-frontier-v3.schema.json` remain unchanged.
 The successor claim schema only expands the trusted target roster.
 
 SHA-256, SHA3 and BLAKE3 use the original exact target semantics and v5 cost model.
 Their per-round normalization is computed using the original organizer reference
 operation counter. The import baseline is an explicit invalid draft smoke check,
-not an incumbent or human-accepted submission. Negative candidate decisions are
-valid Pareto artifacts; missing evidence/provider failures fail the execution.
+not an incumbent or human-accepted submission. Its null-score output still
+identifies the normalized scoring policy; no resource measurements are fabricated.
+Negative candidate decisions are valid Pareto artifacts; missing evidence/provider failures fail the execution.
 
 ## Orchard target
 
@@ -85,6 +92,19 @@ Yukon reorgs include all four tracks in the successor; score/validity scopes app
 to that batch. Admission-only round updates do not use this path.
 
 ## Rollout
+
+This source prepares fresh normalized initial evaluations. Yukon objectives are
+immutable at registration: a reorg cannot rename the old `timeLog2` objective.
+The existing dev registration remains pinned to `8c81a39eb987a3235fa38569435474671fed5b1b`
+with its old objective and evidence. Production is not registered. Existing human
+decisions do not transfer automatically. The combined UI needs explicit support
+for both normalized policies and raw resource preservation before activation;
+this repository does not change the UI or the backend. Yukon permits only one
+open challenge per source repository. A fresh normalized registration for this
+already-open dev repository therefore needs an explicitly planned transition or
+a separate source repository, retaining the old registration and evidence. No
+close/reimport action or automatic submission/review transfer is part of this
+source preparation.
 
 1. Review and deploy Yukon admission storage/API/worker and combined UI support.
 2. Publish this harness in the parallel source repository and install Yukon access.

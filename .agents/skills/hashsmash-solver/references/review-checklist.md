@@ -46,6 +46,9 @@ authoritative. These questions supplement them with recurring failure cases.
 - Are table regions disjoint, addresses representable, and indexing operations
   charged? Include scratch buffers, code, constants and retained randomness in
   memory. Uninitialized storage needs an explicit valid access argument.
+- Does the combined cost use `timeLog2 + max(0, memoryLog2Bytes - 20)`, with
+  the one-MiB floor and the correct v5 or Orchard scoring policy? Keep raw total
+  time and memory bounds in the claim; the adapter computes the combined score.
 - Does the final logarithmic bound round conservatively and justify the stated
   success probability? A nominal exponent is not the current published frontier.
 

@@ -1,13 +1,20 @@
 # Orchard accounting: disclosure to the judges
 
-Policy: `orchard-field-ram-v2`, with algebraic rules `orchard-finite-work-v1`.
+Resource policy: `orchard-field-ram-v2`, with algebraic rules `orchard-finite-work-v1`.
+New successor score projection: `hashsmash-orchard-tm-v1`, canonical SHA-256
+`497b0e3c33b57ab31fa79c957c22290327c50238793754184d48c93a86e363d7`.
 Organizer decision date: 11 October 2026.
 
 This note records the rules selected after the Poseidon proposal and organizer
 review. It explains the additional decisions delegated to the implementer so
 that judges can assess their consequences. The authoritative runtime contract is
 [orchard-cost-v2.json](./orchard-cost-v2.json), included in the evidence supplied
-to every review and bound into the target configuration hash.
+to every review and bound into the target configuration hash. The separate
+[normalized scoring definition](./scoring-policies/hashsmash-orchard-tm-v1.json)
+is also bound into new evidence. It retains all resource prices and finite-work
+rules below, then projects raw time and memory at the trusted Pareto boundary.
+The [scoring contract](../scoring-policies/README.md) explains source attribution,
+metadata and fresh-registration requirements.
 
 ## Decisions
 
@@ -23,7 +30,8 @@ to every review and bound into the target configuration hash.
 | Logs | Base 2 for newly stated expressions; retain all log factors and convert other specified bases exactly |
 | Setup and lower-order terms | Include them, or cover them with a justified finite upper bound |
 | Probability | A finite budget achieving the claimed success probability, at least 0.39 |
-| Memory | Count and review bytes; no memory objective or tie-break |
+| Memory | Count and review bytes; the cost axis adds max(0, memoryLog2Bytes - 20), with a one-MiB floor |
+| Objectives | Maximize partial rounds; minimize normalizedTimeMemoryLog2 |
 | Baseline | No required qualified attack baseline; bundled drafts remain invalid smoke checks |
 
 The review supplied by the organizers selected ω = 2.8 and endorsed the current
@@ -78,7 +86,10 @@ lookup and collision verification remain charged as applicable.
 
 For H reference permutation calls and W other primitive operations, when those
 terms cover the complete budget, the normalized cost is `T = H + W/C(r)` and the
-score is `log2(T)`. A fully expanded operation count is instead divided once by C.
+raw time bound is `timeLog2 = log2(T)`. The new Pareto cost axis is
+`timeLog2 + max(0, memoryLog2Bytes - 20)`, equivalently
+`log2(T * max(1, memoryBytes / 1048576))`. Memory is not an extra objective or a
+tie-break. A fully expanded operation count is instead divided once by C.
 At r = 1, C = 237 (156 multiplications plus 81 additions); at r = 2, C = 258
 (168 multiplications plus 90 additions). The denominator remains the fixed dense
 reference implementation even if an attack uses an optimized implementation.
@@ -96,7 +107,10 @@ and independently supplies the required success argument. At n = 1024 this is
 56,685,049.42, whose log2 is 25.75646494. A ceiling of 25.76 covers this illustrative
 arithmetic; submitting 25.75 would not. For r = 2, the same work has log2 25.63398094
 because its reference permutation is more expensive. Actual attacks must of
-course recompute their own work when the round count changes.
+course recompute their own work when the round count changes. These numbers are
+raw time bounds. If the example used 2^30 bytes of reviewed memory, the submitted
+r=1 time bound 25.76 would project to normalized cost 35.76. At one MiB or less
+it would remain 25.76. The raw time and memory metrics remain separately visible.
 
 This is an accounting example, not an attack, baseline or endorsed coefficient.
 Dropping the coefficient 5 would underprice its leading term by a factor of 5;
@@ -134,14 +148,19 @@ The model remains abstract. Equal field-addition, field-multiplication and word
 weights are not hardware calibration. ω = 2.8 is a selected convention, not a
 claim about the best achievable exponent. Explicitly counted algorithms and
 convention-based algebraic estimates must be identified as such in the evidence.
-Memory-heavy attacks can rank well despite impractical storage, which remains
-visible in the reviewed memory metric.
+Memory above one MiB now increases the normalized cost, while raw storage remains
+visible in the reviewed memory metric. This is still an abstract accounting choice,
+not a measurement of physical runtime or a cross-family security comparison.
 
 The SHA-256, SHA3-256 and BLAKE3 cost models and shared judge prompts are unchanged.
 V1's Orchard prices and normalization are retained; v2 versions the added estimate
 rules. Historical evidence remains tied to its original source and evaluation.
 Changing accepted round counts is a live admission update; changing these rules
-requires an evaluation refresh. The one stable Orchard lane supports r = 0–56,
+requires an evaluation refresh when the objective contract is unchanged. Changing
+from the old time-only objective to this normalized objective instead requires a
+fresh registration; a Yukon reorg cannot rename immutable objectives. Old dev
+source/evidence remains pinned to `8c81a39eb987a3235fa38569435474671fed5b1b`.
+The one stable Orchard lane supports r = 0–56,
 but this decision initially admits only r = 1 and 2. Neither choice asserts a
 first-unbroken security boundary.
 

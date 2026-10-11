@@ -1,6 +1,5 @@
 import json
 from pathlib import Path
-import shutil
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -12,12 +11,12 @@ from verifier.intake import validate_candidate
 from scripts.reference_operation_costs import reference_costs
 from scripts import pareto_pipeline as pipeline
 from scripts.hashsmash_pipeline import RunPaths
+from pareto.scoring import evaluation_policies, scoring_metadata
+from tests.helpers import candidate_fixture
 
 
 def evaluation(family='sha256', **extra):
-    return {'fields': {'scores': True, 'validity': True}, 'policies': {
-        'scoring': {'id': 'orchard-field-ram-v2' if family == 'poseidon' else 'collision-frontier-v5'},
-        'validity': {'id': 'paired-lanes-v1', 'lane': 'exploratory'}}, **extra}
+    return {'fields': {'scores': True, 'validity': True}, 'policies': evaluation_policies(family), **extra}
 
 
 class OrchardTests(unittest.TestCase):
@@ -81,14 +80,18 @@ class AdapterTests(unittest.TestCase):
     def test_drafts_and_disallowed_rounds_emit_invalid_artifacts_without_judge(self):
         for family,rounds in [('sha256',37),('sha3-256',5),('blake3',1),('poseidon',0)]:
             with self.subTest(family=family), tempfile.TemporaryDirectory() as tmp:
-                root=Path(tmp); candidate=root/'candidate'
+                root=Path(tmp)
                 track=track_for(family,rounds)
-                shutil.copytree(track.candidate,candidate)
+                candidate=candidate_fixture(root,track,ready=False)
                 paths=RunPaths.for_track(track,state_root=root/'pareto/.yukon',candidate=candidate)
                 with patch.object(pipeline,'ROOT',root),patch.object(pipeline,'select_track',return_value=track),patch.object(pipeline.original.RunPaths,'for_track',return_value=paths),patch.object(pipeline.original,'run_judge',side_effect=AssertionError('draft must not call judge')),patch.dict('os.environ',{'YUKON_EVALUATION':json.dumps(evaluation(family))}):
                     for phase in ('intake','judge','score'): self.assertEqual(pipeline.run(phase,family),0)
                     result=json.loads((root/f'pareto/.yukon/scores/{family}.json').read_text())
                     self.assertFalse(result['valid']); self.assertIsNone(result['scores'])
+                    for key, value in scoring_metadata(family).items():
+                        self.assertEqual(result['metrics'][key], value)
+                    self.assertNotIn('timeLog2', result['metrics'])
+                    self.assertNotIn('memoryLog2Bytes', result['metrics'])
                     with patch.dict('os.environ',{'YUKON_EVALUATION':json.dumps(evaluation(family, admission={'acceptedRoundCounts':[]}))}):
                         for phase in ('intake','judge','score'): self.assertEqual(pipeline.run(phase,family),0)
                         self.assertIn('not accepted',json.loads((root/f'pareto/.yukon/scores/{family}.json').read_text())['reason'])
@@ -141,12 +144,12 @@ class AdapterTests(unittest.TestCase):
             (paths.work/'pareto-outcome.json').write_text('{"intake":"passed"}')
             def scored(_):
                 paths.score.parent.mkdir(parents=True)
-                paths.score.write_text(json.dumps({'score':91.25,'metrics':{'rounds':39,'timeLog2':91.25,'memoryLog2Bytes':12}}))
+                paths.score.write_text(json.dumps({'score':91.25,'metrics':{'rounds':39,'timeLog2':91.25,'memoryLog2Bytes':40.5,'costModelId':'collision-frontier-v5','timeUnit':'target-compressions'}}))
                 return 0
             with patch.object(pipeline,'ROOT',root),patch.object(pipeline,'select_track',return_value=track),patch.object(pipeline.original.RunPaths,'for_track',return_value=paths),patch.object(pipeline.original,'run_score',side_effect=scored) as score,patch.dict('os.environ',{'YUKON_EVALUATION':json.dumps(evaluation())}):
                 pipeline.run('score','sha256')
                 score.assert_called_once_with(paths)
                 result=json.loads((root/'pareto/.yukon/scores/sha256.json').read_text())
-                self.assertEqual(result['scores'],[39,91.25]);self.assertEqual(result['metrics']['memoryLog2Bytes'],12)
+                self.assertEqual(result['scores'],[39,111.75]);self.assertEqual(result['metrics']['memoryLog2Bytes'],40.5)
 
 if __name__=='__main__': unittest.main()

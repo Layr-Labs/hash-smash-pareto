@@ -13,13 +13,27 @@
           "direction": "+"
         },
         {
-          "name": "timeLog2",
+          "name": "normalizedTimeMemoryLog2",
           "direction": "-"
         }
       ],
       "paretoPolicies": {
         "scoring": {
-          "id": "collision-frontier-v5"
+          "id": "hashsmash-scalar-tm-v1",
+          "definitionSha256": "65f6bd3eb8260395d5a9520ebe14be10f68efba6bf4625d9cebef2221b832c2d",
+          "scoreMetric": "normalizedTimeMemoryLog2",
+          "sourceCostModelId": "collision-frontier-v5",
+          "timeUnit": "target-compressions",
+          "objectives": [
+            {
+              "name": "rounds",
+              "direction": "+"
+            },
+            {
+              "name": "normalizedTimeMemoryLog2",
+              "direction": "-"
+            }
+          ]
         },
         "validity": {
           "id": "paired-lanes-v1",
@@ -62,13 +76,27 @@
           "direction": "+"
         },
         {
-          "name": "timeLog2",
+          "name": "normalizedTimeMemoryLog2",
           "direction": "-"
         }
       ],
       "paretoPolicies": {
         "scoring": {
-          "id": "collision-frontier-v5"
+          "id": "hashsmash-scalar-tm-v1",
+          "definitionSha256": "65f6bd3eb8260395d5a9520ebe14be10f68efba6bf4625d9cebef2221b832c2d",
+          "scoreMetric": "normalizedTimeMemoryLog2",
+          "sourceCostModelId": "collision-frontier-v5",
+          "timeUnit": "target-compressions",
+          "objectives": [
+            {
+              "name": "rounds",
+              "direction": "+"
+            },
+            {
+              "name": "normalizedTimeMemoryLog2",
+              "direction": "-"
+            }
+          ]
         },
         "validity": {
           "id": "paired-lanes-v1",
@@ -111,13 +139,27 @@
           "direction": "+"
         },
         {
-          "name": "timeLog2",
+          "name": "normalizedTimeMemoryLog2",
           "direction": "-"
         }
       ],
       "paretoPolicies": {
         "scoring": {
-          "id": "collision-frontier-v5"
+          "id": "hashsmash-scalar-tm-v1",
+          "definitionSha256": "65f6bd3eb8260395d5a9520ebe14be10f68efba6bf4625d9cebef2221b832c2d",
+          "scoreMetric": "normalizedTimeMemoryLog2",
+          "sourceCostModelId": "collision-frontier-v5",
+          "timeUnit": "target-compressions",
+          "objectives": [
+            {
+              "name": "rounds",
+              "direction": "+"
+            },
+            {
+              "name": "normalizedTimeMemoryLog2",
+              "direction": "-"
+            }
+          ]
         },
         "validity": {
           "id": "paired-lanes-v1",
@@ -160,13 +202,27 @@
           "direction": "+"
         },
         {
-          "name": "timeLog2",
+          "name": "normalizedTimeMemoryLog2",
           "direction": "-"
         }
       ],
       "paretoPolicies": {
         "scoring": {
-          "id": "orchard-field-ram-v2"
+          "id": "hashsmash-orchard-tm-v1",
+          "definitionSha256": "497b0e3c33b57ab31fa79c957c22290327c50238793754184d48c93a86e363d7",
+          "scoreMetric": "normalizedTimeMemoryLog2",
+          "sourceCostModelId": "orchard-field-ram-v2",
+          "timeUnit": "target-compressions",
+          "objectives": [
+            {
+              "name": "rounds",
+              "direction": "+"
+            },
+            {
+              "name": "normalizedTimeMemoryLog2",
+              "direction": "-"
+            }
+          ]
         },
         "validity": {
           "id": "paired-lanes-v1",

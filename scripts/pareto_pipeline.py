@@ -2,7 +2,6 @@
 """Pareto transport around the original HashSmash judge; no participant host execution."""
 from pathlib import Path
 import argparse
-import json
 import os
 import subprocess
 import sys
@@ -10,6 +9,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from pareto.targets import FAMILIES, track_for, validate_admission
+from pareto.scoring import evaluation_policies, normalized_score, objectives, scoring_metadata
 from scripts import hashsmash_pipeline as original
 from verifier.constants import MAX_CLAIM_BYTES
 from verifier.errors import VerificationError
@@ -33,13 +33,16 @@ def context(family):
     raw = os.environ.get('YUKON_EVALUATION')
     if raw is None:
         return None
-    value = json.loads(raw)
+    value = load_json_bytes(raw.encode('utf-8'), 'trusted YUKON_EVALUATION')
     if not isinstance(value, dict) or not isinstance(value.get('fields'), dict):
         raise ValueError('invalid trusted YUKON_EVALUATION')
-    expected = {'scoring': {'id': 'orchard-field-ram-v2' if family == 'poseidon' else 'collision-frontier-v5'},
-                'validity': {'id': 'paired-lanes-v1', 'lane': 'exploratory'}}
+    expected = evaluation_policies(family)
     if value.get('policies') != expected:
         raise ValueError('this pinned HashSmash judge does not support the requested policy versions')
+    # Yukon transports objectives inside our scoring-policy envelope.
+    # If a caller also supplies them at top level, disagreement is an error.
+    if 'objectives' in value and value['objectives'] != objectives():
+        raise ValueError('this pinned HashSmash judge does not support the requested objectives')
     fields = value['fields']
     if set(fields) != {'scores', 'validity'} or any(type(v) is not bool for v in fields.values()) or not any(fields.values()):
         raise ValueError('invalid requested Pareto fields')
@@ -102,10 +105,15 @@ def run(command, family):
             paths = original.RunPaths.for_track(select_track(family))
             original.run_score(paths)  # Revalidates the exact original dossier and cost review.
             scalar = load_json_bytes(paths.score.read_bytes(), str(paths.score))
-            result = {'valid': True, 'scores': [paths.track.rounds, scalar['score']], 'metrics': scalar['metrics']}
+            # Project independently verified raw bounds; never relabel an old tuple.
+            projected = normalized_score(family, scalar['metrics'])
+            scores = [paths.track.rounds, projected] if evaluation is None or evaluation['fields']['scores'] else None
+            result = {'valid': True, 'scores': scores, 'metrics': scalar['metrics']}
         result.setdefault('metrics', {}).update(paretoAdapter='hashsmash-pareto-v1', familyId=family,
             supportedRoundCounts=list(range(FAMILIES[family][1], FAMILIES[family][2]+1)),
-            scoreMetric='timeLog2', costModelId='orchard-field-ram-v2' if family == 'poseidon' else 'collision-frontier-v5')
+            **scoring_metadata(family),
+            costModelId='orchard-field-ram-v2' if family == 'poseidon' else 'collision-frontier-v5',
+            timeUnit='target-compressions')
         atomic_write_json(output, result)
         return 0
     raise ValueError('unknown pipeline phase')

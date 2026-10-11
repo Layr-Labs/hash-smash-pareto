@@ -9,6 +9,7 @@ from verifier import hash_functions, blake3, keccak
 from verifier.io import canonical_json_bytes, sha256_bytes
 from verifier.errors import VerificationError
 from scripts.reference_operation_costs import Word
+from pareto.scoring import evaluation_policies, objectives, policy_definition
 
 FAMILIES = {
     'sha256': ('sha256', 1, 64),
@@ -65,8 +66,16 @@ class FamilyTrack(LaneTrack):
             model['reference_operation_costs'] = {self.target_id: self.reference_operation_cost(model)}
             result['cost_model'] = model
         files = sorted(self.challenge_root.glob('*.py')) + [ROOT / 'scripts/pareto_pipeline.py', self.challenge_root / 'orchard-pallas-constants.json']
+        files += [ROOT / name for name in (
+            'scripts/scalar_scoring_policy.py', 'scripts/scalar_score_resources.py',
+            'scoring-policies/hashsmash-scalar-tm-v1.json',
+            'pareto/scoring-policies/hashsmash-orchard-tm-v1.json',
+        )]
+        # Successor-only overlay; original cost models and review meanings stay intact.
+        result['scoring_policy'] = policy_definition(self.family)
         result['pareto_adapter'] = {
             'id': 'hashsmash-pareto-v1', 'family': self.family,
+            'objectives': objectives(), 'policies': evaluation_policies(self.family),
             'sha256': sha256_bytes(canonical_json_bytes({str(p.relative_to(ROOT)): sha256_bytes(p.read_bytes()) for p in files})),
         }
         return result

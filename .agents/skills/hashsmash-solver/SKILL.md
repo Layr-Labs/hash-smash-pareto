@@ -38,7 +38,7 @@ Use the installed `yukon-cli` skill (`yukon skill`) for authentication, cloning,
 traces, history, notes and synchronization. For a linked checkout select the
 assigned family and run `yukon trace status` before edits. Read published results,
 review status and relevant submission notes. There is no single promoted
-incumbent in this challenge: compare the round/work frontier and preserve each
+incumbent in this challenge: compare the round/normalized-cost frontier and preserve each
 result's source and human decision. A bundled draft is not an accepted baseline.
 
 For an explicitly local-only assignment, use the supplied checkout and state
@@ -125,8 +125,14 @@ factors, and include setup and lower-order work. Neither `O(n^2.8)` nor an
 unsupported coefficient of 1 supplies a numerical cost. Concrete algorithm
 counts remain charged as counted; ω does not discount a cubic implementation.
 
-Memory in bytes is required and reviewed, but is neither an objective nor a
-tie-break. The objectives maximize rounds and minimize `timeLog2`. A higher
+Memory in bytes is required and reviewed. All four families maximize rounds and
+minimize `normalizedTimeMemoryLog2 = timeLog2 + max(0, memoryLog2Bytes - 20)`.
+The one-MiB floor means up to 1,048,576 bytes adds zero; every doubling above it
+adds one to the cost axis. There is no separate memory objective or tie-break.
+Keep raw time and memory in their claim fields; do not submit the combined score
+as `time_log2`. Read [the scoring definitions](../../../scoring-policies/README.md)
+for the v5 and separate Orchard identities. Primitive prices and Orchard's finite
+work/omega rules are unchanged. A higher
 round count alone does not establish dominance over a cheaper construction;
 the ordinary judge checks the submitted time bound rather than tightening it.
 Do not invent a resource-ledger field or confuse model confidence with the
