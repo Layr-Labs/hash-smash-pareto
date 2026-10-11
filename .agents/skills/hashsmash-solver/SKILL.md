@@ -31,7 +31,7 @@ profile. Profiles are `<family>-r<rounds>-prefix-v1.json`, with
 `poseidon-orchard` as the Poseidon prefix. Look in `../target-profiles/` first,
 then `target-profiles/`; use the exact profile named in the checked claim.
 Read `../cost-models/collision-frontier-v5.json` for SHA-256, SHA3-256 and BLAKE3,
-or `orchard-cost-v1.json` for Orchard. The runtime contract supplies the selected
+or `orchard-cost-v2.json` for Orchard. The runtime contract supplies the selected
 round's normalization; do not reuse another round's compression price.
 
 Use the installed `yukon-cli` skill (`yukon skill`) for authentication, cloning,
@@ -119,6 +119,11 @@ For H complete target compressions/permutations and W other priced operations,
 parent and root compression. Obtain C from the selected round's contract.
 Orchard uses its explicit field/word operation model, `C = 216 + 21*r`;
 exponentiation and inversion require constituent-operation accounting.
+For algebraic estimates read `ORCHARD_ACCOUNTING.md`: use ω = 2.8 where the
+bound is parameterized by ω, keep justified finite coefficients and logarithmic
+factors, and include setup and lower-order work. Neither `O(n^2.8)` nor an
+unsupported coefficient of 1 supplies a numerical cost. Concrete algorithm
+counts remain charged as counted; ω does not discount a cubic implementation.
 
 Memory in bytes is required and reviewed, but is neither an objective nor a
 tie-break. The objectives maximize rounds and minimize `timeLog2`. A higher

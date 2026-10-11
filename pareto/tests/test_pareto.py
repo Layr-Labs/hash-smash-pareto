@@ -16,7 +16,7 @@ from scripts.hashsmash_pipeline import RunPaths
 
 def evaluation(family='sha256', **extra):
     return {'fields': {'scores': True, 'validity': True}, 'policies': {
-        'scoring': {'id': 'orchard-field-ram-v1' if family == 'poseidon' else 'collision-frontier-v5'},
+        'scoring': {'id': 'orchard-field-ram-v2' if family == 'poseidon' else 'collision-frontier-v5'},
         'validity': {'id': 'paired-lanes-v1', 'lane': 'exploratory'}}, **extra}
 
 
@@ -97,6 +97,36 @@ class AdapterTests(unittest.TestCase):
         with patch.dict('os.environ', {'YUKON_EVALUATION': json.dumps(evaluation(policies={'scoring': {'id': 'future'}, 'validity': None}))}):
             with self.assertRaisesRegex(ValueError, 'does not support'):
                 pipeline.context('sha256')
+
+    def test_orchard_v1_evaluation_cannot_run_on_v2_source(self):
+        stale = evaluation('poseidon')
+        stale['policies']['scoring']['id'] = 'orchard-field-ram-v1'
+        with patch.dict('os.environ', {'YUKON_EVALUATION': json.dumps(stale)}):
+            with self.assertRaisesRegex(ValueError, 'does not support'):
+                pipeline.context('poseidon')
+
+    def test_algebraic_policy_is_bound_to_orchard_evidence_only(self):
+        from scripts.export_review_packet import build_packet
+        from tests.helpers import candidate_fixture
+
+        track = track_for('poseidon', 2)
+        policy_path = ROOT / 'pareto/orchard-cost-v2.json'
+        actual_read = Path.read_text
+        altered = json.loads(actual_read(policy_path))
+        altered['algebraic_estimates']['matrix_multiplication_exponent'] = 2
+        other = track_for('blake3', 3)
+        other_before = other.config_sha256()
+        def read(path, *args, **kwargs):
+            return json.dumps(altered) if path == policy_path else actual_read(path, *args, **kwargs)
+        with tempfile.TemporaryDirectory() as tmp:
+            candidate = candidate_fixture(Path(tmp), track)
+            before = build_packet(track, candidate=candidate)
+            with patch.object(Path, 'read_text', read):
+                after = build_packet(track, candidate=candidate)
+                self.assertEqual(other.config_sha256(), other_before)
+            self.assertNotEqual(before['binding']['target_config_sha256'], after['binding']['target_config_sha256'])
+            self.assertEqual(before['binding']['package_sha256'], after['binding']['package_sha256'])
+            self.assertEqual(before['roles'], after['roles'])
 
     def test_candidate_round_selection_rejects_symlinks(self):
         with tempfile.TemporaryDirectory() as tmp:

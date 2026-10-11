@@ -71,10 +71,14 @@ Constants and 22 full-round vectors derive from `zcash/halo2`, tag
 The constants file records its source SHA-256. The project is dual MIT/Apache-2.0;
 see `UPSTREAM-NOTICE.md` for provenance and licenses.
 
-The initial Orchard model is explicit Pallas field RAM (`orchard-field-ram-v1`),
+The Orchard model is explicit Pallas field RAM (`orchard-field-ram-v2`),
 with field add/subtract/multiply and 256-bit word operations at unit base cost.
 `C=216+21*r` normalizes a selected permutation; inversion/exponentiation require
-constituent operation accounting. This is separate from existing hash models.
+constituent operation accounting. Algebraic estimates use ω = 2.8, explicit
+justified finite coefficients and all logarithmic factors. See the
+[judge disclosure and accounting rules](./ORCHARD_ACCOUNTING.md). V2 retains
+v1's operation prices and adds this estimate policy; the v1 file is historical.
+This is separate from existing hash models.
 The original HashSmash judge reviews it initially. A later Orchard judge or model
 change requires a Yukon reorg without migrating the legacy challenge. Current
 Yukon reorgs include all four tracks in the successor; score/validity scopes apply

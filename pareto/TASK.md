@@ -31,7 +31,10 @@ encoding-alias and quantum results do not solve this assignment.
 Read [the claim schema](./schemas/claim.json),
 [the review policy](../docs/JUDGE_LANES.md), and the applicable
 [word-operation cost model](../cost-models/collision-frontier-v5.json) or
-[Orchard field-operation model](./orchard-cost-v1.json).
+[Orchard field-operation model](./orchard-cost-v2.json). Orchard algebraic
+estimates use ω = 2.8 and retain justified coefficients, logarithmic factors and
+finite setup costs. Read the [accounting rules and examples](./ORCHARD_ACCOUNTING.md)
+before turning an asymptotic estimate into a numerical claim.
 
 ## Work and checks
 

@@ -166,7 +166,7 @@
       ],
       "paretoPolicies": {
         "scoring": {
-          "id": "orchard-field-ram-v1"
+          "id": "orchard-field-ram-v2"
         },
         "validity": {
           "id": "paired-lanes-v1",

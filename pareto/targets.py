@@ -60,7 +60,7 @@ class FamilyTrack(LaneTrack):
     def benchmark(self):
         result = super().benchmark()
         if self.family == 'poseidon':
-            model = json.loads((self.challenge_root / 'orchard-cost-v1.json').read_text())
+            model = json.loads((self.challenge_root / 'orchard-cost-v2.json').read_text())
             model['operation_weights'] = result['cost_model']['operation_weights']
             model['reference_operation_costs'] = {self.target_id: self.reference_operation_cost(model)}
             result['cost_model'] = model

@@ -36,7 +36,7 @@ def context(family):
     value = json.loads(raw)
     if not isinstance(value, dict) or not isinstance(value.get('fields'), dict):
         raise ValueError('invalid trusted YUKON_EVALUATION')
-    expected = {'scoring': {'id': 'orchard-field-ram-v1' if family == 'poseidon' else 'collision-frontier-v5'},
+    expected = {'scoring': {'id': 'orchard-field-ram-v2' if family == 'poseidon' else 'collision-frontier-v5'},
                 'validity': {'id': 'paired-lanes-v1', 'lane': 'exploratory'}}
     if value.get('policies') != expected:
         raise ValueError('this pinned HashSmash judge does not support the requested policy versions')
@@ -105,7 +105,7 @@ def run(command, family):
             result = {'valid': True, 'scores': [paths.track.rounds, scalar['score']], 'metrics': scalar['metrics']}
         result.setdefault('metrics', {}).update(paretoAdapter='hashsmash-pareto-v1', familyId=family,
             supportedRoundCounts=list(range(FAMILIES[family][1], FAMILIES[family][2]+1)),
-            scoreMetric='timeLog2', costModelId='orchard-field-ram-v1' if family == 'poseidon' else 'collision-frontier-v5')
+            scoreMetric='timeLog2', costModelId='orchard-field-ram-v2' if family == 'poseidon' else 'collision-frontier-v5')
         atomic_write_json(output, result)
         return 0
     raise ValueError('unknown pipeline phase')

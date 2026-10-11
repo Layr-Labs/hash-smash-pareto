@@ -19,7 +19,7 @@ from verifier.io import sha256_bytes
 
 class FamilyPacketTests(unittest.TestCase):
     def test_family_packet_preserves_exact_target_cost_and_review_roles(self):
-        for family, rounds in [('sha256', 39), ('sha3-256', 7), ('blake3', 3), ('poseidon', 0), ('poseidon', 56)]:
+        for family, rounds in [('sha256', 39), ('sha3-256', 7), ('blake3', 3), ('poseidon', 0), ('poseidon', 1), ('poseidon', 2), ('poseidon', 56)]:
             with self.subTest(family=family, rounds=rounds), tempfile.TemporaryDirectory() as tmp:
                 track = track_for(family, rounds)
                 candidate = candidate_fixture(Path(tmp), track)
@@ -37,7 +37,10 @@ class FamilyPacketTests(unittest.TestCase):
                     self.assertEqual(role['system_prompt'], exporter.load_system_prompt(stage, role['strategy']))
                     self.assertEqual(role['output_schema'], exporter._schema_for_stage(stage))
                 if family == 'poseidon':
-                    self.assertEqual(packet['evidence']['benchmark']['cost_model']['id'], 'orchard-field-ram-v1')
+                    model = packet['evidence']['benchmark']['cost_model']
+                    self.assertEqual(model['id'], 'orchard-field-ram-v2')
+                    self.assertEqual(model['algebraic_estimates']['matrix_multiplication_exponent'], 2.8)
+                    self.assertEqual(model['algebraic_estimates']['logarithm_base'], 2)
                     self.assertEqual(track.reference_operation_cost({}), 216 + 21 * rounds)
 
     def test_family_resolves_current_claim_and_rejects_manifest_mismatch(self):
