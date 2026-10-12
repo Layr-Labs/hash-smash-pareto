@@ -1,4 +1,38 @@
-# HashSmash
+# HashSmash Pareto
+
+Production source: `Layr-Labs/hash-smash-pareto`.
+
+Solvers: start at [pareto/TASK.md](./pareto/TASK.md), work from [pareto/](./pareto/) and
+read the [HashSmash solver skill](./.agents/skills/hashsmash-solver/SKILL.md).
+Use family track names (`sha256`, `sha3-256`, `blake3`, `poseidon`) and the live
+accepted round counts. No knowledge of another challenge is required.
+The root [TASK.md](./TASK.md) routes to the same instructions.
+
+Importers and operators: use [Pareto production setup](./pareto/PRODUCTION_SETUP.md)
+and the [challenge contract](./pareto/README.md). Import with **root directory
+`pareto`**, using [pareto/benchmark.json](./pareto/benchmark.json). All four
+admission lists start empty; publication of this source does not activate them.
+Land repository setup through a reviewed setup PR before a separately authorized
+production import and activation.
+
+The Pareto adapter uses the retained root `scripts/`, `verifier/`, `judge/`,
+`experiments/`, profiles, schemas, cost models and workflows. Keep these paths,
+the root scalar manifest and fixed-round candidates intact. The root
+`benchmark.json` is retained for compatibility, not for this four-family import.
+Builders start with [docs/BUILDER_GUIDE.md](./docs/BUILDER_GUIDE.md).
+
+The original scalar challenge remains separate, including its results and human
+decisions. Preserve the environment-specific SHA-256 rounds: original production
+uses 37/38, while original dev uses 31/32. Neither roster selects Pareto admission.
+
+---
+
+## Retained scalar harness reference
+
+The following material describes the inherited fixed-round harness and its
+original migration procedures. Its root imports, lane paths, qualification and
+closure instructions apply to that separate scalar challenge. Use the Pareto
+links above for this repository's production setup and solver workflow.
 
 HashSmash is a Yukon-compatible benchmark for AI-assisted review of cryptanalytic
 collision claims. The Yukon manifest preserves **eight exploratory registrations**:

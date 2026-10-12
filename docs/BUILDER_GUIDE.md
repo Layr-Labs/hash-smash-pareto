@@ -5,6 +5,13 @@ target definitions, tests, judge configuration, workflows, deployment, or organi
 baseline preparation. Ranked Yukon solvers start at [TASK.md](../TASK.md).
 Builder work does not grant an unassigned candidate directory to edit.
 
+For this repository's four-family Pareto challenge, read
+[pareto/README.md](../pareto/README.md) and
+[Pareto production setup](../pareto/PRODUCTION_SETUP.md); its import root is
+`pareto`. The fixed-round catalog, root-import and migration instructions below
+describe the retained scalar harness. Keep that implementation and its root
+manifest in place for the Pareto adapter, without importing it as this challenge.
+
 ## Context and ownership
 
 The [frontier guide](./FRONTIER_LANES.md) retains 26 runnable local tracks,
