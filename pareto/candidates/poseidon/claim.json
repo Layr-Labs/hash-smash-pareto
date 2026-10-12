@@ -1,20 +1,26 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "poseidon-orchard-r0-prefix-v1",
+  "target_profile": "poseidon-orchard-r2-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 0,
+  "rounds": 2,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 28.56,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
+    "memory_log2_bytes": 26.33,
     "preprocessing_log2": 0,
-    "success_probability": 0.39,
+    "success_probability": 1,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "poseidon-orchard-r0-nominal-v2",
+  "restrictions": [
+    "Ordinary collision of the complete selected-round Orchard hash poseidon-orchard-r2-prefix-v1 (P128Pow5T3, Pallas, input [nk, rho, 2^65], full rounds 0-3, partial rounds 4-5, full rounds 60-63, deployed constants and MDS, output coordinate 0). The two canonical inputs are in certificates/, common digest 577b6b5f0c9749439979d550d49c2ce70cb079096537c7b7d56c9fbbcec3ad07; the organizer recomputes it.",
+    "Construction (proof.md Sections 2-3): the two-round line of entry 1942e47d. Round-1 S-box inputs u(t) = (t D0, t D1, C2) lie in the reachable plane, the state after round 1 is affine in sigma = t^5, and the digest is f(sigma) of degree exactly 5^8 = 390,625. A root sigma1 of h = (f - f(sigma0)) / (X - sigma0) gives a collision (Lemma 4); inputs follow by fifth roots (Lemma 2).",
+    "Algorithm (Sections 4-6): X^p mod h by 254 fused Barrett squarings at transform lengths 3*2^18 and 3*2^17 (radix 16/8/4/2 transforms without bit reversal, one radix-3 stage); gcd(h, X^p - X) by a memory-lean half-gcd with cyclic matrix products exact by the half-gcd degree relations (Lemmas H, C, W, Q) and a blocked in-place remainder; root of the degree-1 gcd. The stream sigma0_i = i + 1 was fixed in writing before any full-size trial; trial 0 succeeded, which follows from the verified certificate (Section 7); the gcd degree 1 is participant-executed. Deterministic and executed on the fixed target: success probability 1; no heuristic.",
+    "Time (Section 8): the closed-form worst-case bound of Appendix B (orchard_bound.py with gcdbound.py and gcdbound2.py, printed in full), whose schedule is at least the program's counter for every loop body plus loop, parallel-block, allocation and exponentiation overheads, with the gcd charged at its worst case over every remainder sequence: 102,050,379,006 primitive operations including a 2^20 allowance, / C(2) = 258: 2^28.55926, claimed 28.56 (2.9 per cent above the bound). The executed count, 82,699,733,035, is below it, phase by phase.",
+    "Memory (Section 9): worst-case live bytes over all phases from the same bound programs (powering 75,497,472 bytes; build 75,000,192; gcd 68,761,088 by a step-by-step replay over every remainder sequence) plus an 8 MiB allowance: 83,886,080 bytes, 2^26.32193, claimed 26.33 (executed live peak 75,497,472; resident peak under the page-returning allocator of Appendix C 79,036,416). No preprocessing or advice beyond the charged setup. Projected cost axis 28.56 + 6.33 = 34.89 at r = 2."
+  ],
+  "baseline_improved": "poseidon-orchard-r2-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
+  "submission_state": "ready",
   "lane": "exploratory",
   "heuristics": []
 }
