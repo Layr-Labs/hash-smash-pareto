@@ -1,20 +1,26 @@
 {
-  "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "poseidon-orchard-r0-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 0,
+  "baseline_improved": "poseidon-orchard-r1-nominal-v2",
+  "certificate_manifest": "certificates/manifest.json",
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 30.79,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
+    "memory_log2_bytes": 27.92,
     "preprocessing_log2": 0,
-    "success_probability": 0.39,
+    "success_probability": 1,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "poseidon-orchard-r0-nominal-v2",
-  "certificate_manifest": "certificates/manifest.json",
+  "heuristics": [],
   "lane": "exploratory",
-  "heuristics": []
+  "restrictions": [
+    "Ordinary collision of the complete selected-round Orchard hash (P128Pow5T3, Pallas, input [nk, rho, 2^65], full rounds 0-3, partial round 4, full rounds 60-63, deployed constants and MDS, output coordinate 0): (nk, 0) and (nk, 1) with nk = 21295018245332138659184472221807390184989200179957268241054586399316369967481, checked by the organizer from certificates/.",
+    "Exact construction: with rho fixed the state after round 0 is affine in t = (nk + c00)^5 (proof.md Lemma 1), so the output difference is a polynomial D(t) of degree 5^8 - 1 = 390,624; a root t gives nk = t^(1/5) - c00 (Lemma 3). The root is found as gcd(D, X^p - X): X^p mod D by 254 transform-based squarings with a Newton inverse, then a recursive half-gcd. Deterministic, no coins; the executed gcd had degree 1, so success probability 1.",
+    "Time: a counted program (proof.md Appendix) adds itemized per-kernel charges of field operations, 256-bit loads/stores, address arithmetic and loop control: 438,774,246,867 operations executed, plus a 2^20 allowance, divided by C(1) = 237: 2^30.7860, claimed 30.79 (not rounded down).",
+    "Memory: peak of all allocated arrays tracked by the program, 250,662,624 bytes, plus 2 MiB for code, constants and stack: 2^27.913, claimed 27.92. No advice, no preprocessing beyond the counted run. Normalized cost 38.71.",
+    "The pair equals that of entry 94e9246a (the equation H(nk,0) = H(nk,1) has exactly one root in F_p); this package claims a cheaper counted construction of it, not a new pair."
+  ],
+  "rounds": 1,
+  "schema_version": 3,
+  "submission_state": "ready",
+  "target_profile": "poseidon-orchard-r1-prefix-v1"
 }
