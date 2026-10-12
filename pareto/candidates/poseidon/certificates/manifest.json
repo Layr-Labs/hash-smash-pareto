@@ -1,1 +1,13 @@
-{"schema_version":2,"certificates":[]}
+{
+  "schema_version": 2,
+  "certificates": [
+    {
+      "id": "orchard-r1-two-round-skip",
+      "type": "hash-collision-witness-v2",
+      "message_a": "certificates/message-a.bin",
+      "message_b": "certificates/message-b.bin",
+      "expected_digest": "82e3468ef09761522153585dbd4474552b2223900adf10f9835bfbff4facbe13",
+      "target_profile": "poseidon-orchard-r1-prefix-v1"
+    }
+  ]
+}
