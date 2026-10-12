@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "deterministic-replay-and-accounting",
+      "kind": "python-message-pairs-v1",
+      "scope": "Selected target r=2. The procedure is deterministic and organizer seeds are unused: every requested trial returns the same certified pair, recomputed from the preregistered SHA-256 s0 stream, the recorded executed root s1 and the line map of proof section 1. Observations report the program's computed bounds (gcd worst-case bound G(n), total operations W, time log2 x 1e6, peak words, memory bytes). The program contains the complete accounting of proof section 5.",
+      "hypothesis": "The line map sends the preregistered s0 and the recorded root s1 to two distinct canonical inputs with equal complete digests; the reported accounting values are those used in the claim.",
+      "program": "experiments/accounting.py",
+      "event": {
+        "kind": "full-collision"
+      }
+    }
+  ]
+}
