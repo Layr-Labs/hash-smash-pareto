@@ -29,8 +29,14 @@ rounds. The manifest starts with empty lists pending organizer selection.
 Changing this setting queues no jobs, creates no evaluation version and changes
 no prior score or human decision. Yukon snapshots it when a new submission is
 queued; the trusted intake checks that snapshot before experiments or AI review.
-An idempotent retry keeps the original snapshot. Baselines and reorgs intentionally
-omit admission, so removing a round never erases or invalidates historical work.
+Idempotent retries and reorgs use each candidate's original admission snapshot,
+including when validity must be evaluated again. Later admission changes apply
+only to new submissions: they neither exclude previously allowed rounds nor
+admit previously refused rounds on replay. Baselines omit admission. For older
+submissions, Yukon must recover the snapshot from verified original intake jobs;
+missing or conflicting evidence must stop the replay rather than use today's
+setting. This requires Yukon's historical-admission support. The harness already
+checks the supplied snapshot before experiments or AI review.
 This is trusted intake rejection after upload, not archive parsing in the API.
 
 Supported counts are SHA-256 1–64, SHA3-256 1–24, BLAKE3 1–7, and Orchard 0–56
