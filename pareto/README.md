@@ -1,9 +1,13 @@
-# HashSmash Pareto successor
+# HashSmash Pareto
 
 Solvers start with [TASK.md](./TASK.md) and the
 [HashSmash solver skill](../.agents/skills/hashsmash-solver/SKILL.md). Commands run
 from this directory. The skill covers target semantics, round selection, total
 cost, safe mechanical checks, optional critique and human-reviewed publication.
+
+Production source is `Layr-Labs/hash-smash-pareto`; operators follow
+[production setup](./PRODUCTION_SETUP.md). Source publication and live activation
+are separate steps.
 
 Four stable Yukon tracks: `sha256`, `sha3-256`, `blake3`, `poseidon`. Import this
 repository with root directory `pareto`. Use a separate GitHub repository from
@@ -99,27 +103,23 @@ to that batch. Admission-only round updates do not use this path.
 
 ## Rollout
 
-This source prepares fresh normalized initial evaluations. Yukon objectives are
-immutable at registration: a reorg cannot rename the old `timeLog2` objective.
-The existing dev registration remains pinned to `8c81a39eb987a3235fa38569435474671fed5b1b`
-with its old objective and evidence. Production is not registered. Existing human
-decisions do not transfer automatically. The combined UI needs explicit support
-for both normalized policies and raw resource preservation before activation;
-this repository does not change the UI or the backend. Yukon permits only one
-open challenge per source repository. A fresh normalized registration for this
-already-open dev repository therefore needs an explicitly planned transition or
-a separate source repository, retaining the old registration and evidence. No
-close/reimport action or automatic submission/review transfer is part of this
-source preparation.
+This production source prepares fresh normalized initial evaluations with empty
+admission for every family. Follow [production setup](./PRODUCTION_SETUP.md) for
+the reviewed setup PR, source selection, separate configuration and activation
+gates. Required provider selection is `openai` with model `gpt-5.6-sol`, matching
+the existing Pareto dev settings; settings and access are provisioned separately.
 
-1. Review and deploy Yukon admission storage/API/worker and combined UI support.
-2. Publish this harness in the parallel source repository and install Yukon access.
-3. Configure the same provider/model settings as original HashSmash securely.
-4. Import root `pareto`, inspect four invalid draft smoke checks, and set each lane's
-   admission list. Open the desired lanes.
-5. Configure the UI's `NEXT_PUBLIC_HASHSMASH_PARETO_SOURCE_URL` plus its four
-   `NEXT_PUBLIC_HASHSMASH_<FAMILY>_PARETO_BENCHMARK_REF` values (SHA3_256 spelling).
-   Keep all legacy references. Test active/paused/closed combinations.
-6. Verify old submission IDs, candidate sources and human decisions remain intact.
+Yukon objectives are immutable at registration: a reorg cannot rename the old
+`timeLog2` objective. Historical time-only dev source and evidence at
+`8c81a39eb987a3235fa38569435474671fed5b1b` retain their original meaning; they do
+not describe the current normalized dev registration. Production uses its own
+source repository and new identities. Existing submissions and human decisions
+do not transfer automatically.
+
+Before activation, the production backend must support normalized Pareto
+evaluation and the historical-admission contract above. The combined UI must
+support both normalized policies, preserve raw resource metrics and keep original
+scalar results and references. This repository does not deploy either service or
+change any lane's live state.
 
 No production creation, import, judging or deployment is performed by local tests.

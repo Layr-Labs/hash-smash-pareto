@@ -1,5 +1,12 @@
 # HashSmash Yukon dev setup
 
+This is the retained **original scalar dev challenge** runbook, including its
+separately planned round migration. It is not a statement of live dev membership:
+original dev SHA-256 uses 31/32, whereas original production uses 37/38.
+Do not apply this runbook's root import, provider examples or closure steps to
+the four-family production setup; use
+[Pareto production setup](../pareto/PRODUCTION_SETUP.md).
+
 This operator runbook is reached through the [builder guide](./BUILDER_GUIDE.md).
 It applies the reusable Yukon setup instructions to HashSmash's paired research
 candidates. There is

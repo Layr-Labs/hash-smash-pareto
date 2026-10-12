@@ -22,7 +22,7 @@ metadata and fresh-registration requirements.
 | --- | --- |
 | Instance | Orchard/Pallas P128Pow5T3, its deployed constants and MDS, eight full rounds |
 | Reduced instances | Full rounds 0–3, first r partial rounds beginning at 4, full rounds 60–63 |
-| Initial accepted counts | r = 1 and 2 partial rounds, each with eight full rounds; live admission is authoritative |
+| Selected dev counts | r = 1 and 2 partial rounds, each with eight full rounds; production starts with empty admission pending separate selection |
 | Primitive prices | Field add/subtract/multiply and primitive 256-bit word operations each have base weight 1 |
 | Normalization | Divide complete charged work by `C(r) = 216 + 21*r` |
 | Matrix exponent | ω = 2.8 for applicable algebraic estimates parameterized by ω |
@@ -160,9 +160,10 @@ requires an evaluation refresh when the objective contract is unchanged. Changin
 from the old time-only objective to this normalized objective instead requires a
 fresh registration; a Yukon reorg cannot rename immutable objectives. Old dev
 source/evidence remains pinned to `8c81a39eb987a3235fa38569435474671fed5b1b`.
-The one stable Orchard lane supports r = 0–56,
-but this decision initially admits only r = 1 and 2. Neither choice asserts a
-first-unbroken security boundary.
+The one stable Orchard lane supports r = 0–56. The dev selection was r = 1 and 2;
+it does not activate production. Production admission starts empty, and live
+admission is authoritative after separate organizer selection. Neither choice
+asserts a first-unbroken security boundary.
 
 ## Sources
 

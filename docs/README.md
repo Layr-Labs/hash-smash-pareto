@@ -1,5 +1,12 @@
 # HashSmash documentation
 
+For the four-family challenge in `Layr-Labs/hash-smash-pareto`, start with the
+[Pareto solver task](../pareto/TASK.md), [challenge contract](../pareto/README.md)
+and [production setup](../pareto/PRODUCTION_SETUP.md). Its import and solver work
+directory is `pareto`. The catalog and original scalar operator guides below
+are retained implementation context; their repository-root import instructions
+do not apply to the Pareto challenge.
+
 The local registry contains 26 runnable lanes (22 current and four historical),
 with four deferred Poseidon slots. The root manifest retains eight exploratory
 registrations; six are intended to compete after closing SHA-256 31/32. Shell commands and

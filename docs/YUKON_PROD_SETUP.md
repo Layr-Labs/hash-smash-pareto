@@ -1,5 +1,10 @@
 # HashSmash Yukon production setup
 
+This is the retained **original scalar challenge** runbook. For the four-family
+`Layr-Labs/hash-smash-pareto` repository and its `pareto` import root, use
+[Pareto production setup](../pareto/PRODUCTION_SETUP.md). The scalar migration
+and root-import instructions below are not Pareto setup steps.
+
 Start with the [builder guide](./BUILDER_GUIDE.md). Production uses
 `Layr-Labs/hash-smash` and `main`. Preserve its ancestry and the separate
 `mooselumph/hash-smash` dev challenge and history. The
