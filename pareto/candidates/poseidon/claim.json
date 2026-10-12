@@ -1,20 +1,33 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "poseidon-orchard-r0-prefix-v1",
+  "submission_state": "ready",
+  "target_profile": "poseidon-orchard-r2-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 0,
+  "rounds": 2,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 67,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
+    "memory_log2_bytes": 31,
     "preprocessing_log2": 0,
-    "success_probability": 0.39,
+    "success_probability": 0.4,
     "nonuniform_advice_log2_bytes": 0
   },
   "restrictions": [],
-  "baseline_improved": "poseidon-orchard-r0-nominal-v2",
+  "baseline_improved": "poseidon-orchard-r2-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
   "lane": "exploratory",
-  "heuristics": []
+  "heuristics": [
+    {
+      "id": "H-slice-root",
+      "statement": "For β uniform on {1, ..., p-1}, the polynomial g_β of degree at most 9765625 defined by g_β(a) = H(a, β) - H(a, 0), where H is the entire first output coordinate of the r=2 Orchard permutation, has exactly one distinct Pallas root with probability at least 1/4. The two trials draw independent words, so this marginal bound is the only non-algebraic premise in the derivation of success probability 0.40.",
+      "role": "score-critical",
+      "scope": "The premise is only for poseidon-orchard-r2-prefix-v1: Pallas modulus p = 0x40000000000000000000000000000000224698fc094cf91b992d30ed00000001, the deployed halo2_poseidon 0.2.0 round constants and MDS, capacity 2^65, full rounds 0..3 and 60..63, partial rounds 4 and 5, and β uniform on the nonzero field elements. It describes the algorithm's coins, not a confidence score.",
+      "extrapolation": "The supporting one-root frequencies were measured on this same field, these same constants, and this same MDS, but on the shorter index lists (0, 60), (0, 1, 62, 63), and (0, 4, 60), with degrees 25, 625, and 125. The premise extrapolates those frequencies to the ten-round target slice of degree at most 5^10.",
+      "evidence_ids": [
+        "proof:97-113",
+        "proof:115-158"
+      ],
+      "limitations": "The target index list was not measured. The five series contain 7, 10, 20, or 32 values. Consecutive β = 1, 2, ... are not uniform field elements. The degree-125 uniform stream was inspected after 8 accepts and then continued through 32 accepts. If the true one-root probability on the target is below 1/4, the submitted success probability is false, and the time bound contains no spare trials. The floor 1/4 is not a confidence interval and is not the Poisson value 1/e."
+    }
+  ]
 }
