@@ -1,19 +1,25 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "poseidon-orchard-r0-prefix-v1",
+  "submission_state": "ready",
+  "target_profile": "poseidon-orchard-r1-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 0,
+  "rounds": 1,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 26.46,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
-    "success_probability": 0.39,
+    "memory_log2_bytes": 24.25,
+    "preprocessing_log2": 10,
+    "success_probability": 1.0,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "poseidon-orchard-r0-nominal-v2",
+  "restrictions": [
+    "Ordinary collision of the complete selected-round Orchard hash poseidon-orchard-r1-prefix-v1 (P128Pow5T3, Pallas, input [nk, rho, 2^65], full rounds 0-3, partial round 4, full rounds 60-63, deployed constants and MDS, output coordinate 0). The two canonical inputs are in certificates/, common digest 82e3468ef09761522153585dbd4474552b2223900adf10f9835bfbff4facbe13; the organizer recomputes it.",
+    "Construction (proof.md Sections 1-2): the two-round line of entry 1942e47d / b257d73. Round-1 S-box inputs u(t) = (t D0, t D1, C2) lie in the reachable plane, the state after round 1 is affine in s = t^5, and the digest is f(s) of degree exactly 5^7 = 78,125. A root s1 of g = (f - f(s0)) / lc(f) gives a collision; inputs follow by fifth roots.",
+    "Algorithm (Sections 2-3): f interpolated by 98,304 evaluations and inverse NTT; X^p mod g by 238 Barrett squarings at transform lengths 196,608 and 98,304; h = gcd(g, X^p - X) by worst-case half-gcd; root extraction. Preregistered stream s0_0 = 4766703137400488083754110162745305822677275183126808187356602193040276619021 succeeds on trial 0 (deg h = 2). Deterministic procedure executed on the fixed target: success probability 1.0; no heuristics.",
+    "Time (Section 5): closed-form worst-case bound computed by accounting.py (printed in full in Appendix A): 21,688,344,183 primitive operations including setup and output verification, / C(1) = 237: 2^26.44746 target units, claimed time_log2 = 26.46 (integer check: 21688344183^100 < 2^2646 * 237^100).",
+    "Memory (Section 5.6): peak working array memory 588,540 words = 18,833,280 bytes; with itemized constants, scalars, and a 1 MiB code allowance: 19,894,720 bytes = 2^24.24588 bytes, claimed memory_log2_bytes = 24.25 (integer check: 19894720^100 < 2^2425). Projected cost axis 26.46 + 4.25 = 30.71 at r = 1."
+  ],
+  "baseline_improved": "poseidon-orchard-r1-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
   "lane": "exploratory",
   "heuristics": []
