@@ -1,1 +1,133 @@
-{"schema_version":2,"certificates":[]}
+{
+  "schema_version": 2,
+  "certificates": [
+    {
+      "id": "r2-parity-collision",
+      "type": "hash-collision-witness-v2",
+      "message_a": "certificates/r2-parity-collision-a.bin",
+      "message_b": "certificates/r2-parity-collision-b.bin",
+      "expected_digest": "276378b449551ec697efdb076f14c5e0f0b1cc65e22d82194e6490d16a348f39",
+      "target_profile": "poseidon-orchard-r2-prefix-v1"
+    },
+    {
+      "id": "r2-j0-s100005",
+      "type": "hash-collision-witness-v2",
+      "message_a": "certificates/r2-j0-s100005-a.bin",
+      "message_b": "certificates/r2-j0-s100005-b.bin",
+      "expected_digest": "5214a18961847dcd10a5efdc1de51deae8bcdb37046b4523788032ae227adc34",
+      "target_profile": "poseidon-orchard-r2-prefix-v1"
+    },
+    {
+      "id": "r2-j0-s100014",
+      "type": "hash-collision-witness-v2",
+      "message_a": "certificates/r2-j0-s100014-a.bin",
+      "message_b": "certificates/r2-j0-s100014-b.bin",
+      "expected_digest": "8051d7b98e8d8e2117b7c9cffb5e5d463c864ec0e4928e56e3d456bc72eb960f",
+      "target_profile": "poseidon-orchard-r2-prefix-v1"
+    },
+    {
+      "id": "r2-j0-s100017",
+      "type": "hash-collision-witness-v2",
+      "message_a": "certificates/r2-j0-s100017-a.bin",
+      "message_b": "certificates/r2-j0-s100017-b.bin",
+      "expected_digest": "4ed53bb81908be8543236d0e768b4c945b11d7bfc8b3aac29802d3ecf747990b",
+      "target_profile": "poseidon-orchard-r2-prefix-v1"
+    },
+    {
+      "id": "r2-j0-s100023",
+      "type": "hash-collision-witness-v2",
+      "message_a": "certificates/r2-j0-s100023-a.bin",
+      "message_b": "certificates/r2-j0-s100023-b.bin",
+      "expected_digest": "87a335772e91c7e9f6b788a96bbe96185f3ce56b013da68ce5d75580ca35d70b",
+      "target_profile": "poseidon-orchard-r2-prefix-v1"
+    },
+    {
+      "id": "r2-j0-s100032",
+      "type": "hash-collision-witness-v2",
+      "message_a": "certificates/r2-j0-s100032-a.bin",
+      "message_b": "certificates/r2-j0-s100032-b.bin",
+      "expected_digest": "27739001bc469268f3d95d0db9601752b774b4cdebfc1ed0c477d6ef823f501d",
+      "target_profile": "poseidon-orchard-r2-prefix-v1"
+    },
+    {
+      "id": "r2-j1-s100006",
+      "type": "hash-collision-witness-v2",
+      "message_a": "certificates/r2-j1-s100006-a.bin",
+      "message_b": "certificates/r2-j1-s100006-b.bin",
+      "expected_digest": "58a59bb0a2825518b0c31b462f0591a508da68d9533b11ccb33cf0902ac29d01",
+      "target_profile": "poseidon-orchard-r2-prefix-v1"
+    },
+    {
+      "id": "r2-j1-s100021",
+      "type": "hash-collision-witness-v2",
+      "message_a": "certificates/r2-j1-s100021-a.bin",
+      "message_b": "certificates/r2-j1-s100021-b.bin",
+      "expected_digest": "26bff15476c05a18fa676c717f4e02b94195b65d8148e3d222388dbf4a64a430",
+      "target_profile": "poseidon-orchard-r2-prefix-v1"
+    },
+    {
+      "id": "r2-j1-s100036",
+      "type": "hash-collision-witness-v2",
+      "message_a": "certificates/r2-j1-s100036-a.bin",
+      "message_b": "certificates/r2-j1-s100036-b.bin",
+      "expected_digest": "d8c45ec765b9c9c4af89b610b9352b3e6ae9652ae40b0eb788f537ea0fc16e3e",
+      "target_profile": "poseidon-orchard-r2-prefix-v1"
+    },
+    {
+      "id": "r2-j1-s100048",
+      "type": "hash-collision-witness-v2",
+      "message_a": "certificates/r2-j1-s100048-a.bin",
+      "message_b": "certificates/r2-j1-s100048-b.bin",
+      "expected_digest": "068508a45d508c4445f70a4bb6ab3dabaf9ee738ad2a3076de80a114bcce0b33",
+      "target_profile": "poseidon-orchard-r2-prefix-v1"
+    },
+    {
+      "id": "r2-j1-s100063",
+      "type": "hash-collision-witness-v2",
+      "message_a": "certificates/r2-j1-s100063-a.bin",
+      "message_b": "certificates/r2-j1-s100063-b.bin",
+      "expected_digest": "9014b91d957786c73c465724adda0bee0c60626af9036481f571aa5a71a4c52e",
+      "target_profile": "poseidon-orchard-r2-prefix-v1"
+    },
+    {
+      "id": "r2-j2-s100004",
+      "type": "hash-collision-witness-v2",
+      "message_a": "certificates/r2-j2-s100004-a.bin",
+      "message_b": "certificates/r2-j2-s100004-b.bin",
+      "expected_digest": "b2a13b048e77e9b32046b3d79fc5a3e00bb73ea48625db0448128dc136bb8722",
+      "target_profile": "poseidon-orchard-r2-prefix-v1"
+    },
+    {
+      "id": "r2-j2-s100007",
+      "type": "hash-collision-witness-v2",
+      "message_a": "certificates/r2-j2-s100007-a.bin",
+      "message_b": "certificates/r2-j2-s100007-b.bin",
+      "expected_digest": "442a57da36d386948bd72e8b00726f2a91b0f02921b674908619d3255d200720",
+      "target_profile": "poseidon-orchard-r2-prefix-v1"
+    },
+    {
+      "id": "r2-j2-s100016",
+      "type": "hash-collision-witness-v2",
+      "message_a": "certificates/r2-j2-s100016-a.bin",
+      "message_b": "certificates/r2-j2-s100016-b.bin",
+      "expected_digest": "10b3dbefb5862a42f29dc81892ecdabebaf994a10f9286429147971e5f647716",
+      "target_profile": "poseidon-orchard-r2-prefix-v1"
+    },
+    {
+      "id": "r2-j2-s100022",
+      "type": "hash-collision-witness-v2",
+      "message_a": "certificates/r2-j2-s100022-a.bin",
+      "message_b": "certificates/r2-j2-s100022-b.bin",
+      "expected_digest": "48b46ae8775875e65c2a21389ef3ecf6da18f76aa76938aad9e9bdea242ecc2c",
+      "target_profile": "poseidon-orchard-r2-prefix-v1"
+    },
+    {
+      "id": "r2-j2-s100025",
+      "type": "hash-collision-witness-v2",
+      "message_a": "certificates/r2-j2-s100025-a.bin",
+      "message_b": "certificates/r2-j2-s100025-b.bin",
+      "expected_digest": "2d2593bb5cf3be147b8844fec3e12cc46535bccfaf1684ace6fda5803eedeb30",
+      "target_profile": "poseidon-orchard-r2-prefix-v1"
+    }
+  ]
+}

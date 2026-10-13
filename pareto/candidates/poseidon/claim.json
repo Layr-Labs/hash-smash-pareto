@@ -1,20 +1,108 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "poseidon-orchard-r0-prefix-v1",
+  "target_profile": "poseidon-orchard-r2-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 0,
+  "rounds": 2,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 28.03,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
+    "memory_log2_bytes": 25.18,
     "preprocessing_log2": 0,
-    "success_probability": 0.39,
+    "success_probability": 0.4,
     "nonuniform_advice_log2_bytes": 0
   },
   "restrictions": [],
-  "baseline_improved": "poseidon-orchard-r0-nominal-v2",
+  "baseline_improved": "poseidon-orchard-r2-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
+  "submission_state": "ready",
   "lane": "exploratory",
-  "heuristics": []
+  "heuristics": [
+    {
+      "id": "H1w",
+      "role": "score-critical",
+      "statement": "For each line index j in {0,1,2}: c_1 >= 1 and c_2 <= 2, where c_k is the number of absolutely irreducible components defined over F_p of the curve X_k of proof Section 5.3 (Lemma 1: S_k = E[C(N,k)] = (c_k + eps_k)/(2^k k!), |eps_k| < 2^-60). With Bonferroni K = 2, the Markov bound on N >= 13, the splitting and sampling terms, it gives per-attempt success >= 0.246794 on every line and two-attempt success >= 0.432681. This is the weakest sufficient genericity condition, not the primary support: the claimed 0.40 is carried by the direct one-sided binomial bound on the success event (two-attempt P >= 0.5361 at 99.9 %, and per line 0.2696/0.2546/0.2983 at 99.9 %, all above the 0.2254 that 0.40 needs), which uses no genericity or cost heuristic. H1p (c_1 = c_2 = 1) gives P >= 0.6074 with a 0.148 per-attempt tolerance.",
+      "scope": "r = 2, all three lines j, exact degree D = 390625 (m = 195312), midpoints w0 uniform in F_p. Tested by 541 complete full-size runs (180, 180, 181 per j); the same mechanism at r = 1 (900 runs) supports it.",
+      "extrapolation": "From 541 sampled midpoints to the exact average over all p midpoints: for c_1 >= 1 through Lemma 1 integrality (Markov on a bounded event), and for the claim through the exact one-sided binomial bound on the success indicator (P >= 0.5361 at 99.9 %), which uses no genericity assumption. The c_2 <= 2 part uses a non-conservative moment test and is not needed for the claim. No extrapolation in rounds or degree; r = 1 (900 runs) only supports the mechanism.",
+      "evidence_ids": [
+        "proof:222-266",
+        "proof:267-342",
+        "proof:591-613",
+        "proof:681-708",
+        "proof:728-736",
+        "proof:987-1052"
+      ],
+      "limitations": "The c_2 <= 2 part uses a Wald test on the unbounded statistic C(N,2), which is not conservative against an unobserved tail (mass 5.7e-4 at N = 30 adds 0.25 to E[C(N,2)] with 0.11 expected hits in 180 runs); per line the r = 2 Wald comparison gives z = 5.7, 7.9, 4.3 against c_2 = 3, but the Wald test on the unbounded C(N,2) is not conservative, so it is illustrative only; c_2 <= 2 is not needed for the claim (the direct binomial route and H1p both give 0.40 with margin >= 0.09). The direct binomial bound has no tail gap but uses local, untrusted runs (NTL implementation, seeded pseudorandom midpoints, j = seed mod 3 stratified); no organizer experiment. Margin: per-attempt success 0.246794 vs 0.2254 needed for 0.40. Time and memory do not depend on this heuristic."
+    },
+    {
+      "id": "H1p",
+      "role": "supporting",
+      "statement": "For each j: c_1 = c_2 = 1 (implied by absolute irreducibility of X_1 and X_2, i.e. transitivity of the geometric monodromy of R_{w0}(h^2) on roots and on ordered pairs h_2 != +-h_1). Gives two-attempt success >= 0.607369; with c_2 = 2 on one line 0.552701, on two lines 0.494472.",
+      "scope": "Same as H1w.",
+      "extrapolation": "As for H1w, through Lemma 1 integrality; not used for the claimed 0.40.",
+      "evidence_ids": [
+        "proof:292-324",
+        "proof:614-625",
+        "proof:681-708",
+        "proof:709-716",
+        "proof:728-736"
+      ],
+      "limitations": "At r = 2, c_2 = 2 is rejected for j = 0 and j = 1 (z = 2.6, 4.2) but not j = 2 (z = 1.6); at r = 1 it is rejected with z >= 3.6 per line. Wald tests on the unbounded statistic C(N,2) are not conservative; local untrusted runs."
+    },
+    {
+      "id": "H1",
+      "role": "supporting",
+      "statement": "For each j, c_k = 1 for k <= 4 (implied by absolute irreducibility of X_1..X_4). With Bonferroni K = 4: per-attempt success >= 0.393225, two-attempt success >= 0.631824.",
+      "scope": "Same as H1w; third and fourth factorial moments of N at full size.",
+      "extrapolation": "As for H1p; not used for the claim.",
+      "evidence_ids": [
+        "proof:267-291",
+        "proof:626-630",
+        "proof:681-708"
+      ],
+      "limitations": "The third moment is estimated from 15 events at r = 2. Not needed for the claimed 0.40."
+    },
+    {
+      "id": "H2",
+      "role": "supporting",
+      "statement": "For each j, F_j has exact degree D = 5^8 = 390625 (nonzero leading coefficient f_D, listed in proof Section 2.5), so R has degree m = 195312 for every midpoint. Established by exact (degree, leading coefficient) tracking with no cancellation at any layer (Appendix D); listed for transparency.",
+      "scope": "r = 2, j = 0, 1, 2.",
+      "extrapolation": "None: a deterministic exact computation per line; deg G = deg F_j does not depend on w0, and the 541 runs agree.",
+      "evidence_ids": [
+        "proof:62-73",
+        "proof:91-127",
+        "proof:631-636",
+        "proof:681-708",
+        "proof:1276-1310"
+      ],
+      "limitations": "The tracking script is stdlib Python using the pinned verifier constants; it was run locally, not by the organizer. A lower degree would only reduce the work."
+    },
+    {
+      "id": "HG",
+      "role": "supporting",
+      "statement": "Cost heuristic: the Euclidean remainder sequence of (R, W = y^((p-1)/2) mod R - 1) is normal (all quotients of degree 1), which fixes the half-gcd operation count (Section 7.3); it does not affect the success event. An abnormal step (quotient degree >= 2) ends the attempt with FAIL, a branch inside the fixed two-attempt budget that only lowers work, modeled at <= m/p < 2^-236 per attempt. The success claim does not rely on HG: the primary argument measures S_t directly.",
+      "scope": "The half-gcd of step 7 at degree m = 195312. Checked at r = 1 (30 midpoints, 1171849 steps) and r = 2 (6 midpoints, 1171871 steps), all quotients of degree 1, no abnormal step; the r = 2 evidence is only 6 midpoints.",
+      "extrapolation": "From 30 r = 1 and 6 r = 2 checked midpoints (all three lines) to the two random r = 2 midpoints of the attack; the model probability of an abnormal step is <= m/p.",
+      "evidence_ids": [
+        "proof:282-282",
+        "proof:468-505",
+        "proof:637-651",
+        "proof:717-727",
+        "proof:1256-1275"
+      ],
+      "limitations": "Seeded midpoints (r = 1 seeds 2001..2030, r = 2 seeds 102001..102006); local, untrusted runs; the Euclid steps use NTL DivRem. The 0.40 claim tolerates a per-attempt loss of 0.0214 under H1w alone (0.148 under H1p)."
+    },
+    {
+      "id": "HS",
+      "role": "supporting",
+      "statement": "Root-extraction losses are small: Pr[N >= 13] <= 0.0032 (Markov on C(N,2) under H1w) and equal-degree splitting fails within 30 tries with probability < 4.4e-7 (Jacobsthal sum).",
+      "scope": "Steps 8-9 of an attempt, deg g <= 12.",
+      "extrapolation": "Derived from H1w and an exact character-sum identity; listed so every probability loss is visible.",
+      "evidence_ids": [
+        "proof:275-281",
+        "proof:652-656",
+        "proof:697-701"
+      ],
+      "limitations": "Depends on H1w for the bound on N. Largest observed N was 3 in 541 runs."
+    }
+  ]
 }
