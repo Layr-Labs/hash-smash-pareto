@@ -1,19 +1,25 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "poseidon-orchard-r0-prefix-v1",
+  "submission_state": "ready",
+  "target_profile": "poseidon-orchard-r2-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 0,
+  "rounds": 2,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 28.008,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
-    "success_probability": 0.39,
+    "memory_log2_bytes": 26.189,
+    "preprocessing_log2": 10,
+    "success_probability": 1,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "poseidon-orchard-r0-nominal-v2",
+  "restrictions": [
+    "Ordinary collision of the complete selected-round Orchard hash poseidon-orchard-r2-prefix-v1 (P128Pow5T3, Pallas, input [nk, rho, 2^65], full rounds 0-3, partial rounds 4-5, full rounds 60-63, deployed constants and MDS, output coordinate 0). The two canonical inputs are in certificates/, common digest ce852ad7ca3e407b8aa64d550a7a921ef39600c3ac1d2a162bbf547db9bff00a; the organizer recomputes it.",
+    "Construction (proof.md Sections 2-3): the two-round line of entry 1942e47d / 186052af. Round-1 S-box inputs see two linear lanes and one constant lane, the state after round 1 is affine in T' = T^5, and the digest is f(T') of degree exactly 5^8 = 390,625. A root T'_1 of q = (f - f(s0)) / (X - s0) gives a collision; inputs follow by fifth roots.",
+    "Algorithm (Sections 4-6): f interpolated by 393,216 evaluations and inverse NTT; X^p mod q by 236 Barrett squarings at transform lengths 786,432 and 393,216 without bit-reversal passes; gcd(q, X^p - X) by memory-lean half-gcd; root extraction. Start point s_n = n + 1 with trial index n=0 (s0 = 1) succeeds on trial 0 (deg g = 1). Deterministic procedure executed on the fixed target: success probability 1; no heuristics.",
+    "Time (Section 6): closed-form count of 69,623,997,689.5 primitive operations including setup and output verification, / C(2) = 258: 2^28.007638 target units, claimed time_log2 = 28.008 (integer check: 69623997690^1000 < 2^28008 * 258^1000).",
+    "Memory (Section 9): peak live array memory 2,356,705 words = 75,414,560 bytes across Q (390,625), R (393,216), A (786,432), and INVQ (786,432). This strictly bounds the half-gcd phase peak of 1,957,008 words and the Newton peak of 1,567,680 words. Adding itemized constants (201 words, 6,432 bytes), transform roots (440 words, 14,080 bytes) and the 1 MiB code allowance (1,048,576 bytes): 76,463,136 bytes = 2^26.188261 bytes, claimed memory_log2_bytes = 26.189 (integer check: 76463136^1000 < 2^26189). Projected cost axis 28.008 + 6.189 = 34.197 at r = 2."
+  ],
+  "baseline_improved": "poseidon-orchard-r2-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
   "lane": "exploratory",
   "heuristics": []
