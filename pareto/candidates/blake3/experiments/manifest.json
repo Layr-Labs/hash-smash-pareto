@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "rho-w22",
+      "kind": "python-message-pairs-v1",
+      "scope": "The exact blake3-r3-prefix-v1 target. The program regenerates the bit-sliced straight line of proof.md Section 3 and runs, per trial, one attempt of the search of proof.md Section 5 at width 22: 256 trails per batch, points are 22-bit values whose message is 0^32 || LE32(x), planes 22..255 reset to 0 after each step, distinguished when physical planes 0 and 1 are zero, cap 36, 14 batches, starts R + i from one random word (SHAKE-256 of the trial seed, a reproducible stand-in for the attack's random word), a dictionary table and the recovery of Section 5.6 with the plain three-round compression. It returns the pair found by the recovery or two nulls.",
+      "hypothesis": "Program check, not a statistical estimate: the shipped program runs one attempt of the claimed search end to end at width 22 per trial and returns the pair its recovery finds, which the organizer verifies. Random-function reference: about 136.9 of 256 successes (a simulation of the same reduced search with uniform 22-bit images succeeded in 2,139 of 4,000 attempts). A count far below the reference would show a program defect or a strongly non-random 22-bit chain; a count near it shows neither. No number of the claim is estimated from the count, and trials are not treated as independent samples. A success is a 22-bit partial match, not a collision. Observations (untrusted): batches, distinguished points, cut trails, merges, Robin Hood merges. Nothing about cost is inferred from the run.",
+      "program": "experiments/b3r3_rho.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "ffff3f0000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "proj-w256",
+      "kind": "python-message-pairs-v1",
+      "scope": "The exact blake3-r3-prefix-v1 target. Per trial 256 random planes (SHAKE-256 of the trial seed) are the starting points of 256 trails, the regenerated straight line of proof.md Section 3 runs eight chained full-width steps of g, and the first pair (step-major order) of distinct evaluated inputs whose images agree on the 22 low bits is returned; the two inputs are recomputed from the seed with the plain three-round compression.",
+      "hypothesis": "Program check, not a statistical estimate: eight chained full-width steps of the shipped straight line from random planes, returning the first pair of distinct inputs whose images agree on 22 bits; the organizer's digest checks the full-width straight line through every returned pair. Reference if the images of the 2,048 evaluated inputs were uniform on 22 bits: 1 - prod_{i<2048}(1 - i/2^22) = 0.39337, about 100.7 of 256. A count far below it would show a biased full-width chain at 22 bits; a count near it shows neither. No number of the claim is estimated from the count. A success is a 22-bit partial match, not a collision. Observation (untrusted): the number of steps run.",
+      "program": "experiments/b3r3_rho.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "ffff3f0000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    }
+  ]
+}
