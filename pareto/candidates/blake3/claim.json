@@ -1,20 +1,59 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "blake3-r1-prefix-v1",
+  "submission_state": "ready",
+  "target_profile": "blake3-r3-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 1,
+  "rounds": 3,
+  "lane": "exploratory",
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 124.91252,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 20,
+    "preprocessing_log2": 23,
     "success_probability": 0.39,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "blake3-r1-nominal-v2",
+  "restrictions": [
+    "Messages M(x) = 0^32 || LE32(x) for a 256-bit point x: one 64-byte chunk of one block, root compression with IV, counter 0, block length 64, flags 11, rounds 0..2; f(x) = the complete 256-bit digest. Distinct points with equal f give two distinct messages with equal complete digests (proof.md Section 2).",
+    "Distinguished-point parallel collision search (van Oorschot-Wiener) on g(x) = f(x) XOR q (q a fixed mask, the digest-plane polarity) with 256 trails per batch: d = 114, cap 16 L, starts R + i from one random word R, a table of 22,000 entries of 32 bytes, one recovery with the selected-round compression, B = B0 + W = 1441791928920204580812654799154030922 batches, W = 4.5 L the detection window (proof.md Section 5).",
+    "Each batch evaluates g on 256 trails with a generated bit-sliced straight line of 17,355 register operations (14,265 XOR, 1,030 AND, 2,060 OR): rotations renamed, constants and NOT folded into plane polarities, every full adder built around the input of different polarity (five operations a bit); checked against the plain three-round compression and run by the organizer experiments (proof.md Section 3).",
+    "Classical 256-bit word RAM under collision-frontier-v5, unit 638: N = 25540762476809282676729775392181909527814 word operations including recovery compression calls at 638 each, every handler bounded by a halt; time_log2 = 124.91252 is log2(N/638) rounded up, by the integer certificate of proof.md Section 6.3.",
+    "Machine convention H_reg: a declared file of 1,024 registers of 256 bits (peak use 771), its 32,768 bytes counted as memory; the main loop has no loads or stores. Priced alternatives: 512 registers +0.0907, 256 +0.2731, 64 +0.6160 (proof.md Section 10).",
+    "Memory at most 1,004,023 bytes <= 2^20, 44,553 bytes of headroom, the peak over the generation of the straight line (758,907 bytes) and the search (straight line 5 bytes per instruction; other code itemized at 3,251 instructions, charged 4,096 at 40 bytes; registers, lane state, scratch, table), so normalizedTimeMemoryLog2 = time_log2 (proof.md Section 4.3). Preprocessing is the generation, charged 2^32 operations. No advice.",
+    "Success at least 0.3905 for one attempt under the score-critical model premise H_rand (the fixed target succeeds at least as often as a uniformly random function in the same search): in the model the first repeat among the first n0 = 256 B0 evaluations occurs with probability at least 1 - exp(-n0(n0-1)/2^257) and is detected within the window W except with probability at most e^-4.5; the other terms are exact bounds (proof.md Section 7). No full-scale run and no collision are claimed."
+  ],
+  "baseline_improved": "blake3-r3-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  "experiment_manifest": "experiments/manifest.json",
+  "heuristics": [
+    {
+      "id": "H_rand",
+      "role": "score-critical",
+      "statement": "Model premise. For the fixed target, the probability over the attempt's coin R that the search succeeds is at least the probability, over R and a uniformly random function F from 256-bit values to 256-bit values, that the same search succeeds when every evaluation of g(x) = f(x) XOR q is replaced by F. In that model (lazy sampling of F) the first repeat among the first n0 = 256 B0 evaluations occurs with probability at least 1 - exp(-n0(n0-1)/2^257) = 0.4021853, its path reaches a distinguished point within W = 4.5 L steps except with probability e^-4.5, and the success probability is at least 0.3905 (proof.md Section 7).",
+      "scope": "The three-round chain g on the points of one attempt: about 2^128.12 evaluations along trails of mean length 2^114 from distinct starts R + i, i < 2^15. The premise compares the fixed target with a random function only through the event that the attempt succeeds; the bound in the model uses the pair-collision rate of fresh images and the distinguished-point rate (density 2^-114 on fixed low bits).",
+      "extrapolation": "Organizer-executed evidence on the target with the shipped straight line: rho-w22 runs the claimed search end to end at width 22 (expected about 136.9 of 256 successes if the 22-bit chain behaves as a random function, from an ideal-function control of 4,000 attempts at the same parameters; our 1,500 target attempts gave 0.559); proj-w256 runs eight chained full-width steps from random planes and tests 22-bit image agreements among 2,048 iterates (expected 100.7 of 256). The organizer recomputes every returned pair. Extrapolated from 22-bit projections and 3,584 evaluations per trial to the full 256-bit images and 2^128 evaluations.",
+      "evidence_ids": [
+        "proof:189-238",
+        "proof:239-243",
+        "proof:244-265",
+        "proof:69-73",
+        "experiment:rho-w22",
+        "experiment:proj-w256"
+      ],
+      "limitations": "A model premise about one fixed function, not a theorem: on the target the run is a deterministic function of R. It cannot be tested at width 256. The experiments reach 22-bit projections and chains of at most a few thousand points per trial; the full functional graph, trails of length 2^114 and the 256-bit collision rate are not measured. The bound tolerates a pair-collision deficit eps up to 0.0016; a larger deficit costs 0.5 log2(1/(1-eps)) bits (proof.md Section 8)."
+    },
+    {
+      "id": "H_reg",
+      "role": "supporting",
+      "statement": "Machine convention: the 256-bit word RAM of collision-frontier-v5 with a declared file of 1,024 registers; operations on register operands cost one word operation each and need no load or store, and the 32,768 bytes of the file are counted in memory. The cost model fixes no register count.",
+      "scope": "The main-loop straight line (17,355 operations per batch, inputs and digests in registers 0 to 255, temporaries in 256 to 1,023, peak 771). Handlers, the recovery and the setup count their loads and stores.",
+      "extrapolation": "None statistical: it is a declared convention. Its price is computed with the same straight line and Belady allocation: 512 registers add 1,128 loads and stores per batch (+0.0907 bit), 256 registers 3,624 (+0.2731), 64 registers 9,263 (+0.6160), proof.md Section 10.",
+      "evidence_ids": [
+        "proof:74-117",
+        "proof:266-270",
+        "proof:52-55"
+      ],
+      "limitations": "If a reviewer requires a smaller register file the cost rises by the priced amount (125.00322 with 512 registers, 125.18562 with 256, 125.52852 with 64); the success argument is unaffected."
+    }
+  ]
 }
