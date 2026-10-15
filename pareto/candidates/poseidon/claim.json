@@ -1,20 +1,40 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "poseidon-orchard-r0-prefix-v1",
+  "submission_state": "ready",
+  "target_profile": "poseidon-orchard-r5-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 0,
+  "rounds": 5,
+  "lane": "exploratory",
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 129.64,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
+    "memory_log2_bytes": 16,
     "preprocessing_log2": 0,
     "success_probability": 0.39,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "poseidon-orchard-r0-nominal-v2",
+  "restrictions": [
+    "Generic memoryless Pollard-rho (Floyd) on f(x)=Poseidon_r5(enc(x)||enc(0)), where enc is the canonical 32-byte LE Pallas encoding of x in F_p and Poseidon_r5 is poseidon-orchard-r5-prefix-v1 ConstantLength<2>; each evaluation is one selected-round permutation.",
+    "Both messages are distinct canonical 64-byte (nk,rho) encodings with rho=0; full 256-bit digests (coordinate 0) agree.",
+    "At most 5*2^127 permutations plus <=80 field/word ops per evaluation at 1/321: T<2^129.64. Cap uses k=2^127 so that under H_random, Pr[L<=k]>=1-exp(-(k(k-1))/(2p)) with p the Pallas prime (~2^254).",
+    "Memory < 2^16 bytes. No tables/preprocessing/advice in the claimed algorithm.",
+    "Success >=0.3934 - 2^-127 under H_random (random-mapping first-repeat on F_p)."
+  ],
+  "baseline_improved": "poseidon-orchard-r5-nominal-v2",
+  "heuristics": [
+    {
+      "id": "H_random",
+      "role": "score-critical",
+      "statement": "Let x0 be uniform in F_p and x_{i+1}=f(x_i). Let L be the first-repeat length. Assume Pr[L<=2^127] >= 1-exp(-(2^127*(2^127-1))/(2p)) >= 0.3934 and Pr[mu=0 and L<=2^127] <= 2^127/p < 2^-127, as for a uniform random mapping on F_p. Then success > 0.39 (proof.md).",
+      "scope": "One trajectory of f on F_p (~2^254 points) from a fresh uniform start; complete Orchard Poseidon with 5 partial rounds on messages (x,0).",
+      "extrapolation": "Organizer experiment rho-reduced runs Floyd on a 16-bit truncation of the same f (iterate trunc16(digest)); organizer checks digest bits 0..15 agree on returned distinct 64-byte messages. Extrapolated to full F_p. Poseidon-Orchard at 5 partial rounds has no published practical full collision that would make the first-repeat distribution of this f substantially worse than random.",
+      "evidence_ids": [
+        "proof:1-77",
+        "experiment:rho-reduced"
+      ],
+      "limitations": "Assumption; 16-bit evidence only; generic attack; no algebraic structure of Poseidon is used."
+    }
+  ],
   "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  "experiment_manifest": "experiments/manifest.json"
 }
