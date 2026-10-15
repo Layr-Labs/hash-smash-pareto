@@ -1,20 +1,36 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha3-256-r5-prefix-v1",
+  "submission_state": "ready",
+  "target_profile": "sha3-256-r7-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 5,
+  "rounds": 7,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 124.419,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 20,
+    "preprocessing_log2": 25.12,
     "success_probability": 0.39,
     "nonuniform_advice_log2_bytes": 0
   },
   "restrictions": [],
-  "baseline_improved": "sha3-256-r5-nominal-v2",
+  "baseline_improved": "sha3-256-r7-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
   "lane": "exploratory",
-  "heuristics": []
+  "heuristics": [
+    {
+      "id": "RF-WALK",
+      "statement": "For the fixed map F(v) = SHA3-256-r7(enc(v)), enc(v) = the 135-byte constant K of proof Section 1 with the four 64-bit words of v written into lanes 0, 1, 2, 4 and 10, 11, 12, 14, walks from fresh uniform start words behave, for the events used in the success bound, as walks of a uniformly random function on {0,1}^256: F at a point not evaluated before is a fresh uniform 256-bit value independent of all values observed so far.",
+      "role": "score-critical",
+      "scope": "Success probability only (first-repeat time, iid distinguished-point coins giving geometric trail positions and lockstep detection delay, binomial count of distinguished points, start hit rates), r = 7, about 2^128 evaluations. Output correctness and the enforced op budget do not depend on it.",
+      "extrapolation": "No experiment at 2^128 scale; the algorithm's success model is checked by a scaled simulation under the random-function model (proof Section 8). Sensitivity: repeats at kappa times the random rate keep the bound >= 0.39 for kappa >= 0.9984; otherwise time_log2 rises by about (1/2) log2(1/kappa).",
+      "evidence_ids": [
+        "proof:13-55",
+        "proof:113-166",
+        "proof:167-247",
+        "proof:328-412",
+        "proof:413-441"
+      ],
+      "limitations": "F is not random; no proof that F on this encoding is not closer to injective than a random function. For r <= 2 the heuristic is not credible."
+    }
+  ]
 }
