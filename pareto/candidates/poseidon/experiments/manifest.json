@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "r3-line-map-replay",
+      "kind": "python-message-pairs-v1",
+      "scope": "Selected r = 3 target. Deterministic replay of the two-round-skip line construction from the deployed constants, the leading-coefficient degree recurrence, and the map from the two reported gcd roots X = r and X = 1 to messages. The same pair is returned for every organizer trial.",
+      "hypothesis": "The line construction in proof.md maps the two reported roots of H(X) - H(1) to two distinct messages that form an ordinary r = 3 collision.",
+      "program": "experiments/reproduce_line.py",
+      "event": {"kind": "full-collision"}
+    }
+  ]
+}
