@@ -1,20 +1,40 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha256-r37-prefix-v1",
+  "submission_state": "ready",
+  "target_profile": "sha256-r39-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 37,
+  "rounds": 39,
+  "lane": "exploratory",
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 130.35,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
+    "memory_log2_bytes": 16,
     "preprocessing_log2": 0,
     "success_probability": 0.39,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "sha256-r37-nominal-v2",
+  "restrictions": [
+    "Generic memoryless Pollard-rho (Floyd) on f(x)=H(enc32(x)), H=complete sha256-r39-prefix-v1 (rounds 0..38), enc32=32-byte LE encoding; one padded block per evaluation.",
+    "Distinct 32-byte messages; full 256-bit digests agree.",
+    "At most 5*2^128 compressions plus <=80 word ops/compression at 1/2812: T<2^130.35.",
+    "Memory < 2^16 bytes. No tables/preprocessing/advice in the claimed algorithm.",
+    "Success >=0.3934-2^-128 under H_random."
+  ],
+  "baseline_improved": "sha256-r39-nominal-v2",
+  "heuristics": [
+    {
+      "id": "H_random",
+      "role": "score-critical",
+      "statement": "Assume the first-repeat length L of f from a uniform start satisfies the uniform random-mapping bounds Pr[L<=2^128]>=1-exp(-(1-2^-128)/2) and Pr[mu=0 and L<=2^128]<=2^-128. Then success>0.39 (proof.md).",
+      "scope": "Full-width f on 2^256 points; complete 39-round SHA-256 on 32-byte messages.",
+      "extrapolation": "Organizer experiment rho-reduced: Floyd on 16-bit truncation; mask-checked. Extrapolated to 256 bits.",
+      "evidence_ids": [
+        "proof:1-50",
+        "experiment:rho-reduced"
+      ],
+      "limitations": "Assumption; 16-bit evidence only; generic attack."
+    }
+  ],
   "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  "experiment_manifest": "experiments/manifest.json"
 }
