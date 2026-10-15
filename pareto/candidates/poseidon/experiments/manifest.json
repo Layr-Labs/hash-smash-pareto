@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "rho-reduced",
+      "kind": "python-message-pairs-v1",
+      "scope": "Floyd on the 12-bit truncation of f(x)=Poseidon_r5(enc(x)||enc(0)); table of size 2^12.",
+      "hypothesis": "Almost every trial returns distinct 64-byte messages agreeing on digest bits 0..11.",
+      "program": "experiments/rho_reduced.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "0fff000000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    }
+  ]
+}
