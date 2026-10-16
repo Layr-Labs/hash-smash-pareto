@@ -1,20 +1,38 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "poseidon-orchard-r0-prefix-v1",
+  "submission_state": "ready",
+  "target_profile": "poseidon-orchard-r56-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 0,
+  "rounds": 56,
+  "lane": "exploratory",
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 129.41,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
+    "memory_log2_bytes": 16,
     "preprocessing_log2": 0,
     "success_probability": 0.39,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "poseidon-orchard-r0-nominal-v2",
-  "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  "restrictions": [
+    "Generic memoryless Pollard-rho (Floyd) on f(x)=Poseidon_r56(enc(x)||enc(0)), where enc is the canonical 32-byte LE Pallas encoding of x in F_p and Poseidon_r56 is poseidon-orchard-r56-prefix-v1 ConstantLength<2>; each evaluation is one selected-round permutation.",
+    "Both messages are distinct canonical 64-byte encodings nk||rho with rho=0 and nk in F_p; each is exactly two 32-byte little-endian Pallas field elements; full 256-bit digests (coordinate 0) agree.",
+    "At most 5*2^127 permutations plus <=80 field/word ops per evaluation at 1/1392: T<2^129.41. Cap uses k=2^127 so that under H_random, Pr[L<=k]>=1-exp(-(k(k-1))/(2p)) with p the Pallas prime (~2^254).",
+    "Memory < 2^16 bytes. No tables/preprocessing/advice in the claimed algorithm.",
+    "Success >=0.3934 - 2^-127 under H_random (random-mapping first-repeat on F_p)."
+  ],
+  "baseline_improved": "poseidon-orchard-r56-nominal-v2",
+  "heuristics": [
+    {
+      "id": "H_random",
+      "role": "score-critical",
+      "statement": "Let x0 be uniform in F_p and x_{i+1}=f(x_i). Let L be the first-repeat length. Assume Pr[L<=2^127] >= 1-exp(-(2^127*(2^127-1))/(2p)) >= 0.3934 and Pr[mu=0 and L<=2^127] <= 2^127/p < 2^-127, as for a uniform random mapping on F_p. Then success > 0.39 (proof.md).",
+      "scope": "One trajectory of f on F_p (~2^254 points) from a fresh uniform start; complete Orchard Poseidon with 56 partial rounds (the full deployed permutation) on messages (x,0).",
+      "extrapolation": "No experiment is included. Support is the standard random-mapping analysis of Floyd's algorithm; full 56-partial-round Orchard Poseidon is designed and widely assumed to behave as a random function on this domain, and no deviation affecting first-repeat length is known.",
+      "evidence_ids": [
+        "proof:1-82"
+      ],
+      "limitations": "Generic birthday bound only, no Poseidon-specific cryptanalysis; it is the trivial upper bound any 256-bit-output hash admits, offered as the memory-light Pareto point at r=56. No reduced-width experiment evidence (the organizer python-message-pairs runner probes digest_fn(b\"\"), which Poseidon rejects); support is the standard random-mapping analysis. Not a practical attack."
+    }
+  ],
+  "certificate_manifest": "certificates/manifest.json"
 }
