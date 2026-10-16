@@ -348,7 +348,9 @@ def _python_result(entry: dict[str, Any], source: bytes, limits: ExperimentLimit
     _keys(result, {"schema_version", "trials"})
     if type(result["schema_version"]) is not int or result["schema_version"] != 1 or type(result["trials"]) is not list or len(result["trials"]) != limits.trials:
         raise ExperimentError("Python output must report exactly every organizer trial")
-    sample_digest = digest_fn(b"")
+    # Two canonical zero field elements are valid for Orchard as well as the
+    # variable-length byte hashes; Orchard rejects an empty sizing probe.
+    sample_digest = digest_fn(bytes(64))
     if type(sample_digest) is not bytes or not sample_digest:
         raise ExperimentSetupError("selected target digest callback must return nonempty bytes")
     event = entry["event"]
