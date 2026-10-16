@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "r39-claw-vow",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39_claw.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "H1, H2, H3, and H4 (proof.md Sections 2, 3, 5, 6, 7, and 11). Trials 0..15: on each trial t, draws a 512-bit first block M0 from SHAKE-256 of the experiment id and organizer seed and compresses it from the standard SHA-256 IV with the 39-step compression function to obtain a real chaining value CV1; compiles and register-allocates the 67-op 7-lane x 36-bit packed kernel (14 peak live registers, 0 spills in 64 registers) and executes it instruction-by-instruction across 16 batches (112 lanes), verifying bit-exact agreement with scalar F_step and with the step-0 and step-1 SHA-256 recurrence equations on CV1; tests 256 unconditional seed-drawn (a0, a1) pairs against the exact row-8 (F8) and row-9 (F9) modular-addition side conditions (verifying the closed-form W8 and W9 equations against full 16-step state inversion); and runs the counted 7-lane packed stage-2 recovery (recover_7pairs_packed) on the t-th embedded claw-SFS witness, verifying exact recovery of (a0, u) and W16 = 0xbca1c321. Returns the 128-byte two-block pair (M0 || M1, M0 || M1') of the first variant on CV1 iff mismatches == 0. Trials 16..255 return no pair by design.",
+      "hypothesis": "Returned pairs: 16 (every active trial 0..15 returns a distinct seed-derived 128-byte variant pair iff mismatches == 0; repeated_pairs: 0); full collisions of the target from IV: 0 (returned pairs are single variants of CV1, not full 2^121.07 collisions). Observations (untrusted): lanes_checked (112), step_ops_folded (67), peak_live_regs (14), row89_tested (256), row89_passes (binomial(256, 585/524288)), stage2_recovered (1), mismatches (0)."
+    },
+    {
+      "id": "r39-tail-sfs",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39_claw.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "H4 and H5 (proof.md Sections 4, 7, and 11). Trials 0..15: verifies on the embedded Table 23 dense base that the exact bit-by-bit row-16 solver (solve_row_exact) finds |G16| = 2 valid W16 words ([0xbca1c121, 0xbca1c321]) and that for W16 = 0xbca1c321 the exact row-17 solver finds the unique valid word W17 = 0x71e9ba98 (|G17| = 1). Then reconstructs the t-th distinct bipartite-claw 39-step semi-free-start colliding pair (CV1, a0, a1) from PAIR_CLAW_SFS[t] via 16-step state inversion (build_variant), verifying: (1) opposite-parity bipartite walk collision F_step(a0) == F_step(u) and recover_a1(a0, u) == a1, (2) W8 in F8 and W9 in F9, (3) exact row masks on steps 16..18 with W16 == 0xbca1c321 and W17 == 0x71e9ba98, and (4) full 39-step compression collision sha256_r39_compress(CV1, M1) == sha256_r39_compress(CV1, M1') with M1 != M1'. Returns CV1 || M1 and CV1 || M1' (96 bytes each) iff mismatches == 0. Trials 16..255 return no pair by design.",
+      "hypothesis": "Returned pairs: 16 (all 16 distinct 96-byte 39-step semi-free-start colliding pairs CV1 || M1 and CV1 || M1' pass every check; repeated_pairs: 0); full collisions of the target from IV: 0 (returned pairs are semi-free-start collisions from CV1, not from the standard IV). Observations (untrusted): row16_exact_count (2), row17_exact_count (1), claw_verified (1), sfs_collision_verified (1), mismatches (0)."
+    }
+  ]
+}
