@@ -1,20 +1,61 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha256-r37-prefix-v1",
+  "target_profile": "sha256-r39-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 37,
+  "rounds": 39,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 124.51302,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 20,
+    "preprocessing_log2": 12.9,
     "success_probability": 0.39,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "sha256-r37-nominal-v2",
+  "restrictions": [
+    "Two distinct 52-byte messages M(x) = P || x and M(y) = P || y, P = 20 zero bytes, x != y 256-bit integers written big-endian: one block (FIPS padding, length 416 bits), standard IV, the steps with indices 0 to 38, feed-forward, the complete 256-bit digest (sha256-r39-prefix-v1). They are found as a collision g(x) = g(y) of the walk g(x) = f(x) XOR q, f(x) = digest(M(x)) read as a big-endian integer, q a fixed 256-bit mask (the polarities of the digest planes of the generated circuit), so g(x) = g(y) exactly when the digests are equal. Plain birthday search with distinguished points; no differential or structural property of the 39 steps is used.",
+    "Machine, a convention declared by this entry (H3, score-critical): a classical load/store machine with 256-bit words, 256-bit immediates and 1,024 registers under collision-frontier-v5 (the benchmark fixes the word size and charges loads and stores, not a register count, constants or lane packing); 2812 operations (C of sha256-r39) to the unit. Charged, one operation each: every XOR, AND, OR, NOT, set, move, load, store, pointer addition, compare, branch and the random word. The program is rolled: a straight part (14271 records), a loop body (5108 records with its loop control) run 8 times, a feed-forward (492 records); a batch of 256 trails executes 55630 records (55667 with the stage-1 test and the batch loop). Every instruction is charged 36 bytes. The straight part uses all 1,024 registers, the loop body 544.",
+    "time_log2 is an upper bound: every term of proof.md Section 3.4 is enforced by a halt of the program (B batches, e2max stage-1 hits, 4737 table keys, 2 cut trails, a recovery of at most c + 2^48 batches, one recovery), and the bound charges each at its limit. The attempt is single: one fresh uniform 256-bit word r, no restart, no amplification, no stored collision, no advice. Distinguished points: low 32 bits zero and the next 90 bits below 59 (density 59 / 2^122). The generator that builds the program at setup is charged (200 operations per primitive call and per emitted record: 19738400).",
+    "Memory: 4737 table entries of 26 bytes (123162 bytes) plus 843480 bytes of code (23430 instructions of 36 bytes: the program, stage 1, the batch loop, handlers, the recovery circuit) plus 16,384 bytes of counters plus 32,768 bytes for the 1,024 registers plus 32,768 bytes for the W' array: 1048562 bytes <= 2^20; claimed as 2^20. The setup phase (the generator's code image of 3507 wasm instructions at 36 bytes and its scratch of 29709 bytes, with the final code size and the counters) is 1015825 bytes, proof 3.6. A C port of the generator, run in a sandbox capped at 1,048,576 bytes of guest memory, emits the identical program (12 pages).",
+    "Success probability at least 0.39: Lemma 2 of proof.md Section 4 proves it for a uniformly random function from the lazy-sampling hazard (a supermartingale over the evaluations, no conditioning on which trails finish, the cut count bounded by a proved theorem, the Chernoff quantile an upper bound by the trapezoid rule; bound 0.39000, exact certificate 0.390000005693 in Appendix A); H1, score-critical (clauses (a) to (d), declared and not proved), says the real attempt succeeds at least as often. Nothing else in the bound is heuristic. If the hazard were (1 - eps) / N the plan needs extra time: 0.0062 bit for eps = 0.01, 0.0389 bit for eps = 0.05, 0.0759 bit for eps = 0.10, 0.2079 bit for eps = 0.25.",
+    "The declared experiments run this program in the organizer sandbox: bssha-n18 (one attempt of the 256-lane search per trial at width 18, DP = low 2 bits zero) and proj-k0-w256 (512 points of the target at width 256 per trial, a pair when two digests agree in the low 18 bits). Each returns pairs whose complete 39-step digests agree in the stated low bits. They are program checks: no number of the claim is estimated from their counts and no sampling premise is used. No outside code or library is used.",
+    "No nonuniform advice; the constant message prefix P (20 zero bytes) is part of the program. Credited derivative of our own sha256 round-39 entries 3c1d7f68-bd81-4f9d-9e94-8a7382af3238, 368d1718-a059-4780-9f08-8f0931a46f0d and 01e31be9-0524-4b77-a40e-c1f862d506a8 (search, handlers, recovery circuit, ledger method, Lemma 2 v2, message layout, experiments; all declared as dependencies, same lane) and, through our blake3 entries 0a9640ed and 62cfd777, of the bit-sliced chain, with the pivot full adder and the mask walk of jungjipdo's 6ae36351 (re-implemented from its proof text). preprocessing_log2 = 12.9 is the setup and generator row, which is also inside time_log2."
+  ],
+  "baseline_improved": "sha256-r39-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  "experiment_manifest": "experiments/manifest.json",
+  "heuristics": [
+    {
+      "id": "H1-random-function-model",
+      "role": "score-critical",
+      "statement": "Model premise, four clauses. Let F be a uniformly random function from 256-bit values to 256-bit values. For the fixed target, the probability that the single attempt of the search succeeds, with the walk g(x) = f(x) XOR q (f(x) = the complete 39-step SHA-256 digest of the 52-byte message P || x, P = 20 zero bytes, x the 32-byte chain value read as a 256-bit big-endian integer, q the fixed digest-plane mask of the generated circuit), is at least the probability P_F, over the fresh word r and a uniformly random F, that the same search succeeds when every evaluation of g is replaced by F (lazy sampling). Clauses: (a) distinct evaluated inputs collide with probability 2^-256, uniform and independent outputs; (b) the iterates from r + t have the first-collision law of a random mapping; (c) a point is a distinguished point (low 32 bits zero and the next 90 bits below 59) with probability 59 / 2^122, independently of the collision events; (d) adaptivity: the program chooses its points, and which trails finish, are cut or abort, from earlier outputs of g; given the whole history of the run and which later outputs are distinguished points, a fresh evaluation equals a given earlier non-distinguished output with probability at least 2^-256 (the lazy-sampling hazard of F). Proof.md Section 4 (Lemma 2) proves P_F >= 0.390000005693 for F from the hazard alone, by a supermartingale over the evaluations, with no conditioning on which trails finish and no fixed-size birthday step; (d) is the premise that g has that hazard. This is a comparison of two success events, not a statement about the entropy of r. Nothing else in the success bound is heuristic.",
+      "scope": "The fixed target sha256-r39-prefix-v1 restricted to the 52-byte messages P || x (P = 20 zero bytes), the 2^128-scale evaluation of g along about 4200 trails of mean length 2^116.12 started from r + t, 256 trails at a time. Not claimed for other messages, other round counts, or evaluations beyond this scale.",
+      "extrapolation": "Declared and not proved: an assumption, no proof is known. The full 256-bit functional graph, trails longer than 2^40 and 2^128 evaluations cannot be observed. The organizer experiments bssha-n18 and proj-k0-w256 run this program on the real target at reduced width (the search at width 18) and at full width for 512 points with 18-bit projections; they are program checks, no number of the claim is estimated from their counts, and no sampling premise is used. Extrapolation from these sizes to width 256 and 2^128 evaluations is by the premise only. If the collision hazard is (1 - eps) / N instead of 1 / N (clause (d), or a deficit eps in clause (a)), the plan of this program needs, to restore 0.39: 0.0062 bit for eps = 0.01, 0.0389 bit for eps = 0.05, 0.0759 bit for eps = 0.10, 0.2079 bit for eps = 0.25.",
+      "evidence_ids": [
+        "experiment:bssha-n18",
+        "experiment:proj-k0-w256",
+        "proof:83-181",
+        "proof:182-192",
+        "proof:193-199"
+      ],
+      "limitations": "A model premise about one fixed function, not a theorem: on the target the run is a deterministic function of r. It cannot be tested at width 256; the experiments reach width 18 and 18-bit projections of 512 points per trial and do not measure collision structure at 2^128 evaluations. The bound has no margin above 0.39 (B is the least multiple of 10^24 that reaches it), so any hazard deficit is repaired by extra time, priced above: 0.0062 bit for eps = 0.01 (Tp 59); 0.0389 bit for eps = 0.05 (Tp 57); 0.0759 bit for eps = 0.10 (Tp 56); 0.2079 bit for eps = 0.25 (Tp 51)."
+    },
+    {
+      "id": "H3-machine-convention",
+      "role": "score-critical",
+      "statement": "Score-critical premise of this entry (the same convention was accepted for our blake3 entry 0a9640ed). The cost model prices a 256-bit word RAM with loads and stores and fixes no register count, no rule for constants and no rule for packing independent computations in one word. This entry declares R = 1,024 registers of 256 bits (counted as 32,768 bytes of memory), 256-bit immediate operands and 256 independent lanes in each word (a bit-sliced word operation is one operation whatever it holds), and charges one operation for every XOR, AND, OR, NOT, set, register move, load, store, pointer addition, comparison and branch. The program is rolled (a straight part of 14271 records, a loop body of 5108 records run 8 times, a feed-forward of 492 records; 55630 records per batch, 55667 with the stage-1 test and the batch loop); the straight part uses all 1,024 registers, the loop body and the feed-forward 544. The organizer's reference count C = 2812 is used only as the unit. Every instruction is charged 36 bytes of code.",
+      "scope": "The loop body of one batch of 256 lanes with its straight part and feed-forward, the stage-1 test, the handlers, the recovery copy of the packed circuit and the memory account.",
+      "extrapolation": "None statistical: a declared convention, priced. Fewer registers would need spill code in the straight part that the shipped allocator does not produce; proof.md 3.5 gives estimates from the preceding study, not from this program: about 124.515 with 512 registers, 124.638 with 256, 124.833 with 128 (against 124.51302 with 1,024).",
+      "evidence_ids": [
+        "proof:28-33",
+        "proof:34-45",
+        "proof:46-56",
+        "proof:71-73",
+        "proof:74-79",
+        "proof:200-206"
+      ],
+      "limitations": "If a reviewer requires a different convention the score rises by the priced amount; the success argument and the set of colliding pairs are unaffected. The program is produced by the generator in the program (a C port emits the identical 19972 records in a 1 MiB sandbox, proof 3.6); the register allocation is part of it. The straight part has no spare register. With one lane per word the same program would cost 256 times more per trail."
+    }
+  ],
+  "submission_state": "ready",
+  "lane": "exploratory"
 }
