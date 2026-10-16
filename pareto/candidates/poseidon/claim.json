@@ -1,20 +1,36 @@
 {
-  "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "poseidon-orchard-r0-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 0,
-  "claim": {
-    "time_log2": 128.0,
-    "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
-    "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
-  },
-  "restrictions": [],
-  "baseline_improved": "poseidon-orchard-r0-nominal-v2",
+  "baseline_improved": "poseidon-orchard-r4-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
+  "claim": {
+    "memory_log2_bytes": 27.25982,
+    "nonuniform_advice_log2_bytes": 0,
+    "preprocessing_log2": 0,
+    "success_probability": 1,
+    "time_log2": 32.62611,
+    "time_unit": "target-compressions"
+  },
+  "heuristics": [
+    {
+      "evidence_ids": [
+        "proof:57-135",
+        "proof:141-184"
+      ],
+      "extrapolation": "None. The time is the executed total of one run of the shipped source, with the trial charged and the output stage and stage I included; the only bounds in it are the stated constants of stage I and of the stage bookkeeping (proof.md section 4.2); no estimate or other run enters it.",
+      "id": "H1-charging-rules",
+      "limitations": "The counts are produced by the instrumentation written into the source; the source is part of the proof text and was not run by the organizer. Word-level costs outside the stated rules (cache, bandwidth) are not part of the model.",
+      "role": "supporting",
+      "scope": "All stages of the executed run of proof.md section 4 at the target dimensions (m = 4882812 for the powering, N = 12582912 and N' = 6291456 in its transforms, 12582912 evaluations of the line).",
+      "statement": "The counts of proof.md sections 6 and 7 describe the executed program of proof.md section 9 under the stated rules: 1 per field operation (a Montgomery conversion is one multiplication), 1 per element load or store plus 1 address operation, 3 per loop iteration plus 2 per loop exit (the loops written with the macro FOR8 are unrolled eight times in the source and charged 3 per pass of eight; the generated kernels are straight-line), 1 per other executed index or control operation, 300 per reduced permutation evaluation, and a register file of 18 words of 256 bits per transform block (16 data words plus two working words: the twiddle operand and the butterfly temporary) as the only register assumption; the allocator (`xalloc`, `xfree`) is charged per executed operation, and the report formatting, the single write and the exit are charged in stage I. The run executed in single-thread mode (1 thread); no clone or futex thread-control system calls are executed."
+    }
+  ],
   "lane": "exploratory",
-  "heuristics": []
+  "restrictions": [
+    "Applies to the selected target poseidon-orchard-r4-prefix-v1 only (four partial rounds plus the eight fixed full rounds); the construction uses the first two full rounds being skippable on a line and gives no claim for other round counts.",
+    "Success probability 1 means: one deterministic procedure (centre sequence starting at centre c_1 = 2 tried in order until the first collision, at most 64 trials, a cap not reached) was executed once from the start on the fixed target and stopped with a collision after 1 trial; the time is the executed operation count of that run with the trial charged, and the memory its executed peak. The run used single-thread execution; thread control and parallel worker calls are not executed."
+  ],
+  "rounds": 4,
+  "schema_version": 3,
+  "submission_state": "ready",
+  "target_profile": "poseidon-orchard-r4-prefix-v1"
 }
