@@ -1,20 +1,66 @@
 {
-  "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "blake3-r1-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 1,
+  "baseline_improved": "blake3-r7-nominal-v2",
+  "certificate_manifest": "certificates/manifest.json",
   "claim": {
-    "time_log2": 128.0,
-    "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
+    "memory_log2_bytes": 19.41421,
+    "nonuniform_advice_log2_bytes": 0,
     "preprocessing_log2": 0,
     "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
+    "time_log2": 125.18367,
+    "time_unit": "target-compressions"
   },
-  "restrictions": [],
-  "baseline_improved": "blake3-r1-nominal-v2",
-  "certificate_manifest": "certificates/manifest.json",
+  "experiment_manifest": "experiments/manifest.json",
+  "heuristics": [
+    {
+      "id": "H1-fixed-target-random-function",
+      "statement": "For the fixed walk f(u) = LE256(BLAKE3_r7(0^32 || LE256(u))) XOR PD (seven rounds is the full BLAKE3 round count), the success probability of the frozen algorithm over its uniform offset rho is at least the random-function lower bound of proof Section P (exact value above 0.41393), and in particular at least 0.39.",
+      "role": "score-critical",
+      "scope": "Transfers the random-function theorem of proof Section P to the fixed target. The algorithm is generic and uses only that answers to fresh queries along the lane-serialized search are uniform and independent of the history.",
+      "extrapolation": "Experiments blake3-r7-slice-first-collision-w20-v1 and -w24-v1 test the first-duplicate mechanism on 512 independent 20- and 24-bit slices of the fixed target, with the same kernel, consecutive starts and lane serialization as the search; under the model the probability of a returned pair is exactly 0.448648 and 0.237789 (99 percent intervals 94-136 and 43-79 of 256, fixed before execution; family-wise false-alarm rate about 1.3 percent; power limited to shifts of roughly 0.07-0.08). Extrapolation from these widths to the 2^128-query full-width regime rests on the design and public analysis of full BLAKE3, not on measurement.",
+      "evidence_ids": [
+        "proof:524-581",
+        "proof:408-523",
+        "experiment:blake3-r7-slice-first-collision-w20-v1",
+        "experiment:blake3-r7-slice-first-collision-w24-v1"
+      ],
+      "limitations": "Plausible, not established. The experiments cannot test full-width distinguished-point and key events, the full function rather than its slices, or properties appearing only at full scale. The random-function event cover has been reviewed by its authors only. The 14-bit implementation diagnostic is not used as probability evidence."
+    },
+    {
+      "id": "H-machine-convention",
+      "statement": "The classical word RAM of the cost model is used with direct addressing: each instruction names its operand words directly and costs one primitive operation; the 823 directly addressed words are ordinary memory, all counted at 32 bytes. The algorithm is the fixed program image of proof Section 3.2 (5-byte kernel, 8-byte control and 40-byte constant formats; 253,877 bytes), counted in memory; COMP computes the complete one-block root compression of M(a) for one compression unit.",
+      "role": "score-critical",
+      "scope": "Accounting convention for proof Sections 3, M and L. The deterministic event bounds and hash-evaluation counts do not depend on it.",
+      "extrapolation": "The image encoding is concrete: the declared experiment serializes every program, decodes it, asserts the round trip and image size, and executes only the decoded program. Under a 36-byte-per-instruction encoding memory would be 2^21.07376 and the normalized score 126.25743. If every kernel instruction were also charged two operand loads and one store, the time bound would be 2^127.16679, still below the nominal 128.",
+      "evidence_ids": [
+        "proof:158-213",
+        "proof:310-321",
+        "proof:391-407",
+        "experiment:blake3-r7-bounded-machine-w14-v1"
+      ],
+      "limitations": "The claimed improvement over the published round-7 reference depends on this convention. The Python generator that produces the image is provenance tooling; its time and workspace are not part of the attack and are not bounded."
+    },
+    {
+      "id": "H-kernel-all-inputs",
+      "statement": "The generated 46,113-instruction kernel computes the planes of f(u) from the planes of u for every 256-bit input u.",
+      "role": "score-critical",
+      "scope": "Correctness of the bitsliced main-loop evaluation, on which the success-probability argument depends. Recovery and the final check use the scalar compression and verify the returned pair explicitly.",
+      "extrapolation": "The declared experiment checks every gate-construction rule exhaustively on all operand classes (6,191 cases over all input assignments) and proves statically that the register-allocated listing computes the gate DAG for every input. The word-level composition follows the BLAKE3 specification line for line and is cross-checked by sampled full-digest agreement with scalar BLAKE3, including every organizer-verified slice pair.",
+      "evidence_ids": [
+        "proof:222-249",
+        "experiment:blake3-r7-bounded-machine-w14-v1"
+      ],
+      "limitations": "The composition step (that build_listing applies the BLAKE3 operations in specification order) is established by inspection and sampling, not by a mechanical equivalence proof."
+    }
+  ],
   "lane": "exploratory",
-  "heuristics": []
+  "restrictions": [
+    "Ordinary collision construction for the complete seven-round BLAKE3 hash (blake3-r7-prefix-v1) on 64-byte messages 0^32 || LE256(u); no complete collision is exhibited and the attack is not executed at full scale.",
+    "time_log2 and memory_log2_bytes are worst-case bounds derived from the fixed program image under the declared H-machine convention; under a 36-byte-per-instruction encoding the normalized score would be 126.25743.",
+    "success_probability rests on the random-function theorem of proof Section P (reviewed by its authors only) and the declared heuristic H1, supported by exact-law slice experiments at widths 20 and 24; the 14-bit machine diagnostic is implementation evidence only."
+  ],
+  "rounds": 7,
+  "schema_version": 3,
+  "submission_state": "ready",
+  "target_profile": "blake3-r7-prefix-v1"
 }
