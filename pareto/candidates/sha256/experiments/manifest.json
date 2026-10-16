@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "claw-kernel-r39",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/clawexp.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "H3 (machine convention) and the claw construction's scalar walk function F. Each trial derives a chaining value from the organizer seed, evaluates the scalar walk function F(x) = f(x) for odd x and F(x) = Sigma0(x) + MAJ(x, A-1, A-2) + Sigma1(E0) + CH(E0, E-1, E-2) - x for even x on 3,000 random 32-bit inputs, and checks internal consistency. No messages are returned: this is a kernel check, not a collision finder. Observations (untrusted): mismatches (0 expected) and tested count per trial.",
+      "hypothesis": "Returned pairs: 0 (every trial returns null pairs). Full collisions: 0. Every trial reports 0 mismatches on 3,000 scalar evaluations of F against its definition. The walk function separates odd inputs (f = sigma0 - id) from even inputs (the compression-derived side) by the low bit, matching proof.md Section 6."
+    }
+  ]
+}
