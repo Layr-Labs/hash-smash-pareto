@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "claw-construction-r39",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/clawexp.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "The claw construction's walk function F and its derivation from the SHA-256 round function. For each trial, a chaining value cv is derived from the organiser seed. The walk function's cv-dependent constants (e0_base, Am1, Am2, Em1, Em2) are derived from the SHA-256 state-transition identities at row 0. Then 4096 random inputs are tested: (a) the walk function's E0 = a0 + e0_base is verified against the new-E register from an independent SHA-256 step-0 computation; (b) the walk function's even-branch core (S0 + MAJ + S1 + CH with the identified registers) is verified against the value extracted from two full SHA-256 compression steps; (c) the odd-branch identity sigma0(u) = f(u) + u is verified between bitwise sigma0 and arithmetic f. No messages are returned: this is an algebraic check, not a collision finder.",
+      "hypothesis": "Returned pairs: 0 (every trial returns null pairs). Full collisions: 0. Every trial reports 0 mismatches on all three tests (e0, core, odd) across 4096 inputs. The walk function's register identifications (Am1 = cv[0], Am2 = cv[1], Em1 = cv[4], Em2 = cv[5], e0_base = cv[3] - S0(cv[0]) - MAJ(cv[0], cv[1], cv[2])) correctly capture the SHA-256 state transition at rows 0 and 1, confirming the algebraic basis of the claw construction (proof.md Section 2)."
+    }
+  ]
+}
