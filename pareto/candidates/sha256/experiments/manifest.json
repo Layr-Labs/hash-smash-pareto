@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "sliced-n18",
+      "kind": "python-message-pairs-v1",
+      "scope": "The sha256-r64-prefix-v1 target with 52-byte messages P || x (P the program's constant 20-byte prefix, x the 32-byte chain value, one block), collision of the low 18 bits of the complete digest. Each trial runs ONE attempt of the shipped 256-lane bit-sliced search on the chain f (the low 18 bits of the digest minus the IV; plan(18): distinguished points with the low bit zero, 5 batches of 256 lanes, age cap 4 batches, table, recovery with the packed 64-step kernel) from a word derived from the trial seed, with no amplification, and returns the two 52-byte messages M(x) and M(y) when the attempt found a pair, two nulls otherwise. At this width a key match whose recovery finds no pair (the start of one trail lies on the other trail) restarts the lane instead of halting the attempt (observation target_robin); the width-256 program halts. The same program also runs the same attempt on an ideal function of the same width (keyed blake2b) and one family-law run with a fresh random 20-byte prefix at n = 10; these are untrusted observations only.",
+      "hypothesis": "For every returned pair the two messages are distinct and their complete 64-step digests agree in the low 18 bits (digest bytes 29, 30 and 31, the low 2 bits of byte 29). This is exact: the program recovers a merge of two trails of the chain f at width 18, walking them with the packed kernel after finding them with the sliced kernel. The number of trials that return a pair is the number of single attempts that succeeded; it is reported as a program check, with the ideal-function control as an untrusted observation, and no probability, interval or sampling inference is drawn from it. Observations (untrusted, the program's own): target_ok, ideal_ok, target_batches, target_finished, target_cut, target_robin, target_halt, ideal_halt, t1_steps. Not shown: any width-256 cost or success probability.",
+      "program": "experiments/shrho64.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "000000000000000000000000000000000000000000000000000000000003ffff",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "sliced-k0-w256",
+      "kind": "python-message-pairs-v1",
+      "scope": "The sha256-r64-prefix-v1 target with 52-byte messages P || x (P the program's constant 20-byte prefix) at full width 256. Each trial evaluates 256 points x in one batch of the shipped bit-sliced kernel (source by trial index mod 3: uniform inputs from the seed, counter inputs r + i, or 128 seed-derived starts and their images under f), and returns two distinct points whose complete digests agree in the low 14 bits when the set contains such a pair, two nulls otherwise. Untrusted observations: the numbers of equal pairs in seven 14-bit projections of f, and packed_agree = 1 when the packed 64-step recovery kernel gives the same f on the first 7 lanes.",
+      "hypothesis": "For every returned pair the two messages M(x) and M(y) are distinct and their complete 64-step digests agree in the low 14 bits (digest byte 31 and the low 6 bits of byte 30). This is exact: it checks the sliced kernel, the lane transposition and the message construction at full width. The number of returned pairs, the projection counts and packed_agree are reported as program checks, not as estimates, and no inference is drawn from them. Observations (untrusted): source, packed_agree, dup_w0, dup_w3, dup_w7, dup_xor8, dup_sum8, dup_p01, dup_p23. Not shown: collision structure at 2^128 evaluations.",
+      "program": "experiments/shrho64.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "0000000000000000000000000000000000000000000000000000000000003fff",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    }
+  ]
+}
