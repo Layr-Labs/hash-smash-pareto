@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "claw-construction-r39",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/clawexp.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "The claw construction's walk function F and its derivation from the SHA-256 round function. For each trial, a chaining value cv is derived from the organiser seed. The walk function's cv-dependent constants (e0_base, Am1, Am2, Em1, Em2) are derived from the SHA-256 state-transition identities at row 0. Then 1024 random inputs are tested: (a) the walk function's E0 = a0 + e0_base is verified against the new-E register from an independent SHA-256 step-0 computation; (b) the walk function's even-branch core (S0 + MAJ + S1 + CH with the identified registers) is verified against the value extracted from two SHA-256 compression steps; (c) the odd-branch identity sigma0(u) = f(u) + u is verified between bitwise sigma0 and arithmetic f. No messages are returned: this is an algebraic check, not a collision finder.",
+      "hypothesis": "Returned pairs: 0 (every trial returns null pairs). Full collisions: 0. Every trial reports 0 mismatches on all three tests (e0, core, odd) across 1024 inputs. The walk function's register identifications (Am1 = cv[0], Am2 = cv[1], Em1 = cv[4], Em2 = cv[5], e0_base = cv[3] - S0(cv[0]) - MAJ(cv[0], cv[1], cv[2])) correctly capture the SHA-256 state transition at rows 0 and 1, confirming the algebraic basis of the claw construction (proof.md Section 2)."
+    },
+    {
+      "id": "sidecond-rate-r39",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/sidecond.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "Side-condition sigma0-difference rates p8 and p9. For each trial, samples 2^14 random W8 (resp. W9) values and checks the exact modular difference condition sigma0(W + D) - sigma0(W) == DS. The modular differences D8=0x40000000, DS8=0x087ff000, D9=0xf7801000, DS9=0x03010000 are derived from the filed dense base (b1). This independently verifies the rates p8 = 2^-3.830 and p9 = 2^-5.978 that were exhaustively computed by rowstat.c over all 2^32 values.",
+      "hypothesis": "Returned pairs: 0. Every trial reports log2_p8 within 0.15 of -3.830 and log2_p9 within 0.15 of -5.978. The sampling rates confirm the exhaustive counts (expected ~1150 hits for p8, ~260 for p9 per trial)."
+    },
+    {
+      "id": "claw-existence-r39",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/clawverify.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "Claw existence and preimage verification. A single 2^19-entry preimage table for f(u) = sigma0(u) - u over odd u is built once before all trials. For each trial, derives a chaining value cv from the seed and searches 2^14 random a0 values for claws (f(u) = g - W0 - T1_base_1, where g = bca1c321). This demonstrates that the claw construction's preimage search produces valid (a0, u) pairs at the predicted rate: with table coverage ~2^-13 per target and 2^14 targets, we expect ~3 claws per trial.",
+      "hypothesis": "Returned pairs: 0. Most trials find at least 1 claw (expected ~3). All found claws have preimage_verified == claws_found, confirming sigma0(u) - u equals the target derived from the SHA-256 step equations."
+    }
+  ]
+}
