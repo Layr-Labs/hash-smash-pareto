@@ -1,0 +1,17 @@
+{
+ "schema_version": 1,
+ "experiments": [
+  {
+   "id": "linewalk-10bit",
+   "kind": "python-message-pairs-v1",
+   "scope": "Reduced-width run of the filed attempt's own walk on the selected Orchard Poseidon target at its own round count: on the input line message(v + rho) on which rounds 0 and 1 are affine, the walk v -> first 10 bits of the digest is run to its first repeat and the two distinct values leading into it are returned as messages; the event is that the first 10 bits of the big-endian reading of the 32-byte digest agree for the two distinct canonical messages. No full collision is expected or claimed.",
+   "hypothesis": "The walk on the line at this round count repeats after about 40 evaluations, as a random 10-bit function would, and every trial returns a pair whose digests agree on those 10 bits. Checks the row's own line map and round function at one reduced width; it says nothing about the full-width map, the cost or the success probability.",
+   "program": "experiments/exp_row.py",
+   "event": {
+    "kind": "digest-xor-mask",
+    "mask_hex": "ffc0000000000000000000000000000000000000000000000000000000000000",
+    "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  }
+ ]
+}
