@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "rho-w22",
+      "kind": "python-message-pairs-v1",
+      "scope": "The search of proof.md Section 4 on the exact sha3-256-r24-prefix-v1 hash, run end to end at width 22. experiments/s24ls.py regenerates the claimed program of Section 3 (the same construction as the C generator of Appendix B, with the polarity pattern 3228195 and boundary size 975 that the generator selects; the text listing must hash to the SHA-256 printed in Section 3.1 and the step count must be 181,705, else the program stops), checks it against a plain 24-round implementation (two chained steps of 256 points), and executes it on Python integers on a 1,018-register file and the spill cells: one integer holds a plane for all trials of the request (trial t in bits 256 t to 256 t + 255), trials never interact. Points are 22-bit values u (upper bits zero), the message is m(u) of Section 2 (128 bytes), and after every step the planes 22 to 255 are set to zero (the only difference from the full-size program). Per trial: 256 walks from starts rho + i (rho from SHAKE-256 of the trial seed), distinguished point = 4 low image bits zero, cap 128 steps, at most 3,000 trails and 400 steps per attempt, the packed table of proof.md Section 4 (1,000 words of three 85-bit fields: key = the 22-bit end, used bit, trail number; no length; linear probing over words), restarts after a DP or at the deadline, and on a match the rebuild of the stored trail's length by replaying it to its first DP, then the replay with the plain implementation; a replay that returns nothing ends the attempt (Section 4), never a restart. One attempt per trial: it returns two different messages whose 24-round digests agree on the 22 low bits, or nulls when the attempt halts.",
+      "hypothesis": "Every returned pair is two different messages m(a), m(b) whose digests agree on the 22 masked bits (bytes 0 and 1 and the low 6 bits of byte 2), found by walks, the table and the replay; a trial whose attempt halts returns nulls. Observations (untrusted): steps of the attempt, trails, dead walks, attempts, records stored, replayed evaluations (rebuild included), restarts after a DP (R_dp) and at the deadline (K_cut), stop code (0 pair, 1 failed replay, 2 trail budget U, 3 step budget Tb); the program asserts idn - 256 = R_dp + K_cut. This is a program check: it shows that the claimed program runs end to end and returns pairs the organizer recomputes. No frequency, step count or timing from this run is used as an estimate or as evidence for a premise, and nothing about the cost at 256 bits is inferred from it.",
+      "program": "experiments/s24ls.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "ffff3f0000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "proj-w256",
+      "kind": "python-message-pairs-v1",
+      "scope": "The same regenerated program at full width: per trial 256 uniform 256-bit points (SHAKE-256 of the trial seed), eight chained steps of the full program (2,048 evaluations per trial), and the first pair, in step-major order, of distinct evaluated inputs whose images agree on the 22 low bits; the two inputs are recomputed with the plain implementation and returned as messages m(a), m(b). A trial without such a pair returns two nulls. A success is a 22-bit partial match, not a collision.",
+      "hypothesis": "Program check at full width, not an estimate: every returned pair is recomputed by the organizer, so a wrong program would give digests that do not match or no pair. The number of successful trials is not interpreted: the seeds are the organizer's public ones, no claim is made that they are unselected or representative, and no success probability, interval or premise is taken from the count.",
+      "program": "experiments/s24ls.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "ffff3f0000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    }
+  ]
+}
