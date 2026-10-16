@@ -143,9 +143,74 @@ class PythonOutputTests(unittest.TestCase):
 
     def test_selected_target_mask_is_not_collision(self):
         rows = [{"trial": 0, "message_a_hex": "01", "message_b_hex": "03"}]
-        result = self.run_rows(rows, event={"kind": "digest-xor-mask", "mask_hex": "01", "expected_hex": "00"}, callback=lambda value: value or b"\x00")["experiments"][0]
+        result = self.run_rows(rows, event={"kind": "digest-xor-mask", "mask_hex": "01", "expected_hex": "00"}, callback=lambda value: value[:1] or b"\x00")["experiments"][0]
         self.assertTrue(result["checked_trials"][0]["success"])
         self.assertFalse(result["checked_trials"][0]["full_collision"])
+
+    def test_supported_target_python_experiments(self):
+        from verifier.hash_functions import digest
+
+        message_a, message_b = bytes(64), b"\x01" + bytes(63)
+        rows = [
+            {"trial": 0, "message_a_hex": message_a.hex(), "message_b_hex": message_b.hex()},
+            {"trial": 1, "message_a_hex": message_a.hex(), "message_b_hex": message_a.hex()},
+            {"trial": 2, "message_a_hex": None, "message_b_hex": None},
+        ]
+        for algorithm, rounds in (
+            ("sha256", 1), ("sha256", 64), ("sha3_256", 1), ("sha3_256", 24),
+            ("blake3", 1), ("blake3", 7),
+            ("poseidon-orchard", 0), ("poseidon-orchard", 1),
+            ("poseidon-orchard", 3), ("poseidon-orchard", 56),
+        ):
+            digest_a, digest_b = (digest(message, algorithm, rounds) for message in (message_a, message_b))
+            events = [
+                {"kind": "full-collision"},
+                {"kind": "digest-xor-mask", "mask_hex": "ff" * 32,
+                 "expected_hex": bytes(a ^ b for a, b in zip(digest_a, digest_b)).hex()},
+            ]
+            for event in events:
+                with self.subTest(algorithm=algorithm, rounds=rounds, event=event["kind"]):
+                    with patch("experiments.runner._run_docker", return_value=output(rows)) as docker:
+                        report = run_experiments(
+                            program(event=event), {"experiments/probe.py": b"pass\n"},
+                            limits=ExperimentLimits(trials=3),
+                            digest_fn=lambda value: digest(value, algorithm, rounds), **TARGET,
+                        )
+                    self.assertEqual(docker.call_count, 2)
+                    self.assertEqual(docker.call_args_list[0], docker.call_args_list[1])
+                    result = report["experiments"][0]
+                    checked = result["checked_trials"]
+                    self.assertEqual(checked[0]["digest_a_hex"], digest_a.hex())
+                    self.assertEqual(checked[0]["digest_b_hex"], digest_b.hex())
+                    self.assertEqual(checked[0]["full_collision"], digest_a == digest_b)
+                    self.assertEqual(result["successes"], int(event["kind"] == "digest-xor-mask" or digest_a == digest_b))
+                    self.assertFalse(checked[1]["success"])
+                    self.assertEqual(checked[2]["reason"], "no_pair_returned")
+                    self.assertEqual(result["organizer_digest_evaluations"], 5)
+                    self.assertEqual(report, verify_report_integrity(report))
+
+    def test_orchard_mask_width_checked_even_without_returned_pairs(self):
+        from verifier.poseidon import digest
+
+        rows = [{"trial": 0, "message_a_hex": None, "message_b_hex": None}]
+        for width in (31, 32, 33):
+            event = {"kind": "digest-xor-mask", "mask_hex": "ff" * width, "expected_hex": "00" * width}
+            with self.subTest(width=width):
+                if width == 32:
+                    result = self.run_rows(rows, event=event, callback=lambda value: digest(value, 3))["experiments"][0]
+                    self.assertEqual(result["successes"], 0)
+                    self.assertEqual(result["organizer_digest_evaluations"], 1)
+                else:
+                    with self.assertRaisesRegex(ExperimentError, "mask length"):
+                        self.run_rows(rows, event=event, callback=lambda value: digest(value, 3))
+
+    def test_orchard_returned_messages_must_still_be_canonical(self):
+        from verifier.poseidon import digest, P, PoseidonInputError
+
+        for invalid in (b"", bytes(63), bytes(65), P.to_bytes(32, "little") + bytes(32), bytes(32) + P.to_bytes(32, "little")):
+            rows = [{"trial": 0, "message_a_hex": bytes(64).hex(), "message_b_hex": invalid.hex()}]
+            with self.subTest(message=invalid.hex()), self.assertRaises(PoseidonInputError):
+                self.run_rows(rows, callback=lambda value: digest(value, 3))
 
     def test_output_injection_and_missing_trials_rejected(self):
         invalids = [
