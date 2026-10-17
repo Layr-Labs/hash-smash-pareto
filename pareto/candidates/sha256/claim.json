@@ -1,20 +1,104 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha256-r37-prefix-v1",
+  "submission_state": "ready",
+  "target_profile": "sha256-r39-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 37,
-  "claim": {
-    "time_log2": 128.0,
-    "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
-    "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
-  },
-  "restrictions": [],
-  "baseline_improved": "sha256-r37-nominal-v2",
-  "certificate_manifest": "certificates/manifest.json",
+  "rounds": 39,
   "lane": "exploratory",
-  "heuristics": []
+  "baseline_improved": "sha256-r39-nominal-v2",
+  "certificate_manifest": "certificates/manifest.json",
+  "experiment_manifest": "experiments/manifest.json",
+  "claim": {
+    "time_log2": 120.3,
+    "time_unit": "target-compressions",
+    "memory_log2_bytes": 20,
+    "preprocessing_log2": 36,
+    "success_probability": 0.39,
+    "nonuniform_advice_log2_bytes": 11
+  },
+  "restrictions": [
+    "Target sha256-r39-prefix-v1: SHA-256 steps 0..38 on every padded 512-bit block, standard SHA-256 IV once before block 0, standard FIPS 180-4 padding, Davies-Meyer feed-forward, equality on all eight 32-bit digest words; outputs two distinct 128-byte (two-block) messages M0 || M1 and M0 || M1' with equal second-block chaining values (and hence equal padded digests).",
+    "Construction: ordinary two-block differential attack using the bipartite claw decomposition W16(a0, u) = g + (sigma0(u) - u) - F_even(a0, CV1) (mod 2^32) at step 16 solved via a 65,536-slot (768 KiB) van Oorschot-Wiener (vOW) distinguished-point walk, the self-contained 584-byte Table 23 dense base (ePrint 2026/1120) derived in 2^34 * 2^2 = 2^36 one-time preprocessing and verified in O(1) online memory, the exact 320-bit unitriangular bijection Phi connecting forward (CV1, a0, a1) to (W0[8], W0[9], W0[16..23]) with exact dual-parity fiber law Ω_dual = {(a0 & 1) == 0, (u & 1) == 1} via (W0[8] & 1) == w9_even_a0_bit(W0[9]) and the 7-step downward recurrence W0[k] = C_k - sigma0(W0[k+1]) (mod 2^32) for k = 7..1 (Corollary 2.3), exact GF(2) affine subspaces on rows 19..22 including the relaxed row-19/20 (d24, d25) in {0, 1} signed modular transition (subs[(20, 0)] and subs[(20, 1)], +0.8074 bits), and the accepted event across steps 18..38.",
+    "Cost: total work <= 2^120.30 target compressions (C = 2812 word ops per 39-step compression), including Stage-1 kernel + DP detection, Stage-2 recovery + control overhead (77 ops/batch in simd7, 98 ops/batch in stream7), itemized non-kernel overhead (321.16 ops/claw: 18 ops/DP hit, 26 ops/raw claw, 11.60 ops staged filter, and 2812+260 = 3072 ops per 2^26 window with cv_gen tag). Packed 7-lane x 36-bit kernel traced at 67 ops (Stage 2) and 71 ops (Stage 1 SWAR DP, 14 registers, 0 spills). Under the 64-seed 99% LCB (-75.4278 log / -75.4116 lin): stream7 SWAR costs 2^119.5817, stream7 unpacked 2^119.8631, simd7 SWAR 2^119.9381, and simd7 unpacked 2^120.1625 (2^120.1659 at 4-window min 33,772). Under the live 16-trial Python 99% LCB (-75.6713 log / -75.6340 lin): stream7 SWAR costs 2^119.8252, stream7 unpacked 2^120.1066, and simd7 SWAR 2^120.1816 (all <= 2^120.30; simd7 unpacked is 2^120.4060 log / 2^120.3687 lin).",
+    "Per-claw success probability 2^-117.235507 (64-seed 99% LCB) / 2^-117.479007 (live 16-trial 99% LCB): exact all-2^32 active-bit theorem for row-8 in_F8 (1,152 / 2^14 = 9/128, bit-0 invariant) and row-9 in_F9 (6,144-mask Lipmaa-Moriai check + 2,080 / 2^17 = 65/4096) giving p8 * p9 = 585 / 524,288 = 2^-9.807707, exact row-17 transition |G17(0xbca1c321)| = 1 -> p17 = 2^-32 at W17 = 0x71e9ba98, exact forward-to-tail distribution equivalence on the dual-parity fiber Ω_dual via Phi, w9_even_a0_bit, and the 7-step downward u = W0[1] filter (Theorem 2.2 & Corollary 2.3), and tail rows 18..38 probability p_tail >= 2^-75.4278 from a 64-seed Fisher-Yates SMC study (64/64 nonzero, 3,089 hits, log LCB -75.4278, lin LCB -75.4116) and >= 2^-75.6713 from the 16 live SMC trials in experiment:r39-tail-sfs (16/16 nonzero, 173 live SFS collisions with 100% a0 even and u odd, log LCB -75.6713, lin LCB -75.6340). Required claws N_claws = 2^116.218955 across 2^101.172 first blocks for Pr >= 0.39 (conditional on H1-H5).",
+    "Memory 823,296 bytes < 2^20 bytes (786,432-byte vOW table + 18,432-byte code + 2,048-byte register file + 16,384-byte advice and scratch), giving memory_log2_bytes = 20 and primary score time_log2 = 120.30 under collision-frontier-v5 (120.30 + max(0, 20 - 20) = 120.30 under hashsmash-scalar-tm-v1)."
+  ],
+  "heuristics": [
+    {
+      "id": "H1-single-trial-chaining-value",
+      "role": "score-critical",
+      "statement": "For uniform 512-bit first blocks M0, the 39-step compression output CV1 = sha256_r39_compress(IV, M0) behaves as an independent random 256-bit chaining value with respect to the bipartite walk function F_step, the row-16/row-17 message-schedule bridge, and the steps 18..38 differential tail, so repeating the 2^26-evaluation vOW window across N_FB = 2^101.172 distinct first blocks yields independent per-window claw trials with Poisson success probability 1 - exp(-N_claws * p_claw) >= 0.39 (lambda = 0.49429635, conditional on H1-H5).",
+      "scope": "Pseudorandomness of first-block chaining values CV1 and inter-block independence across the 2^101.172 vOW windows.",
+      "extrapolation": "Lemma 2.1, Theorem 2.2, and Lemma 3.1 prove W16(a0, u) = g + (sigma0(u) - u) - F_even(a0, CV1) (mod 2^32) and the 320-bit unitriangular bijection Phi : (CV1, a0, a1) <-> (W0[8], W0[9], W0[16..23]) algebraically with probability 1 for every CV1. Across the 4 independent CVs in ledger() (33,820, 33,772, 33,962, and 33,858 distinct claws per 2^26 window; relative SD 0.23%) and across 16 live independent seed-derived first blocks M0 in experiment:r39-claw-vow (10,240 unselected vOW walks across 16 CVs, gated on Trial 16 by inter_cv_disp_ratio = 1.2436 <= 2.2), claw yield and side-condition survival show no inter-block overdispersion.",
+      "evidence_ids": [
+        "proof:23-93",
+        "proof:179-193",
+        "proof:295-305",
+        "proof:341-348",
+        "experiment:r39-claw-vow"
+      ],
+      "limitations": "Each first block M0 contributes an expected mean of 33,853.0 distinct claws (per-block collision probability ~ 2^-102.2), so Poisson amplification across 2^101.172 independent first blocks is exact to within O(2^-102)."
+    },
+    {
+      "id": "H2-packed-7lane-machine-model",
+      "role": "score-critical",
+      "statement": "Under the 64-register 256-bit word-RAM cost model (C = 2812 word operations per 39-step compression), 7 independent 32-bit lanes packed at a 36-bit stride with 4-bit guard bands execute one F_step evaluation in 67 instructions for Stage-2 recovery and 71 instructions for Stage-1 (including the 4-op SWAR zero-field DP detector ((out & 0x7F) + 0x7F) ^ 0x80 & 0x80) using 14 peak live registers and 0 register spills, and with Stage-2 control overhead (+8 ops/batch in simd7 -> 77 ops/batch; +29 ops/batch in stream7 -> 98 ops/batch) and the itemized 321.1596 non-kernel ops/distinct claw (18 ops/DP hit = 278.1745 ops, 26 ops/raw claw recover_a1 = 31.2938 ops, 11.0 + (65/4096)*28 + (585/524288)*140 = 11.6005 ops staged filter + dedup probe, and 2812 + 260 = 3072 ops per 2^26 window = 0.0907 ops/claw with 18-bit cv_gen window tag) included, one deduplicated distinct claw costs 28,926.12 word operations (10.2867 compressions, total work 2^119.5817 under 64-seed log LCB / 2^119.5655 under 64-seed linear LCB / 2^119.8252 under live 16-trial log LCB) under stream7 SWAR, 35,156.40 word operations (12.5023 compressions, total work 2^119.8631 / 2^120.1066) under stream7 unpacked, 37,033.69 word operations (13.1699 compressions, total work 2^119.9381 / 2^120.1816) under simd7 SWAR, or 43,263.97 word operations (15.3855 compressions, total work 2^120.1625 at the 4-window mean 33,853.0 and 2^120.1659 at the 4-window minimum 33,772 under the 64-seed LCB, and 2^120.4060 log / 2^120.3687 lin under the live 16-trial LCB) under simd7 unpacked.",
+      "scope": "Word-operation count per 7-lane packed F_step batch in Stage 1 and Stage 2, itemized non-kernel operation counts (DP handler, recover_a1, staged filter, per-window CV1 setup), and total amortized word operations per deduplicated distinct claw.",
+      "extrapolation": "Same 7-lane x 36-bit convention as accepted 39-step baselines 8681f9bd (shrho.py) and f86da3c1. Every instruction of both the 67-op Stage-2 kernel and the 71-op Stage-1 SWAR DP kernel is traced by Tracer (build_traced_step), register-allocated via linear scan (allocate -> 14 registers, 0 spills), and verified bit-for-bit against scalar F_step and unpacked lane-by-lane DP detection across 1,792 lanes in experiment:r39-claw-vow, which also executes both recover_1pair_simd7 (simd7) and recover_7pairs_packed (stream7, len(pairs) == 7) with 0 mismatches. Section 6.2 itemizes every non-kernel operation (321.1596 ops/claw total).",
+      "evidence_ids": [
+        "proof:124-176",
+        "proof:194-231",
+        "proof:300-330",
+        "proof:341-348",
+        "experiment:r39-claw-vow"
+      ],
+      "limitations": "Our claimed bound 2^120.30 covers all four Stage-1/Stage-2 regimes under the 64-seed 99% LCB (up to 2^120.1659 at the 4-window minimum 33,772 under simd7 unpacked) and covers all three SWAR/stream7 regimes under the live 16-trial Python 99% LCB (2^119.8252 stream7 SWAR, 2^120.1066 stream7 unpacked, 2^120.1816 simd7 SWAR; the double-fallback simd7 unpacked regime under the live 16-trial LCB is 2^120.4060 log / 2^120.3687 lin)."
+    },
+    {
+      "id": "H3-vow-distinct-claw-rate",
+      "role": "score-critical",
+      "statement": "A 65,536-slot (768 KiB) two-stage vOW distinguished-point search with dp_bits = 7 and max_steps = 2048 switched to a fresh first-block chaining value CV1 every 2^26 walk evaluations yields an expected mean of 33,853.0 deduplicated distinct claws (a0, u) per 2^26 evaluations (1,982.36 walk evaluations per distinct claw, deduplication ratio 135,412 / 162,983 = 0.8308; 4-window empirical range [33,772, 33,962], with even the 4-window minimum 33,772 costing 2^120.1659 <= 2^120.30 under 96-op unpacked simd7 at the 64-seed LCB), and deduplicated vOW-recovered claws behave as uniform on the unconstrained message-schedule degrees of freedom so that they satisfy the row-8 condition in_F8(W8) and row-9 condition in_F9(W9) with (W8 & 1) == w9_even_a0_bit(W9) at the exact active-bit product rate p8 * p9 = (1,152 / 2^14) * (2,080 / 2^17) = (9/128) * (65/4096) = 585 / 524,288 = 2^-9.807707.",
+      "scope": "vOW distinct-claw yield per 2^26 walk evaluations, uniformity of deduplicated vOW-recovered claws on unconstrained schedule degrees of freedom, and joint row-8/row-9 side-condition survival rate.",
+      "extrapolation": "Theorem 2.2(1)-(2) and Corollary 2.3 prove that a1 <-> W0[9] and (given a1) a0 <-> W0[8] are unit-slope affine bijections for every CV1 with (a0 & 1) == 0 iff (W0[8] & 1) == w9_even_a0_bit(W0[9]). Theorem 7.1 (executed live in enumerate_active_f8_f9 on Trial 16 of experiment:r39-claw-vow) proves over all 2^32 words via the Binary Subtraction Invariance Lemma and the 6,144-mask Lipmaa-Moriai borrow-transition exhaustion that in_F8 depends exclusively on the 14-bit mask 0xCC19E60C (1,152 / 16,384 = 9/128 exact, with bit 0 strictly inactive so even-a0 parity cannot bias W8) and in_F9 depends exclusively on the 17-bit mask 0xF9983C0F (2,080 / 131,072 = 65/4096 exact). In ledger(), 4 x 2^26 vOW evaluations produced 135,412 distinct claws and 157 joint F8 cap F9 passes vs 151.10 expected (ratio 1.039). In experiment:r39-claw-vow, Trials 0..15 run live unselected vOW walks across 16 CVs (10,240 walks total, 485 distinct claws) and live unselected full-32-bit W16 = 0xbca1c321 claw searches (27 full-32-bit claws), verifying w9_even_a0_bit(w9) == (w8 & 1) on 100% of claws and gating the 17th returned pair on tot_live_distinct >= 380, 0.80 <= dedup_ratio <= 0.96, tot_full32_claws >= 8, 0.025 <= f8_rate <= 0.120, and 0.002 <= f9_rate <= 0.040.",
+      "evidence_ids": [
+        "proof:55-78",
+        "proof:179-231",
+        "proof:234-249",
+        "proof:341-348",
+        "experiment:r39-claw-vow",
+        "experiment:r39-tail-sfs"
+      ],
+      "limitations": "Empirical validation combines the all-2^32 active-bit theorem for F8 (2^14 states) and F9 (6,144-mask Lipmaa-Moriai check + 2^17 states), 4 x 2^26 full-scale vOW benchmark data (135,412 distinct claws, 157 joint passes vs 151.10 expected), and live gated 16-CV vOW and full-32-bit claw trials inside the organizer budget."
+    },
+    {
+      "id": "H4-accepted-claw-event",
+      "role": "score-critical",
+      "statement": "Conditioned on a deduplicated vOW claw (a0, u) satisfying (a0 & 1) == 0, (u & 1) == 1, W16(a0, u) = 0xbca1c321, W8 in F8, and W9 in F9, the vOW-recovered pair behaves as uniform on the unconstrained message-schedule degrees of freedom so that it satisfies the row-17 transition W17(a0, u) = 0x71e9ba98 in G17(0xbca1c321) with probability p17 = 2^-32, and conditioned on the full bridge event E_bridge = {W8 in F8, W9 in F9, (a0 & 1) == 0, (u & 1) == 1, W16 = 0xbca1c321, W17 = 0x71e9ba98}, the forward-to-tail conditional distribution of the remaining tail inputs (W0[8], W0[9], W0[18..23]) matches the exact uniform measure on the dual-parity fiber Ω_dual = {(w8, w9, w18..w23) in F8 x F9 x (Z/2^32Z)^6 : (w8 & 1) == w9_even_a0_bit(w9) and (u & 1) == 1} sampled by the steps 18..38 SMC estimator (with exact Bayes factor P_{Ω_par}(u odd)^-1 = 2) and inverted downward by Phi^-1 = invert_rollout_to_sfs (by Theorem 2.2 and Corollary 2.3), where the steps 18..38 differential tail with the relaxed (d24, d25) in {0, 1} row-19/20 transition (subs[(20, 0)] and subs[(20, 1)]) and full 8-word digest equality after step 38 has true conditional probability p_tail = P_{Ω_dual}(E_18..38).",
+      "scope": "Uniformity of vOW-recovered claws on unconstrained schedule degrees of freedom for the row-17 transition (p17 = 2^-32), forward-to-tail conditional distribution equivalence between forward claws conditioned on E_bridge and the downward SFS / tail SMC distribution on the dual-parity fiber Ω_dual = {(w8, w9, w18..w23) : (w8 & 1) == w9_even_a0_bit(w9) and (u & 1) == 1}, and unbiasedness E[hat_q_s] = p_tail of the Fisher-Yates randomized residual/stratified SMC estimator.",
+      "extrapolation": "Exact bit-by-bit enumeration (solve_row_exact) proves |G16| = 2 and |G17(0xbca1c321)| = 1 (0x71e9ba98). By Lemma 2.1(5), W17(a0, u) is randomized by sigma0(W2(a0, a1)) via step-2 terms absent from W16, W8, and W9; on the 135,412 vOW claws, byte matches to 0x71e9ba98 are [517, 486, 525, 526] vs 528.95 expected, 16-bit prefix matches are 4 vs 2.07 expected, conditional low-4-bit matches on F8 cap F9 are 13/157 = 0.0828 vs 0.0625 expected, and Trial 16 of experiment:r39-claw-vow gates unselected vOW low-4-bit W17 rate in [0.025, 0.115] (observed 29/485 = 0.0598). For forward-to-tail distribution equivalence, Theorem 2.2 and Corollary 2.3 prove that the forward map Phi : (CV1, a0, a1) -> (W0[8], W0[9], W0[16..23]) and downward SFS map Phi^-1 = invert_rollout_to_sfs form an exact 320-bit unitriangular measure-preserving bijection over (Z/2^32Z)^10 under which (a0 & 1) == 0 iff (W0[8] & 1) == w9_even_a0_bit(W0[9]) and (u & 1) == 1 is determined by the 7-step downward recurrence W0[k] = C_k - sigma0(W0[k+1]) (mod 2^32) for k = 7..1 with P_{Ω_par}(u odd) = 1/2 exact (empirically 87,101 / 173,896 = 0.500880 on the 64-seed study and 0.4974 on the live 16-trial run). At stages 19..22, applying a Fisher-Yates uniform random permutation to the surviving pool before cyclic stratified allocation guarantees E[hat_q_s] = p_tail exactly.",
+      "evidence_ids": [
+        "proof:45-78",
+        "proof:114-121",
+        "proof:250-297",
+        "proof:341-348",
+        "experiment:r39-claw-vow",
+        "experiment:r39-tail-sfs"
+      ],
+      "limitations": "Under the pseudorandomness of CV1 (H1) and vOW claw uniformity on the unconstrained schedule degrees of freedom, Theorem 2.2 and Corollary 2.3 make the forward-to-tail conditional distribution equivalence exact on the dual-parity fiber Ω_dual = {(a0 & 1) == 0, (u & 1) == 1}, and Fisher-Yates stratified resampling makes each per-seed estimate hat_q_s unbiased on the linear scale."
+    },
+    {
+      "id": "H5-student-t-tail-calibration",
+      "role": "score-critical",
+      "statement": "The finite-sample one-sided 99% Student-t lower confidence bounds on p_tail = P_{Ω_dual}(E_18..38) computed from our 64-seed Fisher-Yates SMC study (p_tail >= 2^-75.4278 log-scale / 2^-75.4116 linear-scale) and from the 16-replicate organizer-executed fixed-budget Fisher-Yates SMC study in experiment:r39-tail-sfs (p_tail >= 2^-75.6713 log-scale / 2^-75.6340 linear-scale) serve as valid conservative lower bounds on the true deterministic conditional tail probability p_tail of the fixed target sha256-r39-prefix-v1, giving per-claw success probability p_claw >= 2^-117.235507 (64-seed 99% LCB) / 2^-117.479007 (live 16-trial 99% LCB) and total work <= 2^120.30 target compressions at fixed-target success probability >= 0.39.",
+      "scope": "Statistical/epistemic calibration of finite-sample Student-t lower confidence bounds (from 64-seed and live 16-replicate Fisher-Yates SMC estimators) as conservative lower bounds on the fixed-target conditional tail probability p_tail, distinct from the fixed-target algorithmic success probability (0.39 conditional on H1-H5).",
+      "extrapolation": "Across 64 independent high-particle SMC seeds (N_part = 512, M_draws = 1,024, T_roll = 2,560 -> 1,310,720 dual-parity rollouts/seed, 64/64 seeds nonzero, 3,089 hits), linear mean log2(mean(q)) = -75.3398, log mean = -75.3583 (SD = 0.2331, SE = 0.0291), log-scale 99% Student-t LCB = -75.4278, and linear-scale 99% Student-t LCB = -75.4116 (4 disjoint 16-seed window LCBs in [-75.5752, -75.4539]). In experiment:r39-tail-sfs, Trials 0..15 execute 16 strictly fixed-budget dual-parity SMC replicas in Python on the organizer public seeds (N_part = 192, M_draws = 384, T_roll = 1,536 -> 294,912 rollouts/trial, 0 adaptive/while loops, accelerated by the exact 1-pass high-16-bit W24 prefilter valid_hi with 0 false negatives), achieving 16/16 nonzero trials, 173 live inverted 39-step SFS collisions (100% verified with (a0_live & 1) == 0 and (u_live & 1) == 1), linear mean -75.2988, log mean -75.3685 (SD = 0.4655), log-scale 99% Student-t LCB = -75.6713, and linear-scale 99% Student-t LCB = -75.6340, gated on Trial 16 by lcb99_log2_q >= -75.95 and lcb99_lin_log2_q >= -75.95.",
+      "evidence_ids": [
+        "proof:250-297",
+        "proof:300-319",
+        "proof:341-348",
+        "experiment:r39-tail-sfs"
+      ],
+      "limitations": "Assumes approximate Student-t coverage of the finite-sample mean of the unbiased per-seed SMC estimator hat_q_s (reported on both log2 and linear scales so Jensen's inequality does not inflate the bound) and absence of adverse seed/parameter-selection bias beyond the claimed complexity margin up to 2^120.30 (+0.718 to +0.134 bits across all 4 regimes under the 64-seed LCB, and +0.475 to +0.118 bits across all 3 SWAR/stream7 regimes under the live 16-trial LCB)."
+    }
+  ]
 }
