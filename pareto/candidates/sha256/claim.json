@@ -1,20 +1,124 @@
 {
-  "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha256-r37-prefix-v1",
-  "attack_class": "ordinary-collision",
-  "rounds": 37,
-  "claim": {
-    "time_log2": 128.0,
-    "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
-    "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
-  },
-  "restrictions": [],
-  "baseline_improved": "sha256-r37-nominal-v2",
-  "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+    "schema_version": 3,
+    "submission_state": "ready",
+    "target_profile": "sha256-r39-prefix-v1",
+    "attack_class": "ordinary-collision",
+    "rounds": 39,
+    "lane": "exploratory",
+    "baseline_improved": "sha256-r39-nominal-v2",
+    "certificate_manifest": "certificates/manifest.json",
+    "experiment_manifest": "experiments/manifest.json",
+    "claim": {
+        "time_log2": 124.25,
+        "time_unit": "target-compressions",
+        "memory_log2_bytes": 21,
+        "preprocessing_log2": 40,
+        "success_probability": 0.39,
+        "nonuniform_advice_log2_bytes": 12
+    },
+    "restrictions": [
+        "Target sha256-r39-prefix-v1: SHA-256 steps 0..38 on every padded block, the standard IV once, FIPS 180-4 padding, feed-forward, all eight digest words; output two distinct 128-byte messages M0 || M1 and M0 || M1' with equal digests.",
+        "Construction: differential attack using the claw construction for row 16 (solving W16 = K(a0, cv) + f(u) via a van Oorschot-Wiener collision search), a 1 MiB DFS dense-base solver, and the published 39-step characteristic (ePrint 2026/1120, Table 21) with the accepted event relaxing row 20 to signed differences.",
+        "Cost: time 2^124.25 target compressions (C = 2812). Claw-search kernel counted at 70 operations per 7 lanes; evaluations per claw 2^11.41 (the cumulative rate of the s128k run, conservative by 0.441 bits against the schedule of proof.md Appendix E.3); per-claw success probability 2^-121.57 (side conditions 2^-9.81, row 17 2^-32, tail rows 18+ 2^-79.76 from a pooled 140-seed study with 20 stalls censored rather than dropped, 99% bootstrap bound with a Bonferroni factor of 8 for the row-20 selection). Score under hashsmash-scalar-tm-v1: 124.25 + max(0, 21 - 20) = 125.25, which is 0.42 bits WORSE than our accepted generic entry 744875ec at 124.83147; this entry is filed as an honest dominated result, not as a frontier improvement.",
+        "Success probability at least 0.39 under H2 (saturated-rate extrapolation), H3 (machine convention), H4 (tail heuristic), H6 (inter-claw independence).",
+        "Memory 2^21 bytes (dense solver: 1,048,576 linear + 94,483 module = 1,143,059; claw search: 128K DP table + code + advice, peak ~1,645,624). Score under hashsmash-scalar-tm-v1: 124.25 + max(0, 21 - 20) = 125.25.",
+        "Reconstruction: the complete characteristic and its 140 bit conditions (Appendix A), the filed dense base b1 (B), the dense solver level by level (C), the tail estimator and the limits of its reported bound (D), the claw search, its measured rate curve, its chaining-value schedule and how collision resolution is batched and priced (E), the emitted packed kernel (F), the probability space including the a0-even/u-odd restriction (G), and what each experiment does and does not establish (H) are all in proof.md.",
+        "Advice: nonuniform_advice_log2_bytes = 12 covers the four dense bases (1,024 bytes) together with the published characteristic the attack consumes as fixed non-derived data (23 row records and 140 bit conditions, about 1,700-2,800 bytes). Earlier filings charged 10, counting the bases only. The characteristic's own search cost is not charged in preprocessing_log2, which covers the dense-base DFS alone.",
+        "Declared heuristics are H1, H2, H3, H4 and H6. There is no H5: it was a tail-transfer premise in the first two filings and was retired when the tail was measured directly on the filed base, so no transfer is needed. The numbering is kept so that earlier review findings remain legible.",
+        "Provenance of the filed base: b1 is the published base of Appendix A.4 with rows 0..3 re-solved, not an independent output of the dense solver; 48 of the 72 compared registers over rows 0..15 are bit-for-bit identical and the 24 that differ are exactly those the SHA-256 relations force. Consequently preprocessing_log2 = 37 is a conservative upper bound rather than a measurement of the work behind b1, and the unrelaxed tail cross-check is withdrawn as circular. Appendix B.1 records this; it does not affect correctness, since b1 satisfies every state and schedule relation for both members and admits rows 16 and 17.",
+        "Claw-selected measurement: the per-claw factors are no longer evaluated only on uniform words. experiments/clawdist.py constructs genuine claws through the filed walk function and the base b1 schedule, confirms that every claw has a0 even and u odd, and measures the side-condition rates and the low-bit distribution of W17 on them. The tail remains the factor not measured under that distribution.",
+        "Retired heuristics: H1 and H5 are both withdrawn and the numbering is kept so earlier review findings remain legible. H5 was a tail-transfer premise, unnecessary once the tail was measured directly on the filed base. H1 asserted that the fixed target g is at least as good as a random one; no ledger line consumes it, because every per-claw factor is evaluated at g -- the row-17 term is the exact |G17(g)| = 1, the tail study's row-16/17 stages select g and condition on it, and the side conditions are measured on claw-selected variants that target g. There is no random-target quantity anywhere to transfer, so the premise is removed rather than defended.",
+        "Two premises that earlier filings asserted are now measured by organizer-run experiments: the splitting estimator's bias (splitting-bias-r39, against a toy with an exactly known answer) and the side-condition factorization under claw selection (the prefix ladder in claw-selected-factors-r39). Two experiments whose checks were identities, clawexp.py and jointside.py, are withdrawn; the algebraic fact jointside.py restated is now a theorem in proof.md rather than an experiment.",
+        "Yield of a fixed work budget: the ledger charges an average claw rate. The single-window yield is measured directly -- each vow-rate-stability-r39 trial is one fixed budget, giving 256 samples with mean 8.66 claws, sd 2.96, cv 0.342, first percentile 3 -- so a single window's lower tail is real. It cannot affect the attack: the schedule sums 2^105.06 independent windows, so the relative standard deviation of the total is 0.342 / sqrt(2^105.06) = 2^-54.1, concentrated 49 bits below any precision this ledger reports. Charging the average rate is therefore correct by concentration, not by assumption (proof.md Appendix E.4).",
+        "Preprocessing: charged from an audited wall-clock budget. Our 39-step campaign over the published message shape is logged job by job (52 jobs: 34 UNSAT, 4 SAT, 14 TIMEOUT at a 4-hour cap, 55.5 CPU-hours); all 124 job specifications at the full cap give 496 CPU-hours, covering both the characteristic search and the re-solution of rows 0..3 that produced b1. The dense-solver DFS of Section 4 is NOT charged here: Appendix B.1 establishes it did not produce the filed base.",
+        "Preprocessing, conversion insensitivity: converting wall-clock at R primitive operations per core-second gives 2^39.21 at R = 10^9, 2^45.85 at 10^11, 2^59.14 at 10^15 and 2^75.75 at 10^20. The filed time_log2 = 124.25 is unchanged for any construction cost below 2^116.94, so R would have to exceed 10^32.4 before the exponent moved; the conversion rate is therefore not load-bearing. preprocessing_log2 = 40 is the figure at R = 10^9, reported because the field requires a number. We do not claim our campaign bounds the authors' search; 14 of our jobs hit the cap undecided."
+    ],
+    "heuristics": [
+        {
+            "id": "H2-saturated-rate",
+            "role": "score-critical",
+            "statement": "Each chaining value is run for 2^26 trail evaluations and then abandoned for a fresh first block, at which point its measured rate is 2^10.972 evaluations per distinct claw. The ledger nevertheless charges 2^11.414, the cumulative rate of a single 2^30-evaluation run, and the premise is that this charged rate is attainable at the 2^105.06 chaining values the attack needs.",
+            "scope": "The evaluations-per-claw term in the time ledger. The charged figure is conservative with respect to the schedule actually specified: the schedule supports 2^10.972 and the ledger charges 2^11.414, a margin of 0.441 bits that is not taken.",
+            "extrapolation": "The measured curve is reproduced in full in proof.md Appendix E.2. Its marginal rate falls to 2^10.878 by 2^25 trail evaluations and then climbs steadily to 2^11.644 by 2^30: a single chaining value's graph has only 2^32 points and the search begins re-covering ground, which is depletion. The earlier filing asserted that the saturated rate was stable over the latter part of that run; the data contradicts that and the claim is withdrawn. The schedule of Appendix E.3 avoids the depleted regime by switching chaining value at the minimum of the curve, so the quantity carried to full scale is a short-run rate rather than a long-run one. Per-window overheads are negligible: clearing the 128000-slot table costs 2^-9.50 operations per evaluation and regenerating the constants less still.",
+            "evidence_ids": [
+                "proof:767-793",
+                "proof:794-831",
+                "experiment:vow-rate-stability-r39"
+            ],
+            "limitations": "One chaining value's functional graph was measured, over a 2^30-evaluation run that is not in the package. The premise is that a 2^26-evaluation window behaves at the remaining 2^105.06 chaining values as it does at this one; no distribution over graphs is established. The reduced-scale experiment runs a 2^20 domain with a substituted even branch and, over its three-fold span, has little power to detect depletion at the rates Appendix E.2 measures; it shows the search executes and is steady at that scale, nothing more."
+        },
+        {
+            "id": "H3-machine-convention",
+            "role": "score-critical",
+            "statement": "64 registers, 256-bit words with 7 lanes of 36 bits, 36 bytes per instruction, immediates free. Same convention as 744875ec. The kernel uses 7 peak live registers.",
+            "scope": "The operations-per-evaluation term. C = 2812 word operations per 39-step compression. The claw kernel costs 70 operations per 7-lane word (10.0 per lane evaluation) plus overhead of 23 operations (rounded up from estimated 22.4).",
+            "extrapolation": "The kernel is counted instruction by instruction by a tracer that is now inside the package: experiments/kernelcount.py rebuilds it on every organizer trial, counts 70 operations for 7 lanes with peak live registers 7, and checks the emitted program against an independent scalar implementation on all 7 lanes of 48 packed vectors per trial with no mismatch. The emitted program is listed line by line in proof.md Appendix F. The overhead (DP test and loop, 6 operations; handler amortized at dp_bits = 7, 16.4 operations) is estimated, not traced.",
+            "evidence_ids": [
+                "proof:82-101",
+                "proof:840-931",
+                "experiment:kernel-opcount-r39"
+            ],
+            "limitations": "The convention is self-declared, as in 744875ec. The kernel itself is now traced by an organizer-run experiment, but the 23 operations of DP test, loop and handler overhead are estimated rather than traced and are 25% of the charge; a full trace could move the score by 0.1-0.3 bits. Larger and untested: the 7-way lane packing is worth log2 7 = 2.81 bits against the organizer's scalar price, and that credit rests entirely on the declared convention."
+        },
+        {
+            "id": "H4-tail-heuristic",
+            "role": "score-critical",
+            "statement": "The tail of 2^-79.759 is a 99% bootstrap lower bound on the mean of per-seed log q estimates from a pooled 140-seed study on base b1 with DIFFROW=20, with all 20 stalled seeds censored at the largest value consistent with their stall and a Bonferroni factor of 8 for the row-20 selection; and this applies when W16 and W17 are fixed by the claw construction.",
+            "scope": "The tail term in the per-claw success probability. The filed value is 2^-79.759, a 99% bootstrap lower bound with a Bonferroni factor of 8 over the pooled 140-seed study. Its validity does not depend on the stall-censoring rule: giving every stalled seed a rigorous zero on the linear scale bounds q at 2^-141.736, i.e. a tail of 2^-77.736, and the filed value sits 2.02 bits below that (proof.md Appendix D.1).",
+            "extrapolation": "120 seeds were run under a written pre-registration (seed range, parameters, stall cap, censoring rule and analysis all fixed before any seed ran) and pooled with the original 20. The complete per-seed data is filed in proof.md Appendix D.2, so the bound is recomputable from the package. The study corrected the earlier picture against the attack: the stall rate is 14.3%, not the 5% one stall in twenty had suggested, and the pooled mean is -142.865 rather than the -141.306 previously filed. Appendix D.1 tabulates the bound under alternative stall treatments. Dropping the stalls from the new 120-seed study reproduces a tail of 2^-77.957, which is to three decimals the 2^-77.96 earlier filings reported, confirming that the old figure was the exclusion artifact. The filed treatment is the most favourable of the defensible options, since every censored value is an upper bound on its seed's q. Two gaps the previous filing left are now closed. The estimator's operational parameters -- population 2000 per level, 4096x population of tail proposals, uniform parent selection with replacement, stall cap 2^36, DIFFROW 20, RELAX_TAIL 1 -- are recorded in Appendix D.1, so with the characteristic of Appendix A the estimator is reimplementable. And its per-row predicate is now in the package and organizer-run: experiments/tailrow.py measures the row-18 conditional directly from the filed base, giving 2^-18.300 over 2^22 pooled proposals against the study's 2^-18.0. Row 18 is the one tail stage the base reaches without search; the deeper stages cost more to reach than the sandbox's entire budget. The unbiasedness premise behind the Appendix D.1 route is now measured rather than asserted: splitting-bias-r39 runs the same scheme on a toy with an exactly known answer and finds the bias positive and falling like 1/population (1.40, 1.20, 1.10, 1.05 at populations 10, 20, 40, 80), about 0.003 bits at the filed 2000. Because the sign is positive the estimator overstates q, so D.1 subtracts it: q >= 2^-141.739, a tail of 2^-77.739, still 2.02 bits above the filed 2^-79.759.",
+            "evidence_ids": [
+                "proof:65-80",
+                "proof:669-880",
+                "experiment:tail-row18-r39",
+                "experiment:splitting-bias-r39",
+                "experiment:claw-selected-factors-r39"
+            ],
+            "limitations": "The largest single term, 79.76 of the 121.57 bits of the per-claw exponent, and only its first stage is measured in the package: tail-row18-r39 reaches row 18, while rows 19 through 23 and the run to row 38 remain reported rather than executed, because the estimator is not a Python program and arriving at those stages exceeds the sandbox budget. Three statements about the censoring rule are corrected in proof.md Appendix D.1: the composite censored value is a hybrid rather than a pure upper bound, since its deeper stages take the completed-seed median; a stall does not imply the row is below 2000/2^36, only that it is probably so; and the per-stage conditionals the rule operates on are not filed, so the censoring step cannot be audited from the package even though the bootstrap step can. None of that affects the filed number, because its validity rests on the independent route in D.1 (stalls at a rigorous zero on the linear scale) rather than on the censoring. The bound targets E[q-hat] and carries to q through the estimator's unbiasedness, which holds up to an O(1/N) fixed-effort bias below 0.01 bits here. All 20 stalls occur at row 21, immediately after the relaxed row 20, which may mean the relaxation defers difficulty rather than that the seeds are unlucky. The tail is also the one per-claw factor still not evaluated under the claw-selected, parity-restricted distribution; the side conditions now are, by claw-selected-factors-r39."
+        },
+        {
+            "id": "H6-inter-claw-independence",
+            "role": "score-critical",
+            "statement": "The N = 2^120.55 generated claws behave as sufficiently independent Bernoulli trials for the Poisson success formula, with per-claw probability p = 2^-121.57.",
+            "scope": "The conversion from per-claw probability to total work via Poisson amplification. The Poisson model requires that per-claw successes are approximately independent.",
+            "extrapolation": "Claws from different chaining values come from different walk functions; within a window the 2^15.49 claws share one. Dependence within a window is now measured rather than left open: each trial of claw-selected-factors-r39 derives its own chaining value, no duplicate claw is produced (distinct_claws equals claws in every trial), and the per-trial side-condition successes show no overdispersion against the independent binomial model, the dispersion index being about 1.04 with a standard deviation near 0.09, so clustering above roughly 30% would have shown. The uniformity of W17 under claw selection, which the -32 term rests on, is also binned there.",
+            "evidence_ids": [
+                "proof:792-799",
+                "experiment:claw-selected-factors-r39"
+            ],
+            "limitations": "The measurement is within a window and at this scale: 256 chaining values, about 1,000 claws, and a dispersion test that resolves clustering above roughly 30% and no finer. It does not bound dependence across the 2^105.06 windows the attack consumes, nor heterogeneity between walk functions, and no analysis of the success event's covariance at full scale is supplied. The Poisson conversion is near-linear in N*p at the filed value, so a variance inflation would inflate the required N roughly proportionally."
+        },
+        {
+            "id": "H8-sidecondition-factorization-full",
+            "role": "score-critical",
+            "statement": "Under the claw-selected, parity-restricted distribution the two side conditions factorize at full 32-bit width, so the per-claw exponent may use p8 x p9 = 2^-9.808.",
+            "scope": "The 9.81-bit side-condition term of the per-claw exponent.",
+            "extrapolation": "Measured on prefixes, where it resolves: claw-selected-factors-r39 finds the joint prefix rate agreeing with the product of the marginal prefix rates to -0.43 bits at 16 bits and -0.63 at 24 bits, inside resolutions of 0.22 and 0.36. Under uniform (a0, a1) the factorization is exact, since W8 = C(a1) - a0 makes W8 uniform and independent of a1 for every fixed a1. The extrapolation is from 24-bit prefixes under claw selection, plus exactness under the uniform distribution, to full width under claw selection.",
+            "limitations": "The full-width joint rate is about 2^-9.81, so on the roughly 1,000 claws the sandbox affords its expected count is under 2 and it cannot be measured here. Both measured prefix deviations are negative, which if real would mean mild anti-correlation and a slightly worse attack than the filed product, not a better one.",
+            "evidence_ids": [
+                "experiment:claw-selected-factors-r39"
+            ]
+        },
+        {
+            "id": "H9-row17-uniform-full",
+            "role": "score-critical",
+            "statement": "Under the claw-selected distribution the fully determined word W17 is uniform over all 32 bits, so |G17(g)| = 1 yields exactly 2^-32 for the row-17 term.",
+            "scope": "The 32-bit row-17 term of the per-claw exponent. |G17(g)| = 1 is exact and verified; this premise is about the denominator, the distribution of W17 over claws.",
+            "extrapolation": "Measured on the low 6 bits: claw-selected-factors-r39 bins W17 over claws and the pooled chi-square is consistent with uniform. The extrapolation is from 6 bits to 32.",
+            "limitations": "The test has little power -- at its band it would miss an eightfold inflation of a single low-bit class about 93% of the time -- and the preimage table confines u to the 2^21 smallest odd values, so any structure in the high bits of W17 is exactly where the test does not look. This is 32 of the 121.57 bits of the per-claw exponent and is a premise, not a measurement, at full width.",
+            "evidence_ids": [
+                "experiment:claw-selected-factors-r39"
+            ]
+        },
+        {
+            "id": "H11-joint-factor-product",
+            "role": "score-critical",
+            "statement": "After conditioning on a genuine claw and on the two side conditions, the row-17 and tail events keep the marginal probabilities the ledger uses, so the three factors may be multiplied into 2^-121.57.",
+            "scope": "The factorization of the per-claw exponent into its three groups. H8 covers the two side conditions against each other and H9 the uniformity of W17; this is the remaining premise, that the groups do not interact.",
+            "extrapolation": "Two conditioning checks on genuine claws, both low-powered and both consistent with independence. W18 from the real expansion on each claw is uniform in its low 6 bits (pooled chi-square z about -1.1), which tests the estimator's uniform-expansion premise at the first tail row under the attack's own distribution. Among claws passing the first side condition, W17's low bit is set 36 times in 85 (z about -1.4). The extrapolation is from these to the full joint event through row 38.",
+            "limitations": "Neither check reaches the tail: conditioning it on side-condition selection needs claws that also pass row 17, costing 2^-32, unreachable at sandbox scale. The W17 check sees one bit on 85 claws and would miss a shift below roughly 20%; the W18 check sees 6 bits of 32. The untested tail carries 79.76 of the 121.57 per-claw bits, so a correlation there moves the exponent one-for-one.",
+            "evidence_ids": [
+                "experiment:claw-selected-factors-r39"
+            ]
+        }
+    ]
 }
