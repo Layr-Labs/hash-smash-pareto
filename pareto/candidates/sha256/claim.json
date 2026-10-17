@@ -1,20 +1,119 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha256-r37-prefix-v1",
+  "submission_state": "ready",
+  "target_profile": "sha256-r39-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 37,
-  "claim": {
-    "time_log2": 128.0,
-    "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
-    "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
-  },
-  "restrictions": [],
-  "baseline_improved": "sha256-r37-nominal-v2",
-  "certificate_manifest": "certificates/manifest.json",
+  "rounds": 39,
   "lane": "exploratory",
-  "heuristics": []
+  "baseline_improved": "sha256-r39-nominal-v2",
+  "certificate_manifest": "certificates/manifest.json",
+  "experiment_manifest": "experiments/manifest.json",
+  "claim": {
+    "time_log2": 121.3,
+    "time_unit": "target-compressions",
+    "memory_log2_bytes": 20,
+    "preprocessing_log2": 36,
+    "success_probability": 0.39,
+    "nonuniform_advice_log2_bytes": 11
+  },
+  "restrictions": [
+    "Target sha256-r39-prefix-v1: SHA-256 steps 0..38 on every padded 512-bit block, standard SHA-256 IV once before block 0, standard FIPS 180-4 padding, Davies-Meyer feed-forward, equality on all eight 32-bit digest words; outputs two distinct 128-byte (two-block) messages M0 || M1 and M0 || M1' with equal second-block chaining values (and hence equal padded digests).",
+    "Construction: ordinary two-block differential attack using the bipartite claw decomposition W16(a0, u) = g + (sigma0(u) - u) - F_even(a0, CV1) (mod 2^32) at step 16 solved via a 65,536-slot (768 KiB) van Oorschot-Wiener (vOW) distinguished-point walk, the self-contained 584-byte Table 23 dense base (ePrint 2026/1120) derived in 2^36 one-time preprocessing and verified in O(1) online memory, exact GF(2) affine subspaces on rows 19..22, and the accepted event across steps 18..38 with step 20 evaluated on signed modular differences.",
+    "Cost: total work <= 2^121.30 target compressions (C = 2812 word operations per 39-step compression). Packed 7-lane x 36-bit kernel traced at 67 instructions for Stage-2 recovery and 71 instructions for Stage-1 with the 4-op SWAR zero-field DP detector ((out & 0x7F) + 0x7F) ^ 0x80 & 0x80 (14 peak live registers, 0 spills in 64 registers; Stage-1 SWAR batch 74 ops -> 2^120.9951 under simd7 and 2^120.5863 under stream7; Stage-1 unpacked 27-op lane-by-lane loop 96 ops/batch -> 2^121.2290 under simd7, also covered by 2^121.30).",
+    "Per-claw success probability 2^-118.357707 (exact row-8 and row-9 side conditions in_F8 and in_F9: 585/524288 = 2^-9.807707, exact row-17 transition |G17(0xbca1c321)| = 1 -> 2^-32.0 at W17 = 0x71e9ba98 under H5-w17-conditional-uniformity, and tail rows 18..38 probability 2^-76.55 from a 64-seed zero-stall SMC study with N = 16,384 particles, 99% Student-t lower confidence bound; point estimate 2^-76.1838). Required distinct claws N_claws = 2^117.341155 for success probability at least 0.39.",
+    "Memory 823,296 bytes < 2^20 bytes (786,432-byte vOW table + 18,432-byte code + 2,048-byte register file + 16,384-byte advice and scratch), giving memory_log2_bytes = 20 and combined Pareto score 121.30 + max(0, 20 - 20) = 121.30."
+  ],
+  "heuristics": [
+    {
+      "id": "H1-bipartite-claw-fixed-target",
+      "role": "score-critical",
+      "statement": "For each random first-block chaining value CV1, the bipartite claw walk on F_step(x) produces opposite-parity pairs (a0, u) satisfying F_step(a0) = F_step(u), which with a1 = recover_a1(a0, u, CV1) yields W16(a0, u) = g = 0xbca1c321 (the unique G16 word with a non-empty G17 fiber), and downstream survival on this fixed target matches the product of prefix side-condition, row-17, and tail probabilities.",
+      "scope": "Validity of the row-16 claw construction and fixed-target success probability per distinct claw.",
+      "extrapolation": "Lemma 2.1 and Lemma 3.1 prove W16(a0, u) = g + (sigma0(u) - u) - F_even(a0, CV1) (mod 2^32) algebraically with probability 1 across steps 0..15. Verified with 0 mismatches across all 135,412 distinct claws in the 65,536-slot vOW benchmark and across 16 multi-step vOW DP trail collisions (la != lb) recovered end-to-end via Stage-1 DP detection, 64K-slot table collision, and Stage-2 7-lane packed recovery in experiment:r39-claw-vow, plus 16 live downward-inverted 39-step SFS colliding pairs in experiment:r39-tail-sfs.",
+      "evidence_ids": [
+        "proof:19-65",
+        "proof:283-287",
+        "experiment:r39-claw-vow"
+      ],
+      "limitations": "Because f(u) = sigma0(u) - u is non-bijective (covering 63.4% of 2^32 values), vOW-recovered claws weight u toward values with larger f-preimage multiplicity; H4, H5, and H6 explicitly test and bound any resulting correlation with the side conditions, W17, and the tail."
+    },
+    {
+      "id": "H2-packed-7lane-machine-model",
+      "role": "score-critical",
+      "statement": "Under the 64-register 256-bit word-RAM cost model (C = 2812 word operations per 39-step compression), 7 independent 32-bit lanes packed at a 36-bit stride with 4-bit guard bands execute one F_step evaluation in 67 instructions for Stage-2 recovery and 71 instructions for Stage-1 (including the 4-op SWAR zero-field DP detector ((out & 0x7F) + 0x7F) ^ 0x80 & 0x80) using 14 peak live registers and 0 register spills.",
+      "scope": "Word-operation count per 7-lane packed F_step evaluation in Stage 1 (74 ops/batch SWAR, 96 ops/batch unpacked) and Stage 2 (69 ops/batch).",
+      "extrapolation": "Same 7-lane x 36-bit convention as the accepted 39-step baseline 8681f9bd (shrho.py) and f86da3c1. Every instruction of both the 67-op Stage-2 kernel and the 71-op Stage-1 SWAR DP kernel is traced by Tracer (build_traced_step), allocated via linear scan (allocate -> 14 registers, 0 spills), and verified bit-for-bit against scalar F_step and against unpacked lane-by-lane DP detection across 112 lanes per active trial (1,792 lanes total) in experiment:r39-claw-vow with 0 mismatches.",
+      "evidence_ids": [
+        "proof:95-143",
+        "proof:283-287",
+        "experiment:r39-claw-vow"
+      ],
+      "limitations": "Our claimed bound 121.30 also covers the 96-op unpacked Stage-1 loop (where all 7 lanes are extracted and tested individually in 27 ops, giving 121.2290 total work under simd7)."
+    },
+    {
+      "id": "H3-vow-distinct-claw-amortization",
+      "role": "score-critical",
+      "statement": "A 65,536-slot (768 KiB) vOW distinguished-point search with dp_bits = 7 and max_steps = 2048 yields one deduplicated distinct claw (a0, u) per 35,396.61 word operations (12.5877 target compressions = 2^3.65394) under immediate 2-walk-in-7-lane Stage-2 recovery with 74-op SWAR Stage-1 batches (simd7), 41,626.89 word operations (14.8033 compressions = 2^3.88785) under 96-op unpacked Stage-1 batches (simd7), or 26,662.69 word operations (9.4818 compressions = 2^3.24516) under 7-lane buffered recovery (stream7).",
+      "scope": "Total word operations per deduplicated distinct claw.",
+      "extrapolation": "Measured directly by executing the full two-stage vOW cycle across 268,435,704 walk evaluations (4 CVs x 2^26 evals: 33,820, 33,772, 33,962, and 33,858 distinct claws per CV, relative SD 0.23%; 38,347,958 main batches, 2,092,676 DP hits, 330,778 value matches, 162,983 raw claws, 135,412 deduplicated distinct claws) in ledger() (--ledger) and verified on 16 live multi-step vOW DP trail collisions (la != lb, 4 <= la, lb <= 102) via recover_7pairs_packed in experiment:r39-claw-vow.",
+      "evidence_ids": [
+        "proof:146-178",
+        "proof:233-259",
+        "experiment:r39-claw-vow"
+      ],
+      "limitations": "Both the 74-op SWAR Stage-1 regime (2^120.9951) and the 96-op unpacked Stage-1 regime (2^121.2290) lie strictly below our claimed 2^121.30 bound."
+    },
+    {
+      "id": "H4-side-condition-independence",
+      "role": "score-critical",
+      "statement": "A deduplicated vOW claw (a0, u) satisfies the row-8 condition in_F8(W8) and the row-9 condition in_F9(W9) with joint probability p8 * p9 = (9/128) * (65/4096) = 585 / 524,288 = 2^-9.807707.",
+      "scope": "Prefix side-condition survival factor in the per-claw success probability.",
+      "extrapolation": "Exhaustively enumerated over all 2^32 words W8 (301,989,888 / 2^32 = 9/128) and W9 (68,157,440 / 2^32 = 65/4096), and empirically verified directly on the 135,412 distinct vOW-recovered claws (157 joint passes observed across the 4 CVs [38, 36, 45, 38] vs 151.10 expected, ratio 1.039) as well as across 4,096 seeded candidates and 16 live multi-step vOW F89 trails in experiment:r39-claw-vow and 16 live SFS pairs in experiment:r39-tail-sfs.",
+      "evidence_ids": [
+        "proof:181-186",
+        "experiment:r39-claw-vow",
+        "experiment:r39-tail-sfs"
+      ],
+      "limitations": "Empirical verification on 135,412 live vOW claws has binomial standard error sqrt(151.1) = 12.29 passes (+/- 0.12 bits)."
+    },
+    {
+      "id": "H5-w17-conditional-uniformity",
+      "role": "score-critical",
+      "statement": "Conditioned on W16(a0, u) = 0xbca1c321, W8 in F8, and W9 in F9, the unconstrained step-17 message word W17(a0, u) = sigma1(W15) + W10 + sigma0(W2(a0, a1)) + u (mod 2^32) hits the unique valid row-17 word 0x71e9ba98 in G17(0xbca1c321) with probability p17 = 2^-32.",
+      "scope": "Row-17 transition probability p17 = 2^-32 in the per-claw success probability.",
+      "extrapolation": "Exact row-17 enumeration (solve_row_exact) proves |G17(0xbca1c321)| = 1 (0x71e9ba98). By Lemma 2.1(5), W17(a0, u) is randomized by sigma0(W2(a0, a1)) where W2 depends on step-2 S0(a1) + MAJ(a1, a0, cv0) and S1(e1) + CH(e1, e0, cv4) that do not appear in W16, W8, or W9. Empirically verified on the 135,412 distinct vOW claws: individual byte matches to 0x71e9ba98 are [517, 486, 525, 526] vs 528.95 +/- 22.95 expected, 16-bit prefix matches (0xba98) are 4 vs 2.07 expected, and conditioned on the 157 claws passing F8 and F9, low-4-bit matches (W17 & 0xF) == 0x8 are 13/157 = 0.0828 vs 1/16 = 0.0625 expected.",
+      "evidence_ids": [
+        "proof:187-192",
+        "proof:219-230",
+        "experiment:r39-claw-vow",
+        "experiment:r39-tail-sfs"
+      ],
+      "limitations": "Direct 32-bit hits on 0x71e9ba98 have rate 2^-32, so empirical validation tests marginal byte/16-bit prefix uniformity across 135,412 vOW claws and 4-bit conditional uniformity on F8 cap F9 claws, complemented by exact 32-bit hits in the 16 live SFS inversions in experiment:r39-tail-sfs."
+    },
+    {
+      "id": "H6-tail-rows-18-to-38-smc",
+      "role": "score-critical",
+      "statement": "Conditioned on W16(a0, u) = 0xbca1c321, W17(a0, u) = 0x71e9ba98, and the row-8 and row-9 side conditions, the conditional probability that the reconstructed message pair satisfies the accepted differential event across steps 18..38 (with step 20 on signed modular differences and full 39-step digest equality at step 38) is at least p_tail = 2^-76.55.",
+      "scope": "Tail (rows 18..38) survival factor p_tail in the per-claw success probability.",
+      "extrapolation": "Measured across 64 independent Sequential Monte Carlo (SMC) runs with N = 16,384 particles per stage starting from random CV1 and random claw pairs passing rows 8, 9, 16, and 17: 64 / 64 seeds completed with 0 stalls (Table 7.1), mean(log2 p_tail) = -76.335945, sample SD = 0.7168, log2(mean(p_tail)) = -76.183798, and one-sided 99% Student-t lower confidence bound = -76.5498 (conservatively rounded to -76.55). In experiment:r39-tail-sfs, each active trial constructs the exact GF(2) affine subspaces on rows 19..22, executes a live seed-driven SMC rollout (32 x 512 = 16,384 rollouts/trial), and inverts a step-38 rollout via invert_rollout_to_sfs into a fresh 39-step SFS colliding pair.",
+      "evidence_ids": [
+        "proof:193-230",
+        "proof:283-287",
+        "experiment:r39-tail-sfs"
+      ],
+      "limitations": "The 99% Student-t lower confidence bound (-76.55 vs point mean -76.18) provides a 0.37-bit buffer against finite-sample SMC variance."
+    },
+    {
+      "id": "H7-inter-claw-poisson-amplification",
+      "role": "score-critical",
+      "statement": "Evaluating N_claws = 2^117.341155 deduplicated distinct claws across 2^102.294 independent random first blocks M0 yields a full 39-step SHA-256 two-block collision with probability at least 1 - exp(-N_claws * p_claw) = 0.39 (lambda = 0.49429635).",
+      "scope": "Conversion of per-claw success probability p_claw = 2^-118.357707 into total required distinct claws for success probability >= 0.39.",
+      "extrapolation": "Within each CV1 table (65,536 slots, 2^26 evaluations), duplicate walk collisions are explicitly stripped (135,412 distinct claws out of 162,983 raw claws in ledger), and distinct first blocks M0 induce independent step functions F_step. Each CV1 contributes only 33,853.0 distinct claws (success probability ~ 2^-103.3 per first block), so inter-block successes are independent Bernoulli trials.",
+      "evidence_ids": [
+        "proof:219-230",
+        "proof:233-259"
+      ],
+      "limitations": "Standard Poisson approximation for rare events across 2^102.294 independent first blocks."
+    }
+  ]
 }
