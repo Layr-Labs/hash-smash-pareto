@@ -1,20 +1,45 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha256-r37-prefix-v1",
+  "target_profile": "sha256-r44-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 37,
+  "rounds": 44,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 124.29299,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 20,
+    "preprocessing_log2": 14.28619,
     "success_probability": 0.39,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "sha256-r37-nominal-v2",
+  "restrictions": [
+    "Two distinct 52-byte messages M(x) = P || x and M(y) = P || y, P = 20 zero bytes, x != y 256-bit integers written big-endian: one block (FIPS padding, length 416 bits), standard IV, the steps with indices 0 to 43, feed-forward, the complete 256-bit digest (sha256-r44-prefix-v1). They are found as a collision g(x) = g(y) of the walk g(x) = f(x), f(x) = the working state after step 43 (the digest minus the IV, word by word) read as a big-endian integer, so g(x) = g(y) exactly when the digests are equal. Plain birthday search with distinguished points; no differential or structural property of the 44 steps is used.",
+    "Machine model (the declared prices of this entry's cost model, proof Section 3.1): a classical load/store machine with 256-bit words and 1024 registers (1021 data, 3 pointers) under collision-frontier-v5; 3232 operations (C of sha256-r44) to the unit. Charged, one operation each: every XOR, AND, OR, NOT, set, move, load, store, pointer addition, compare, branch and the random word. A main-loop body record (register-to-register XOR, AND, OR or NOT, no immediate operand) is 5 bytes (an opcode and three 10-bit register fields), the price of dariolina's 6b678689; every other instruction is 36 bytes. The operation ledger is the exact count of the records of the submitted program (62157 per batch, 62194 with stage 1 and the batch loop), listed by `python3 experiments/bssha.py --text` and counted by `--ledger` (proof Appendix A).",
+    "time_log2 is an upper bound: every term of proof.md Section 3.4 is enforced by a halt of the program (B batches, e2max stage-1 hits, 28501 table keys, 2 cut trails, a recovery of at most c + 2^48 batches, one recovery), and the bound charges each at its limit. The attempt is single: one fresh uniform 256-bit word r, no restart, no amplification, no stored collision, no advice. Distinguished points: low 32 bits zero and the next 90 bits below 420 (density 420 / 2^122). The generator that builds the program at setup is charged (200 operations per primitive call and per emitted record: 63757800).",
+    "Memory: 28501 table entries of 22 bytes (627022 bytes) plus 369573 bytes of code (62157 body records of 5 bytes = 310785, plus 1633 other instructions of 36 bytes = 58788) plus 16,384 bytes of counters plus 32768 bytes for the 1024 registers plus 2816 bytes for the recovery array: 1048563 bytes <= 2^20; claimed as 2^20. The setup phase (the generator's code image of 2800 wasm instructions at 36 bytes and its scratch of 75948 bytes, with the final code size and the counters) is 562705 bytes, proof 3.6. The generator fits in 2^20 (proof Section 3.6, Appendix A).",
+    "Success probability at least 0.39: Lemma 2 of proof.md Section 4 proves it for a uniformly random function from the lazy-sampling hazard (a supermartingale over the evaluations, no conditioning on which trails finish, the cut count bounded by a proved theorem, the Chernoff quantile an upper bound by the trapezoid rule; bound 0.39000, exact certificate 0.390000003836 in Appendix A); H1, score-critical (clauses (a) to (d), declared and not proved), says the real attempt succeeds at least as often. Nothing else in the bound is heuristic. If the hazard were (1 - eps) / N the plan needs extra time: 0.0072 bit for eps = 0.01, 0.0371 bit for eps = 0.05, 0.0761 bit for eps = 0.10, 0.2077 bit for eps = 0.25.",
+    "The declared experiments run this program in the organizer sandbox: bssha-n18 (one attempt of the 256-lane search per trial at width 18, DP = low 2 bits zero) and proj-k0-w256 (512 points of the target at width 256 per trial, a pair when two digests agree in the low 18 bits). Each returns pairs whose complete 44-step digests agree in the stated low bits. They are program checks: no number of the claim is estimated from their counts and no sampling premise is used. No outside code or library is used.",
+    "No nonuniform advice; the constant message prefix P (20 zero bytes) is part of the program. Credited derivative of our own sha256 entries and of dariolina's 6b678689 (the 5-byte body price, the unrolled sliced kernel) and 744875ec: 0598ee0b-20d0-456f-9957-1ff0414ee17b (124.56541), 6b678689-e6a2-42b0-87d8-fff55432f2f6 (124.41766), 389fa7c3-6fdd-4349-a2e0-a12c0e95a47b (124.3503) and 744875ec-f063-4208-8075-b61192ac4d69 (124.83147) (search, handlers, ledger method, Lemma 2 v2, message layout, experiments, the bit-sliced generator; 744875ec: the walk on the digest minus the IV; all declared as dependencies, same lane) and, through our blake3 entries 0a9640ed and 62cfd777, of the bit-sliced chain, with the pivot full adder and the mask walk of jungjipdo's 6ae36351 (re-implemented from its proof text). preprocessing_log2 = 14.28619 is the setup and generator row, which is also inside time_log2."
+  ],
+  "baseline_improved": "sha256-r44-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  "experiment_manifest": "experiments/manifest.json",
+  "heuristics": [
+    {
+      "id": "H1-random-function-model",
+      "role": "score-critical",
+      "statement": "Model premise, four clauses. Let F be a uniformly random function from 256-bit values to 256-bit values. For the fixed target, the probability that the single attempt of the search succeeds, with the walk g(x) = f(x) (f(x) = the working state after 44 steps of the 52-byte message P || x, P = 20 zero bytes, x the 32-byte chain value read as a 256-bit big-endian integer: the complete 44-step SHA-256 digest minus the IV word by word, so g(x) = g(y) exactly when the digests are equal), is at least the probability P_F, over the fresh word r and a uniformly random F, that the same search succeeds when every evaluation of g is replaced by F (lazy sampling). Clauses: (a) distinct evaluated inputs collide with probability 2^-256, uniform and independent outputs; (b) the iterates from r + t have the first-collision law of a random mapping; (c) a point is a distinguished point (low 32 bits zero and the next 90 bits below 420) with probability 420 / 2^122, independently of the collision events; (d) adaptivity: the program chooses its points, and which trails finish, are cut or abort, from earlier outputs of g; given the whole history of the run and which later outputs are distinguished points, a fresh evaluation equals a given earlier non-distinguished output with probability at least 2^-256 (the lazy-sampling hazard of F). Proof.md Section 4 (Lemma 2) proves P_F >= 0.390000003836 for F from the hazard alone, by a supermartingale over the evaluations, with no conditioning on which trails finish and no fixed-size birthday step; (d) is the premise that g has that hazard. This is a comparison of two success events, not a statement about the entropy of r. Nothing else in the success bound is heuristic.",
+      "scope": "The fixed target sha256-r44-prefix-v1 restricted to the 52-byte messages P || x (P = 20 zero bytes), the 2^128-scale evaluation of g along about 27200 trails of mean length 2^113.29 started from r + t, 256 trails at a time. Not claimed for other messages, other round counts, or evaluations beyond this scale.",
+      "extrapolation": "Our theory: the 44-step SHA-256 map g behaves along the trails of this program as a random function of 256 bits, with collision hazard 1 / N per fresh evaluation; the regime is the 2^128-scale search along trails of mean length 2^113.29. The organizer experiments bssha-n18 and proj-k0-w256 run this program on the real target at reduced width (the search at width 18) and at full width for 512 points with 18-bit projections; they are program checks, no number of the claim is estimated from their counts, and no sampling premise is used. Extrapolation from these sizes to width 256 and 2^128 evaluations is by the premise only. If the collision hazard is (1 - eps) / N instead of 1 / N (clause (d), or a deficit eps in clause (a)), the plan of this program needs, to restore 0.39: 0.0072 bit for eps = 0.01, 0.0371 bit for eps = 0.05, 0.0761 bit for eps = 0.10, 0.2077 bit for eps = 0.25.",
+      "evidence_ids": [
+        "experiment:bssha-n18",
+        "experiment:proj-k0-w256",
+        "proof:82-180",
+        "proof:181-191",
+        "proof:192-198"
+      ],
+      "limitations": "A model premise about one fixed function, not a theorem: on the target the run is a deterministic function of r. It cannot be tested at width 256; the experiments reach width 18 and 18-bit projections of 512 points per trial and do not measure collision structure at 2^128 evaluations. The bound has no margin above 0.39 (B is the least multiple of 10^24 that reaches it), so any hazard deficit is repaired by extra time, priced above: 0.0072 bit for eps = 0.01 (Tp 418); 0.0371 bit for eps = 0.05 (Tp 409); 0.0761 bit for eps = 0.10 (Tp 398); 0.2077 bit for eps = 0.25 (Tp 364)."
+    }
+  ],
+  "submission_state": "ready",
+  "lane": "exploratory"
 }
