@@ -1,20 +1,47 @@
 {
-  "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "poseidon-orchard-r0-prefix-v1",
-  "attack_class": "ordinary-collision",
-  "rounds": 0,
-  "claim": {
-    "time_log2": 128.0,
-    "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
-    "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
-  },
-  "restrictions": [],
-  "baseline_improved": "poseidon-orchard-r0-nominal-v2",
-  "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+ "schema_version": 3,
+ "target_profile": "poseidon-orchard-r44-prefix-v1",
+ "attack_class": "ordinary-collision",
+ "rounds": 44,
+ "claim": {
+  "time_log2": 126.22507,
+  "time_unit": "target-compressions",
+  "memory_log2_bytes": 20,
+  "preprocessing_log2": 28,
+  "success_probability": 0.39,
+  "nonuniform_advice_log2_bytes": 0
+ },
+ "restrictions": [
+  "Two distinct 64-byte messages with equal digests for the Orchard hash with 44 partial rounds (poseidon-orchard-r44-prefix-v1), found as a collision F(x) = F(y), x != y, of the walk F(x) = digest(message(x + rho0)) / OUTSCALE: message() is the injective parametrisation of the input line on which rounds 0 and 1 are affine, OUTSCALE a fixed nonzero field constant, rho0 a random 254-bit coin of the attempt. Plain birthday search, one trail with distinguished points, one table; the success probability uses no property of the rounds.",
+  "Cost model orchard-field-ram-v2, C = 1140. Prices used: canonical field ADD and MUL 1/C each; every other primitive 256-bit word operation (AND, OR, shift, compare, branch, register move, aligned load or store, random word) 1/C. No permutation call is charged as a unit: every evaluation executes the 664-operation step program (270 ADD, 394 MUL; proof.md Section 2, listing in Appendix C), an equivalent form of rounds 2-63 that equals the reference digest divided by OUTSCALE. Constant loads: the 267 step constants are loaded once per attempt (267 loads, charged) into a declared file of 328 256-bit registers, counted in memory; arithmetic takes register operands.",
+  "Ledger (proof.md Section 6, instruction listings): a trail step is 664 + 3 operations, plus 3 per block of 8 unrolled steps; a recovery evaluation at most 664 + 6; table scan, insertion, bisection, constant loads, the message roots and setup are at most 10,027,495,265 operations. The offline derivation of the step constants and fixed parameters (build_step, tune.py in exact integer arithmetic, one run of plan) is bounded by 187,552,931,368 word operations from the metered counts of the shipped code (proof.md Section 6a, Appendix G); that bound is inside time_log2 and is also declared as preprocessing_log2 = 28 (one quantity, not added twice). time_log2 is the full budget with every halt charged at its limit: S = n + d trail steps and 3 gmax recovery evaluations, log2 T = 126.225068, claimed 126.22507 (rounded up). One attempt; no restart, amplification or advice.",
+  "Memory: 22,973 table entries of one 32-byte word (high 126 bits of the value OR index), a side array of 16-bit low parts (1,436 words), the start word, code at most 6,890 instructions at 36 bytes, constants and the 328-register file: 1,048,552 bytes, below 2^20 (proof.md Section 7; the code term and the word layout are derived there).",
+  "Success probability at least 0.39: Lemma 2 (proof.md Section 5) proves 0.39000000008469836209 (at least 0.39) for a uniformly random function at the filed budget, with explicit terms for the trail, detection, table and gaps. H1 (the only premise, score-critical, our theory that the fixed map behaves like a uniformly random function for this search) states that the real map with the random coin rho0 reaches 0.39 at the filed budget; measurements of the real map family at r = 7, 23 and 56 on truncated outputs are in proof.md Section 8.",
+  "The program is printed in full in proof.md Appendix B (standard library only); the step program in Appendix C. One organizer-run experiment is declared (lowbits-birthday, python-message-pairs-v1, event digest-xor-mask; source experiments/exp_lowbits.py): agreement of the first 14 bits of this target's own digest (proof.md Section 9). Participant measurements: replay sources in Appendix D, data in Appendix E, per-job seeds and records in Appendix F. No full collision is produced or claimed; the claim is the cost of the search."
+ ],
+ "baseline_improved": "poseidon-orchard-r44-nominal-v2",
+ "certificate_manifest": "certificates/manifest.json",
+ "experiment_manifest": "experiments/manifest.json",
+ "heuristics": [
+  {
+   "id": "H1-random-function-model",
+   "role": "score-critical",
+   "statement": "The filed trail has n = 133578331 * 2^100 steps, at which Lemma 2 gives 0.390000000 for a uniformly random function (the least multiple of 2^100 that reaches 0.39). Premise: for the attempt's coins rho0 and x_0 (uniform 254-bit words), the search of proof.md Section 3 on the real map F(x) = digest(message(x + rho0)) / OUTSCALE, at the budget n, succeeds with probability at least 0.39. H1 is our theory that, for this search, the fixed map behaves like a uniformly random function.",
+   "scope": "Target poseidon-orchard-r44-prefix-v1, inputs on the line of proof.md Section 1, one trail with the parameters of proof.md Section 3 (S = 1.694e38 evaluations). Applies to this round count and budget. Only the success probability rests on it; the step program, the recovery, the ledger and the memory are proved or checked exactly (proof.md Sections 2, 4, 6, 7).",
+   "extrapolation": "Organizer-run experiment lowbits-birthday (python-message-pairs-v1, digest-xor-mask, 256 trials; proof.md Section 9): regime = this target's own digest at r = 44, agreement of the first 14 bits, fresh random inputs, at most 1200 evaluations per trial (a random function needs about 160); the real digest returns a verified pair in every trial, as a random 14-bit function does. Participant-run measurements (per-job seeds, records and counts in proof.md Appendix F) on the real map family at r = 7, 23 and 56 partial rounds with outputs truncated to w = 16..40 bits (F_w(v) = low w bits of F(v), a fresh rho and start per trial, as in the attempt), 20,616 walks: the hazard multiplier (collision rate relative to a random function, estimated from the exact discrete first-repeat law, profile-likelihood interval, coverage checked by simulation in proof.md Section 8) is 1.001, 95% interval [0.987, 1.015], with slope -0.0011 per bit (standard error 0.0015) across widths; the full search succeeded in 3,463/8,616 = 0.402 runs at widths 24..40 against a mean Lemma 2 bound of 0.3900; DP gaps follow the geometric law and stayed below gmax. H1 applies the measured law to this row (r = 44) at 254 bits over 2^127 steps. Sensitivity: if the real map has the collision rate of a random function times a factor c, success is about 1 - exp(-c x) - n/N - eps with x = 0.49525; c = 1 gives 0.39, and c = 0.9, 0.75, 0.6, 0.5, 0.4 give the values in the table of proof.md Section 8.",
+   "evidence_ids": [
+    "proof:36-49",
+    "proof:51-108",
+    "proof:119-167",
+    "proof:169-177",
+    "proof:1572-2113",
+    "proof:2115-2166",
+    "proof:2168-2294",
+    "experiment:lowbits-birthday"
+   ],
+   "limitations": "H1 concerns the average over the attempt's coin rho0, which is what Lemma 2 bounds. Evidence: the measurements of proof.md Section 8 (outputs of 16 to 40 bits, trails of at most 2,970,429 steps, r = 7, 23, 56) and the experiment of Section 9."
+  }
+ ],
+ "submission_state": "ready",
+ "lane": "exploratory"
 }
