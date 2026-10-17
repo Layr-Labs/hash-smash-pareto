@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "r39-claw-vow",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39_claw.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "H1, H2, H3, H4, and H5 (proof.md Sections 2, 3, 5, 6, 7, and 11). Trials 0..15: on each trial t, draws a 512-bit first block M0 from SHAKE-256 of the experiment id and organizer seed and compresses it from the standard SHA-256 IV with the 39-step Davies-Meyer compression function to obtain CV1; compiles and register-allocates both the 67-op Stage-2 kernel and the 71-op Stage-1 kernel (including the 4-op SWAR DP detector ((out & 0x7F) + 0x7F) ^ 0x80 & 0x80, 14 peak live registers, 0 spills in 64 registers) and executes the 71-op kernel instruction-by-instruction across 16 batches (112 lanes), verifying bit-exact agreement with scalar F_step, with the unpacked 7-bit DP detector, and with the step-0 and step-1 SHA-256 recurrence equations on CV1; tests 256 seeded (a0, u) pairs via closed_form_w8_w9_w17 against full 18-step state inversion (recording F8&F9 passes and low-4-bit matches of W17 to 0x71e9ba98); and executes a real multi-step vOW DP trail collision (la != lb, 4 <= la, lb <= 102) from VOW_F89_TRAILS[t] through Stage-1 DP detection, 64K-slot table collision, and Stage-2 7-lane packed recovery (Phase 1 length equalization + Phase 2 lockstep walk-back), verifying exact recovery of (a0, u), W16 = 0xbca1c321, W8 in F8, and W9 in F9. Returns the 128-byte two-block pair (M0 || M1, M0 || M1') on CV1 iff mismatches == 0. Trials 16..255 return no pair by design.",
+      "hypothesis": "Returned pairs: 16 (every active trial 0..15 returns a distinct seed-derived 128-byte variant pair iff mismatches == 0; repeated_pairs: 0); full collisions of the target from IV: 0 (returned pairs are single variants of CV1, not full 2^121.30 collisions). Observations (untrusted): lanes_checked (112), step_ops_folded (67), stage1_traced_ops (71), peak_live_regs (14), stage1_dp_hits (binomial(112, 2^-7)), vow_trail_la (4..102), vow_trail_lb (6..95), vow_rec_batches (8..135), row89_tested (256), row89_passes (binomial(256, 585/524288)), w17_low4_hits (binomial(256, 1/16)), stage2_recovered (1), mismatches (0)."
+    },
+    {
+      "id": "r39-tail-sfs",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39_claw.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "H4, H5, and H6 (proof.md Sections 4, 7, 8, and 11). Trials 0..15: verifies on the embedded Table 23 dense base that solve_row_exact finds |G16| = 2 ([0xbca1c121, 0xbca1c321]), |G17(0xbca1c321)| = 1 ([0x71e9ba98]), and |G18| = 16,384 (12,288 satisfying the row-22 lookahead bit), and constructs the exact GF(2) affine subspaces on rows 19..22 via Gaussian elimination (build_row_subspaces). Then on each trial t, seeds splitmix64 from SHAKE-256 of the experiment id and organizer seed and executes a live SMC particle rollout (N = 32 particles through rows 18..23 x T = 512 schedule-only rollouts on steps 23..38 = 16,384 unbiased rollouts per trial, tracking max reached step and step-24..28 survival counts), followed by live downward SFS inversion (invert_rollout_to_sfs) of a rollout reaching step 38 into a fresh seed-derived 39-step semi-free-start colliding pair (CV1_live, M1_live, M1'_live), plus full verification of PAIR_CLAW_SFS[t]. Returns the live seed-derived 96-byte pair (CV1_live || M1_live, CV1_live || M1'_live) iff mismatches == 0. Trials 16..255 return no pair by design.",
+      "hypothesis": "Returned pairs: 16 (each active trial 0..15 generates a distinct live seed-derived 96-byte 39-step semi-free-start colliding pair CV1_live || M1_live and CV1_live || M1'_live with sha256_r39_compress(CV1_live, M1_live) == sha256_r39_compress(CV1_live, M1'_live) and M1_live != M1'_live; repeated_pairs: 0); full collisions of the target from IV: 0 (returned pairs are semi-free-start collisions from CV1_live, not from the standard IV). Observations (untrusted): row16_exact_count (2), row17_exact_count (1), row18_valid_count (12288), smc_rollouts (16384), smc_max_step (28..38), smc_reach24_to_28 (5-element list), live_sfs_inverted (1), claw_verified (1), sfs_collision_verified (1), mismatches (0)."
+    }
+  ]
+}
