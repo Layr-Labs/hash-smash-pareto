@@ -1,20 +1,43 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha3-256-r5-prefix-v1",
+  "submission_state": "ready",
+  "target_profile": "sha3-256-r24-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 5,
+  "rounds": 24,
+  "lane": "exploratory",
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 124.54197,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 20,
+    "preprocessing_log2": 34,
     "success_probability": 0.39,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "sha3-256-r5-nominal-v2",
-  "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  "restrictions": [
+    "Two distinct 128-byte one-block messages m(a), m(b) of sha3-256-r24-prefix-v1 (zero state, rate 136, suffix 0x06 with pad10*1, rounds 0 to 23, full 256-bit digest). m(u) places the point u (lanes u0..u3) in lanes 1, 6, 11 = u0, u1, u0^u1^K11 and 4, 9, 14 = u2, u3, u2^u3^K14, the other lanes 0..15 fixed constants K of trial 419 (proof.md Section 2); F(u) = SHA3-256-r24(m(u)) xor PD, and F(a) = F(b) with a != b is a collision of two distinct messages.",
+    "Distinguished-point parallel collision search (van Oorschot-Wiener) on F with 256 walks per step, the search of 0bd0022d and 5700dc84: DP = image x < 996 x 2^132 (planes 142..255 zero and the 10 planes below them < 996; theta = 996 x 2^-124, H = 114.0400), no trail cut, replay cap 192,175,830,994,599,577,266,900,205,935,001,600 steps, at most 16,992 trails, a table of 4,248 words with four 64-bit records each (48 end bits and the trail number), Tb = 67956479 x 2^94 steps, a prefilter-hit counter that aborts at hit HMAX + 1, and one replay that measures the stored trail by walking it to its DP (proof.md Section 4).",
+    "One step of 256 walks is a generated bit-sliced straight line of 146,782 register operations (106,646 XOR, 20,705 AND, 14,751 OR, 4,680 NOT; no loads or stores): lazy per-row theta, per-row complement subsets and 10-gate chi rows, NOTs placed by a polarity plan, dead-code elimination, last-use allocation (step design after jungjipdo's 67f781f8, our own generator gen3.c, written round by round; proof.md Section 3).",
+    "Cost model collision-frontier-v5, unit 6504: N = Tb x 146,802 + ((6541 + 13079) x LRC + 79) + R + PRE = 201394500597237441697031225723259698068471 word operations, every operation of the assembled other code counted (2,721 instructions, proof.md Section 4.3 and Appendix D), at most HMAX + 1 prefilter hits, PRE = the generator run gen3 512 0 3 (preprocessing_log2 34); time_log2 = 124.54197 by the integer certificate of Appendix A.",
+    "Machine model (the declared prices of the cost model of this entry, proof.md Section 3.6; the benchmark fixes neither): a declared file of 2,192 registers of 256 bits, the convention of 67f781f8, its 70,144 bytes counted as memory, an operation on registers costing one word operation, every load and store of the other code charged; 5 bytes per straight-line instruction and 32 bytes per instruction of the other code (87,072 bytes, measured), PERM one unit.",
+    "Memory at most 1,044,033 bytes <= 2^20 (search phase 1,044,033: registers, straight line, other code, table, walk state, data image; proof.md Section 6); the generator run gen3 512 0 3 precedes the search (phases do not overlap) and is charged with its static image 286,888 bytes, a 32,768-byte stack and the whole program file 733,910 bytes (1,037,182); its measured peak resident memory is 299,008 bytes.",
+    "Success at least 0.39 for one attempt over the fresh word rho, under the score-critical premise H_rand (our theory: over the algorithm's coin rho the program on the fixed target succeeds with at least the random-function probability of proof.md Section 5), with failure terms for a colliding pair with a trail of more than LRC evaluations, the trail limit, self-coincidence, starts and 48-bit key matches, and the hit-counter abort (F5 < 2^-1000, proved)."
+  ],
+  "baseline_improved": "sha3-256-r24-nominal-v2",
+  "heuristics": [
+    {
+      "id": "H_rand",
+      "role": "score-critical",
+      "statement": "Premise H_rand (our theory): over the algorithm's coins, the program run on the fixed SHA3-256-r24 target (F(u) = SHA3-256-r24(m(u)) xor PD, with the linear-structure message embedding m of proof.md Section 2) succeeds with probability at least the probability computed in proof.md Section 5 for a uniformly random function F from 256-bit values to 256-bit values. The only coin of the algorithm is the uniform word rho; the target is fixed, and given rho the run is deterministic. The computation of Section 5 is made in the random-function model, where F is realised by lazy sampling (values at distinct inputs independent and uniform, a fresh point a distinguished point with probability 996 x 2^-124), and there one attempt succeeds with probability at least 0.39 after the failure terms. The premise is that the fixed target carries this probability over.",
+      "scope": "The fixed function F of proof.md Section 2 on the points of one attempt: about 1.012630 x 2^128 evaluations in 256 lockstep walks from starts rho + i, i < 16,992. Only the pair-coincidence rate among evaluated images and the distinguished-point rate enter the bound. The step program, the cost, the memory and the failure terms are derived, not assumed.",
+      "extrapolation": "Not an estimate of the success probability for the fixed target. Organizer-executed program checks: rho-w22 runs the whole search with the claimed straight line at width 22 (every trial must return a 22-bit partial collision; an ideal random function needs 20.47 steps on average); proj-w256 runs eight chained full-width steps and tests 22-bit agreement among 2,048 iterates (model 0.3934 per trial). Our own runs on the program file of this package (proof.md Section 7.2): pair-coincidence rates on three 32-bit windows among 2^24 images of uniform inputs, of the consecutive starts rho + i and of chained iterates, and single-bit difference statistics.",
+      "evidence_ids": [
+        "proof:244-273",
+        "proof:304-310",
+        "proof:311-325"
+      ],
+      "limitations": "Our theory; no proof. No run reaches 2^128 and no full collision is claimed. The checks work at 22 and 32 bits (and 44 to 48 bits in rho length, on other constants). A pair-coincidence deficit eps costs about 0.5 log2(1/(1 - eps)) bits of time."
+    }
+  ],
+  "experiment_manifest": "experiments/manifest.json",
+  "certificate_manifest": "certificates/manifest.json"
 }
