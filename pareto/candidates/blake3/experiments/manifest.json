@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "blake3-r7-bounded-machine-w16-v2",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/bounded_machine.py",
+      "scope": "Complete bounded-restart machine program, for a machine with a declared 1,024-register file, serialized into its byte image (4-byte three-operand kernel words behind an 8-byte length-carrying KERNEL instruction, 8-byte control, 40-byte constant formats) and decoded before execution with an asserted round trip; 45,974-instruction register-resident bitsliced kernel (complement-free pivot adders, outputs pinned to their home registers) plus control code with a two-stage distinguished test (stage 1 on 32 planes; a counted stage-2 budget enforced by a halt), an endpoint table of 64-bit slots holding a 47-bit key and a 17-bit start identifier, and lane metadata, in memory via charged loads and stores, executed by a counting interpreter. Twelve deterministic control-flow fixtures (including the budget halt) and full-width cost probes under lane-wise test functions; then 256 organizer-seeded 16-bit projected searches on complete BLAKE3 r7 digests (256 lanes, distinguished predicate = 3 low zero bits and a four-bit window below 11, stage 1 on the 3 low planes, 9 key bits, capacity 256, age cap 3, 48 batches, 4,096 starts, budget 4,608), each cross-checked against the scalar reference state machine, with sampled kernel lanes compared to scalar BLAKE3 on all 256 output bits.",
+      "hypothesis": "The decoded machine image implements the frozen specification: it agrees with the scalar reference on every fixture and projected trial (termination code, pair, insertions, cuts, stage-2 batches, starts, batches, compressions), its handler operation counts equal the closed forms of the ledger at the full-width parameters, its image length equals the ledger's code size, and its register-allocated kernel is statically shown to compute the gate DAG and fits the declared register file and agrees with scalar BLAKE3 on every sampled lane. Returned pairs are distinct messages with equal low sixteen digest bits. Success frequency is control-flow coverage only; no full-width success probability or all-input kernel correctness is inferred.",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "ffff000000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "blake3-r7-slice-first-collision-w20-v1",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/bounded_machine.py",
+      "scope": "Evidence for heuristic H1. Each organizer trial selects an independent 20-bit slice g(u) = (BLAKE3_r7(0^32 || LE256(c | u)) XOR PD) mod 2^20 of the fixed target, with c derived from the trial seed and its low 20 bits cleared. 256 lane walks start at 256 consecutive slice values and are evaluated with the same bitsliced kernel and serialized in batch and lane order exactly as in the full search, for 5 batches (1280 slots). A trial returns the two colliding messages when the first event is an output equal to an earlier output; it returns no pair when the first event is an output equal to a start value or when no event occurs.",
+      "hypothesis": "If the fixed target's slices behave like uniformly random functions for this lane-serialized exposure, every query before the first event is fresh and the first-event law is exact: the probability that a trial returns a pair is 0.448648 (expected 114.85 of 256 trials, binomial 99 percent interval 94 to 136); start-first 0.216373 and no-event 0.334979. The organizer verifies every returned pair on the low 20 digest bits. A count outside the interval would be evidence against H1 for this event. This tests the first-duplicate mechanism of the proof at width 20; it does not measure full-width success probability.",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "ffff0f0000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "blake3-r7-slice-first-collision-w24-v1",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/bounded_machine.py",
+      "scope": "Evidence for heuristic H1. Each organizer trial selects an independent 24-bit slice g(u) = (BLAKE3_r7(0^32 || LE256(c | u)) XOR PD) mod 2^24 of the fixed target, with c derived from the trial seed and its low 24 bits cleared. 256 lane walks start at 256 consecutive slice values and are evaluated with the same bitsliced kernel and serialized in batch and lane order exactly as in the full search, for 12 batches (3072 slots). A trial returns the two colliding messages when the first event is an output equal to an earlier output; it returns no pair when the first event is an output equal to a start value or when no event occurs.",
+      "hypothesis": "If the fixed target's slices behave like uniformly random functions for this lane-serialized exposure, every query before the first event is fresh and the first-event law is exact: the probability that a trial returns a pair is 0.237789 (expected 60.87 of 256 trials, binomial 99 percent interval 43 to 79); start-first 0.041888 and no-event 0.720323. The organizer verifies every returned pair on the low 24 digest bits. A count outside the interval would be evidence against H1 for this event. This tests the first-duplicate mechanism of the proof at width 24; it does not measure full-width success probability.",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "ffffff0000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    }
+  ]
+}
