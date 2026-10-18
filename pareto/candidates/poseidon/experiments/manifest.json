@@ -1,0 +1,17 @@
+{
+ "schema_version": 1,
+ "experiments": [
+  {
+   "id": "lowbits-birthday",
+   "kind": "python-message-pairs-v1",
+   "scope": "Selected target poseidon-orchard-r21-prefix-v1, organizer seeds, at most 1200 fresh canonical 64-byte message pairs per trial, deterministic from the supplied seed. Every eighth trial the program additionally runs one w=16 truncated first-repeat witness walk on the filed walk map (fresh (rho0, start) from the same trial seed, 4096-step cap) and reports its length and cap flag as untrusted participant observations; the runner executes the program twice and requires byte-identical output.",
+   "hypothesis": "The submitted construction finds two distinct messages whose selected-round Orchard Poseidon digests agree on the low 14 bits within the per-trial budget.",
+   "program": "experiments/exp_lowbits.py",
+   "event": {
+    "kind": "digest-xor-mask",
+    "mask_hex": "ff3f000000000000000000000000000000000000000000000000000000000000",
+    "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  }
+ ]
+}
