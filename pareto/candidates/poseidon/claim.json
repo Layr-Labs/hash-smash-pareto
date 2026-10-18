@@ -1,20 +1,51 @@
 {
-  "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "poseidon-orchard-r0-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 0,
-  "claim": {
-    "time_log2": 128.0,
-    "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
-    "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
-  },
-  "restrictions": [],
-  "baseline_improved": "poseidon-orchard-r0-nominal-v2",
+  "baseline_improved": "poseidon-orchard-r56-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
+  "claim": {
+    "memory_log2_bytes": 19.99997,
+    "nonuniform_advice_log2_bytes": 0,
+    "preprocessing_log2": 36,
+    "success_probability": 0.39,
+    "time_log2": 126.21753,
+    "time_unit": "target-compressions"
+  },
+  "experiment_manifest": "experiments/manifest.json",
+  "heuristics": [
+    {
+      "evidence_ids": [
+        "proof:228-305",
+        "proof:385-507"
+      ],
+      "extrapolation": "Evidence is two author-run campaigns on the fixed map, both reported in proof Section 9 with the measurement program reproduced in proof Appendix B so that the evidence is inside the candidate. The first measures the first-repeat rate of the walk map itself, x -> F(x) mod 2^w, at output widths 16, 20, 24, 28, 30 and 32 (8,300 walks, disclosed seed p56-h1-campaign-v1, the coin drawn as the program draws it), each walk run to its exact first repeated value, against a seeded random-function control through the same code path. The second measures the three properties the first does not: the distinguished-point rate of the predicate x mod 2^128 < T at densities 2^-8, 2^-12 and 2^-16 over 4,194,240 samples, the uniformity of the low 16 bits of F, the gap law between distinguished points at density 2^-8, and the table occupancy, each against the same control. Proof Section 9 discloses that the campaigns were run in stages, that the first two stages of campaign 1 measured the truncated digest rather than the truncated walk map and were superseded after a review of this package observed the difference, and that widths and tests were chosen partly after seeing earlier results, so every interval is descriptive and no coverage is advertised. No width, seed, walk or test was discarded and no result is withheld. The pooled first-repeat statistic is 0.9900 with 95 percent interval [0.9688, 1.0112], against 1 for a uniformly random function, and a seeded random-function control through the same code path gives 1.0158. The map and the control agree within their intervals at every width and at every measured density. What the two campaigns reach is 32-bit outputs, trails of about 2^16 steps and densities of 2^-8 to 2^-16; the filed budget needs the transfers at density 2^-112.26455 over about 2^127 steps of a 254-bit map, a gap of more than 2^95 in density and more than 2^110 in trail length that no feasible experiment closes, since a single full-width trail is the attack itself. The measurements exclude gross departures where they can be seen; they do not bound the deficit at the level the filed budget needs and are not presented as validation of the premise. The step to full width is the premise itself and rests on the design and public analysis of Orchard Poseidon. No pre-registration, holdout or calibration is claimed.",
+      "id": "H1-fixed-target-random-function",
+      "limitations": "Plausible, not established. The random-function bound exceeds 0.39 by 1.70e-09, so any fixed-target deficit larger than that defeats the claim; the filed budget is the least one reaching 0.39 and buys no robustness margin: it tolerates only about a 5.6e-09 relative shortfall in the collision rate, and absorbing a one percent shortfall would cost about 0.00725 bits of time (proof Section 9 gives the sensitivity table). The measurement's pooled standard error is 0.0108, so it excludes gross departures of a few percent and cannot speak to that level. The premise transfers four properties of a random function: the first-repeat rate, the distinguished-point rate for the predicate x mod 2^128 < T, the gap distribution between distinguished points and the resulting table occupancy. All four now have observable-analogue evidence (proof Section 9, campaigns 1 and 2), but at densities and trail lengths many orders of magnitude from the filed regime, and the rules are explicit that a sampled experiment does not prove a full-scale success bound. The declared experiments cannot test full-width distinguished-point, gap or table events, nor the full-width map; the trail-machine experiment runs a reduced width with reduced parameters and its success frequency is control-flow coverage only, not a probability estimate. The success-bound experiment certifies arithmetic in the random-function model and establishes nothing about the fixed target.",
+      "role": "score-critical",
+      "scope": "Transfers the random-function lemma of proof Section 6 to the fixed target. The algorithm is generic and uses no property of the Orchard round function, but the premise is not merely freshness: proof Lemma 1(iii) needs each fresh value to be conditionally uniform over the elements not yet used, which is what bounds the distinguished-point probability, together with the chain-rule independence used in the detection, gap and table terms. The premise concerns this target, this line and this budget; it is not claimed for other round counts or other budgets.",
+      "statement": "For the fixed walk map F(x) = digest(message(x + rho0)) / OUTSCALE on the input line of proof Section 2, at the complete 56-partial-round Orchard Poseidon schedule, with rho0 drawn as the frozen program draws it (the low 254 bits of a uniform 256-bit word, uniform on [0, 2^254) and within total variation 2^-128 of field-uniform), the frozen algorithm of proof Section 4 succeeds with probability at least 0.39 at the filed budget S, where the single-trail lemma of proof Section 6 gives 0.390000001700 for a uniformly random function on the same number of points."
+    },
+    {
+      "evidence_ids": [
+        "proof:308-330",
+        "experiment:poseidon-orchard-r56-trail-machine-w11-v1"
+      ],
+      "extrapolation": "The declared experiment reports the structural counts of the listing executed in the organizer's executor: step operations and constants, step and control registers, control instructions, step copies, code bytes and the memory total. The experiment protocol labels such counts participant observations and does not credit them as resource costs, so they do not establish the memory figure; that figure is derived from the layout in proof Section 7.3, and the reported counts let a reader check the derivation against the executed listing. The benchmark contract fixes no register count. We are aware of 56-partial-round entries declaring files of comparable size, but that is an observation about another participant's package which a judge cannot check from inside this one, so it is context rather than support.",
+      "id": "H-MACHINE-register-file",
+      "limitations": "The register-file size and the instruction encoding are this entry's declaration, not contract requirements, so the time bound is conditional on accepting them. Charging instruction fetch at one 32-byte load per fetched step word would add about 0.17 bits to the time bound, counting the trail rows only. The memory axis is a knife edge: the layout sits 24 bytes below 2^20, so declining the 4-byte step encoding in favour of 8 bytes adds 61,408 bytes to the image and turns the memory term of the normalized cost from zero into about 0.08208 bits.",
+      "role": "score-critical",
+      "scope": "Accounting convention for the operation ledger of proof Section 7 and the memory figure of proof Section 7.3. The deterministic event counts of proof Section 5 and the success argument of proof Section 6 do not depend on it; the main-loop operation count does.",
+      "statement": "The cost model's Pallas field RAM with 256-bit words is realized as a load/store machine with a fixed, declared file of 414 registers of 256 bits (345 named by the step program, 64 for the search control and the constants). Registers are named statically by instruction fields and are never reached by a computed address; the file's 13,248 bytes are counted in memory_log2_bytes as storage. Every other word (start word, table, side array, output area, constant area) is memory, reached only by charged loads and stores. A step instruction carries three 9-bit register fields and one opcode bit and occupies 4 bytes; control instructions occupy 8 bytes; the program image is counted in memory and instruction fetch is not charged as a primitive operation."
+    }
+  ],
   "lane": "exploratory",
-  "heuristics": []
+  "restrictions": [
+    "Ordinary collision construction for the complete 56-partial-round Orchard Poseidon hash (poseidon-orchard-r56-prefix-v1) on messages of exactly two canonical Pallas field elements, with the state initialized [m0, m1, 2^65] and the complete first output coordinate compared. The attack was not executed at full scale and no collision of the complete target is exhibited. This is not a break of Orchard Poseidon and asserts no weakness of its round function: the success argument is the generic birthday bound for a random function plus the declared premise H1.",
+    "time_log2 and memory_log2_bytes are worst-case bounds for the frozen program of proof Section 4 on the load/store machine declared in H-MACHINE-register-file, with every termination charged at its limit (step budget, table full, start on cycle, walk cap, lockstep cap) and the offline derivation of the constants charged flat inside the time bound as preprocessing_log2 36.",
+    "The construction replicates published work with credit (proof Section 1): the two-round bypass on a line of Bariant, Bouvier, Leurent and Perrin (ToSC 2022), the sparse partial rounds of Grassi, Khovratovich, Rechberger, Roy and Schofnegger (USENIX Security 2021), and the assembled attack of public submissions 7f88498e-210e-4e2d-a75f-323ed65133ec at 48 partial rounds and 6de8a0a2-c1af-4234-9874-4d0022aa55a3 at 56. Our own additions are the accounting parameters re-tuned against the one-mebibyte budget at this round count and one ledger tightening. Against the current best 56-round entry b810ea13 (126.226166, filed at a 0.39 bound) the difference is 0.00864 bits and is this entry's parameters and ledger at the same success bound; against its predecessor 6de8a0a2 (126.363427, a 0.45 bound) the difference decomposes as 0.13725 bits of probability margin and 0.00865 bits of ours (proof Section 1.1). No participant file was copied or executed.",
+    "success_probability rests on the single-trail lemma of proof Section 6, whose arithmetic at the submitted parameters is recomputed in the organizer's executor by experiment poseidon-orchard-r56-success-bound-v1 (bound 0.390000001700) in the random-function model only, together with the declared premise H1 for the fixed target. The filed budget is the least one reaching 0.39 and so carries no probability margin."
+  ],
+  "rounds": 56,
+  "schema_version": 3,
+  "submission_state": "ready",
+  "target_profile": "poseidon-orchard-r56-prefix-v1"
 }

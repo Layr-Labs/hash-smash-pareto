@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "poseidon-orchard-r56-trail-machine-w11-v1",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/trail_machine.py",
+      "scope": "The complete search program of proof Section 4 as an instruction listing, executed by a counting interpreter on the real equivalent-form step program (808 field operations at 56 partial rounds) at output width 11, with the reduced-width parameters printed in the program. Each organizer trial derives its two coins from the organizer's trial seed, runs one trail with distinguished points and the deterministic recovery, and returns the two colliding 64-byte messages when the search succeeds. The program also verifies, in every trial, that the step program times OUTSCALE equals the organizer's reference digest of message(x + rho0) at 56 partial rounds on a seed-derived point, asserts eight deterministic control-flow fixtures against a plainly written reference implementation of the same algorithm (including the step-budget halt, the table-full halt and the start-on-cycle halt), and reports the structural counts of the listing: step operations, step constants, step and control registers, control instructions, step copies and code bytes. The embedded deployed round constants and MDS are checked against three organizer digest vectors at import time.",
+      "hypothesis": "The listing implements the frozen algorithm of the proof: on the real width-11 map it terminates with the reference implementation's termination code in every trial, and every returned pair is two distinct canonical messages whose complete 56-partial-round Orchard Poseidon digests agree on the low eleven bits, which the organizer verifies with its own digest. The reported counters are participant observations of control flow and charge; the success frequency is control-flow coverage at a reduced width and reduced parameters, and no full-width success probability is inferred from it.",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "ff07000000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "poseidon-orchard-r56-success-bound-v1",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/success_bound.py",
+      "scope": "Exact certification of the single-trail success bound of proof Section 6 at the submitted parameters, in 60-digit decimal arithmetic with every exponential, quotient and product rounded in the direction that weakens the bound. The program reports the six loss terms (no repeat within the budget, start on the cycle, repeat not detected, cycle shorter than the detection delay, a gap above the cap, table overflow), the certified lower bound, the certification flag and the derived integer parameters. It ignores the organizer seeds, certifies once, reports the same values in every trial row and returns no message pairs.",
+      "hypothesis": "The certified lower bound on the success probability of one attempt for a uniformly random function is at least 0.39, with the individual loss terms equal to the values quoted in proof Section 6. This is arithmetic in the random-function model only: it establishes nothing about the fixed Orchard Poseidon target, which is the declared premise H1, and it infers nothing from the target. No pair is returned, so the organizer's pair recomputation applies to none; the evidentiary content is that the organizer's executor reproduces the quoted numbers from the submitted source.",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    }
+  ]
+}
