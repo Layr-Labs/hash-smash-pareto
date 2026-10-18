@@ -1,20 +1,43 @@
 {
-  "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "poseidon-orchard-r0-prefix-v1",
-  "attack_class": "ordinary-collision",
-  "rounds": 0,
-  "claim": {
-    "time_log2": 128.0,
-    "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
-    "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
-  },
-  "restrictions": [],
-  "baseline_improved": "poseidon-orchard-r0-nominal-v2",
-  "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+ "schema_version": 3,
+ "submission_state": "ready",
+ "target_profile": "poseidon-orchard-r16-prefix-v1",
+ "attack_class": "ordinary-collision",
+ "rounds": 16,
+ "claim": {
+  "time_log2": 61.35511,
+  "time_unit": "target-compressions",
+  "memory_log2_bytes": 57.7,
+  "preprocessing_log2": 20,
+  "success_probability": 0.3956,
+  "nonuniform_advice_log2_bytes": 0
+ },
+ "restrictions": [
+  "Applies to the selected target poseidon-orchard-r16-prefix-v1 only (sixteen partial rounds 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18 and 19 plus the eight fixed full rounds); the construction uses the first two full rounds being skippable on a line and gives no claim for other round counts.",
+  "time_log2 is the worst-case operation count of the algorithm of proof.md section 4 (at most K = 2 centres, every trial charged in full with the root isolation at its cap of 64 rounds, one thread), plus the offline bound of 1,000,000 operations of proof.md section 6.2, which is declared as preprocessing_log2 = 20 and is inside time_log2 (one quantity); memory_log2_bytes is the footprint. Cost model orchard-field-ram-v2: every field operation, load, store, control operation and random word is priced 1/C, C = 216 + 21 r = 552.",
+  "success_probability 0.39560 is a probability over the algorithm's fresh independent uniform 256-bit random words (the cost model's random-word primitive) for the fixed target, derived from the one score-critical premise H-GEOM-w1 as 1 - (1 - q)^K - K (eps_coin + eps_iso + delta_C) with q = 0.22257 (proof.md section 9.2)."
+ ],
+ "baseline_improved": "poseidon-orchard-r16-nominal-v2",
+ "certificate_manifest": "certificates/manifest.json",
+ "experiment_manifest": "experiments/manifest.json",
+ "lane": "exploratory",
+ "heuristics": [
+  {
+   "id": "H-GEOM-w1",
+   "statement": "Notation: p is the Pallas prime, D = 5^22, F in F_p[X] the fixed digest polynomial of proof.md section 2.3 at r = 16 (degree D). G(c,t) = (F(c+t) - F(c-t))/(2t) in F_p[c,t] (total degree D-1; G(c,t) = g_c(t^2) for the odd part g_c of proof.md section 3). k(c) is the number of nonzero squares S = t^2 with G(c,t) = 0 (k(c) = deg G_c). O is the set of (c,s1,s2) with G(c,s1) = G(c,s2) = 0, s1^2 != s2^2 and s1 s2 != 0. Premise: N*/p >= 1 - eps and N_off/p <= w (1 + eps) with w = 1 and eps = 0.21, where N* is the number of points (c,t) of G = 0 over F_p with t != 0 and N_off the number of points (c,s1,s2) over F_p with G(c,s1) = G(c,s2) = 0, s1^2 != s2^2 and s1 s2 != 0. Reduction (proved from the count statement of the premise, with no genus bound (Grok jobs 138 and 139); proof.md section 9.2, numbers recomputed in Appendix D): for c uniform in F_p, E[k] >= 1/2 - e1 and E[k(k-1)] <= w/4 + e2 with e1 < 1.050e-01 and e2 < 5.250e-02; Cauchy-Schwarz gives P(k >= 1) >= 0.2236917563 and Markov on k(k-1) gives P(k > 16) <= 0.0011121324, so the event 1 <= k <= 16 has probability at least q = 0.22257 for a uniform centre; two independent coin centres then succeed with probability at least 0.395602595 (with the coin and isolation terms of proof.md 9.2 and 9.4).",
+   "role": "score-critical",
+   "scope": "The fixed Poseidon target poseidon-orchard-r16-prefix-v1, this line construction (the line j = 0 of the first two rounds, odd part about a centre, proof.md sections 2-3), the polynomial F of proof.md section 2.3; centres uniform on F_p. Not claimed for other round counts. Nothing else in the success bound is heuristic: the Cauchy-Schwarz reduction, the isolation lemma (proof.md 9.4) and the independence of the centres (each draw uses fresh random words) are proved in proof.md.",
+   "extrapolation": "From the two moments of k(c) that H-GEOM-w1 gives through the counts to the success of the algorithm at r = 16. The bound is explicit for every r >= 13 as a function of the count statement (no genus bound; Grok jobs 138 and 139). Support: usable roots appeared at three of the four centres tried in our executed full-scale runs at r = 3, 4, 5 (proof.md section 10.1); the organizer-run experiments lowbits-birthday and line-ladder-w6, -w8, -w10, -w12 on the digest of the target and on the antipodal pairs of its line construction (proof.md section 10.2); the exact computations of Grok job 135 for the toy permutation on a generic line over the Pallas field (Theorem A: the hypothesis with w = 1 at one full round; Theorem B: absolute irreducibility of G = 0, a reduced pair scheme of pure dimension 1 and an absolutely irreducible off-diagonal u-scheme at two full rounds; Theorem D: degree exactly 5^N), and of Grok job 136 for the first N = 1, 2, 3, 4 full rounds of the Orchard parameter tuple on a generic line, re-run on the deployed constants and the attack line: (a) and (b) hold at N = 1, ..., 4, w = 1 at N = 1, the monodromy is S_m at N = 2, 3 (proof.md section 10.3), with the density of our line (proof.md section 10.3). Under (a) and 2-transitivity of the monodromy of H, w is 1 or 2 (Grok job 137, lemma: with the arithmetic monodromy Gamma inside the hyperoctahedral group B_m, K = Gamma meet F_2^m is one of 0, <1>, E, F_2^m once pi(Gamma) contains A_m, and w = 1 exactly when K contains the even-weight subspace E, w = 2 otherwise; the witnesses of Grok job 136 establish the hypotheses). Measured on the deployed Orchard constants and the attack's own line (the F_N of proof.md 10.3, using the Frobenius cycle types of H(c, u) and their lifts to G(c, t) = H(c, t^2) over F_p): N = 1 gives K = F_2^2 and w = 1; N = 2 (m = 12) gives K = F_2^12 and w = 1, witnessed by the 12-cycle specialisations c = 8 (two 12-cycles on G, omega = 0) and c = 24 (one 24-cycle, omega = 1) and the even permutation c = 6; N = 3 (m = 62) gives K = F_2^62 and w = 1, witnessed by the 62-cycle specialisations c = 82 (omega = 0) and c = 102 (omega = 1) and the even permutation c = 1. So w = 1 at N = 1, 2, 3 on the deployed constants, a measured trend, and the premise states w = 1 at N = 22: this is our theory, the measured w = 1 at N = 1, 2, 3 continues, and the lemma gives w = 1 or w = 2 given (a) and 2-transitivity.",
+   "evidence_ids": [
+    "proof:272-306",
+    "proof:321-392",
+    "experiment:lowbits-birthday",
+    "experiment:line-ladder-w6",
+    "experiment:line-ladder-w8",
+    "experiment:line-ladder-w10",
+    "experiment:line-ladder-w12"
+   ],
+   "limitations": "It concerns this F, not every polynomial of degree D: it is false for permutation polynomials (every pure composition of maps x -> a x^5 + b, p = 2 mod 5, is bijective and has k = 0), and a statement about components over the algebraic closure alone does not imply it (X^3 over F_101: two conjugate lines, no off-diagonal rational point). The explicit constants of 9.2 apply for every r >= 13 as stated, with no genus bound: the Weil majorant of the second moment (Grok job 138) exceeds the main term from r = 13, so the premise is stated as the count statement itself, which Grok job 139 measures on toy copies (10.3)."
+  }
+ ]
 }
