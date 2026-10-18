@@ -1,20 +1,46 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha256-r37-prefix-v1",
+  "target_profile": "sha256-r64-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 37,
+  "rounds": 64,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 124.38558,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 20,
+    "preprocessing_log2": 15.3466,
     "success_probability": 0.39,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "sha256-r37-nominal-v2",
+  "restrictions": [
+    "Ordinary collision of complete SHA-256 at 64 rounds: two distinct 52-byte messages M(x)=P||x, P=20 zero bytes, x a 32-byte big-endian value; standard IV, FIPS length padding, all 64 rounds and feed-forward, all 256 digest bits. The internal walk is the working state before final IV addition; equality is equivalent to complete-digest equality by a fixed word-wise bijection. No structural or differential attack is claimed.",
+    "Native classical 256-bit load/store RAM with 1024 registers (1021 data plus 3 pointers), fully charged 32768 bytes. Every Boolean operation, explicit load/store, move/set, pointer addition, comparison, branch and random word costs one primitive operation; 4912 primitives equal one target compression. Native instruction decode is part of the chosen machine convention; this bound does not describe a runtime software interpreter or ordinary CPU implementation.",
+    "Four-byte little-endian body word: dst | (srcA<<10) | (srcB<<20) | (op<<30). Opcodes 0/1/2/3 are XOR/AND/OR/NOT, NOT requires srcB=0. All 100205 body tuples roundtrip exactly and have no move/set/immediate. Opcode3 with srcB>=1 is reserved for extended 36-byte instructions with a 256-bit payload. Native code is self-delimiting; no dynamic software unpacking is part of the modeled search.",
+    "Fixed plan Tp=350, B=1353154099710000000000000000000000000, 256 lanes, stage-1 test34 plus loop3, body100205, total100242 operations per batch. Distinguished points have low32 bits zero and the next90 bits below350. Halts enforce B, e2max=161308538879156112670898437564, table24285 keys, at most2 cut trails, recovery at most ceil(16L)+2^48 calls; L=2^122/350. No runtime parameter optimization, restarts or amplification.",
+    "Memory: body400820 + other code60228 + registers32768 + counters16384 + recovery array4096 + table24285*22=534270 gives1048566 bytes <=2^20. Table entry is key5/start2/length15 bytes; start identifiers stay below2^16 and capped lengths below2^119. Setup825806 bytes does not coexist with table; reported memory bound20 includes both phases.",
+    "Generator is charged400 operations per primitive call and emitted record: 400*(409424+100205)=203851600, plus813600 setup, all included in total time. A conservative5600-instruction generator code image at36 bytes/instruction,114006 scratch bytes and the full registerfile are included in setup. These doubled finite generator allowances are declared bounds, not a fresh compiler measurement. Preprocessing bound15.34660 also appears in total time.",
+    "Total charged operations N=136473648807747854874159176999948637495191; N/4912 has log2<=124.38558. The inherited random-function Lemma2, with the new fixed plan and outward-rounded exact certificate, gives P_F>=0.39115312828634628524. H1 is a disclosed score-critical extrapolation from random F to the fixed target, not proved or inferred from experiment frequencies. No full-size collision was executed.",
+    "Two declared experiments check small-width search and full-width18-bit projections using decoded compact tuples. Fresh32-trial local organizer reports completed twice reproducibly:23/32 and11/32 verified18-bit witness pairs. All isolated selftests passed. Default256-trial local run exceeded20seconds under amd64 emulation; no full256 report is claimed. Official remote evaluation must independently run its declared experiment limits.",
+    "Derivative of Jbenisek4e278a64-abbf-4736-8ce5-cb9625595078 (entire circuit, search, recovery, probability argument and source) and dariolina6b678689-e6a2-42b0-87d8-fff55432f2f6 (compact-native convention and pre-disclosed4-byte direction), declared as dependencies. Underlying credits are recorded in proof8. Contribution is concrete strict packing/decoding, codec checks, conservative setup allowances and fixed enlarged-table plan. Prior authors are not asserted to endorse this entry."
+  ],
+  "baseline_improved": "sha256-r64-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  "experiment_manifest": "experiments/manifest.json",
+  "heuristics": [
+    {
+      "id": "H1-random-function-model",
+      "role": "score-critical",
+      "statement": "For the fixed 64-round SHA-256 walk g on M(x)=zero20||x, the single attempt over one fresh uniform256-bit word succeeds at least as often as the same procedure for a uniformly random256-bit function F. This assumes uniform collision hazard on fresh evaluations, random-mapping iterates, DP density350/2^122 independent of collisions, and persistence of the lazy-sampling hazard despite adaptive trail selection. The proof of the numerical bound concerns F; it does not establish H1 for g.",
+      "scope": "The selected fixed target and52-byte message subdomain,256 simultaneous trails,Q=346407449525760000000000000000000000000 evaluations,mean trail length2^122/350. Not claimed for other targets or parameters.",
+      "extrapolation": "Small-width18-bit searches and full-width18-bit projections check the implementation. They do not measure256-bit collision structure or2^128 work; transfer to that regime rests on H1 only. No probability estimate or confidence interval is inferred from those checks.",
+      "evidence_ids": [
+        "experiment:bssha-n18",
+        "experiment:proj-k0-w256",
+        "proof:102-199",
+        "proof:200-234"
+      ],
+      "limitations": "Unproved fixed-target premise. Neither full256-bit collisions nor full-scale trails have been tested. An adverse deviation in collision hazard can invalidate the claimed success bound. Machine and finite generator allowances are separately explicit in restrictions and proof3; experimental Python memory/time is not a realization of the modeled native machine."
+    }
+  ],
+  "submission_state": "ready",
+  "lane": "exploratory"
 }
