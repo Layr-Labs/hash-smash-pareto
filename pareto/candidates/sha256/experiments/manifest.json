@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "sha256-r64-bounded-machine-w16-v1",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/sha256_machine.py",
+      "scope": "Complete bounded-restart machine program, for a machine with a declared 1,024-register file, serialized into its byte image (4-byte three-operand kernel words behind an 8-byte length-carrying KERNEL instruction, 8-byte control, 40-byte constant formats) and decoded before execution with an asserted round trip; 99,616-instruction register-resident bitsliced kernel (complement-free pivot adders, outputs pinned to their home registers) plus control code with a two-stage distinguished test (stage 1 on 32 planes; a counted stage-2 budget enforced by a halt), an endpoint table of 64-bit slots holding a 47-bit key and a 17-bit start identifier, and lane metadata, in memory via charged loads and stores, executed by a counting interpreter. Sixteen deterministic control-flow fixtures (including the budget halt) and full-width cost probes under lane-wise test functions; then 256 organizer-seeded 16-bit projected searches on complete SHA-256 r64 working states (256 lanes, distinguished predicate = 3 low zero bits with no window test, which is the deployed predicate of the full-width program at its own width of 112 low zero bits; the window variant is exercised separately by the control-flow fixtures, stage 1 on the 3 low planes, 9 key bits, capacity 256, age cap 3, 48 batches, 4,096 starts, budget 4,608), each cross-checked against the scalar reference state machine, with sampled kernel lanes compared to scalar SHA-256 on all 256 output bits.",
+      "hypothesis": "The decoded machine image implements the frozen specification: it agrees with the scalar reference on every fixture and projected trial (termination code, pair, insertions, cuts, stage-2 batches, starts, batches, compressions), its handler operation counts equal the closed forms of the ledger at the full-width parameters, its image length equals the ledger's code size, and its register-allocated kernel is statically shown to compute the gate DAG and fits the declared register file and agrees with scalar SHA-256 on every sampled lane. Returned pairs are distinct messages with equal low sixteen bits of the first digest word. Success frequency is control-flow coverage only; no full-width success probability or all-input kernel correctness is inferred.",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "0000ffff00000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "sha256-r64-slice-first-collision-w20-v1",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/sha256_machine.py",
+      "scope": "Evidence for heuristic H1. Each organizer trial selects an independent 20-bit slice g(u) = (SHA256_r64(P || BE256(c | u)) before the feed-forward XOR PD) mod 2^20 of the fixed target, with c derived from the trial seed and its low 20 bits cleared. 256 lane walks start at 256 consecutive slice values and are evaluated with the same bitsliced kernel and serialized in batch and lane order exactly as in the full search, for 5 batches (1280 slots). A trial returns the two colliding messages when the first event is an output equal to an earlier output; it returns no pair when the first event is an output equal to a start value or when no event occurs.",
+      "hypothesis": "Under the random-function model every query before the first event is fresh, so the first-event law is exact and the probability that a trial returns a pair is 0.448648 (114.85 of 256), with the complementary start-first and no-event probabilities also fixed before execution by exact rational arithmetic. The organizer verifies every returned pair on the declared low digest bits. This experiment is DIAGNOSTIC and is not a calibrated test of the fixed-target premise H1: the organizer seed material is public and fixed, there is no holdout nonce and no pre-registration, and the width, the slot count and the choice of these two experiments were made by the authors. No coverage, no confidence statement, no false-alarm rate and no rejection rule are claimed, and no full-width success probability is inferred. What a returned-pair count near 114.85 would show is the absence of a gross departure from random-function behaviour in this mechanism at width 20, and nothing more.",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "000fffff00000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "sha256-r64-slice-first-collision-w24-v1",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/sha256_machine.py",
+      "scope": "Evidence for heuristic H1. Each organizer trial selects an independent 24-bit slice g(u) = (SHA256_r64(P || BE256(c | u)) before the feed-forward XOR PD) mod 2^24 of the fixed target, with c derived from the trial seed and its low 24 bits cleared. 256 lane walks start at 256 consecutive slice values and are evaluated with the same bitsliced kernel and serialized in batch and lane order exactly as in the full search, for 12 batches (3072 slots). A trial returns the two colliding messages when the first event is an output equal to an earlier output; it returns no pair when the first event is an output equal to a start value or when no event occurs.",
+      "hypothesis": "Under the random-function model every query before the first event is fresh, so the first-event law is exact and the probability that a trial returns a pair is 0.237789 (60.87 of 256), with the complementary start-first and no-event probabilities also fixed before execution by exact rational arithmetic. The organizer verifies every returned pair on the declared low digest bits. This experiment is DIAGNOSTIC and is not a calibrated test of the fixed-target premise H1: the organizer seed material is public and fixed, there is no holdout nonce and no pre-registration, and the width, the slot count and the choice of these two experiments were made by the authors. No coverage, no confidence statement, no false-alarm rate and no rejection rule are claimed, and no full-width success probability is inferred. What a returned-pair count near 60.87 would show is the absence of a gross departure from random-function behaviour in this mechanism at width 24, and nothing more.",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "00ffffff00000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "sha256-r64-success-bound-v1",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/success_bound.py",
+      "scope": "The exact random-function success bound of proof Section P for the frozen parameters, recomputed inside the organizer's executor in 60-digit decimal arithmetic with every exponential, quotient and product rounded in the direction that weakens the bound and exact rationals elsewhere. The run ignores the organizer trial seeds, performs one certification and reports the same loss terms and the certified lower bound in every trial row; it returns no message pairs, so no target event is claimed.",
+      "hypothesis": "The literals of the frozen program (theta = 2^-112, U = 71,316, R = 10 L, B = 1048069 * 2^100, 47-bit key, 2^17 reserved starts) satisfy the bound of proof Section P with a certified success probability of at least 0.39: the reported bound_floor is 0.390036155778183 and certified is 1 in every row. This is arithmetic reproduction of the stated bound in the random-function model, executed by the organizer rather than only by the authors. It is not evidence about the fixed SHA-256 target, which is the separate heuristic H1.",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    }
+  ]
+}
