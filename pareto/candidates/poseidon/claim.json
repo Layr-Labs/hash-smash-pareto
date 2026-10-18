@@ -1,20 +1,34 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "poseidon-orchard-r0-prefix-v1",
+  "target_profile": "poseidon-orchard-r23-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 0,
+  "rounds": 23,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 126.6394,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 20.0,
+    "preprocessing_log2": 15,
     "success_probability": 0.39,
     "nonuniform_advice_log2_bytes": 0
   },
   "restrictions": [],
-  "baseline_improved": "poseidon-orchard-r0-nominal-v2",
+  "baseline_improved": "poseidon-orchard-r23-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
+  "submission_state": "ready",
   "lane": "exploratory",
-  "heuristics": []
+  "experiment_manifest": "experiments/manifest.json",
+  "heuristics": [
+    {
+      "id": "H1",
+      "statement": "The real r=23 walk map F(x) = digest(message(x+rho0))*LAMBDA with a fresh random rho0 finds a collision with probability at least 0.39 at the filed budget n1 = 172533624524770551326248201244353529883 = ceil(m_hi * n0), where n0 = 169183785570475143485240440522017581764 is the tight uniform-random-function budget for 0.39. Premise: the real map's per-step repeat hazard is a constant multiple m of the random-function hazard (hazard-multiplier family), with measured two-sided 95% profile-likelihood interval [0.9891, 1.0198]; within the family the 0.39-success budget scales as 1/sqrt(m), so the interval implies a budget in [0.9902, 1.00551]*n0, which n1 = 1.0198*n0 dominates (incumbent linear-margin convention).",
+      "role": "score-critical",
+      "scope": "The exact r=23 Orchard Poseidon permutation with pinned deployed constants; walk values in Z_p; fresh rho0 uniform on 254 bits and fresh start per walk; first-repeat statistics only.",
+      "extrapolation": "Measured on the same r=23 map truncated to w in [16, 20, 24, 28, 32, 36] bits (fresh truncated start per walk, exact discrete first-repeat likelihood with bounded series tail, profile-likelihood interval); pooled hazard multiplier 1.0044, 95% CI [0.9891, 1.0198], 16380 walks over six widths, no slope across widths. Extrapolated to the full-width map through the hazard-multiplier family with 1/sqrt(m) budget scaling; the filed budget dominates the whole CI-implied interval.",
+      "evidence_ids": [
+        "experiment:lowbits-birthday",
+        "proof:72-86"
+      ],
+      "limitations": "No proof of H1 is known. The measurements are reduced-width only; the full-width first-repeat cannot be observed. The 14-bit organizer event cannot separate hazard multipliers near 0.5 from 1. The interval is conditional on the hazard-multiplier family, per-walk seed independence, and the exact-discrete likelihood tail bound; profile-likelihood coverage is calibrated by simulation, not exact. If the real map's hazard exceeded m_hi the filed success probability would fall below 0.39 by the corresponding factor."
+    }
+  ]
 }
