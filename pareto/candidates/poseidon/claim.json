@@ -1,20 +1,58 @@
 {
-  "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "poseidon-orchard-r0-prefix-v1",
-  "attack_class": "ordinary-collision",
-  "rounds": 0,
-  "claim": {
-    "time_log2": 128.0,
-    "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
-    "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
+ "schema_version": 3,
+ "submission_state": "ready",
+ "target_profile": "poseidon-orchard-r21-prefix-v1",
+ "attack_class": "ordinary-collision",
+ "rounds": 21,
+ "claim": {
+  "time_log2": 72.475,
+  "time_unit": "target-compressions",
+  "memory_log2_bytes": 68.693,
+  "preprocessing_log2": 20,
+  "success_probability": 0.3956,
+  "nonuniform_advice_log2_bytes": 0
+ },
+ "restrictions": [
+  "Applies to the selected target poseidon-orchard-r21-prefix-v1 only (twenty-one partial rounds 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 and 24 plus the eight fixed full rounds); the construction uses the first two full rounds being skippable on a line and gives no claim for other round counts.",
+  "time_log2 is the operation count of the algorithm of proof.md section 4 with every trial at its maximum (at most K = 2 centres, every trial charged in full with stage D for the normal remainder sequence, which bounds every trial since a trial with any other sequence aborts after a prefix of that work (proof.md 6.3), and with the root isolation at its cap of 64 rounds; one thread), plus the offline bound of 1,000,000 operations of proof.md section 6.2, which is declared as preprocessing_log2 = 20 and is inside time_log2 (one quantity); memory_log2_bytes is the footprint (the peak of the live set, proof.md section 7; Appendix G.7 places every array of stages C and D at its address in an arena of that size, with 3 charged compactions per trial). Cost model orchard-field-ram-v2: every field operation, load, store, control operation and random word is priced 1/C, C = 216 + 21 r = 657.",
+  "Declared reading of the cost model (proof.md 4.2, as in the base entry): a register file of 18 words of 256 bits, whose operands are not charged as loads, while every array load and store is charged with its address operation; the allocator's flat 64 per call is charged on every allocation and free of rows C and D and as an allowance of 10^10 calls per trial in the other rows (proof.md 4.2, 6). preprocessing_log2 = 20 is stated in primitive operations (2^20 >= 10^6), about 2^10.57 target-compression units.",
+  "success_probability 0.39560 is a probability over the algorithm's fresh independent uniform 256-bit random words (the cost model's random-word primitive) for the fixed target, derived from the score-critical premises H-GEOM-w1 and H-NORMAL as 1 - (1 - q + delta + delta_C)^K - K (eps_coin + eps_iso) with q = 0.22257, delta = 2^-100 and the proved delta_C < 2^-129 (proof.md section 9.2).",
+  "This entry revises the r = 21 entry e6dcb600, itself a revision of f62fb39 (commit a031a50); both are declared as dependencies: the construction, stages A, B and E to I, the premise H-GEOM-w1 and the evidence are f62fb39's; the truncated half-gcd, the normal-sequence charge with abort (H-NORMAL) and scheme (c) are e6dcb600's; this entry recomputes stage C in the value domain (Montgomery squaring on cosets of the subgroup of order 2^32 with extensions by geometric interpolation), chooses the block length of every block product, and adds windows, an in-place base case and early frees to stage D (proof.md section 1)."
+ ],
+ "baseline_improved": "poseidon-orchard-r21-nominal-v2",
+ "certificate_manifest": "certificates/manifest.json",
+ "experiment_manifest": "experiments/manifest.json",
+ "lane": "exploratory",
+ "heuristics": [
+  {
+   "id": "H-GEOM-w1",
+   "statement": "Notation: p is the Pallas prime, D = 5^27, F in F_p[X] the fixed digest polynomial of proof.md section 2.3 at r = 21 (degree D). G(c,t) = (F(c+t) - F(c-t))/(2t) in F_p[c,t] (total degree D-1; G(c,t) = g_c(t^2) for the odd part g_c of proof.md section 3). k(c) is the number of nonzero squares S = t^2 with G(c,t) = 0 (k(c) = deg G_c). O is the set of (c,s1,s2) with G(c,s1) = G(c,s2) = 0, s1^2 != s2^2 and s1 s2 != 0. Premise: N*/p >= 1 - eps and N_off/p <= w (1 + eps) with w = 1 and eps = 0.21, where N* is the number of points (c,t) of G = 0 over F_p with t != 0 and N_off the number of points (c,s1,s2) over F_p with G(c,s1) = G(c,s2) = 0, s1^2 != s2^2 and s1 s2 != 0. Reduction (proved from the count statement of the premise, with no genus bound (Grok jobs 138 and 139); proof.md section 9.2, numbers recomputed in Appendix D): for c uniform in F_p, E[k] >= 1/2 - e1 and E[k(k-1)] <= w/4 + e2 with e1 < 1.050e-01 and e2 < 5.250e-02; Cauchy-Schwarz gives P(k >= 1) >= 0.2236917563 and Markov on k(k-1) gives P(k > 16) <= 0.0011121324, so the event 1 <= k <= 16 has probability at least q = 0.22257 for a uniform centre; two independent coin centres then succeed with probability at least 0.395602595 (with the coin and isolation terms of proof.md 9.2 and 9.4, and the term delta of H-NORMAL).",
+   "role": "score-critical",
+   "scope": "The fixed Poseidon target poseidon-orchard-r21-prefix-v1, this line construction (the line j = 0 of the first two rounds, odd part about a centre, proof.md sections 2-3), the polynomial F of proof.md section 2.3; centres uniform on F_p. Not claimed for other round counts. Besides H-NORMAL (the second declared premise of this entry, which bounds the probability of an abnormal remainder sequence), nothing else in the success bound is heuristic: the Cauchy-Schwarz reduction, the isolation lemma (proof.md 9.4) and the independence of the centres (each draw uses fresh random words) are proved in proof.md.",
+   "extrapolation": "This is the premise of the base entry f62fb39, unchanged; its evidence (proof.md section 10) is the base entry's. From the two moments of k(c) that H-GEOM-w1 gives through the counts to the success of the algorithm at r = 21. The bound is explicit for every r >= 13 as a function of the count statement (no genus bound; Grok jobs 138 and 139). Support: usable roots appeared at three of the four centres tried in our executed full-scale runs at r = 3, 4, 5 (proof.md section 10.1); the organizer-run experiments lowbits-birthday and line-ladder-w6, -w8, -w10, -w12 on the digest of the target and on the antipodal pairs of its line construction (proof.md section 10.2); the exact computations of Grok job 135 for the toy permutation on a generic line over the Pallas field (Theorem A: the hypothesis with w = 1 at one full round; Theorem B: absolute irreducibility of G = 0, a reduced pair scheme of pure dimension 1 and an absolutely irreducible off-diagonal u-scheme at two full rounds; Theorem D: degree exactly 5^N), and of Grok job 136 for the first N = 1, 2, 3, 4 full rounds of the Orchard parameter tuple on a generic line, re-run on the deployed constants and the attack line: (a) and (b) hold at N = 1, ..., 4, w = 1 at N = 1, the monodromy is S_m at N = 2, 3 (proof.md section 10.3), with the density of our line (proof.md section 10.3). Under (a) and 2-transitivity of the monodromy of H, w is 1 or 2 (Grok job 137, lemma: with the arithmetic monodromy Gamma inside the hyperoctahedral group B_m, K = Gamma meet F_2^m is one of 0, <1>, E, F_2^m once pi(Gamma) contains A_m, and w = 1 exactly when K contains the even-weight subspace E, w = 2 otherwise; the witnesses of Grok job 136 establish the hypotheses). Measured on the deployed Orchard constants and the attack's own line (the F_N of proof.md 10.3, using the Frobenius cycle types of H(c, u) and their lifts to G(c, t) = H(c, t^2) over F_p): N = 1 gives K = F_2^2 and w = 1; N = 2 (m = 12) gives K = F_2^12 and w = 1, witnessed by the 12-cycle specialisations c = 8 (two 12-cycles on G, omega = 0) and c = 24 (one 24-cycle, omega = 1) and the even permutation c = 6; N = 3 (m = 62) gives K = F_2^62 and w = 1, witnessed by the 62-cycle specialisations c = 82 (omega = 0) and c = 102 (omega = 1) and the even permutation c = 1. So w = 1 at N = 1, 2, 3 on the deployed constants, a measured trend, and the premise states w = 1 at N = 27: this is our theory, the measured w = 1 at N = 1, 2, 3 continues, and the lemma gives w = 1 or w = 2 given (a) and 2-transitivity.",
+   "evidence_ids": [
+    "proof:293-327",
+    "proof:344-419",
+    "experiment:lowbits-birthday",
+    "experiment:line-ladder-w6",
+    "experiment:line-ladder-w8",
+    "experiment:line-ladder-w10",
+    "experiment:line-ladder-w12"
+   ],
+   "limitations": "It concerns this F, not every polynomial of degree D: it is false for permutation polynomials (every pure composition of maps x -> a x^5 + b, p = 2 mod 5, is bijective and has k = 0), and a statement about components over the algebraic closure alone does not imply it (X^3 over F_101: two conjugate lines, no off-diagonal rational point). The explicit constants of 9.2 apply for every r >= 13 as stated, with no genus bound: the Weil majorant of the second moment (Grok job 138) exceeds the main term from r = 13, so the premise is stated as the count statement itself, which Grok job 139 measures on toy copies (10.3)."
   },
-  "restrictions": [],
-  "baseline_improved": "poseidon-orchard-r0-nominal-v2",
-  "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  {
+   "id": "H-NORMAL",
+   "statement": "For the centre c uniform on F_p, the Euclidean remainder sequence of (g_c, R_c - 1), where g_c is the monic odd part of proof.md section 3 (degree m = 3,725,290,298,461,914,062) and R_c = S^((p-1)/2) mod g_c, is normal down to its gcd (deg(R_c - 1) = m - 1 and every quotient has degree 1) except with probability at most delta = 2^-100. Stage D is charged for the normal sequence and every division tests its quotient degree; on any other quotient the trial ABORTs (proof.md 4.4, 6.3). With H-GEOM-w1 the success bound is 1 - (1 - q + delta + delta_C)^2 - 2 (eps_coin + eps_iso) = 0.395602595, delta_C < 2^-129 the proved bound on a zero of g_c on the point set O1 of stage C (proof.md 9.2(f)).",
+   "role": "score-critical",
+   "scope": "The pairs (g_c, R_c - 1) of the target poseidon-orchard-r21-prefix-v1, c uniform on F_p. It enters only the success probability: the time and memory bounds hold for every remainder sequence, because an abnormal sequence ends the trial at its first abnormal quotient after executing a prefix of the charged work (proof.md 6.3, by lemma 4.4). Not claimed for other round counts.",
+   "extrapolation": "For a uniformly random pair of degrees m and m - 1 the sequence is abnormal exactly when one of the m principal subresultant coefficients vanishes, each a nonzero polynomial of degree at most 2m in the coefficients, so by Schwartz-Zippel the probability is at most 2 m^2 / p < 2^-129; the premise extrapolates this random-pair behaviour to the structured pair (g_c, R_c - 1), with a margin of 2^29. Measured support (the base entry's runs, proof.md 10.5): the complete Euclidean sequences of (g_c, R_c - 1) for the same construction on the sibling targets with r' = 0 (8 centres, 7,811 steps each) and r' = 1 (2 centres, 39,061 steps each) had every quotient of degree 1.",
+   "evidence_ids": [
+    "proof:338-343",
+    "proof:269-272",
+    "proof:423-428"
+   ],
+   "limitations": "Not verified at r = 21, which would need the computation itself. The Schwartz-Zippel bound does not transfer, because the coefficients of R_c have degree about p in those of g_c; an algebraic relation between g_c and R_c that forces a subresultant coefficient to vanish for many centres would invalidate the premise, and none is known. The success bound stays at least 0.39 for every delta <= 0.00359 (proof.md 9.3), so the claim needs far less than the stated 2^-100."
+  }
+ ]
 }
