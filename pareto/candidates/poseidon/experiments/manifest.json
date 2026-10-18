@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "lowbits-birthday",
+      "kind": "python-message-pairs-v1",
+      "scope": "Reduced event on the selected Orchard Poseidon target at its own round count: the first 14 bits of the big-endian reading of the 32-byte digest agree for two distinct canonical messages. One birthday search per organizer trial over fresh inputs from the trial seed. No full collision is expected or claimed.",
+      "hypothesis": "A search of at most 1200 fresh inputs returns a pair whose digests agree on those 14 bits in every trial, as a random 14-bit function would. Checks the digest of the selected target at one reduced width; it says nothing about the full-width map, the cost or the success probability.",
+      "program": "experiments/exp_lowbits.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "fffc000000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "line-ladder-w6",
+      "kind": "python-message-pairs-v1",
+      "scope": "Reduced event on the selected Orchard Poseidon target at its own round count, on the line construction of proof.md section 2: the first 6 bits of the big-endian reading of the 32-byte digest agree for two distinct canonical messages that are the antipodal points W = c+s and W = c-s about a centre c of the line j = 0 of the first two rounds. One scan of the pairs s = 1, ..., 150 per organizer trial, the centre from the trial seed. No full collision is expected or claimed.",
+      "hypothesis": "The digest difference F(c+s) - F(c-s) = 2 s g_c(s^2) of the antipodal points behaves as a random function of s at width 6: a trial returns a pair with probability 1-(1-2^-6)^150 = 0.9058, about 232 of the 256 trials. Checks the digest of the selected target on the antipodal line pairs of the attack at one reduced width; it says nothing about the full-width map, the cost or the success probability.",
+      "program": "experiments/exp_line.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "fc00000000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "line-ladder-w8",
+      "kind": "python-message-pairs-v1",
+      "scope": "Reduced event on the selected Orchard Poseidon target at its own round count, on the line construction of proof.md section 2: the first 8 bits of the big-endian reading of the 32-byte digest agree for two distinct canonical messages that are the antipodal points W = c+s and W = c-s about a centre c of the line j = 0 of the first two rounds. One scan of the pairs s = 1, ..., 150 per organizer trial, the centre from the trial seed. No full collision is expected or claimed.",
+      "hypothesis": "The digest difference F(c+s) - F(c-s) = 2 s g_c(s^2) of the antipodal points behaves as a random function of s at width 8: a trial returns a pair with probability 1-(1-2^-8)^150 = 0.4441, about 114 of the 256 trials. Checks the digest of the selected target on the antipodal line pairs of the attack at one reduced width; it says nothing about the full-width map, the cost or the success probability.",
+      "program": "experiments/exp_line.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "ff00000000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "line-ladder-w10",
+      "kind": "python-message-pairs-v1",
+      "scope": "Reduced event on the selected Orchard Poseidon target at its own round count, on the line construction of proof.md section 2: the first 10 bits of the big-endian reading of the 32-byte digest agree for two distinct canonical messages that are the antipodal points W = c+s and W = c-s about a centre c of the line j = 0 of the first two rounds. One scan of the pairs s = 1, ..., 150 per organizer trial, the centre from the trial seed. No full collision is expected or claimed.",
+      "hypothesis": "The digest difference F(c+s) - F(c-s) = 2 s g_c(s^2) of the antipodal points behaves as a random function of s at width 10: a trial returns a pair with probability 1-(1-2^-10)^150 = 0.1363, about 35 of the 256 trials. Checks the digest of the selected target on the antipodal line pairs of the attack at one reduced width; it says nothing about the full-width map, the cost or the success probability.",
+      "program": "experiments/exp_line.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "ffc0000000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "line-ladder-w12",
+      "kind": "python-message-pairs-v1",
+      "scope": "Reduced event on the selected Orchard Poseidon target at its own round count, on the line construction of proof.md section 2: the first 12 bits of the big-endian reading of the 32-byte digest agree for two distinct canonical messages that are the antipodal points W = c+s and W = c-s about a centre c of the line j = 0 of the first two rounds. One scan of the pairs s = 1, ..., 150 per organizer trial, the centre from the trial seed. No full collision is expected or claimed.",
+      "hypothesis": "The digest difference F(c+s) - F(c-s) = 2 s g_c(s^2) of the antipodal points behaves as a random function of s at width 12: a trial returns a pair with probability 1-(1-2^-12)^150 = 0.0360, about 9 of the 256 trials. Checks the digest of the selected target on the antipodal line pairs of the attack at one reduced width; it says nothing about the full-width map, the cost or the success probability.",
+      "program": "experiments/exp_line.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "fff0000000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "euclid-normal-n2-t256",
+      "kind": "python-message-pairs-v1",
+      "scope": "Euclidean normality of the attack's own construction at reduced depth, on the selected Orchard Poseidon target (proof.md 9.5, 10.5.1). For a centre c from the trial seed the program builds F_2(c + X), the coordinate 0 after the first 2 S-box layers on the line j = 0 of the first two rounds (the F_N of proof.md 10.3, degree 25), its monic odd part g about c (degree m = 12), R = X^((p-1)/2) mod g and the complete Euclidean remainder sequence of (g, R - 1), exactly over F_p. Trials 0-255 are computed. A computed trial whose sequence is normal (deg(R - 1) = m - 1 and every quotient of degree 1 down to the gcd) returns two distinct canonical messages on the line whose digests agree on the first 6 bits, found among 65 line points (certain, by pigeonhole); any other trial returns two nulls. No full collision is expected or claimed.",
+      "hypothesis": "Every computed sequence is normal, so exactly 256 of the 256 trials return a pair. Per computed trial the program reports the untrusted observations deg_r_minus_1, steps (m - deg gcd when normal), abnormal_quotients, first_abnormal_step, max_quotient_degree and gcd_degree (positive in about 2 of 5 trials, a usable root). Supports the premise H-NORMAL of proof.md 9.5 at m = 12 on the construction's own pairs; it says nothing about the scale m of the claim, the cost or the success probability.",
+      "program": "experiments/exp_euclid.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "fc00000000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "euclid-normal-n3-t24",
+      "kind": "python-message-pairs-v1",
+      "scope": "Euclidean normality of the attack's own construction at reduced depth, on the selected Orchard Poseidon target (proof.md 9.5, 10.5.1). For a centre c from the trial seed the program builds F_3(c + X), the coordinate 0 after the first 3 S-box layers on the line j = 0 of the first two rounds (the F_N of proof.md 10.3, degree 125), its monic odd part g about c (degree m = 62), R = X^((p-1)/2) mod g and the complete Euclidean remainder sequence of (g, R - 1), exactly over F_p. The first 24 trials are computed (the sandbox budget); the other trials return two nulls. A computed trial whose sequence is normal (deg(R - 1) = m - 1 and every quotient of degree 1 down to the gcd) returns two distinct canonical messages on the line whose digests agree on the first 6 bits, found among 65 line points (certain, by pigeonhole); any other trial returns two nulls. No full collision is expected or claimed.",
+      "hypothesis": "Every computed sequence is normal, so exactly 24 of the 256 trials return a pair (the first 24). Per computed trial the program reports the untrusted observations deg_r_minus_1, steps (m - deg gcd when normal), abnormal_quotients, first_abnormal_step, max_quotient_degree and gcd_degree (positive in about 2 of 5 trials, a usable root). Supports the premise H-NORMAL of proof.md 9.5 at m = 62 on the construction's own pairs; it says nothing about the scale m of the claim, the cost or the success probability.",
+      "program": "experiments/exp_euclid.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "fc00000000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "euclid-normal-n4-t2",
+      "kind": "python-message-pairs-v1",
+      "scope": "Euclidean normality of the attack's own construction at reduced depth, on the selected Orchard Poseidon target (proof.md 9.5, 10.5.1). For a centre c from the trial seed the program builds F_4(c + X), the coordinate 0 after the first 4 S-box layers on the line j = 0 of the first two rounds (the F_N of proof.md 10.3, degree 625), its monic odd part g about c (degree m = 312), R = X^((p-1)/2) mod g and the complete Euclidean remainder sequence of (g, R - 1), exactly over F_p. The first 2 trials are computed (the sandbox budget); the other trials return two nulls. A computed trial whose sequence is normal (deg(R - 1) = m - 1 and every quotient of degree 1 down to the gcd) returns two distinct canonical messages on the line whose digests agree on the first 6 bits, found among 65 line points (certain, by pigeonhole); any other trial returns two nulls. No full collision is expected or claimed.",
+      "hypothesis": "Every computed sequence is normal, so exactly 2 of the 256 trials return a pair (the first 2). Per computed trial the program reports the untrusted observations deg_r_minus_1, steps (m - deg gcd when normal), abnormal_quotients, first_abnormal_step, max_quotient_degree and gcd_degree (positive in about 2 of 5 trials, a usable root). Supports the premise H-NORMAL of proof.md 9.5 at m = 312 on the construction's own pairs; it says nothing about the scale m of the claim, the cost or the success probability.",
+      "program": "experiments/exp_euclid.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "fc00000000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    }
+  ]
+}
