@@ -1,20 +1,41 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "poseidon-orchard-r0-prefix-v1",
+  "target_profile": "poseidon-orchard-r23-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 0,
+  "rounds": 23,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 126.64474,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 20,
+    "preprocessing_log2": 32,
     "success_probability": 0.39,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "poseidon-orchard-r0-nominal-v2",
+  "restrictions": [
+    "Two distinct 64-byte messages (pairs of canonical Pallas field elements) with equal digests for the Orchard hash with 23 partial rounds (poseidon-orchard-r23-prefix-v1, digest = state[0], whole element compared). The messages are the line inverse message(W) of proof.md Section 2; both are canonical by construction.",
+    "Cost model orchard-field-ram-v2, C = 216 + 21*23 = 699. Prices used: canonical field ADD, SUB and MUL 1/C each; every 256-bit word primitive 1/C; exponentiation and inversion charged as their counted constituent operations; a target compression is one unit. No permutation call is charged as a unit.",
+    "Ledger (proof.md Section 7): a walk step is 519 charged operations (listing in proof.md Section 3: 27 + 24 + 23*16 + 3*24 + 16 + 12, the entry rescale folded into the round-3 tables); the filed search is one trail of S1 = 178597435891429200878561991096629710601 steps (178514977233407124990816098423499042677 trail + 82458658022075887745892673130667924 detection window); recovery at most 3*(gmax+16) evaluations at 519 + 6 each plus at most four scans at 109,668 word operations each; dp-table work at most 27,414 events at at most 137,081 word operations each (5 word operations per probe over the packed 27,413-entry table + 16; deterministic caps); PRG 2 coin draws at 264; setup 2000; message fifth-roots 2286; offline derivation 2^41 word operations (constants, budget solve, the 16,380-walk measurement campaign) charged inside time (preprocessing_log2 = 32). Total 92969364e40 operations, /699 = 13300338e37 compressions, log2 = 126.644731, filed 126.64474 rounded up.",
+    "Memory: 27,413 dp-table entries of one 32-byte word (high 126 bits of the value OR its index) plus a 16-bit side field each, one 32-byte start word, at most 103,644 bytes of code, 5,600 constants and 7,200 register bytes: 1,048,518 bytes total, under 2^20, so the normalized memory term of the score is 0 (proof.md Section 8). The threshold is below 2^16, so the stored key is injective on dp values and reconstruction is exact.",
+    "Success probability at least 0.39 at the filed trail budget n1 = 178514977233407124990816098423499042677, the smallest budget surviving every repeat-hazard factor c >= 0.90 (proof.md Sections 5-6); the floor 0.90 lies below every measured 95% lower bound (smallest 0.9080 at w=36; pooled 0.9891), so the reduced-width evidence dominates the tolerance. The real-map transfer is the premise H1 (claim.json H1-random-walk-rate, proof.md Section 6): an assumption, no proof is known.",
+    "The step program, the single-trail search with its recovery, the budget solve, the measurement and analysis sources are printed in full in proof.md Appendices A-C (standard library only); the organizer experiment is experiments/exp_lowbits.py with experiments/manifest.json (python-message-pairs-v1, digest-xor-mask on the first 14 bits, 256 trials; local run 256/256 verified pairs, byte-identical on repeat)."
+  ],
+  "baseline_improved": "poseidon-orchard-r23-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
+  "submission_state": "ready",
   "lane": "exploratory",
-  "heuristics": []
+  "experiment_manifest": "experiments/manifest.json",
+  "heuristics": [
+    {
+      "id": "H1-random-walk-rate",
+      "role": "score-critical",
+      "statement": "The filed trail has n1 = 178514977233407124990816098423499042677 steps, the smallest walk budget at which the uniform-random-function lemma (proof.md Section 5) with the repeat hazard scaled by c = 0.90 bounds success at 0.39 (the random function reaches 0.4226 at n1; the floor 0.90 lies below every measured 95% lower bound, smallest 0.9080). Premise: for the attempt's coins (rho0 and x0, uniform 254-bit words), the distinguished-point single-trail search of proof.md Section 4 on the real map F(x) = digest(message(x + rho0)) * LAMBDA, at the trail budget n1, succeeds with probability at least 0.39. H1 is our theory that, for this search, the fixed map with a random rho0 behaves like a uniformly random function; this is an assumption and no proof is known.",
+      "scope": "Target poseidon-orchard-r23-prefix-v1, inputs on the line of proof.md Section 2, one search with the parameters of proof.md Section 4 (walk budget S1 = 178597435891429200878561991096629710601 evaluations). Not claimed for other round counts or budgets. Only the success probability rests on this premise; the step program, the search and recovery, the ledger and the memory are proved or checked exactly (proof.md Sections 3, 4, 7, 8).",
+      "extrapolation": "Organizer-run experiment lowbits-birthday (python-message-pairs-v1, digest-xor-mask, 256 trials; proof.md Section 10): reduced-width witness on this target's own digest at r=23, first 14 bits, fresh random inputs, at most 1200 evaluations per trial; local run of the same event returned 256/256 verified pairs, byte-identical on repeat; it witnesses no gross low-bit structure and infers no probability. Participant measurements (proof.md Section 6, Appendix C): first-repeat walks on the real r=23 map truncated to w in [16, 20, 24, 28, 32, 36] bits, fresh (rho0, start) per walk, every walk to its exact first repeat, 16380 walks, exact discrete first-repeat likelihood with bounded series tail; pooled hazard multiplier 1.0044, 95% profile-likelihood CI [0.9891, 1.0198], no slope across widths. The tolerance floor c >= 0.90 lies below every measured cell's 95% lower bound (minimum 0.9080), so the reduced-width evidence dominates the tolerance. The extrapolation from widths 16-36 to width 254 is the premise itself; the measurements do not bound the full-width multiplier.",
+      "evidence_ids": [
+        "experiment:lowbits-birthday",
+        "proof:80-127"
+      ],
+      "limitations": "The organizer experiment is one width (14 bits), one round count, a witness-only event on the digest, not on the walk map, and cannot validate this premise. The participant measurements reach outputs of at most 36 bits and first-repeat indexes of order 2^19 steps; they show the random-function first-repeat law on the real round function at these widths and do not bound the rate at 254 bits. The interval is a profile-likelihood interval, asymptotic in the number of walks and conditional on the hazard-multiplier family; it is evidence about the multiplier, not a bound. On a single fixed map the success over starts varies with that map's cycle structure; the attempt draws rho0 as a coin and the premise concerns the average over rho0."
+    }
+  ]
 }
