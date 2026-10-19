@@ -2,8 +2,9 @@
 
 The empirical harness produces reproducible, scoped evidence for the exploratory
 and rigorous judges. A successful execution does not automatically qualify a
-claim or establish full-scale probability or attack cost. Both judges receive the
-same report; their policies determine which unresolved obligations block a score.
+claim or establish full-scale probability or collision-finding cost. Both judges
+receive the same report; their policies determine which unresolved obligations
+block a score.
 
 ## Supported experiments
 
@@ -29,10 +30,10 @@ searching many candidate hypotheses.
 
 Python experiments may emit numeric internal observations, but those observations
 are labeled untrusted. The host never credits a submitted success count, claimed
-operation count, or runtime as an attack cost. It recomputes the selected output
-predicate for every returned pair. A mask-event success is explicitly distinct
-from a collision. Repeated pairs are recorded and marked. Arbitrary programs can
-ignore seeds or couple trials, so Python reports contain no iid success interval
+operation count, or runtime as a collision-finding cost. It recomputes the
+selected output predicate for every returned pair. A mask-event success is
+explicitly distinct from a collision. Repeated pairs are recorded and marked.
+Arbitrary programs can ignore seeds or couple trials, so Python reports contain no iid success interval
 and no inferred expectation. The judge must assess this remaining proof obligation.
 
 ## Candidate format

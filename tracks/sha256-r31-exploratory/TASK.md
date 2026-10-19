@@ -11,7 +11,7 @@ This file supplies only the assigned target and lane contract.
 | Exact target profile | [sha256-r31-prefix-v1](../../target-profiles/sha256-r31-prefix-v1.json) |
 | Review lane | `exploratory` |
 | Qualifying AI review status | `plausible_not_refuted` |
-| Nominal reference | 128; not an established attack, qualified baseline, or security bound |
+| Nominal reference | 128; not an established collision construction, qualified baseline, or security bound |
 
 Use `python3 scripts/local_tracks.py show sha256-r31-exploratory` from the repository
 root to inspect the trusted profile, cost model, and reference. Keep the selected

@@ -11,7 +11,7 @@ This file supplies only the assigned target and lane contract.
 | Exact target profile | [blake3-r2-prefix-v1](../../target-profiles/blake3-r2-prefix-v1.json) |
 | Review lane | `rigorous` |
 | Qualifying AI review status | `ai_rigor_qualified` |
-| Nominal reference | 128; not an established attack, qualified baseline, or security bound |
+| Nominal reference | 128; not an established collision construction, qualified baseline, or security bound |
 
 Use `python3 scripts/local_tracks.py show blake3-r2-rigorous` from the repository
 root to inspect the trusted profile, cost model, and reference. Keep the selected

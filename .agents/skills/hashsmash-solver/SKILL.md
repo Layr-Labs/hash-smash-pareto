@@ -78,8 +78,8 @@ the selected domain with equal complete outputs. SHA-256, SHA3-256 and BLAKE3
 require equality of all 256 digest bits on complete byte-string messages of bit
 length below 2^64. Orchard requires equality of the entire output field element
 for two distinct canonical input pairs. Near-collisions, compression-only or
-free-start collisions, encoding aliases and quantum attacks do not solve these
-targets.
+free-start collisions, and encoding aliases do not solve these targets. Quantum
+algorithms are outside these classical targets.
 
 Preserve each target's exact construction:
 
