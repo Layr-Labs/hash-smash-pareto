@@ -1,20 +1,63 @@
 {
-  "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "poseidon-orchard-r0-prefix-v1",
-  "attack_class": "ordinary-collision",
-  "rounds": 0,
-  "claim": {
-    "time_log2": 128.0,
-    "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
-    "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
+ "schema_version": 3,
+ "submission_state": "ready",
+ "target_profile": "poseidon-orchard-r3-prefix-v1",
+ "attack_class": "ordinary-collision",
+ "rounds": 3,
+ "claim": {
+  "time_log2": 27.87775,
+  "time_unit": "target-compressions",
+  "memory_log2_bytes": 26.9095,
+  "preprocessing_log2": 0,
+  "success_probability": 1,
+  "nonuniform_advice_log2_bytes": 0
+ },
+ "restrictions": [
+  "Applies to the selected target poseidon-orchard-r3-prefix-v1 only (three partial rounds plus the eight fixed full rounds); the construction uses the first two full rounds being skippable on a line and gives no claim for other round counts.",
+  "Success probability 1 means: one deterministic procedure (centres c_i = i tried in the order i = 1, 2, 3, ... until the first verified collision, at most 64 trials) was executed once from the start on the fixed target and stopped with a collision after 1 trial(s); the time is the executed operation count of that run with every trial charged, and the memory is the whole static executable image plus a 64 KiB stack bound (above the measured peak resident set). It is not a probability over centres. The line j = 0, its normalization (a, b) = (M01, -M00) and the centre order are the canonical choices fixed in the source, inherited from edd943c; that centre 1 succeeds on this line was public before this program was written, and the program stores no instance-specific data. A priori (random-polynomial model) a centre yields a usable root with probability about 1 - e^(-1/2) = 0.39; this estimate is not used by the claim.",
+  "The collision found is the same pair as the certificates of edd943c and of our earlier 4bcabff8 (same line j = 0 and centre c = 1); the claim is the executed cost of this program."
+ ],
+ "baseline_improved": "poseidon-orchard-r3-nominal-v2",
+ "certificate_manifest": "certificates/manifest.json",
+ "lane": "exploratory",
+ "heuristics": [
+  {
+   "id": "H1-charging-rules",
+   "role": "score-critical",
+   "statement": "The counts of proof.md sections 6 and 7 are those of the program of proof.md section 9 under the stated rules: 1 per canonical field addition, subtraction, multiplication or squaring (a Montgomery conversion is one multiplication; inversion and exponentiation expanded per bit), 1 per 256-bit element load or store plus 1 address operation, 3 per loop iteration plus 2 per loop exit, 1 per other executed integer or control operation, 279 per line evaluation and per reference permutation, 128 per recursive call of hgcd, stated constant bounds for stage bookkeeping, the prologue and the report/system calls, and a register file of 18 words of 256 bits (a radix-8 block: 8 data words, 7 twiddles, one temporary and the running twiddle and its step; a radix-16 block: 16 data words, one twiddle and one temporary, its twiddles loaded from memory; the truncated top: 16 data words, one twiddle, one temporary; proof.md section 4.2), with integer indices, pointers and loop bounds in integer registers, the variant of each pass selected once per pass, and non-recursive procedure calls treated as inlined.",
+   "scope": "All stages of the executed run at the target dimensions: m = 976562; line interpolation on n' = 983040 points O1 (2 n' line evaluations); stage C truncated transforms of n' points on O1 and O2, 236 steps; stage D products on 3 * 2^(l-2) or 2^l points and the first on O1.",
+   "extrapolation": "None. The time is the executed total of one run of the shipped source, with every trial charged and stages H and I included; the only bounds in it are the stated constants (proof.md section 4.2). Stage C (82% of N) is also derived in closed form from the source (proof.md section 6.2) and equals the run's stage C row up to the 100 operations of the stage switch that the ledger attributes to it.",
+   "evidence_ids": [
+    "proof:135-199",
+    "proof:399-498",
+    "proof:528-544",
+    "proof:570-4383"
+   ],
+   "limitations": "The charging conventions are premises of the cost model (the same as for edd943c and 4bcabff8); word-level costs outside them (cache, bandwidth) are not part of the model. Sensitivity to the register premise (estimate from the pass structure, proof.md section 4.2): with about 8 registers (radix-4 blocks) roughly +0.3 in time_log2, with radix-2 blocks only roughly +1.0. Stage D and prep (about 17.5% of N) are not derived in closed form; their counts rest on H2."
   },
-  "restrictions": [],
-  "baseline_improved": "poseidon-orchard-r0-nominal-v2",
-  "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  {
+   "id": "H2-executed-run",
+   "role": "score-critical",
+   "statement": "The ledger of proof.md section 6 (and its output in section 6.3) is the output of one faithful execution of the source of proof.md section 9, built with the stated command, run as single 3 under a 64 KiB stack limit; on that run the data-dependent path is the one reported: deg g_1 = m (checked by the program; also implied by lc(F) != 0, proof.md section 2.3), g_1 has no zero on O1 (checked by the program), stage D found G of degree 1, trial 1 ended with a collision verified by the reference permutation, and the stage-D arena peak stayed within its capacity.",
+   "scope": "The single executed run on the fixed target (centre 1, one trial), on the stated toolchain and CPU. The counts do not depend on the build (identical counts were observed for -Os and -O3 builds at r = 2).",
+   "extrapolation": "None: the claim is the count of that run; nothing is scaled from other sizes or runs.",
+   "evidence_ids": [
+    "proof:368-398",
+    "proof:399-527",
+    "proof:545-569"
+   ],
+   "limitations": "The organizer did not execute the run (about 14 minutes on one core, deterministic, no input), so the counts and the reported path rest on the shipped source and its instrumentation. Independent support: the certificate lies on the line with midpoint 1 (proof.md section 5.1), so a correct implementation finds deg G >= 1 at centre 1; stage C is recounted in closed form (section 6.2). If the path had differed (another centre needed), each further trial would add about 6.9e10 operations (about +1 in time_log2 for a second trial)."
+  },
+  {
+   "id": "H3-shift-splitting",
+   "role": "supporting",
+   "statement": "If deg G >= 2, one of the fixed shifts delta = 1, ..., 256 splits G by gcd(G, (S + delta)^((p-1)/2) - 1) (standard equal-degree splitting: a random shift separates a given pair of roots with probability about 1/2).",
+   "scope": "Only the branch deg G >= 2 of stage E, which the executed run did not take (deg G = 1).",
+   "extrapolation": "Applied to a fixed shift sequence instead of random shifts.",
+   "evidence_ids": [
+    "proof:358-367"
+   ],
+   "limitations": "Not exercised and not score-critical: the branch would cost about 1e5 operations, and a failure would only move the run to the next centre."
+  }
+ ]
 }
