@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "lowbits-birthday",
+      "kind": "python-message-pairs-v1",
+      "scope": "Selected target poseidon-orchard-r23-prefix-v1, organizer seeds, at most 1200 fresh canonical 64-byte message pairs per trial, deterministic from the supplied seed.",
+      "hypothesis": "The submitted construction finds two distinct messages whose selected-round Orchard Poseidon digests agree on the low 14 bits within the per-trial budget.",
+      "program": "experiments/exp_lowbits.py",
+      "event": {"kind": "digest-xor-mask", "mask_hex": "ff3f000000000000000000000000000000000000000000000000000000000000", "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"}
+    }
+  ]
+}
