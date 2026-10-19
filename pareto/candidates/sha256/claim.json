@@ -1,20 +1,73 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha256-r37-prefix-v1",
+  "target_profile": "sha256-r55-prefix-v1",
+  "rounds": 55,
+  "lane": "exploratory",
   "attack_class": "ordinary-collision",
-  "rounds": 37,
+  "baseline_improved": "sha256-r55-nominal-v2",
+  "submission_state": "ready",
+  "certificate_manifest": "certificates/manifest.json",
+  "experiment_manifest": "experiments/manifest.json",
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 124.21821,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 19.87428,
     "success_probability": 0.39,
+    "preprocessing_log2": 0,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "sha256-r37-nominal-v2",
-  "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  "restrictions": [
+    "Ordinary collision construction for SHA-256 reduced to its first 55 of 64 steps (standard IV, schedule, constants, padding and feed-forward after step 54) (sha256-r55-prefix-v1) on 52-byte one-block messages P || BE256(u) with a fixed public 20-byte prefix. The walk is f(u) = B(S(u)) XOR PD with B a fixed public bijection of the final working state (proof Section 1.2), so f(u) = f(v) exactly when the complete digests are equal. No complete collision is exhibited and the attack is not executed at full scale.",
+    "time_log2 and memory_log2_bytes are worst-case bounds derived from the fixed program image on a load/store machine with a declared file of 1,024 registers of 256 bits whose 32768 bytes are included in the memory bound; every computed-address access is charged; each scalar evaluation is charged one complete compression plus 249 word operations (64 of block assembly and the 185-operation program of B). Instruction fetch is not charged as a primitive operation (the convention of the leader 3642e1cd-e391-41a7-81e0-456c02e4becd and its comparators); charging one 256-bit load per 32 bytes of kernel code gives 124.38699 (proof Section L.6).",
+    "success_probability rests on the random-function theorem of proof Section P (certified 0.390036155778183, recomputed by the declared experiment sha256-r55-success-bound-v1) and on the declared heuristic H1. The slice experiments are diagnostic evidence under public fixed organizer seeds; the 16-bit machine experiment is implementation and cost evidence only."
+  ],
+  "heuristics": [
+    {
+      "id": "H1-fixed-target-random-function",
+      "role": "score-critical",
+      "statement": "For the fixed walk f(u) = B(S(u)) XOR PD at SHA-256 reduced to its first 55 of 64 steps (standard IV, schedule, constants, padding and feed-forward after step 54), the success probability of the frozen algorithm over its uniform offset rho is at least the random-function lower bound of proof Section P (certified 0.390036155778183), and in particular at least 0.39.",
+      "scope": "Transfers the random-function theorem to the fixed target. The algorithm is generic: it uses no property of SHA-256 beyond evaluating it. B is a fixed bijection, so f is a fixed permutation of the outputs of S XOR PD and the random-function model is equally (un)justified for both.",
+      "extrapolation": "Experiments sha256-r55-slice-first-collision-w20-v1 and sha256-r55-slice-first-collision-w22-v1 exercise the first-duplicate mechanism on 512 independent 20- and 22-bit slices of the fixed walk with the same kernel and lane serialization; model probabilities 0.448648 and 0.230668 are fixed before execution. Three replicates of the width-22 experiment (w22-rep1..rep3, fresh organizer seeds) were declared in every package of the round-40 to round-60 rebuild, under one rule and before any organizer-seeded executor run of this package or any computation of a replicate count. Organizer-seeded counts: width 20 returned 111 of 256 (-0.48 sd); the primary width-22 run 72 of 256 (+1.92 sd); its three replicates 60, 64 and 53; all four width-22 runs 249 of 1,024 against 236.20 expected (+0.95 sd) (proof Section H). Diagnostic only (public seeds, no holdout, widths chosen by us, every declared run reported). The step from the random-function theorem to the fixed target is an exchange of quantifiers that this package assumes and does not prove.",
+      "limitations": "Plausible, not established. The bound exceeds 0.39 by 0.000036155778; no feasible experiment can detect a deficit of that size. The random-function argument is the integrated detection-delay bound of 09fe5fcd-5614-4329-8b7d-48957c238fac / 3642e1cd-e391-41a7-81e0-456c02e4becd, re-derived from 76ab339a-d895-49a0-b339-eec6a6d4c626; it is reproduced here unchanged and has been reviewed by its authors and by us, not by an independent referee.",
+      "evidence_ids": [
+        "proof:469-678",
+        "proof:680-732",
+        "experiment:sha256-r55-slice-first-collision-w20-v1",
+        "experiment:sha256-r55-slice-first-collision-w22-v1",
+        "experiment:sha256-r55-slice-first-collision-w22-rep1-v1",
+        "experiment:sha256-r55-slice-first-collision-w22-rep2-v1",
+        "experiment:sha256-r55-slice-first-collision-w22-rep3-v1",
+        "experiment:sha256-r55-success-bound-v1"
+      ]
+    },
+    {
+      "id": "H-machine-convention",
+      "role": "score-critical",
+      "statement": "The cost model's 256-bit word RAM is realized as a load/store machine with a fixed, declared file of 1,024 registers of 256 bits, named statically and counted in memory; every other word is memory reached by charged loads and stores. The algorithm is the fixed program image (330,144 bytes), counted in memory together with the 1,576 bytes of the B program; instruction fetch is not charged. COMP is one compression unit plus 249 word operations (64 of block assembly, 185 for the map B, run in 16 scratch registers).",
+      "scope": "Accounting convention for proof Sections 3, M and L; the main-loop operation count depends on it.",
+      "extrapolation": "The declared checks experiment asserts, in the organizer's executor, the kernel's 76,834 instructions and 907 registers, the fit of the 957 kernel and control registers and the 16 scratch registers of B (973 named) in the declared file, the image round trip and size, the length of the B program, and every per-handler closed form at the full-width parameters.",
+      "limitations": "The register-file size and the uncharged instruction fetch are declarations the benchmark neither fixes nor forbids; Section L.6 gives the fetch-charged figure 124.38699. Smaller files need spill code that is not measured here.",
+      "evidence_ids": [
+        "proof:204-287",
+        "proof:421-447",
+        "proof:458-467",
+        "experiment:sha256-r55-machine-checks-v1",
+        "experiment:sha256-r55-bounded-machine-w16-v1"
+      ]
+    },
+    {
+      "id": "H-kernel-all-inputs",
+      "role": "score-critical",
+      "statement": "The generated kernel (76,834 gates, 0 output moves, no complement) computes the planes of f(u) = B(S(u)) XOR PD from the planes of u for every 256-bit input u.",
+      "scope": "Correctness of the bitsliced main-loop evaluation, on which the success-probability argument depends. Recovery recomputes the collision with the scalar compression, so a kernel error cannot produce a false output.",
+      "extrapolation": "The declared experiment checks every gate-construction rule exhaustively on all operand classes, proves statically that the allocated listing computes the gate DAG, pins the explicit reference to hashlib.sha256 on 74 inputs, checks B against the step-loop composition and against its inverse, and compares sampled kernel lanes with the reference on all 256 output bits in every trial.",
+      "limitations": "The word-level composition in build_listing (including the truncated tail) is established by inspection and by sampling, not mechanically for all inputs.",
+      "evidence_ids": [
+        "proof:293-315",
+        "proof:52-100",
+        "experiment:sha256-r55-machine-checks-v1",
+        "experiment:sha256-r55-bounded-machine-w16-v1"
+      ]
+    }
+  ]
 }
