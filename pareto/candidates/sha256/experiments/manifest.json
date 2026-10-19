@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "sha256-r54-machine-checks-v1",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/sha256_machine.py",
+      "scope": "Static and closed-form checks of the complete program, no search and no message pairs: kernel instruction count, gate split, registers and output polarity of the 74,978-instruction kernel computing f(u) = B(S(u)) XOR PD, S(u) the working state after step 53 of the one padded block of P || BE256(u) and B the fixed bijection of proof Section 1.2; fit of kernel, control and the 16 scratch registers of the map B in the declared 1,024-register file; explicit 64-step reference against hashlib.sha256 on 74 inputs and B, its inverse, its 185-operation word program, the packed walk table and the truncated step loop on the same inputs; exhaustive gate-rule checks; static proof that the allocated listing computes the gate DAG; image encode/decode round trip and size (322,720 bytes); sixteen control-flow fixtures; every handler cost measured at the full-width parameters.",
+      "hypothesis": "Every assertion holds, so the experiment exits normally and reports the asserted figures in its first rows (kernel 74,978 instructions, 907 registers, image 322,720 bytes, COMP charge 249, closed forms of proof Section M.2). A failed assertion aborts the run. No pair is returned and no target event is claimed.",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "sha256-r54-bounded-machine-w16-v1",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/sha256_machine.py",
+      "scope": "Search part (the static checks are the experiment sha256-r54-machine-checks-v1). Complete bounded-restart machine program for a declared 1,024-register file, serialized into its byte image (4-byte kernel words behind an 8-byte length-carrying KERNEL instruction, 8-byte control, 40-byte constant formats) and decoded before execution with an asserted round trip; 74,978-instruction register-resident bitsliced kernel computing the tail-truncated walk f(u) = B(S(u)) XOR PD, S(u) the working state after step 53 of the one padded block of P || BE256(u) and B the fixed bijection of proof Section 1.2; control code with a two-stage distinguished test, an endpoint table of 64-bit slots and lane metadata in memory via charged loads and stores, executed by a counting interpreter; the COMP instruction runs the 185-operation straight-line word program of B after the compression and is charged for it. Encoding checks (explicit 64-step reference against hashlib.sha256 on 74 inputs; B, its inverse and its word program against the step-loop composition on the same inputs), sixteen deterministic control-flow fixtures and full-width cost probes; then one organizer-seeded 16-bit projected search per trial on the real walk (256 lanes, 3 low zero bits, 9 key bits, capacity 256, age cap 3, 48 batches, 4,096 starts, budget 4,608), each cross-checked against the scalar reference state machine, with sampled kernel lanes compared to the scalar reference on all 256 output bits.",
+      "hypothesis": "The decoded machine image implements the frozen specification: it agrees with the scalar reference on every fixture and projected trial, its handler operation counts equal the closed forms of the ledger at the full-width parameters (with COMP charged one compression plus 249 word operations), its image length equals the ledger's code size, its kernel is statically shown to compute the gate DAG and fits the declared register file, and it agrees with the scalar reference on every sampled lane. Returned pairs are distinct messages with equal low sixteen bits of digest word 7 (the last four digest bytes), because output word 0 of the walk is the working-state word h. Success frequency is control-flow coverage only.",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "000000000000000000000000000000000000000000000000000000000000ffff",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "sha256-r54-slice-first-collision-w20-v1",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/sha256_machine.py",
+      "scope": "Evidence for heuristic H1. Each organizer trial selects an independent 20-bit slice g(u) = f(c | u) mod 2^20 of the fixed walk f(u) = B(S(u)) XOR PD, S(u) the working state after step 53 of the one padded block of P || BE256(u) and B the fixed bijection of proof Section 1.2, with c derived from the trial seed and its low 20 bits cleared; the low 20 bits of f are the low bits of the working-state word h, so of digest word 7. 256 lane walks start at 256 consecutive slice values and are evaluated with the same bitsliced kernel and serialized in batch and lane order exactly as in the full search, for 5 batches (1,280 slots). A trial returns the two colliding messages when the first event is an output equal to an earlier output; it returns no pair when the first event is an output equal to a start value or when no event occurs.",
+      "hypothesis": "Under the random-function model every query before the first event is fresh, so the first-event law is exact and the probability that a trial returns a pair is 0.448648 (114.85 of 256), fixed before execution by exact rational arithmetic. The organizer verifies every returned pair on the declared low bits of digest word 7. DIAGNOSTIC only, not a calibrated test of H1: public fixed seeds, no holdout, widths and slot counts chosen by the authors; no coverage, confidence, false-alarm rate or rejection rule is claimed and no full-width success probability is inferred.",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "00000000000000000000000000000000000000000000000000000000000fffff",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "sha256-r54-slice-first-collision-w22-v1",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/sha256_machine.py",
+      "scope": "Evidence for heuristic H1. Each organizer trial selects an independent 22-bit slice g(u) = f(c | u) mod 2^22 of the fixed walk f(u) = B(S(u)) XOR PD, S(u) the working state after step 53 of the one padded block of P || BE256(u) and B the fixed bijection of proof Section 1.2, with c derived from the trial seed and its low 22 bits cleared; the low 22 bits of f are the low bits of the working-state word h, so of digest word 7. 256 lane walks start at 256 consecutive slice values and are evaluated with the same bitsliced kernel and serialized in batch and lane order exactly as in the full search, for 6 batches (1,536 slots). A trial returns the two colliding messages when the first event is an output equal to an earlier output; it returns no pair when the first event is an output equal to a start value or when no event occurs.",
+      "hypothesis": "Under the random-function model every query before the first event is fresh, so the first-event law is exact and the probability that a trial returns a pair is 0.230668 (59.05 of 256), fixed before execution by exact rational arithmetic. The organizer verifies every returned pair on the declared low bits of digest word 7. DIAGNOSTIC only, not a calibrated test of H1: public fixed seeds, no holdout, widths and slot counts chosen by the authors; no coverage, confidence, false-alarm rate or rejection rule is claimed and no full-width success probability is inferred.",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "00000000000000000000000000000000000000000000000000000000003fffff",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "sha256-r54-slice-first-collision-w22-rep1-v1",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/sha256_machine.py",
+      "scope": "Replicate 1 of sha256-r54-slice-first-collision-w22-v1: the identical program, slice width, start set, kernel, serialization and 6 batches (1,536 slots); only the experiment id differs, so the organizer derives 256 fresh trial seeds. Evidence for heuristic H1, as the primary width-22 experiment.",
+      "hypothesis": "Same law as sha256-r54-slice-first-collision-w22-v1: probability 0.230668 (59.05 of 256) that a trial returns a pair, fixed before execution. The three replicates were declared in every package of the round-40 to round-60 rebuild, under one rule and before any organizer-seeded executor run of this package or any computation of a replicate count (proof Section H); they and the primary are read together as 1,024 trials with expectation 236.20, and every declared run is reported. DIAGNOSTIC only: no coverage, confidence, false-alarm rate or rejection rule is claimed and no full-width success probability is inferred.",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "00000000000000000000000000000000000000000000000000000000003fffff",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "sha256-r54-slice-first-collision-w22-rep2-v1",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/sha256_machine.py",
+      "scope": "Replicate 2 of sha256-r54-slice-first-collision-w22-v1: the identical program, slice width, start set, kernel, serialization and 6 batches (1,536 slots); only the experiment id differs, so the organizer derives 256 fresh trial seeds. Evidence for heuristic H1, as the primary width-22 experiment.",
+      "hypothesis": "Same law as sha256-r54-slice-first-collision-w22-v1: probability 0.230668 (59.05 of 256) that a trial returns a pair, fixed before execution. The three replicates were declared in every package of the round-40 to round-60 rebuild, under one rule and before any organizer-seeded executor run of this package or any computation of a replicate count (proof Section H); they and the primary are read together as 1,024 trials with expectation 236.20, and every declared run is reported. DIAGNOSTIC only: no coverage, confidence, false-alarm rate or rejection rule is claimed and no full-width success probability is inferred.",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "00000000000000000000000000000000000000000000000000000000003fffff",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "sha256-r54-slice-first-collision-w22-rep3-v1",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/sha256_machine.py",
+      "scope": "Replicate 3 of sha256-r54-slice-first-collision-w22-v1: the identical program, slice width, start set, kernel, serialization and 6 batches (1,536 slots); only the experiment id differs, so the organizer derives 256 fresh trial seeds. Evidence for heuristic H1, as the primary width-22 experiment.",
+      "hypothesis": "Same law as sha256-r54-slice-first-collision-w22-v1: probability 0.230668 (59.05 of 256) that a trial returns a pair, fixed before execution. The three replicates were declared in every package of the round-40 to round-60 rebuild, under one rule and before any organizer-seeded executor run of this package or any computation of a replicate count (proof Section H); they and the primary are read together as 1,024 trials with expectation 236.20, and every declared run is reported. DIAGNOSTIC only: no coverage, confidence, false-alarm rate or rejection rule is claimed and no full-width success probability is inferred.",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "00000000000000000000000000000000000000000000000000000000003fffff",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "sha256-r54-success-bound-v1",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/success_bound.py",
+      "scope": "The exact random-function success bound of proof Section P for the frozen parameters, recomputed inside the organizer's executor in 60-digit decimal arithmetic with every transcendental rounded in the direction that weakens the bound and exact rationals elsewhere. It ignores the trial seeds and returns no message pairs.",
+      "hypothesis": "The literals theta = 2^-112, U = 71,316, R = 10 L, B = 1048069 * 2^100, 47-bit key and 2^17 starts give a certified lower bound 0.390036155778183 >= 0.39 (certified = 1 in every row). Arithmetic only; it is not evidence about the fixed target, which is H1.",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    }
+  ]
+}
