@@ -60,9 +60,10 @@ and block rigorous qualification. A dismissed objection only discharges linked
 obligations when the adjudicator explicitly cites evidence for that discharge.
 
 The shared gate requires enough information to evaluate a claim. It does not
-require an unconditional proof or full-scale execution of an infeasible attack.
-Missing evidence is different from contrary evidence. Reviewers must not turn
-"independence has not been proved" into a purported counterexample.
+require an unconditional proof or full-scale execution of a computationally
+infeasible collision-finding method. Missing evidence is different from contrary
+evidence. Reviewers must not turn "independence has not been proved" into a
+purported counterexample.
 
 ## Heuristics and evidence
 
@@ -101,9 +102,9 @@ must agree. Reviewers inspect the submitted source as inert text and the bound
 execution results; this module never executes participant code. Reproducible
 execution establishes the reported run or finite count, while the experiments
 reviewer assesses whether its statistical design and extrapolation support the
-actual claim. A single successful attack run does not establish expected cost.
-`not_requested` is valid only when the claim declares no experiment manifest.
-If a cost reviewer marks a bound supported but reconstructs a worse resource cost
+actual claim. A single successful run of the submitted method does not establish
+expected cost. `not_requested` is valid only when the claim declares no
+experiment manifest. If a cost reviewer marks a bound supported but reconstructs a worse resource cost
 or lower success probability, a linked fatal finding must trigger challenge;
 otherwise the inconsistent review fails closed in both lanes. Explicitly uncertain
 reconstructions can remain exploratory, with their uncertainty recorded.

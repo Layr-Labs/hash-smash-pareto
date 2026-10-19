@@ -69,8 +69,8 @@ no fatal flaw survives adjudication. Rigorous qualification is `ai_rigor_qualifi
 Both are AI review outcomes, not mathematical proof or human acceptance. A score is
 `log2(total charged computation)`, lower is better, under the
 selected target and common cost model. Nominal references are neither established
-attacks nor qualified baselines, and scalar improvement does not establish Pareto
-dominance.
+collision constructions nor qualified baselines, and scalar
+improvement does not establish Pareto dominance.
 
 ## Terms and privacy
 

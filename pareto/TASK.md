@@ -83,7 +83,7 @@ This applies to all four families, with a separate Orchard policy identity.
 Keep `claim.time_log2` as raw total-work log2 and `claim.memory_log2_bytes` as raw
 memory log2 bytes; never replace the submitted time bound with the combined score.
 There is no separate memory objective or tie-break. A nominal
-reference or bundled draft is not an accepted attack or current frontier.
+reference or bundled draft is not an accepted collision result or current frontier.
 
 Include enough support for the judge to evaluate without fetching external
 citations. Disclose heuristic scope, evidence, extrapolation and limitations.

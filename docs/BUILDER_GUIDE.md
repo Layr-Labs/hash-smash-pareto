@@ -59,9 +59,9 @@ Use these guides for the assigned subsystem:
   pass is `ai_rigor_qualified`. Neither is mathematical proof or human acceptance.
   Heuristics require explicit scope, evidence, and review. Model confidence is not
   algorithmic success probability; scalar improvement is not Pareto dominance.
-- Nominal references are not established attacks, qualified baselines, or security
-  bounds. Drafts never reach the judge or emit scores. Never bypass those gates or
-  reinterpret historical artifacts under a new policy.
+- Nominal references are not established collision constructions, qualified
+  baselines, or security bounds. Drafts never reach the judge or emit scores.
+  Never bypass those gates or reinterpret historical artifacts under a new policy.
 - Use `--track` explicitly for pipeline and verifier commands. Preserve independent
   output paths and fingerprints; never repurpose an old score for another track.
 
