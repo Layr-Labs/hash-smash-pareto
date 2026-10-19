@@ -31,6 +31,6 @@
     "compression-only or free-start collisions",
     "near-collisions or output truncation",
     "changing the IV, padding, round range, or output width",
-    "implementation/side-channel attacks"
+    "implementation or side-channel methods"
   ]
 }

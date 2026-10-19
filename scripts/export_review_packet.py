@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+from contextlib import nullcontext
 from copy import deepcopy
 from pathlib import Path
 import shutil
@@ -215,14 +216,20 @@ def build_packet(track, *, candidate: Path | None = None, experiment_report: Pat
         (ROOT / "judge/committees/paired-roles-v1.json").read_bytes(), "organizer committee",
     )
     roles = {}
-    for stage in INITIAL_STAGES:
-        strategy = committee["roles"][stage]["strategy"]
-        roles[stage] = {
-            "strategy": strategy,
-            "obligation_ids": list(OBLIGATIONS[stage]),
-            "system_prompt": load_system_prompt(stage, strategy),
-            "output_schema": _schema_for_stage(stage),
-        }
+    if track.__class__.__module__ == "pareto.targets":
+        from pareto.prompt_policy import active_prompt_policy
+        prompt_policy = active_prompt_policy()
+    else:
+        prompt_policy = nullcontext()
+    with prompt_policy:
+        for stage in INITIAL_STAGES:
+            strategy = committee["roles"][stage]["strategy"]
+            roles[stage] = {
+                "strategy": strategy,
+                "obligation_ids": list(OBLIGATIONS[stage]),
+                "system_prompt": load_system_prompt(stage, strategy),
+                "output_schema": _schema_for_stage(stage),
+            }
     _same_package(intake, validate_candidate(candidate, track=track))
     binding = evidence_binding(evidence)
     return {

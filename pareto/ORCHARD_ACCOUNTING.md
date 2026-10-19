@@ -32,7 +32,7 @@ metadata and fresh-registration requirements.
 | Probability | A finite budget achieving the claimed success probability, at least 0.39 |
 | Memory | Count and review bytes; the cost axis adds max(0, memoryLog2Bytes - 20), with a one-MiB floor |
 | Objectives | Maximize partial rounds; minimize normalizedTimeMemoryLog2 |
-| Baseline | No required qualified attack baseline; bundled drafts remain invalid smoke checks |
+| Baseline | No required qualified collision-result baseline; bundled drafts remain invalid smoke checks |
 
 The review supplied by the organizers selected ω = 2.8 and endorsed the current
 target and weighted accounting choices. The implementer's additional choices are
@@ -92,7 +92,7 @@ raw time bound is `timeLog2 = log2(T)`. The new Pareto cost axis is
 tie-break. A fully expanded operation count is instead divided once by C.
 At r = 1, C = 237 (156 multiplications plus 81 additions); at r = 2, C = 258
 (168 multiplications plus 90 additions). The denominator remains the fixed dense
-reference implementation even if an attack uses an optimized implementation.
+reference implementation even if a submitted method uses an optimized implementation.
 
 ## Example and sensitivity
 
@@ -106,13 +106,13 @@ and independently supplies the required success argument. At n = 1024 this is
 13,434,356,712 primitive operations. For r = 1, the normalized time is about
 56,685,049.42, whose log2 is 25.75646494. A ceiling of 25.76 covers this illustrative
 arithmetic; submitting 25.75 would not. For r = 2, the same work has log2 25.63398094
-because its reference permutation is more expensive. Actual attacks must of
-course recompute their own work when the round count changes. These numbers are
+because its reference permutation is more expensive. Actual collision-finding methods
+must of course recompute their own work when the round count changes. These numbers are
 raw time bounds. If the example used 2^30 bytes of reviewed memory, the submitted
 r=1 time bound 25.76 would project to normalized cost 35.76. At one MiB or less
 it would remain 25.76. The raw time and memory metrics remain separately visible.
 
-This is an accounting example, not an attack, baseline or endorsed coefficient.
+This is an accounting example, not a collision construction, baseline or endorsed coefficient.
 Dropping the coefficient 5 would underprice its leading term by a factor of 5;
 dropping the log at this dimension would underprice it by a further factor of 10.
 Multiplying an entire budget by a factor k adds `log2(k)` to the score. This is why

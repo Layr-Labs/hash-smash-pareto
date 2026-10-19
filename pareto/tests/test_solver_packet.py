@@ -10,6 +10,7 @@ import unittest
 from unittest.mock import PropertyMock, patch
 
 from pareto.targets import FamilyTrack, track_for
+from pareto.prompt_policy import active_prompt_policy
 from scripts import export_review_packet as exporter
 from scripts import pareto_pipeline, pareto_candidate
 from tests.helpers import candidate_fixture
@@ -33,15 +34,43 @@ class FamilyPacketTests(unittest.TestCase):
                 self.assertEqual(packet['evidence']['benchmark'], track.benchmark())
                 self.assertEqual(packet['binding'], exporter.evidence_binding(packet['evidence']))
                 self.assertEqual(packet['binding']['target_config_sha256'], track.config_sha256())
-                for stage, role in packet['roles'].items():
-                    self.assertEqual(role['system_prompt'], exporter.load_system_prompt(stage, role['strategy']))
-                    self.assertEqual(role['output_schema'], exporter._schema_for_stage(stage))
+                with active_prompt_policy():
+                    for stage, role in packet['roles'].items():
+                        self.assertEqual(role['system_prompt'], exporter.load_system_prompt(stage, role['strategy']))
+                        self.assertEqual(role['output_schema'], exporter._schema_for_stage(stage))
+                evaluability = ' '.join(packet['roles']['lane_evaluability']['system_prompt'].split())
+                self.assertIn('declared collision problem class', evaluability)
+                self.assertNotIn('infeasible attack', evaluability)
                 if family == 'poseidon':
                     model = packet['evidence']['benchmark']['cost_model']
                     self.assertEqual(model['id'], 'orchard-field-ram-v2')
                     self.assertEqual(model['algebraic_estimates']['matrix_multiplication_exponent'], 2.8)
                     self.assertEqual(model['algebraic_estimates']['logarithm_base'], 2)
                     self.assertEqual(track.reference_operation_cost({}), 216 + 21 * rounds)
+
+    def test_pareto_prompt_policy_is_scoped_and_restored(self):
+        original = exporter.load_system_prompt('lane_evaluability', 'formal-proof-v1')
+        self.assertIn('exact target and attack class', original)
+        with active_prompt_policy():
+            current = ' '.join(exporter.load_system_prompt('lane_evaluability', 'formal-proof-v1').split())
+            self.assertIn('declared collision problem class', current)
+            self.assertNotIn('infeasible attack', current)
+            from judge.openai_adapter import OpenAIConfig, openai_system_prompt
+            from judge.bedrock_adapter import BedrockConfig, bedrock_system_prompt
+            openai = openai_system_prompt(
+                OpenAIConfig(api_key='test', model='gpt-5.6-sol'),
+                'lane_evaluability',
+            )
+            bedrock = bedrock_system_prompt(
+                BedrockConfig(api_key='test', model='us.openai.gpt-5.6-sol'),
+                'lane_evaluability',
+            )
+            self.assertIn('formal `attack_class` identifier', openai)
+            self.assertIn('formal `attack_class` identifier', bedrock)
+        self.assertEqual(
+            exporter.load_system_prompt('lane_evaluability', 'formal-proof-v1'),
+            original,
+        )
 
     def test_family_resolves_current_claim_and_rejects_manifest_mismatch(self):
         with tempfile.TemporaryDirectory() as tmp:

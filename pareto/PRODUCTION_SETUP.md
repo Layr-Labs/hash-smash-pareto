@@ -84,9 +84,10 @@ bash pareto/setup.sh
 ```
 
 Check changed documentation links, the four empty admission lists and preservation
-of the published solver skill, all 26 scalar configuration fingerprints and all
-152 supported Pareto configuration fingerprints. These checks use no live AI and
-do not establish a successful import, cryptanalytic qualification or activation.
+of the published solver skill and all 26 scalar configuration fingerprints. A
+Pareto contract revision must deliberately change all affected Pareto fingerprints;
+verify the complete expected set of 152 before activation. These checks use no live
+AI and do not establish a successful import, mathematical qualification or activation.
 
 ## Separate activation gates
 
@@ -99,7 +100,7 @@ is in [Round admission](./README.md#round-admission).
 Use the supported production owner/importer workflow with root `pareto` and the
 reviewed source commit. Record the returned identities and inspect all four
 official baseline workflows and their artifacts. Bundled candidates are invalid
-draft smoke checks with null scores, not accepted attacks or incumbents. Preserve
+draft smoke checks with null scores, not accepted collision results or incumbents. Preserve
 empty admission and unopened participation until activation is explicitly
 authorized. Inspect uncertain import results before retrying.
 

@@ -58,13 +58,16 @@ Time remains total work in selected-round target-compression units; raw time and
 memory remain separate reviewed metrics. Memory is part of the cost axis, with
 no additional objective or tie-break. See the [pinned scoring definitions,
 source attribution and transport contract](../scoring-policies/README.md).
-The adapter calls the original intake, certificate and experiment gates, original
-paired committee, original qualification aggregation, and original score builder,
-then explicitly projects the authenticated raw bounds at the Pareto boundary.
-`judge/`, its prompts and `schemas/claim-frontier-v3.schema.json` remain unchanged.
-The successor claim schema only expands the trusted target roster.
+The adapter calls the original intake, certificate and experiment gates, paired
+committee, qualification aggregation, and score builder, then explicitly projects
+the authenticated raw bounds at the Pareto boundary. Official reviews and advisory
+packets use the Pareto-local mathematical-language prompt set in `pareto/judge/`.
+The shared root judge, prompts, profiles, cost model and scalar fingerprints remain
+unchanged. The successor claim schema only expands the trusted target roster.
 
-SHA-256, SHA3 and BLAKE3 use the original exact target semantics and v5 cost model.
+SHA-256, SHA3 and BLAKE3 use Pareto-local copies of the original exact target
+semantics and v5 cost model, with only the theoretical-collision terminology
+normalized.
 Their per-round normalization is computed using the original organizer reference
 operation counter. The import baseline is an explicit invalid draft smoke check,
 not an incumbent or human-accepted submission. Its null-score output still
@@ -96,8 +99,9 @@ justified finite coefficients and all logarithmic factors. See the
 [judge disclosure and accounting rules](./ORCHARD_ACCOUNTING.md). V2 retains
 v1's operation prices and adds this estimate policy; the v1 file is historical.
 This is separate from existing hash models.
-The original HashSmash judge reviews it initially. A later Orchard judge or model
-change requires a Yukon reorg without migrating the legacy challenge. Current
+The same paired committee reviews it with the Pareto-local prompt set. A later
+Orchard judge or model change requires a Yukon reorg without migrating the legacy
+challenge. Current
 Yukon reorgs include all four tracks in the successor; score/validity scopes apply
 to that batch. Admission-only round updates do not use this path.
 

@@ -23,7 +23,7 @@
   },
   "out_of_scope": [
     "Free-start or compression-only collisions",
-    "Quantum attacks",
+    "Quantum algorithms",
     "Changing rounds, IV, padding, mode or output length"
   ],
   "selection_note": "Organizer-selected exploration target; no first-unbroken boundary is asserted.",
