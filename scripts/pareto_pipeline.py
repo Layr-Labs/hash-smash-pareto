@@ -9,6 +9,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from pareto.targets import FAMILIES, track_for, validate_admission
+from pareto.prompt_policy import active_prompt_policy
 from pareto.scoring import evaluation_policies, normalized_score, objectives, scoring_metadata
 from scripts import hashsmash_pipeline as original
 from verifier.constants import MAX_CLAIM_BYTES
@@ -90,7 +91,8 @@ def run(command, family):
         if outcome.get('valid') is False:
             return 0
         paths = original.RunPaths.for_track(select_track(family))
-        status = original.run_judge(paths)
+        with active_prompt_policy():
+            status = original.run_judge(paths)
         if status == 3:
             return 3
         if status:

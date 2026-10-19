@@ -240,6 +240,49 @@ class BindingTests(unittest.TestCase):
                 self.assertTrue(all(t.config_sha256() != old for t, old in zip(tracks, before)))
                 self.assertEqual({t.id: t.config_sha256() for t in frontier_tracks()}, legacy_before)
 
+    def test_pareto_language_contracts_are_isolated_from_scalar_tracks(self):
+        from verifier.frontier_tracks import frontier_tracks
+        original_read = Path.read_bytes
+        scalar_before = {track.id: track.config_sha256() for track in frontier_tracks()}
+        pareto_tracks = [
+            track_for(family, rounds)
+            for family, (_, low, high) in FAMILIES.items()
+            for rounds in range(low, high + 1)
+        ]
+        before = [track.config_sha256() for track in pareto_tracks]
+        changed_prompt = ROOT / 'pareto/judge/prompts/lane-evaluability-v1.md'
+
+        def changed(path):
+            data = original_read(path)
+            return data + b'\n' if path == changed_prompt else data
+
+        with patch.object(Path, 'read_bytes', changed):
+            self.assertTrue(all(
+                track.config_sha256() != old
+                for track, old in zip(pareto_tracks, before)
+            ))
+            self.assertEqual(
+                {track.id: track.config_sha256() for track in frontier_tracks()},
+                scalar_before,
+            )
+
+        for track in pareto_tracks:
+            benchmark = track.benchmark()
+            self.assertEqual(
+                benchmark['qualification_policy']['language_profile'],
+                'pareto-theoretical-collision-v1',
+            )
+            self.assertEqual(track.profile_path.parent, ROOT / 'pareto/target-profiles')
+            serialized = json.dumps(benchmark['target_profile'])
+            self.assertNotIn('Quantum attacks', serialized)
+            self.assertNotIn('implementation/side-channel attacks', serialized)
+            if track.family != 'poseidon':
+                self.assertEqual(
+                    track.cost_path,
+                    ROOT / 'pareto/cost-models/collision-frontier-v5.json',
+                )
+                self.assertNotIn('full attack', json.dumps(benchmark['cost_model']))
+
     def test_changed_policy_definition_fails_closed(self):
         from scripts import scalar_scoring_policy
         for family, path in [('sha256', scalar_scoring_policy.ACTIVE_POLICY_PATH), ('poseidon', scoring.ORCHARD_POLICY_PATH)]:
@@ -251,7 +294,7 @@ class BindingTests(unittest.TestCase):
                 scoring.policy_definition(family)
 
     def test_all_supported_contracts_keep_original_primitive_and_reference_prices(self):
-        original_cost = json.loads((ROOT / 'cost-models/collision-frontier-v5.json').read_bytes())
+        original_cost = json.loads((ROOT / 'pareto/cost-models/collision-frontier-v5.json').read_bytes())
         orchard_cost = json.loads((ROOT / 'pareto/orchard-cost-v2.json').read_bytes())
         count = 0
         for family, (_, low, high) in FAMILIES.items():

@@ -96,6 +96,26 @@ class AdapterTests(unittest.TestCase):
                         for phase in ('intake','judge','score'): self.assertEqual(pipeline.run(phase,family),0)
                         self.assertIn('not accepted',json.loads((root/f'pareto/.yukon/scores/{family}.json').read_text())['reason'])
 
+    def test_official_judge_uses_pareto_prompt_policy(self):
+        track = track_for('sha256', 39)
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            paths = RunPaths.for_track(track, state_root=root / 'pareto/.yukon')
+            gate = root / 'pareto/.yukon/work/tracks/sha256-pareto/pareto-outcome.json'
+            gate.parent.mkdir(parents=True)
+            gate.write_text('{"intake":"passed"}')
+
+            def judge(_):
+                from judge.prompts import load_system_prompt
+                prompt = ' '.join(load_system_prompt('lane_evaluability').split())
+                self.assertIn('declared collision problem class', prompt)
+                self.assertNotIn('infeasible attack', prompt)
+                return 0
+
+            with patch.object(pipeline, 'ROOT', root),                  patch.object(pipeline, 'select_track', return_value=track),                  patch.object(pipeline.original.RunPaths, 'for_track', return_value=paths),                  patch.object(pipeline.original, 'run_judge', side_effect=judge) as review,                  patch.dict('os.environ', {}, clear=True):
+                self.assertEqual(pipeline.run('judge', 'sha256'), 0)
+            review.assert_called_once_with(paths)
+
     def test_unknown_policy_is_an_execution_failure(self):
         with patch.dict('os.environ', {'YUKON_EVALUATION': json.dumps(evaluation(policies={'scoring': {'id': 'future'}, 'validity': None}))}):
             with self.assertRaisesRegex(ValueError, 'does not support'):

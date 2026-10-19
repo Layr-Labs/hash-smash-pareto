@@ -32,7 +32,7 @@
   "out_of_scope": [
     "Raw permutation distinguishers",
     "Free-start or compression-only collisions",
-    "Quantum attacks",
+    "Quantum algorithms",
     "Changing rate,capacity,suffix,IV,round range or output length"
   ]
 }

@@ -9,6 +9,7 @@ from verifier import hash_functions, blake3, keccak
 from verifier.io import canonical_json_bytes, sha256_bytes
 from verifier.errors import VerificationError
 from scripts.reference_operation_costs import Word
+from pareto.prompt_policy import LANGUAGE_PROFILE_ID, qualification_policy_sha256
 from pareto.scoring import evaluation_policies, objectives, policy_definition
 
 FAMILIES = {
@@ -52,14 +53,19 @@ class FamilyTrack(LaneTrack):
 
     @property
     def profile_path(self):
-        original = ROOT / 'target-profiles' / f'{self.profile_id}.json'
-        return original if original.exists() else self.challenge_root / 'target-profiles' / f'{self.profile_id}.json'
+        return self.challenge_root / 'target-profiles' / f'{self.profile_id}.json'
+
+    @property
+    def cost_path(self):
+        return self.challenge_root / 'cost-models/collision-frontier-v5.json'
 
     def reference_operation_cost(self, cost):
         return reference_cost(self.family, self.rounds)
 
     def benchmark(self):
         result = super().benchmark()
+        result['qualification_policy']['language_profile'] = LANGUAGE_PROFILE_ID
+        result['qualification_policy']['sha256'] = qualification_policy_sha256()
         if self.family == 'poseidon':
             model = json.loads((self.challenge_root / 'orchard-cost-v2.json').read_text())
             model['operation_weights'] = result['cost_model']['operation_weights']
