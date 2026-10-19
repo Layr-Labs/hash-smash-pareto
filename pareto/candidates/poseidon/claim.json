@@ -1,20 +1,43 @@
 {
-  "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "poseidon-orchard-r0-prefix-v1",
-  "attack_class": "ordinary-collision",
-  "rounds": 0,
-  "claim": {
-    "time_log2": 128.0,
-    "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
-    "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
-  },
-  "restrictions": [],
-  "baseline_improved": "poseidon-orchard-r0-nominal-v2",
-  "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+ "schema_version": 3,
+ "submission_state": "ready",
+ "target_profile": "poseidon-orchard-r8-prefix-v1",
+ "attack_class": "ordinary-collision",
+ "rounds": 8,
+ "claim": {
+  "time_log2": 42.33969,
+  "time_unit": "target-compressions",
+  "memory_log2_bytes": 39.132,
+  "preprocessing_log2": 20,
+  "success_probability": 0.39009,
+  "nonuniform_advice_log2_bytes": 0
+ },
+ "restrictions": [
+  "Applies to the selected target poseidon-orchard-r8-prefix-v1 only (eight partial rounds 4, 5, 6, 7, 8, 9, 10 and 11 plus the eight fixed full rounds); the construction uses the first two full rounds being skippable on a line and gives no claim for other round counts.",
+  "time_log2 is the worst-case operation count of the algorithm of proof.md section 4 (one centre, K = 1, the trial charged in full with the root isolation at its cap of 64 rounds, one thread), plus the offline bound of 1,000,000 operations of proof.md section 6.2, which is declared as preprocessing_log2 = 20 and is inside time_log2 (one quantity); memory_log2_bytes is the footprint. Cost model orchard-field-ram-v2: every field operation, load, store, control operation and random word is priced 1/C, C = 216 + 21 r = 384.",
+  "success_probability 0.39009 is a probability over the algorithm's fresh independent uniform 256-bit random words (the cost model's random-word primitive) for the fixed target, derived from the one score-critical premise H-ONE as 1 - (1 - q)^K - K (eps_coin + eps_iso) = q - eps_coin - eps_iso with K = 1 and q = 0.3901 (proof.md sections 9.1, 9.2)."
+ ],
+ "baseline_improved": "poseidon-orchard-r8-nominal-v2",
+ "certificate_manifest": "certificates/manifest.json",
+ "experiment_manifest": "experiments/manifest.json",
+ "lane": "exploratory",
+ "heuristics": [
+  {
+   "id": "H-ONE",
+   "statement": "Notation: p is the Pallas prime, D = 5^14, F in F_p[X] the fixed digest polynomial of proof.md section 2.3 at r = 8 (degree D), g_c the monic odd part of F about the centre c (proof.md section 3, degree m = 3,051,757,812), k(c) the number of nonzero squares S with g_c(S) = 0 (k(c) = deg G of stage D). Premise: the number of centres c in F_p with 1 <= k(c) <= 16 is at least 0.3901 p; equivalently, for c uniform on F_p, P(1 <= k(c) <= 16) >= q = 0.3901. With one centre (K = 1) the success bound is q - eps_coin - eps_iso = 0.390099999999997628 (proof.md 9.2). The value 0.3901 is 0.0033693 below 1 - e^(-1/2) = 0.3934693, the probability that a uniform signed permutation (the hyperoctahedral group B_m, the monodromy of the cover G(c,t) = g_c(t^2) = 0 at the depths where it is computed) has a positive fixed point (proof.md 9.3(a)).",
+   "role": "score-critical",
+   "scope": "The fixed Poseidon target poseidon-orchard-r8-prefix-v1, this line construction (the line j = 0 of the first two rounds, odd part about a centre, proof.md sections 2-3), the polynomial F of proof.md section 2.3; centres uniform on F_p. Not claimed for other round counts. The other terms of the success bound are proved: the coin bias and the isolation lemma (proof.md 4.1.1, 9.2, 9.4); stage D is charged for every remainder sequence (proof.md 6.3), so no premise on the sequences is used; the time and memory bounds do not depend on the premise.",
+   "extrapolation": "From the law of k(c) at reduced depth to the polynomial F of depth 12. The roots of G(c,t) in t are +-t_1, ..., +-t_m, so the monodromy group of the cover lies in the hyperoctahedral group B_m and k(c) counts the positive fixed points of the Frobenius element; for the full group B_m this number is Poisson(1/2) in the limit, P(k >= 1) = 1 - e^(-1/2) = 0.3934693 (exactly 1 - sum_{j<=m} (-1/2)^j/j!), and Bonferroni at order 4 gives P >= 151/384 = 0.3932292 from four moments (proof.md 9.3(a), (b)). At N = 2 and 3 S-box layers on the deployed constants and the attack line the arithmetic monodromy is B_12 and B_62 (Grok jobs 136 and 137, re-run on the deployed constants, proof.md 10.3); the geometric monodromy then contains the commutator subgroup of B_m, the j-fold fibre powers are absolutely irreducible, and the Aubry-Perret bound with Bonferroni gives 0.39346933 <= P(1 <= k <= 16) <= 0.39346944 there: the premise is a theorem at those depths (proof.md 9.3(c)). Measured: toy fields at p = 1,048,627, exact over all centres, 27 cases with 3 to 8 layers, P(k >= 1) between 0.39214 and 0.39436 (proof.md 9.3(d)); the organizer-run tests one-centre-n2-t256 and one-centre-n3-t24 run one trial of the algorithm at depth N = 2, 3 (m = 12, 62) per organizer seed and return a witness pair exactly when the sequence is normal, 1 <= k(c) <= 16 and the isolated root gives a verified collision of F_N, with predicted counts Binomial(T, 0.393469) (proof.md 10.5.1). The deviations from the law shrink like p^(-1/2) and do not grow with the degree (toy fields 1.36/sqrt(p); the counts of Grok job 139, eps ~ 3.1/sqrt(p) over degrees 5 to 1,953,125); the premise extrapolates the law to N = 14 with an allowance of 0.0034.",
+   "evidence_ids": [
+    "proof:246-258",
+    "proof:259-274",
+    "proof:275-306",
+    "proof:396-401",
+    "experiment:one-centre-n2-t256",
+    "experiment:one-centre-n3-t24",
+    "experiment:line-ladder-w6"
+   ],
+   "limitations": "It concerns this F, not every polynomial of degree D: it is false for permutation polynomials (k = 0 at every centre) and for a decomposable F with imprimitive monodromy (the axis line of proof.md 10.3, Theorem C), and false at one layer (m = 2: the law gives exactly 0.375). At N = 14 the monodromy is not computed and the counts N_3, N_4 are out of reach of Weil's bound; the premise is the extrapolation of a law that is a theorem at N = 2, 3 and measured on toy fields and on the real field at N <= 4. The organizer tests compute k(c) inside the submitted program; the runner checks only the returned witness pairs, so they are evidence under trusted execution of that program, printed in full in experiments/exp_euclid.py."
+  }
+ ]
 }
