@@ -1,20 +1,64 @@
 {
-  "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "poseidon-orchard-r0-prefix-v1",
-  "attack_class": "ordinary-collision",
-  "rounds": 0,
-  "claim": {
-    "time_log2": 128.0,
-    "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
-    "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
+ "schema_version": 3,
+ "submission_state": "ready",
+ "target_profile": "poseidon-orchard-r3-prefix-v1",
+ "attack_class": "ordinary-collision",
+ "rounds": 3,
+ "claim": {
+  "time_log2": 27.88161,
+  "time_unit": "target-compressions",
+  "memory_log2_bytes": 26.9095,
+  "preprocessing_log2": 0,
+  "success_probability": 1,
+  "nonuniform_advice_log2_bytes": 0
+ },
+ "restrictions": [
+  "Applies to the selected target poseidon-orchard-r3-prefix-v1 only (three partial rounds plus the eight fixed full rounds); the construction uses the first two full rounds being skippable on a line and gives no claim for other round counts.",
+  "Success probability 1 means: one deterministic procedure (centres c_i = i tried in the order i = 1, 2, 3, ... until the first verified collision, at most 64 trials, no random choices) ends on this target in trial 1. The certificate shows a root of g_1 at c = 1 (proof.md section 5.1), and the stages compute what proof.md section 4 states under the premises H2 and H3. It is not a probability over centres. The time is the operation count of that procedure derived from its source (proof.md section 6), bounded over 1 <= deg G <= 8; the memory is the whole static executable image plus a 64 KiB stack bound derived from the call graph of the build (proof.md section 7). The line j = 0, its normalization (a, b) = (M01, -M00) and the centre order are the canonical choices fixed in the source, inherited from edd943c; that centre 1 succeeds on this line was public before this program was written, and the program stores no instance-specific data.",
+  "The collision found is the same pair as the certificates of edd943c, 4bcabff8 and a41aecdd (same line j = 0 and centre c = 1); the claim is the cost of this program. This package revises a41aecdd: the same program and source, with the count now derived from the source instead of claimed as the output of the executed run."
+ ],
+ "baseline_improved": "poseidon-orchard-r3-nominal-v2",
+ "certificate_manifest": "certificates/manifest.json",
+ "lane": "exploratory",
+ "heuristics": [
+  {
+   "id": "H1-charging-rules",
+   "role": "score-critical",
+   "statement": "The count of proof.md section 6 is the sum, over the statements that the program of proof.md section 9 executes, of the charges written at those statements under the rules of proof.md section 4.2: 1 per canonical field addition, subtraction, multiplication or squaring (a Montgomery conversion is one multiplication; inversion and exponentiation expanded per bit), 1 per 256-bit element load or store plus 1 address operation, 3 per loop iteration plus 2 per loop exit, 1 per other executed integer or control operation, 279 per line evaluation and per reference permutation, 128 per recursive call of hgcd, the stated constant bounds for stage bookkeeping, the prologue, the constants and the report and system calls, and a register file of 18 words of 256 bits (a radix-8 block: 8 data words, 7 twiddles, one temporary and the running twiddle and its step; a radix-16 block: 16 data words, one twiddle and one temporary, its twiddles loaded from memory; the truncated top: 16 data words, one twiddle, one temporary), with integer indices, pointers and loop bounds in integer registers, the variant of each pass selected once per pass, and non-recursive procedure calls treated as inlined.",
+   "scope": "All stages of the procedure at the target dimensions: m = 976562; line interpolation on n' = 983040 points O1 (2 n' line evaluations); stage C truncated transforms of n' points on O1 and O2, 236 steps; stage D products on 3 * 2^(l-2) or 2^l points and the first on O1.",
+   "extrapolation": "None. The counts are derived for the target dimensions from the source: stage C in closed form, stages B and prep by components, stage D by its recursion (a fixed function of m under H2), stages E and F bounded over their paths; the cost model of proof.md Appendix A evaluates them. Nothing is scaled from other sizes.",
+   "evidence_ids": [
+    "proof:154-221",
+    "proof:446-722",
+    "proof:764-786",
+    "proof:816-4548",
+    "proof:4602-6236"
+   ],
+   "limitations": "The charging conventions are premises of the cost model (the same as for edd943c and 4bcabff8); word-level costs outside them (cache, bandwidth) are not modelled. Sensitivity to the register premise (estimate from the pass structure, proof.md section 4.2): with about 8 registers roughly +0.3 in time_log2, with radix-2 blocks only roughly +1.0. The counts of stages B, prep and D are evaluated by the cost model of Appendix A rather than written as one formula each; section 6 gives their components and the recursion table."
   },
-  "restrictions": [],
-  "baseline_improved": "poseidon-orchard-r0-nominal-v2",
-  "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  {
+   "id": "H2-generic-path",
+   "role": "score-critical",
+   "statement": "For the fixed target at centre c = 1, with R_1 = S^((p-1)/2) mod g_1: (a) g_1 has no zero on O1; (b) deg(R_1 - 1) = m - 1 and the Euclidean remainder sequence of (g_1, R_1 - 1) is normal (every quotient has degree 1) down to G = gcd(g_1, R_1 - 1); (c) deg G <= 8. Under (a)-(c) every data-dependent branch of stages A to D has a fixed outcome and the count of proof.md section 6 bounds the operations of the procedure on this target.",
+   "scope": "The single target poseidon-orchard-r3-prefix-v1 at its first centre c = 1, where deg G >= 1 is proved by the certificate (proof.md section 5.1).",
+   "extrapolation": "The random-polynomial model applied to the fixed polynomials g_1 and R_1 - 1 of this target: (a) given (c), at most 7 roots of G other than the certificate root S (which is outside H_20, proved), each in O1 with probability n'/p < 2^-234; (b) an abnormal sequence needs one of at most m principal subresultant coefficients of the cofactors (each of degree at most 2m) to vanish, probability at most 2 m^2 / p < 2^-212 by the Schwartz-Zippel bound; (c) the number of further roots of G behaves like a Poisson variable of mean 1/2, so deg G > 8 has probability about 6e-8.",
+   "evidence_ids": [
+    "proof:399-445",
+    "proof:448-499"
+   ],
+   "limitations": "A heuristic about one fixed pair of polynomials, not a proof. Sensitivity: if (a) failed, later centres would run (about +1 in time_log2 per further trial, and a fresh centre succeeds with probability only about 0.39 in the same model), so the time bound would not hold; if (b) failed, stage D would follow the general path for abnormal quotients, whose count, arena peak and recursion depth are not derived here, and the arena could overflow and end the program; if (c) failed with deg G = d > 8, stage E would add at most 256 e(d) operations (about +0.02 in time_log2 at d = 20). The instrumented run took this path with deg G = 1 (proof.md section 6.8); that run was not executed by the organizer and is corroboration only."
+  },
+  {
+   "id": "H3-shift-splitting",
+   "role": "score-critical",
+   "statement": "If 2 <= deg G <= 8, stage E reduces G to a single root within the shifts delta = 1, ..., 256: a shift splits G whenever s_i + delta is a square for some roots s_i of G and a non-square for others, and a random shift separates a given pair of roots with probability 1/2.",
+   "scope": "Only the branch 2 <= deg G <= 8 of stage E (a priori probability about 0.39 given the certificate root).",
+   "extrapolation": "The splitting probability for random shifts applied to the fixed shifts 1, 2, ..., 256; at most 7 splits are needed, so in that model all 256 shifts fail to finish with probability below 2^-200.",
+   "evidence_ids": [
+    "proof:379-390",
+    "proof:696-715"
+   ],
+   "limitations": "A heuristic for fixed shifts. A failure would end trial 1 and later centres would run (about +1 in time_log2 per further trial, each succeeding with probability only about 0.39 in the model), so the time bound would not hold. The cost of the branch, all 256 shifts at degree 8, is included in the claimed time."
+  }
+ ]
 }
