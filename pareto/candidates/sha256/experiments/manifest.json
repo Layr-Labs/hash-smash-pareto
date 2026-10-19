@@ -1,0 +1,165 @@
+{
+ "schema_version": 1,
+ "experiments": [
+  {
+   "id": "r39-transplant-claw",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39joint.py",
+   "event": {
+    "kind": "full-collision"
+   },
+   "scope": "The 39-step compression of sha256-r39-prefix-v1 as used by the construction (proof.md Sections 2 and 10). Trial 0 runs the shipped program's Attack.claw on the published Table 23 pair (chaining value CV_PUB, a0 = A[4], u = W1) with the folded kernel built for CV_PUB: the filters W9 in F9, W8 in F8 and W17 = published value, then both second blocks are built, compressed from CV_PUB for 39 steps and compared. Trials 1 to 255 draw a chaining value, an even a0 and an odd u from the trial seed, recover a1, build the first message and its partner from the construction, and compare the 39-step trajectories of both with the published pair. No message pair is returned: the pair is a collision of the compression function from CV_PUB, not from the standard IV, so the organizer's digest check on blocks hashed from the IV is not a collision, and a full collision of the target is not claimed.",
+   "hypothesis": "Observations (the program's own, untrusted). Trial 0: claw_returned_pair 1, passed_f9 1, passed_f8 1, passed_w17 1, pair_is_published 1, sfs_collision 1, published_w16_is_g 1, published_w17 1, kernel_records 734, claw_ops 6173. Trials 1 to 255: transplant_ok 1 (the states A[6..19] and E[10..19] of both messages equal the published ones), w1_is_u 1, w16_identity 1 (W16 - g = F(u) - F(a0) mod 2^32) on all 255. Returned pairs: 0 of 256. Not shown: any claw search at full size, the tail, any cost."
+  },
+  {
+   "id": "r39-window-small",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39joint.py",
+   "event": {
+    "kind": "full-collision"
+   },
+   "scope": "Trial 0 runs one window of the shipped program (folded 256-lane kernel, every parameter of class P unchanged: DP = low 7 bits zero, table 26,112 words, queue 4096, stage 2 as in proof.md Section 3) on a first block drawn from the trial seed, cut to 2^22 walk evaluations (16,384 iterations of 256 lanes) instead of 2^26, in check mode: every raw claw is asserted to satisfy F(a0) = F(u), a0 even, u odd and W16 = g by the construction (build and expand). Trials 1 to 255 return nothing. No message pair is returned. The generator is charged at its halt cap 575,000 operators because the sandbox has no WebAssembly runtime.",
+   "hypothesis": "Observations (the program's own, untrusted), trial 0: iterations 16384, dp_hits 32865, matches 1705, stage2_iterations 2892, raw_claws 836, opposite_parity 836, distinct_claws 807, passed_f9 11, passed_f8 0, passed_w17 0, kernel_records 741, ops 24291337 (generator 580928 of them). No assertion fails. The window is 1/16 of the program's window, so its operations per claw are not the ledger value of proof.md Section 5. Returned pairs: 0 of 256. Not shown: a full-size window, the tail, any cost."
+  },
+  {
+   "id": "r39-tail-01",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39tail.py",
+   "event": {
+    "kind": "full-collision"
+   },
+   "scope": "Tail replica of proof Section 8 (run 1 of 14): trial 0 runs the SMC over E18..E23 of the carrier K_P (500 particles) with a known-answer check on the published pair; trials 1 to 10 draw W8 in F8 and W9 in F9 for every proposal (30 x 2048 each), rebuild rows 24 to 38 and verify every hit by the two 39-step compressions. Returns no message pair.",
+   "hypothesis": "Observations (the program's own): trial 0 kat 1, mask_viol 0, stage counts k18..k23 and log2_carrier; trials 1 to 10 hits, verified (= hits) and parity classes. Over the 14 runs with the public seeds: 601 hits in 8,601,600 proposals, 601 verified; mean log2 Q' = -75.393, one-sided 99% Student lower bound -75.592 (proof Section 8)."
+  },
+  {
+   "id": "r39-tail-02",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39tail.py",
+   "event": {
+    "kind": "full-collision"
+   },
+   "scope": "Tail replica of proof Section 8 (run 2 of 14): trial 0 runs the SMC over E18..E23 of the carrier K_P (500 particles) with a known-answer check on the published pair; trials 1 to 10 draw W8 in F8 and W9 in F9 for every proposal (30 x 2048 each), rebuild rows 24 to 38 and verify every hit by the two 39-step compressions. Returns no message pair.",
+   "hypothesis": "Observations (the program's own): trial 0 kat 1, mask_viol 0, stage counts k18..k23 and log2_carrier; trials 1 to 10 hits, verified (= hits) and parity classes. Over the 14 runs with the public seeds: 601 hits in 8,601,600 proposals, 601 verified; mean log2 Q' = -75.393, one-sided 99% Student lower bound -75.592 (proof Section 8)."
+  },
+  {
+   "id": "r39-tail-03",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39tail.py",
+   "event": {
+    "kind": "full-collision"
+   },
+   "scope": "Tail replica of proof Section 8 (run 3 of 14): trial 0 runs the SMC over E18..E23 of the carrier K_P (500 particles) with a known-answer check on the published pair; trials 1 to 10 draw W8 in F8 and W9 in F9 for every proposal (30 x 2048 each), rebuild rows 24 to 38 and verify every hit by the two 39-step compressions. Returns no message pair.",
+   "hypothesis": "Observations (the program's own): trial 0 kat 1, mask_viol 0, stage counts k18..k23 and log2_carrier; trials 1 to 10 hits, verified (= hits) and parity classes. Over the 14 runs with the public seeds: 601 hits in 8,601,600 proposals, 601 verified; mean log2 Q' = -75.393, one-sided 99% Student lower bound -75.592 (proof Section 8)."
+  },
+  {
+   "id": "r39-tail-04",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39tail.py",
+   "event": {
+    "kind": "full-collision"
+   },
+   "scope": "Tail replica of proof Section 8 (run 4 of 14): trial 0 runs the SMC over E18..E23 of the carrier K_P (500 particles) with a known-answer check on the published pair; trials 1 to 10 draw W8 in F8 and W9 in F9 for every proposal (30 x 2048 each), rebuild rows 24 to 38 and verify every hit by the two 39-step compressions. Returns no message pair.",
+   "hypothesis": "Observations (the program's own): trial 0 kat 1, mask_viol 0, stage counts k18..k23 and log2_carrier; trials 1 to 10 hits, verified (= hits) and parity classes. Over the 14 runs with the public seeds: 601 hits in 8,601,600 proposals, 601 verified; mean log2 Q' = -75.393, one-sided 99% Student lower bound -75.592 (proof Section 8)."
+  },
+  {
+   "id": "r39-tail-05",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39tail.py",
+   "event": {
+    "kind": "full-collision"
+   },
+   "scope": "Tail replica of proof Section 8 (run 5 of 14): trial 0 runs the SMC over E18..E23 of the carrier K_P (500 particles) with a known-answer check on the published pair; trials 1 to 10 draw W8 in F8 and W9 in F9 for every proposal (30 x 2048 each), rebuild rows 24 to 38 and verify every hit by the two 39-step compressions. Returns no message pair.",
+   "hypothesis": "Observations (the program's own): trial 0 kat 1, mask_viol 0, stage counts k18..k23 and log2_carrier; trials 1 to 10 hits, verified (= hits) and parity classes. Over the 14 runs with the public seeds: 601 hits in 8,601,600 proposals, 601 verified; mean log2 Q' = -75.393, one-sided 99% Student lower bound -75.592 (proof Section 8)."
+  },
+  {
+   "id": "r39-tail-06",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39tail.py",
+   "event": {
+    "kind": "full-collision"
+   },
+   "scope": "Tail replica of proof Section 8 (run 6 of 14): trial 0 runs the SMC over E18..E23 of the carrier K_P (500 particles) with a known-answer check on the published pair; trials 1 to 10 draw W8 in F8 and W9 in F9 for every proposal (30 x 2048 each), rebuild rows 24 to 38 and verify every hit by the two 39-step compressions. Returns no message pair.",
+   "hypothesis": "Observations (the program's own): trial 0 kat 1, mask_viol 0, stage counts k18..k23 and log2_carrier; trials 1 to 10 hits, verified (= hits) and parity classes. Over the 14 runs with the public seeds: 601 hits in 8,601,600 proposals, 601 verified; mean log2 Q' = -75.393, one-sided 99% Student lower bound -75.592 (proof Section 8)."
+  },
+  {
+   "id": "r39-tail-07",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39tail.py",
+   "event": {
+    "kind": "full-collision"
+   },
+   "scope": "Tail replica of proof Section 8 (run 7 of 14): trial 0 runs the SMC over E18..E23 of the carrier K_P (500 particles) with a known-answer check on the published pair; trials 1 to 10 draw W8 in F8 and W9 in F9 for every proposal (30 x 2048 each), rebuild rows 24 to 38 and verify every hit by the two 39-step compressions. Returns no message pair.",
+   "hypothesis": "Observations (the program's own): trial 0 kat 1, mask_viol 0, stage counts k18..k23 and log2_carrier; trials 1 to 10 hits, verified (= hits) and parity classes. Over the 14 runs with the public seeds: 601 hits in 8,601,600 proposals, 601 verified; mean log2 Q' = -75.393, one-sided 99% Student lower bound -75.592 (proof Section 8)."
+  },
+  {
+   "id": "r39-tail-08",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39tail.py",
+   "event": {
+    "kind": "full-collision"
+   },
+   "scope": "Tail replica of proof Section 8 (run 8 of 14): trial 0 runs the SMC over E18..E23 of the carrier K_P (500 particles) with a known-answer check on the published pair; trials 1 to 10 draw W8 in F8 and W9 in F9 for every proposal (30 x 2048 each), rebuild rows 24 to 38 and verify every hit by the two 39-step compressions. Returns no message pair.",
+   "hypothesis": "Observations (the program's own): trial 0 kat 1, mask_viol 0, stage counts k18..k23 and log2_carrier; trials 1 to 10 hits, verified (= hits) and parity classes. Over the 14 runs with the public seeds: 601 hits in 8,601,600 proposals, 601 verified; mean log2 Q' = -75.393, one-sided 99% Student lower bound -75.592 (proof Section 8)."
+  },
+  {
+   "id": "r39-tail-09",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39tail.py",
+   "event": {
+    "kind": "full-collision"
+   },
+   "scope": "Tail replica of proof Section 8 (run 9 of 14): trial 0 runs the SMC over E18..E23 of the carrier K_P (500 particles) with a known-answer check on the published pair; trials 1 to 10 draw W8 in F8 and W9 in F9 for every proposal (30 x 2048 each), rebuild rows 24 to 38 and verify every hit by the two 39-step compressions. Returns no message pair.",
+   "hypothesis": "Observations (the program's own): trial 0 kat 1, mask_viol 0, stage counts k18..k23 and log2_carrier; trials 1 to 10 hits, verified (= hits) and parity classes. Over the 14 runs with the public seeds: 601 hits in 8,601,600 proposals, 601 verified; mean log2 Q' = -75.393, one-sided 99% Student lower bound -75.592 (proof Section 8)."
+  },
+  {
+   "id": "r39-tail-10",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39tail.py",
+   "event": {
+    "kind": "full-collision"
+   },
+   "scope": "Tail replica of proof Section 8 (run 10 of 14): trial 0 runs the SMC over E18..E23 of the carrier K_P (500 particles) with a known-answer check on the published pair; trials 1 to 10 draw W8 in F8 and W9 in F9 for every proposal (30 x 2048 each), rebuild rows 24 to 38 and verify every hit by the two 39-step compressions. Returns no message pair.",
+   "hypothesis": "Observations (the program's own): trial 0 kat 1, mask_viol 0, stage counts k18..k23 and log2_carrier; trials 1 to 10 hits, verified (= hits) and parity classes. Over the 14 runs with the public seeds: 601 hits in 8,601,600 proposals, 601 verified; mean log2 Q' = -75.393, one-sided 99% Student lower bound -75.592 (proof Section 8)."
+  },
+  {
+   "id": "r39-tail-11",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39tail.py",
+   "event": {
+    "kind": "full-collision"
+   },
+   "scope": "Tail replica of proof Section 8 (run 11 of 14): trial 0 runs the SMC over E18..E23 of the carrier K_P (500 particles) with a known-answer check on the published pair; trials 1 to 10 draw W8 in F8 and W9 in F9 for every proposal (30 x 2048 each), rebuild rows 24 to 38 and verify every hit by the two 39-step compressions. Returns no message pair.",
+   "hypothesis": "Observations (the program's own): trial 0 kat 1, mask_viol 0, stage counts k18..k23 and log2_carrier; trials 1 to 10 hits, verified (= hits) and parity classes. Over the 14 runs with the public seeds: 601 hits in 8,601,600 proposals, 601 verified; mean log2 Q' = -75.393, one-sided 99% Student lower bound -75.592 (proof Section 8)."
+  },
+  {
+   "id": "r39-tail-12",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39tail.py",
+   "event": {
+    "kind": "full-collision"
+   },
+   "scope": "Tail replica of proof Section 8 (run 12 of 14): trial 0 runs the SMC over E18..E23 of the carrier K_P (500 particles) with a known-answer check on the published pair; trials 1 to 10 draw W8 in F8 and W9 in F9 for every proposal (30 x 2048 each), rebuild rows 24 to 38 and verify every hit by the two 39-step compressions. Returns no message pair.",
+   "hypothesis": "Observations (the program's own): trial 0 kat 1, mask_viol 0, stage counts k18..k23 and log2_carrier; trials 1 to 10 hits, verified (= hits) and parity classes. Over the 14 runs with the public seeds: 601 hits in 8,601,600 proposals, 601 verified; mean log2 Q' = -75.393, one-sided 99% Student lower bound -75.592 (proof Section 8)."
+  },
+  {
+   "id": "r39-tail-13",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39tail.py",
+   "event": {
+    "kind": "full-collision"
+   },
+   "scope": "Tail replica of proof Section 8 (run 13 of 14): trial 0 runs the SMC over E18..E23 of the carrier K_P (500 particles) with a known-answer check on the published pair; trials 1 to 10 draw W8 in F8 and W9 in F9 for every proposal (30 x 2048 each), rebuild rows 24 to 38 and verify every hit by the two 39-step compressions. Returns no message pair.",
+   "hypothesis": "Observations (the program's own): trial 0 kat 1, mask_viol 0, stage counts k18..k23 and log2_carrier; trials 1 to 10 hits, verified (= hits) and parity classes. Over the 14 runs with the public seeds: 601 hits in 8,601,600 proposals, 601 verified; mean log2 Q' = -75.393, one-sided 99% Student lower bound -75.592 (proof Section 8)."
+  },
+  {
+   "id": "r39-tail-14",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39tail.py",
+   "event": {
+    "kind": "full-collision"
+   },
+   "scope": "Tail replica of proof Section 8 (run 14 of 14): trial 0 runs the SMC over E18..E23 of the carrier K_P (500 particles) with a known-answer check on the published pair; trials 1 to 10 draw W8 in F8 and W9 in F9 for every proposal (30 x 2048 each), rebuild rows 24 to 38 and verify every hit by the two 39-step compressions. Returns no message pair.",
+   "hypothesis": "Observations (the program's own): trial 0 kat 1, mask_viol 0, stage counts k18..k23 and log2_carrier; trials 1 to 10 hits, verified (= hits) and parity classes. Over the 14 runs with the public seeds: 601 hits in 8,601,600 proposals, 601 verified; mean log2 Q' = -75.393, one-sided 99% Student lower bound -75.592 (proof Section 8)."
+  }
+ ]
+}
