@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "lowbits-birthday",
+      "kind": "python-message-pairs-v1",
+      "scope": "Reduced event on the selected Orchard Poseidon target at its own round count: the first 14 bits of the big-endian reading of the 32-byte digest agree for two distinct canonical messages. One birthday search per organizer trial over fresh inputs from the trial seed. No full collision is expected or claimed.",
+      "hypothesis": "A search of at most 1200 fresh inputs returns a pair whose digests agree on those 14 bits in every trial. The count of trials that return a pair is a reproducible observation; no probability, rate or population bound is drawn from it (public organizer seeds; nothing is assumed about the seeded trials being independent or identically distributed). Checks the digest of the selected target at one reduced width; it says nothing about the full-width map, the cost or the success probability.",
+      "program": "experiments/exp_lowbits.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "fffc000000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "line-ladder-w6",
+      "kind": "python-message-pairs-v1",
+      "scope": "Reduced event on the selected Orchard Poseidon target at its own round count, on the line construction of proof.md section 2: the first 6 bits of the big-endian reading of the 32-byte digest agree for two distinct canonical messages that are the antipodal points W = c+s and W = c-s about a centre c of the line j = 0 of the first two rounds. One scan of the pairs s = 1, ..., 150 per organizer trial, the centre from the trial seed. No full collision is expected or claimed.",
+      "hypothesis": "Some scans find an antipodal pair W = c+s, W = c-s whose digests agree on the first 6 bits; each returned pair is checked by the runner. The count of returned pairs is a reproducible observation of the line construction at width 6; no probability, rate or population bound is drawn from it (public organizer seeds; nothing is assumed about the seeded trials being independent or identically distributed). Checks the digest of the selected target on the antipodal line pairs of the algorithm at one reduced width; it says nothing about the full-width map, the cost or the success probability.",
+      "program": "experiments/exp_line.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "fc00000000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "line-ladder-w8",
+      "kind": "python-message-pairs-v1",
+      "scope": "Reduced event on the selected Orchard Poseidon target at its own round count, on the line construction of proof.md section 2: the first 8 bits of the big-endian reading of the 32-byte digest agree for two distinct canonical messages that are the antipodal points W = c+s and W = c-s about a centre c of the line j = 0 of the first two rounds. One scan of the pairs s = 1, ..., 150 per organizer trial, the centre from the trial seed. No full collision is expected or claimed.",
+      "hypothesis": "Some scans find an antipodal pair W = c+s, W = c-s whose digests agree on the first 8 bits; each returned pair is checked by the runner. The count of returned pairs is a reproducible observation of the line construction at width 8; no probability, rate or population bound is drawn from it (public organizer seeds; nothing is assumed about the seeded trials being independent or identically distributed). Checks the digest of the selected target on the antipodal line pairs of the algorithm at one reduced width; it says nothing about the full-width map, the cost or the success probability.",
+      "program": "experiments/exp_line.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "ff00000000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "line-ladder-w10",
+      "kind": "python-message-pairs-v1",
+      "scope": "Reduced event on the selected Orchard Poseidon target at its own round count, on the line construction of proof.md section 2: the first 10 bits of the big-endian reading of the 32-byte digest agree for two distinct canonical messages that are the antipodal points W = c+s and W = c-s about a centre c of the line j = 0 of the first two rounds. One scan of the pairs s = 1, ..., 150 per organizer trial, the centre from the trial seed. No full collision is expected or claimed.",
+      "hypothesis": "Some scans find an antipodal pair W = c+s, W = c-s whose digests agree on the first 10 bits; each returned pair is checked by the runner. The count of returned pairs is a reproducible observation of the line construction at width 10; no probability, rate or population bound is drawn from it (public organizer seeds; nothing is assumed about the seeded trials being independent or identically distributed). Checks the digest of the selected target on the antipodal line pairs of the algorithm at one reduced width; it says nothing about the full-width map, the cost or the success probability.",
+      "program": "experiments/exp_line.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "ffc0000000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "line-ladder-w12",
+      "kind": "python-message-pairs-v1",
+      "scope": "Reduced event on the selected Orchard Poseidon target at its own round count, on the line construction of proof.md section 2: the first 12 bits of the big-endian reading of the 32-byte digest agree for two distinct canonical messages that are the antipodal points W = c+s and W = c-s about a centre c of the line j = 0 of the first two rounds. One scan of the pairs s = 1, ..., 150 per organizer trial, the centre from the trial seed. No full collision is expected or claimed.",
+      "hypothesis": "Some scans find an antipodal pair W = c+s, W = c-s whose digests agree on the first 12 bits; each returned pair is checked by the runner. The count of returned pairs is a reproducible observation of the line construction at width 12; no probability, rate or population bound is drawn from it (public organizer seeds; nothing is assumed about the seeded trials being independent or identically distributed). Checks the digest of the selected target on the antipodal line pairs of the algorithm at one reduced width; it says nothing about the full-width map, the cost or the success probability.",
+      "program": "experiments/exp_line.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "fff0000000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "euclid-normal-n2-t256-l2-a",
+      "kind": "python-message-pairs-v1",
+      "scope": "Euclidean normality of the algorithm's own construction at reduced depth, on the selected Orchard Poseidon target (proof.md 9.5, 10.5.1). For two centres c per trial (the first from the trial seed, the second from the seed and its index) the program builds F_2(c + X), the coordinate 0 after the first 2 S-box layers on the line j = 0 of the first two rounds (the F_N of proof.md 10.3, degree 25), its monic odd part g about c (degree m = 12), R = X^((p-1)/2) mod g and the complete Euclidean remainder sequence of (g, R - 1), exactly over F_p. Trials 0-255 are computed, 512 sequences (seed set a, entry 1 of 2). A trial whose two sequences are both normal (deg(R - 1) = m - 1 and every quotient of degree 1 down to the gcd) returns two distinct canonical messages on the line whose digests agree on the first 6 bits, found among 65 line points (certain, by pigeonhole); any other trial returns two nulls. No full collision is expected or claimed.",
+      "hypothesis": "Every computed sequence is normal, so exactly 256 of the 256 trials return a pair. The count is a reproducible observation consistent with H-NORMAL; no bound on the abnormality rate is drawn from it (public organizer seeds; nothing is assumed about the seeded trials being independent or identically distributed). Per computed trial the program reports the untrusted observations sequences, normal_sequences, selfcheck_ok, abnormal_quotients, gcd_positive (about 2 of 5 centres) and max_quotient_degree. Supports H-NORMAL at m = 12 on the construction's own pairs; it says nothing about the scale m of the claim, the cost or the success probability.",
+      "program": "experiments/exp_euclid.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "fc00000000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "euclid-normal-n2-t256-l2-b",
+      "kind": "python-message-pairs-v1",
+      "scope": "Euclidean normality of the algorithm's own construction at reduced depth, on the selected Orchard Poseidon target (proof.md 9.5, 10.5.1). For two centres c per trial (the first from the trial seed, the second from the seed and its index) the program builds F_2(c + X), the coordinate 0 after the first 2 S-box layers on the line j = 0 of the first two rounds (the F_N of proof.md 10.3, degree 25), its monic odd part g about c (degree m = 12), R = X^((p-1)/2) mod g and the complete Euclidean remainder sequence of (g, R - 1), exactly over F_p. Trials 0-255 are computed, 512 sequences (seed set b, entry 2 of 2). A trial whose two sequences are both normal (deg(R - 1) = m - 1 and every quotient of degree 1 down to the gcd) returns two distinct canonical messages on the line whose digests agree on the first 6 bits, found among 65 line points (certain, by pigeonhole); any other trial returns two nulls. No full collision is expected or claimed.",
+      "hypothesis": "Every computed sequence is normal, so exactly 256 of the 256 trials return a pair. The count is a reproducible observation consistent with H-NORMAL; no bound on the abnormality rate is drawn from it (public organizer seeds; nothing is assumed about the seeded trials being independent or identically distributed). Per computed trial the program reports the untrusted observations sequences, normal_sequences, selfcheck_ok, abnormal_quotients, gcd_positive (about 2 of 5 centres) and max_quotient_degree. Supports H-NORMAL at m = 12 on the construction's own pairs; it says nothing about the scale m of the claim, the cost or the success probability.",
+      "program": "experiments/exp_euclid.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "fc00000000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "one-centre-n2-t256",
+      "kind": "python-message-pairs-v1",
+      "scope": "One trial of the algorithm at reduced depth, on the selected Orchard Poseidon target (proof.md 9.1, 9.5, 10.5.1). For a centre c from the trial seed the program builds F_2(c + X) (the F_N of proof.md 10.3, degree 25), its monic odd part g (degree m = 12), R = X^((p-1)/2) mod g and the complete Euclidean sequence of (g, R - 1) with its gcd G, exactly over F_p; deg G = k(c), the number of usable roots. If the sequence is normal and 1 <= k(c) <= 16, it isolates a root S of G (stage E, shifts from the seed), takes s = sqrt(S) and checks F_2(c + s) = F_2(c - s) by direct evaluation. Trials 0-255 are computed. A trial that passes returns two distinct canonical messages on the line whose digests agree on the first 6 bits (65 line points, certain by pigeonhole); any other trial returns two nulls. The checked pair count is the number of centres where one trial at depth 2 succeeds.",
+      "hypothesis": "Every computed sequence is normal (H-NORMAL), and a trial returns a pair exactly when 1 <= k(c) <= 16 and its isolated root passes the check; at m = 12 the fraction of centres with 1 <= k(c) <= 16 is given by the law of proof.md 9.3, a theorem at this depth. The pair count is a reproducible observation consistent with that law; no probability, rate or population bound is drawn from it (public organizer seeds; nothing is assumed about the seeded trials being independent or identically distributed). Per computed trial the program reports the untrusted observations n_layers, m, gcd_degree, normal, abnormal_quotients, selfcheck, iso_rounds, root_check and witness_points. Supports the premises H-ONE and H-NORMAL at m = 12 on the construction's own polynomial; it says nothing about the scale m of the claim, where they are extrapolated.",
+      "program": "experiments/exp_euclid.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "fc00000000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "one-centre-n3-t24",
+      "kind": "python-message-pairs-v1",
+      "scope": "One trial of the algorithm at reduced depth, on the selected Orchard Poseidon target (proof.md 9.1, 9.5, 10.5.1). For a centre c from the trial seed the program builds F_3(c + X) (the F_N of proof.md 10.3, degree 125), its monic odd part g (degree m = 62), R = X^((p-1)/2) mod g and the complete Euclidean sequence of (g, R - 1) with its gcd G, exactly over F_p; deg G = k(c), the number of usable roots. If the sequence is normal and 1 <= k(c) <= 16, it isolates a root S of G (stage E, shifts from the seed), takes s = sqrt(S) and checks F_3(c + s) = F_3(c - s) by direct evaluation. The first 24 trials are computed (the sandbox budget); the other trials return two nulls. A trial that passes returns two distinct canonical messages on the line whose digests agree on the first 6 bits (65 line points, certain by pigeonhole); any other trial returns two nulls. The checked pair count is the number of centres where one trial at depth 3 succeeds.",
+      "hypothesis": "Every computed sequence is normal (H-NORMAL), and a trial returns a pair exactly when 1 <= k(c) <= 16 and its isolated root passes the check; at m = 62 the fraction of centres with 1 <= k(c) <= 16 is given by the law of proof.md 9.3, a theorem at this depth. The pair count is a reproducible observation consistent with that law; no probability, rate or population bound is drawn from it (public organizer seeds; nothing is assumed about the seeded trials being independent or identically distributed). Per computed trial the program reports the untrusted observations n_layers, m, gcd_degree, normal, abnormal_quotients, selfcheck, iso_rounds, root_check and witness_points. Supports the premises H-ONE and H-NORMAL at m = 62 on the construction's own polynomial; it says nothing about the scale m of the claim, where they are extrapolated.",
+      "program": "experiments/exp_euclid.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "fc00000000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    }
+  ]
+}
