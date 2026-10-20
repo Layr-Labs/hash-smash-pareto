@@ -1,20 +1,69 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha3-256-r5-prefix-v1",
+  "submission_state": "ready",
+  "target_profile": "sha3-256-r16-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 5,
+  "rounds": 16,
+  "lane": "exploratory",
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 124.42274,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 20,
+    "preprocessing_log2": 35,
     "success_probability": 0.39,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "sha3-256-r5-nominal-v2",
-  "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  "restrictions": [
+    "Two distinct 128-byte one-block messages m(a), m(b) of sha3-256-r16-prefix-v1 (zero state, rate 136, suffix 0x06 with pad10*1, rounds 0 to 15, full 256-bit digest). m(u) places the point u (lanes u0..u3) in lanes 1, 6, 11 = u0, u1, u0^u1^K11 and 4, 9, 14 = u2, u3, u2^u3^K14, the other lanes 0..15 fixed constants K of trial 1230 of the structured set S3-04 (proof.md Section 2); F(u) = SHA3-256-r16(m(u)) xor PD, and F(a) = F(b) with a != b is a collision of two distinct messages.",
+    "Distinguished-point parallel collision search (van Oorschot-Wiener) on F with 256 walks per step, the search of 6ff4e6cc and 8adfac47: DP = image x < 1010 x 2^134 (planes 144..255 zero and the 10 planes below them < 1010; theta = 1010 x 2^-122, H = 112.0199), no trail cut, replay cap 53,958,815,449,314,812,704,108,668,640,034,816 steps, at most 66,160 trails, a table of 13,232 words with five 51-bit slots each (a written bit and 50 end bits; the place of the slot gives the trail number), Tb = 268152997 x 2^92 steps, a prefilter-hit counter that aborts at hit HMAX + 1, and one replay that measures the stored trail by walking it to its DP (proof.md Section 4).",
+    "One step of 256 walks is a generated bit-sliced straight line of 92,535 register operations (67,398 XOR, 13,304 AND, 9,352 OR, 2,481 NOT; no loads or stores): lazy per-row theta, per-row complement subsets and 10-gate chi rows, NOTs placed by a polarity plan with one round of lookahead, dead-code elimination, last-use allocation (step design after jungjipdo's 67f781f8, our own generator gen3.c, written round by round; proof.md Section 3).",
+    "Cost model collision-frontier-v5, unit 4336: N = Tb x 92,555 + ((4373 + 8743) x LRC + 79) + R + PRE = 123612892661039139357763781233645749171852 word operations, every operation of the assembled other code counted (2,712 instructions, proof.md Section 4.3 and Appendix D), at most HMAX + 1 prefilter hits, PRE = the generator run gen3 512 1000 4, the constant basis, the parameter scan and the assembly of the other code, each counted (proof.md Section 3.7; preprocessing_log2 35); time_log2 = 124.42274 by the integer certificate of Appendix A.",
+    "Machine conventions H_reg and H_code (role supporting; the cost model fixes neither; proof.md Section 3.6): H_reg, a declared file of 2,192 registers of 256 bits, the convention of 67f781f8, its 70,144 bytes counted as memory, an operation on registers costing one word operation, every load and store of the other code charged; H_code, 39 bits per straight-line instruction (packed) and 32 bytes per instruction of the other code (86,784 bytes, measured), PERM one unit.",
+    "Memory at most 1,048,430 bytes <= 2^20 (search phase 1,048,430: registers, straight line, other code, table, walk state, data image; proof.md Section 6); the generator run gen3 512 1000 4 precedes the search (phases do not overlap) and is charged with its static image 323,378 bytes, a 16,384-byte stack and the whole program file 462,675 bytes (790,871); its measured peak resident memory is 319,488 bytes; the basis, the parameter scan and the assembly each run alone below that bound (proof.md Section 3.7).",
+    "Success at least 0.39 for one attempt over the fresh word rho, under the score-critical premise H_rand (our theory: over the algorithm's coin rho the program on the fixed target succeeds with at least the random-function probability of proof.md Section 5), with failure terms for a colliding pair with a trail of more than LRC evaluations, the trail limit, self-coincidence, starts and 50-bit key matches, and the hit-counter abort (F5 < 2^-1000, proved)."
+  ],
+  "baseline_improved": "sha3-256-r16-nominal-v2",
+  "heuristics": [
+    {
+      "id": "H_rand",
+      "role": "score-critical",
+      "statement": "Premise H_rand (our theory): over the algorithm's coins, the program run on the fixed SHA3-256-r16 target (F(u) = SHA3-256-r16(m(u)) xor PD, with the linear-structure message embedding m of proof.md Section 2) succeeds with probability at least the probability computed in proof.md Section 5 for a uniformly random function F from 256-bit values to 256-bit values. The only coin of the algorithm is the uniform word rho; the target is fixed, and given rho the run is deterministic. The computation of Section 5 is made in the random-function model, where F is realised by lazy sampling (values at distinct inputs independent and uniform, a fresh point a distinguished point with probability 1010 x 2^-122), and there one attempt succeeds with probability at least 0.39 after the failure terms. The premise is that the fixed target carries this probability over.",
+      "scope": "The fixed function F of proof.md Section 2 on the points of one attempt: about 0.998948 x 2^128 evaluations in 256 lockstep walks from starts rho + t(i), i < 66,160 (five runs of S consecutive values, proof.md Section 4). Only the pair-coincidence rate among evaluated images and the distinguished-point rate enter the bound. The step program, the cost, the memory and the failure terms are derived, not assumed.",
+      "extrapolation": "Not an estimate of the success probability for the fixed target. Organizer-executed program checks: rho-w22 runs the whole search with the claimed straight line at width 22 (every trial must return a 22-bit partial collision; an ideal random function needs 20.47 steps on average); proj-w256 runs eight chained full-width steps and tests 22-bit agreement among 2,048 iterates (model 0.3934 per trial). Our own runs on the program file of this package (proof.md Section 7.2): pair-coincidence rates on three 32-bit windows among 2^24 images of uniform inputs, of consecutive starts rho + i (the form of each run of starts) and of chained iterates, and single-bit difference statistics.",
+      "evidence_ids": [
+        "proof:254-283",
+        "proof:314-320",
+        "proof:321-335"
+      ],
+      "limitations": "Our theory; no proof. No run reaches 2^128 and no full collision is claimed. The checks work at 22 and 32 bits (and 44 to 48 bits in rho length, on other constants). A pair-coincidence deficit eps costs about 0.5 log2(1/(1 - eps)) bits of time."
+    },
+    {
+      "id": "H_reg",
+      "role": "supporting",
+      "statement": "Machine convention: the 256-bit word RAM of collision-frontier-v5 with a declared file of 2,192 registers of 256 bits (2,181 used by the straight line, registers 2,181 to 2,190 by the search state; the handlers use the dead straight-line registers above 255 as temporaries). An operation on register operands costs one word operation, with no load or store; every load and store of the other code is a charged word operation (proof.md Sections 3.6 and 4). The 70,144 bytes of the file are counted as memory (Section 6). The cost model fixes no register count. This is the convention of 67f781f8 (credited in proof.md Section 8; on another challenge, so not a declared dependency), which declares 2,304 registers.",
+      "scope": "The register file of the machine that runs the step program and the search of proof.md Section 4; it affects the time and memory ledgers only, not the success bound.",
+      "extrapolation": "None statistical: a declared convention. Executed checks (selftest, the experiments, other3_test.py) validate the functional output of the program with this allocation, not the cost of register access.",
+      "evidence_ids": [
+        "proof:118-130",
+        "proof:284-311"
+      ],
+      "limitations": "A reviewer who requires a smaller register file would charge loads and stores that this ledger does not contain; the success argument is unaffected. The role supporting is the role of a declared convention."
+    },
+    {
+      "id": "H_code",
+      "role": "supporting",
+      "statement": "Code-memory charging convention: a declared encoding, since the cost model and the target profile fix none. The straight line is stored packed at 39 bits per instruction (3-bit opcode and three 12-bit register numbers; 451,182 bytes with the prefilter); all other code is charged 32 bytes per instruction: 2,712 instructions, 86,784 bytes, measured from the assembled file (opcode byte, three 16-bit register numbers, 192-bit immediate; PERM costs one unit; proof.md Sections 3.6, 4.3, 6 and Appendix D). The 39-bit instruction format is the one of 67f781f8 (credited in proof.md Section 8), which stores it in 5 bytes.",
+      "scope": "The code rows of the memory table (proof.md Section 6); it does not affect the success bound.",
+      "extrapolation": "None statistical: a declared convention. The executed checks decode the packed 39-bit and the 32-byte encodings in software to validate the function of the program.",
+      "evidence_ids": [
+        "proof:118-130",
+        "proof:224-239",
+        "proof:284-311",
+        "proof:1637-2619"
+      ],
+      "limitations": "A reviewer who requires 32 bytes per straight-line instruction would charge more code memory than this ledger; the success argument is unaffected. The instruction set of the other code is our declaration under H_code."
+    }
+  ],
+  "experiment_manifest": "experiments/manifest.json",
+  "certificate_manifest": "certificates/manifest.json"
 }
