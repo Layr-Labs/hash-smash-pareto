@@ -1,0 +1,65 @@
+{
+ "schema_version": 1,
+ "experiments": [
+  {
+   "id": "one-centre-n2-t256",
+   "kind": "python-message-pairs-v1",
+   "scope": "One trial of the algorithm of proof.md section 4 at reduced depth N = 2 on the selected Orchard Poseidon target (proof.md 8.1, 9.4). The centre c is derived from the trial seed; the program builds F_2(c + X) (coordinate 0 after the first two S-box layers of the digest polynomial on the line j = 0, degree 25), its monic odd part g (degree m = 12), R = X^((p-1)/2) mod g and the complete Euclidean remainder sequence of (g, R - 1) with its gcd G (deg G = k(c), the number of usable roots), exactly over F_p. If the sequence is normal and 1 <= k(c) <= 16, it isolates a root S of G (shifts derived from the seed, at most 64 rounds), takes s = sqrt(S) and checks F_2(c + s) = F_2(c - s) by direct iteration of the layers. Trials 0-255 are computed. A trial that passes returns two distinct canonical messages on the line whose digests of the selected target agree on the first 6 bits (found among the first 65 line points; it always exists by pigeonhole); any other trial returns two nulls. The organizer-checked pair count is the number of centres at which one trial at depth 2 succeeds.",
+   "hypothesis": "The fraction of centres at which one trial of the algorithm at depth 2 succeeds is the law value of proof.md 8.3, P(1 <= k(c) <= 16) = 1 - e^(-1/2) = 0.3935 up to the depth-2 correction (0.39347 at m = 12, with every sequence normal); the predicted count is Binomial(256, 0.3935), about 101 of 256 trials (95 % interval 86 to 116). Supports the premise H-ONE at the depth where it is a theorem (proof.md 8.3); it says nothing about the cost, and it is not the probability of the claim.",
+   "program": "experiments/exp_centre.py",
+   "event": {
+    "kind": "digest-xor-mask",
+    "mask_hex": "fc00000000000000000000000000000000000000000000000000000000000000",
+    "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  },
+  {
+   "id": "one-centre-n3-t20",
+   "kind": "python-message-pairs-v1",
+   "scope": "As one-centre-n2-t256 at depth N = 3 (F_3 of degree 125, m = 62): one trial of the algorithm per organizer seed, trials 0-19 computed, the others return two nulls. The same flag rule, the same witness rule (two distinct canonical messages on the line whose selected-target digests agree on the first 6 bits).",
+   "hypothesis": "The fraction of centres at which one trial at depth 3 succeeds is the law value 0.3935 (proof.md 8.3: the premise is a theorem at depth 3 with margin 0.00237); the predicted count is Binomial(20, 0.3935), about 8 of 20 trials. Supports H-ONE at depth 3; not the probability of the claim and nothing about the cost.",
+   "program": "experiments/exp_centre.py",
+   "event": {
+    "kind": "digest-xor-mask",
+    "mask_hex": "fc00000000000000000000000000000000000000000000000000000000000000",
+    "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  },
+  {
+   "id": "euclid-normal-n2-t128-l2-a",
+   "kind": "python-message-pairs-v1",
+   "scope": "Normality of the Euclidean remainder sequence at reduced depth N = 2 (proof.md 8.5, 9.4): for each of the trials 0-127 the program takes two centres from the trial seed and computes, exactly over F_p, F_2(c + X), its monic odd part g (m = 12), R = X^((p-1)/2) mod g and the complete remainder sequence of (g, R - 1) down to the zero remainder; 256 sequences in all. A trial is flagged when both sequences are normal (deg(R - 1) = m - 1 and every quotient of degree 1) and every self-check of F_2 passes; a flagged trial returns two distinct canonical messages on the line whose selected-target digests agree on the first 6 bits (always found among the first 65 line points). The other trials return two nulls.",
+   "hypothesis": "Every computed sequence is normal: all 128 trials return a pair (the premise H-NORMAL, proof.md 8.5, at m = 12). Zero abnormal sequences in the 256 + 256 + 20 sequences of the three normality experiments bound the abnormality at these depths by 3/532 = 0.0056 (rule of three, one-sided 95 %); together with the local runs of proof.md 9.3 the bound is below delta = 0.003. Tests the construction at m = 12, not its scale; nothing about the cost.",
+   "program": "experiments/exp_centre.py",
+   "event": {
+    "kind": "digest-xor-mask",
+    "mask_hex": "fc00000000000000000000000000000000000000000000000000000000000000",
+    "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  },
+  {
+   "id": "euclid-normal-n2-t128-l2-b",
+   "kind": "python-message-pairs-v1",
+   "scope": "As euclid-normal-n2-t128-l2-a with other organizer seeds (the suffix changes only the seeds): 128 trials of two centres each at depth N = 2, 256 further sequences.",
+   "hypothesis": "Every computed sequence is normal: all 128 trials return a pair (H-NORMAL at m = 12, proof.md 8.5).",
+   "program": "experiments/exp_centre.py",
+   "event": {
+    "kind": "digest-xor-mask",
+    "mask_hex": "fc00000000000000000000000000000000000000000000000000000000000000",
+    "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  },
+  {
+   "id": "euclid-normal-n3-t20",
+   "kind": "python-message-pairs-v1",
+   "scope": "Normality at depth N = 3 (F_3 of degree 125, m = 62): trials 0-19, one centre each from the trial seed, the complete remainder sequence of (g, R - 1) computed exactly; a trial is flagged when the sequence is normal and the self-checks pass, and returns the same kind of witness pair; the other trials return two nulls.",
+   "hypothesis": "Every computed sequence is normal: all 20 trials return a pair (H-NORMAL at m = 62, proof.md 8.5).",
+   "program": "experiments/exp_centre.py",
+   "event": {
+    "kind": "digest-xor-mask",
+    "mask_hex": "fc00000000000000000000000000000000000000000000000000000000000000",
+    "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  }
+ ]
+}
