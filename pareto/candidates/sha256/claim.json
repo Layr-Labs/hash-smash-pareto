@@ -1,20 +1,99 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha256-r37-prefix-v1",
+  "target_profile": "sha256-r39-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 37,
+  "rounds": 39,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 118.206,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 20,
+    "preprocessing_log2": 36,
     "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
+    "nonuniform_advice_log2_bytes": 7.322
   },
-  "restrictions": [],
-  "baseline_improved": "sha256-r37-nominal-v2",
+  "restrictions": [
+    "Target sha256-r39-prefix-v1: SHA-256 reduced to its first 39 steps in every compression, FIPS 180-4 padding, the standard IV, feed-forward, equality of all eight 32-bit digest words. Output: two distinct 128-byte messages M0 || M1 and M0 || M1' with the same random first block M0 and second blocks that give equal chaining values; the padding block that follows is identical, so the digests are equal. The cost is the work of the program experiments/r39joint.py over B first blocks, one window of 2^26 walk evaluations each.",
+    "Construction, credited: sraiw's 38912d66 transplants the published Table 23 pair of ePrint 2026/1120 onto a random first-block chaining value through an exact bijection (cv, a0, a1) <-> (W8, W9, W16..W23); row 16 is the claw F(a0) = F(u), a0 even and u odd, of a 32-bit map, found by a van Oorschot-Wiener distinguished-point walk (dariolina's row-16 claw idea: 21b6653a, 2c48b18c, cfe5c4e2, 4e396742); then W8 in F8 and W9 in F9 (exact 585/524288), W17 = the published value (2^-32 for uniform W17), and the tail rows 18 to 38 (p_tail). Declared dependencies: 44870635 (lamb356, the base program), d90878ff (Jbenisek, the machine program), 38912d66, 4e396742, 2c48b18c, cfe5c4e2, 744875ec, 0c1ef7c3, 6b678689.",
+    "Machine model (prices of this entry's cost model, proof Section 4), collision-frontier-v5: a counted 256-bit word RAM with 256 registers (counted as memory), 2812 operations per target compression. One operation each: XOR, AND, OR, NOT, move, shift, rotate, add, subtract, compare, set; a branch is a compare plus a branch (2); a load or a store is 3 (index shift, base add, access); a call plus its return is 2. A walk-kernel body record (register-to-register XOR, AND, OR or NOT, no immediate operand) is 5 bytes, the price of dariolina's 6b678689 and Jbenisek's 0c1ef7c3; every other instruction is 36 bytes. One executed WebAssembly operator of the in-program generator is one operation (it halts at 575,000 operators). Every operation of the program is counted by the class Mach; no price is an average.",
+    "time_log2 = 118.206 (exact 118.20531, rounded up) is log2 of (W_BUDGET + R + 6 B) / 2812 + 2^36 target-compressions, with W_BUDGET = floor(B x 523,024,054 x (1 + 2^-20)) + 1 from 99% bounds: 523,024,054 ops/window, c- = 50,472.66 claws/window, g- = 50,394.89 groups/window, and ratio r- = 0.998342 (c- r- = 50,388.97 <= g-; proof Section 7; plain-mean 118.1913). 10,263.1 ops/claw is measured over 24 windows of 2^26 walk evaluations on the real step function (1,213,630 claws, 50,567.92/window; 1,211,719 groups, 50,488.29/window; proof Section 5, Appendix A). G = ln(1/0.60999) / (p8 p9 2^-32 p_tail) = 2^116.3212 groups, N = G / r- = 2^116.3236 claws, p8 p9 = 585/524288, log2 p_tail = -75.53. The program halts after B = 2^100.7004 windows or at W_BUDGET = 2^129.6627 (proof Section 7); all other halts (kernel > 780, > 206 regs, generator > 575,000 ops) are charged. Unconditional success probability >= (1 - 0.60999) - 2 exp(-2^17.5) > 0.390009 > 0.39.",
+    "Memory 1,047,892 bytes = 2^19.9991, claimed as 2^20: register file 8,192; 2 kernel images x 780 x 5 = 7,800; 3,599 other instructions (734 census, 1,100 hand-counted routines, 1,765 generator and relocation) x 36 = 129,564; table 26,112 words x 32 = 835,584; lane array, save area, queue, pair slots, timing wheel, free stack and counters 66,592; advice 160. The generator's scratch lies in the table region during generation. No solver, no search campaign and no preprocessing buffer: setup and the program share this peak.",
+    "Advice and preprocessing (H3-advice-construction, proof Section 11, the form of 38912d66 Section 4.2): the base is the published Table 23 pair of ePrint 2026/1120 (chaining value, M, M': 160 bytes), embedded as advice. The program reads from it only the dense part of the characteristic (states of steps 2 to 15, W10..W15, D8, D9, g, the row-17 value). Its construction takes at most 2^36 target-compressions in at most 2^16 bytes of resident memory: 2^34 candidates on steps 10 to 15 (384 state bits under 350 conditions; steps 9 down to 0 and CV_PUB follow by exact downward step inversion with zero branching), each tested for non-empty row-16 and row-17 fibres by exact 32-bit bit-by-bit DFS (solve_row_exact) in under 2^2 compressions per candidate (verified in r39-transplant-claw trial 0). The paper's Step 1 is about 2^34.2 SHA-256 calls and its Step 2 holds with probability 1.",
+    "Experiments r39-transplant-claw and r39-window-small run experiments/r39joint.py in the organizer sandbox with hard assert verification of all outputs: r39-transplant-claw (trial 0: the published pair through claw() plus verify_advice_construction() running solve_row_exact on rows 16 and 17, downward step inversion, and a 256-candidate step-15 slice; trials 1..255: the transplant identity on 255 random chaining values) and r39-window-small (trials 0..3: 4 independent windows of 2^22 evaluations = 2^24 walk evaluations total, 3,265 distinct claws and 3,265 distinct groups, asserting WIN_EXP counts, 256-bin chi-square of W17 and W18 low bytes, and lag-1 group autocorrelation < 0.02). The tail is replicated in the sandbox by experiments/r39tail.py (r39-tail-01..14, asserting EXP and verify_smc_stats(), proof Sections 8 and 10)."
+  ],
+  "baseline_improved": "sha256-r39-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  "experiment_manifest": "experiments/manifest.json",
+  "heuristics": [
+    {
+      "id": "H1-claw-model",
+      "role": "score-critical",
+      "statement": "Four parts. (a) The chaining value cv of a random first block behaves as an independent random value for the walk map F and the later events, so the windows of the program are independent trials. (b) The yield and the cost of a window are those measured on the real step function over 24 full-size windows: 50,567.92 distinct claws, 50,488.29 distinct claw groups and 10,263.1 operations per distinct claw (one-sided 99% bounds mu+ = 523,024,054 operations, c- = 50,472.66 claws, g- = 50,394.89 groups, r- = 0.998342 groups/claw); the program cannot be run for 2^100.70 windows. (c) A distinct claw (a0 even, u odd, F(a0) = F(u)) is, for the events W8 in F8, W9 in F9, W17 = 0x71e9ba98 and the tail, a trial with probability p8 p9 2^-32 p_tail, independent of the walk's yield, with p8 p9 = 585/524288 exact; claws are counted by groups with a shared endpoint (one claw per group suffices). (d) W17 is uniform over the claws.",
+      "scope": "The fixed target sha256-r39-prefix-v1 and the program of experiments/r39joint.py: first blocks drawn uniformly, windows of 2^26 walk evaluations of the real step function F, claws with W16 = g by the published construction. Not claimed for another base pair, another round count or another walk.",
+      "extrapolation": "Our theory: walk claws are uniform on the free words of the bijection (cv, a0, a1) <-> (W8, W9, W16..W23) apart from the claw equation. Directly verified in the organizer sandbox by hard asserts in r39joint.py (r39-window-small trials 0..3, 4 windows = 2^24 walk evaluations, 3,265 distinct claws and 3,265 groups in WIN_EXP): W9 in F9 55 (51.8 expected), W8 in F8 224 (229.6), joint F9 & F8 2 (3.64), W17 low-8 matches 11 (12.75), low-12 matches 2 (0.80), and 256-bin chi-square of W17 mod 256 is 239.57 (255 df) and W18 mod 256 is 248.67 (255 df). Also measured on 310,224 claws of 6 first blocks: W9 in F9 5,015 (0.01617 vs 0.01587), W8 in F8 22,002 (0.07092 vs 0.07031), both 360 (0.001160 vs 0.001116); W17 low-k matches k=8: 1,199 (1,211.8), k=12: 82 (75.7), k=16: 5 (4.73), low-16 chi-square 65,830.2 (65,535 df, z=0.82). Part (b) is measured over 24 full windows (Appendix A, 9,975.9..10,521.9 ops/claw, SE 31.8; g- = 50,394.89) and extended to 2^100.7004 windows by (a).",
+      "evidence_ids": [
+        "experiment:r39-transplant-claw",
+        "experiment:r39-window-small",
+        "proof:11-21",
+        "proof:40-58",
+        "proof:100-106",
+        "proof:138-165"
+      ],
+      "limitations": "The organizer sandbox runs 4 windows of 2^22 evaluations (3,265 distinct claws/groups, asserting WIN_EXP, W8/W9 rates, W17 low-8/12 matches, and 256-bin chi-square uniformity of W17 and W18 low bytes) and the offline check covers 24 full windows (1,213,630 claws, SE 0.31% = 0.004 bit) and 310,224 claws on the low 16 bits of W17; uniformity of the high 16 bits of W17 and extrapolation from 24 full windows to 2^100.7004 windows are parts (a)-(d)."
+    },
+    {
+      "id": "H2-tail",
+      "role": "score-critical",
+      "statement": "For the claws of the program (a0 even, u odd, W16 = g, W8 in F8, W9 in F9, W17 = 0x71e9ba98) the probability that the two 39-step compressions of the pair give equal 256-bit outputs is at least 2^-75.53 for the quantity of proof Section 8 (rows 18 to 38, W18..W23 uniform), a lower bound on the tail probability because the carrier K_P is a subset of all routes to a collision.",
+      "scope": "The tail rows 18 to 38 of the Table 23 trail after the claw, W8 uniform on F8, W9 uniform on F9, E18..E23 of the first member uniform on 2^32, a0 even and u odd. Not claimed for another trail.",
+      "extrapolation": "Our theory: p_tail >= 2^-75.53. The organizer replica experiments/r39tail.py (r39-tail-01..14) hard-asserts EXP and verify_smc_stats() on every run: 1,706 verified collisions in 22,937,600 proposals across the 14 public-seed runs, parity classes [427, 440, 433, 406] (chi-square 1.51 < 7.81); per run, r39-tail-11 has parity classes [19, 30, 12, 37], chi-square 15.22 on 3 df (p = 0.0016, 0.023 after Bonferroni over 14 runs), and the estimator does not use parity; one tail design (N_P 800, NB 80) was run on the organizer seeds, which it shares with the 4487063 runs (paired-average bound, 14 df: -75.4801), and direct stage-18 Monte Carlo calibration (c18 = 206/65536 matching the 14-run SMC stage-18 rate within 0.0003). By Del Moral's Feynman-Kac theorem, the unnormalized product estimator Q'_r = 2^(l2_r) * (hits_r / 1638400) is exactly unbiased on the linear scale (E[Q'_r] = Q', zero log-scale Jensen bias): verify_smc_stats() hard-asserts linear-scale mean log2(mean(Q')) = -75.3284 (-75.328) and one-sided 99% Student-t lower bound log2(lcb_lin) = -75.5062 (-75.506) > -75.53 (and log-scale 99% bound -75.5116 > -75.53). Cross-checked by an offline 64 x 2^28 C run (-75.354) and sraiw's bound -75.4278 (38912d66).",
+      "evidence_ids": [
+        "proof:94-99",
+        "experiment:r39-tail-01",
+        "experiment:r39-tail-02",
+        "experiment:r39-tail-03",
+        "experiment:r39-tail-04",
+        "experiment:r39-tail-05",
+        "experiment:r39-tail-06",
+        "experiment:r39-tail-07",
+        "experiment:r39-tail-08",
+        "experiment:r39-tail-09",
+        "experiment:r39-tail-10",
+        "experiment:r39-tail-11",
+        "experiment:r39-tail-12",
+        "experiment:r39-tail-13",
+        "experiment:r39-tail-14"
+      ],
+      "limitations": "A one-sided 99% confidence lower bound (-75.5062 linear-scale unbiased, -75.5116 log-scale) over 14 organizer-executed replica runs of the Feynman-Kac unbiased estimator, 0.024 bits above the declared -75.53 (linear) and 0.018 bits (log); pooled with the 14 earlier organizer runs of 4487063 (N_P = 500, 614,400 proposals each: mean -75.3927, bound -75.5916 alone, below -75.53) the 28-run one-sided 99% Student-t bound is -75.4803 > -75.53. Stage 18 is calibrated against direct uniform Monte Carlo (c18 = 206/65536) and stages 18..23 use N_P = 800 particles with exact 1- and 2-step lookahead; K_P is a subset of all collision routes so Q <= p_tail."
+    },
+    {
+      "id": "H3-advice-construction",
+      "role": "score-critical",
+      "statement": "Constructing the 160-byte Table 23 base pair (ePrint 2026/1120, Section 4.3; sraiw 38912d66 Section 4.2) takes at most 2^36 target-compressions (preprocessing_log2 = 36) in at most 2^16 bytes of resident memory: on steps 10 to 15, the 384 state bits under the 350 Table 23 differential and carry conditions leave a 2^34-candidate space (steps 9 down to 0 and CV_PUB are uniquely determined downward by step inversion with zero search), and each candidate is tested for non-empty row-16 fibre G16 and row-17 fibre G17(g) by exact 32-bit bit-by-bit DFS (solve_row_exact) in under 2^2 = 4 target-compressions (11,248 word operations) per candidate.",
+      "scope": "One-time offline construction of the 160-byte advice (CV_PUB, M_PUB, MP_PUB) for sha256-r39-prefix-v1; not part of the online walk.",
+      "extrapolation": "Trials 0 and 1 of experiment:r39-transplant-claw execute verify_advice_construction() in experiments/r39joint.py: it runs the exact 32-bit bit-by-bit DFS fibre solver solve_row_exact on rows 16 and 17 of the Table 23 base (verifying g16_fibre_size = 2 with G16 = 0xbca1c321, g17_fibre_size = 1 with W17 = 0x71e9ba98, and fibre_dfs_ops = 1944 < 2812 word operations < 1 target-compression), verifies that steps 9 down to 0 and CV_PUB are uniquely recovered from steps 10 to 15 and W[0..15] by exact downward step inversion with zero search (downward_inv_ok = 1), and enumerates a 256-candidate local slice of the step-15 free bits (advice_slice_cands = 256, advice_slice_hits = 1, ops_per_cand = 408 < 4 * 2812 word operations < 2^2 target-compressions). Extrapolated from the 256-candidate slice and the ePrint 2026/1120 Section 4.3 Step 1 measurement (about 2^34.2 SHA-256 calls, Step 2 probability 1) to the 2^34-candidate space on steps 10 to 15.",
+      "evidence_ids": [
+        "experiment:r39-transplant-claw",
+        "proof:108-113",
+        "proof:118-121"
+      ],
+      "limitations": "The organizer sandbox runs the exact row-16/row-17 DFS fibre enumeration, exact downward step inversion on steps 13..0, and a 256-candidate step-15 slice rather than the full 2^34-candidate enumeration; the 2^34 candidate count and 2^34.2 SHA-256 calls come from the 384 - 350 = 34 free bits on steps 10 to 15 of Table 23 and ePrint 2026/1120 Section 4.3. Because the benchmark scalar is log2(T_online + T_pre) with T_online = 2^118.20531, any preprocessing cost up to 2^98 target-compressions adds less than 2^-20 to T_online and leaves the rounded scalar time_log2 = 118.206 unchanged."
+    },
+    {
+      "id": "H5-group-independence",
+      "role": "score-critical",
+      "statement": "Distinct claw groups of the run (claws grouped into connected components by shared endpoint; distinct groups have disjoint inputs (a0, u) of the bijection), within a window and across windows, are independent trials for the events W8 in F8, W9 in F9, W17 = 0x71e9ba98 and the tail, so the run succeeds with conditional probability 1 - (1 - p_claw)^G >= 1 - exp(-G p_claw) = 0.390010 over G = 2^116.3212 groups (and unconditional probability >= 0.390010 - 2 exp(-2^17.5) > 0.390009 > 0.39 after the Hoeffding bound).",
+      "scope": "The amplification of proof Section 7 over the G = 2^116.3212 groups of the fixed target sha256-r39-prefix-v1 and the program experiments/r39joint.py; not claimed for another walk or round count.",
+      "extrapolation": "Across windows the chaining value is fresh (H1(a)). Directly verified in the organizer sandbox by hard asserts in r39joint.py (r39-window-small trials 0..3, 4 windows = 2^24 evaluations): 3,265 distinct claw groups in 3,265 distinct claws (807, 827, 795, 836; ratio 1.0000), 100% distinct (W8, W9, W17, W18) tuples per window, 256-bin chi-square of W17 mod 256 is 239.57 (255 df) and first tail word W18 mod 256 is 248.67 (255 df), and lag-1 group autocorrelation across consecutive groups is < 0.02 for W9 in F9 (-0.0165), W17[0] (0.0116), and W18[0] (0.0020). Across all 24 full windows (Appendix A): 1,211,719 distinct groups in 1,213,630 claws (mean 50,488.29, sd 183.04, 99% lower bound g- = 50,394.89; ratio 0.998425, 99% lower bound r- = 0.998342, c- r- = 50,388.97 <= g-), binomial F9/F8 counts (chi-square 22.6 and 32.0 on 24 df), and F9 lag-1 autocorrelation within 0.012.",
+      "evidence_ids": [
+        "experiment:r39-window-small",
+        "proof:56-58",
+        "proof:82-90",
+        "proof:100-106",
+        "proof:138-165"
+      ],
+      "limitations": "Within-window independence across distinct claw groups is tested in the organizer sandbox on 3,265 groups (100% distinct (W8, W9, W17, W18) tuples, 256-bin chi-square uniformity of W17 and first tail word W18 low bytes, and lag-1 group autocorrelation < 0.02 for F9, W17[0], and W18[0]) and across 24 full windows (1,211,719 groups); full 32-bit W17 and 39-step tail independence across groups beyond low-byte and lag-1 tests is the remaining extrapolation."
+    }
+  ],
+  "submission_state": "ready",
+  "lane": "exploratory"
 }
