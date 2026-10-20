@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "bssha-n16",
+      "kind": "python-message-pairs-v1",
+      "scope": "The sha256-r46-prefix-v1 target with the 64-byte messages M(x) of proof Section 1 (two blocks after FIPS padding). Each trial runs ONE attempt of the shipped 256-lane search (plan(16): distinguished points with the low 2 bits zero, 7 batches of 256 lanes, cut rule, table, recovery on the rolled two-lane program) on the walk g16(x) = the low 16 bits of the complete digest of M(x), x < 2^16: each batch runs the shipped program on the 256 planes (the 240 high input planes zero) and the experiment's digest network inverts the encoding and adds block 2. It returns M(x) and M(y) when the attempt found a pair, two nulls otherwise. Observations (untrusted, the program's own): target_ok, batches, halt.",
+      "hypothesis": "For every returned pair the two messages are distinct and their complete 46-step digests (two blocks) agree in the low 16 bits (digest bytes 30 and 31). This is exact: the attempt merges two trails of a walk whose value is those 16 digest bits. The number of trials that return a pair is reported as a program check; no probability, interval or sampling inference is drawn from it. Not shown: any width-256 cost or success probability.",
+      "program": "experiments/bssha.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "000000000000000000000000000000000000000000000000000000000000ffff",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "proj-k0-w256",
+      "kind": "python-message-pairs-v1",
+      "scope": "The sha256-r46-prefix-v1 target with the 64-byte messages M(x) at full width 256. Each trial evaluates 256 points x with the shipped program (source by trial index mod 3: uniform inputs from the seed, counter inputs r + i, iterates of g from 256 seed-derived starts), forms their complete two-block digests with the experiment's digest network (inverse of the encoding, chaining value, block 2), and returns two distinct points whose digests agree in the low 16 bits when the set contains such a pair, two nulls otherwise. Untrusted observations: source, dup_w0 (equal pairs in the low 16 digest bits).",
+      "hypothesis": "For every returned pair the two messages M(x) and M(y) are distinct and their complete 46-step digests agree in the low 16 bits. This is exact: it checks the program, the inverse of the encoding, the chaining value, block 2 and the message construction at full width. The counts are program checks, not estimates. Not shown: collision structure at 2^128 evaluations.",
+      "program": "experiments/bssha.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "000000000000000000000000000000000000000000000000000000000000ffff",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    }
+  ]
+}
