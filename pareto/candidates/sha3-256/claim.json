@@ -1,20 +1,43 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha3-256-r5-prefix-v1",
+  "submission_state": "ready",
+  "target_profile": "sha3-256-r15-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 5,
+  "rounds": 15,
+  "lane": "exploratory",
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 124.4332,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 20,
+    "preprocessing_log2": 48,
     "success_probability": 0.39,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "sha3-256-r5-nominal-v2",
-  "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  "restrictions": [
+    "Two distinct 128-byte one-block messages m(a), m(b) of sha3-256-r15-prefix-v1 (zero state, rate 136, suffix 0x06 with pad10*1, rounds 0 to 14, full 256-bit digest). m(u) places the point u (lanes u0..u3) in lanes 1, 6, 11 = u0, u1, u0^u1^K11 and 4, 9, 14 = u2, u3, u2^u3^K14, the other lanes 0..15 fixed constants K of trial 3600 (proof.md Section 2); F(u) = SHA3-256-r15(m(u)) xor PD, and F(a) = F(b) with a != b is a collision of two distinct messages.",
+    "Distinguished-point parallel collision search (van Oorschot-Wiener) on F with 256 walks per step, the search of 71fefe66 unchanged: DP = image x < 936 x 2^134 (theta = 936 x 2^-122), no trail cut, replay cap 59644228391338421569821382516146176 steps (10.4999 / theta), at most 65120 trails, a table of 16280 words with four 64-bit records each (47 end bits and the trail number), Tb = 1328093265282585793353186825841147904 steps, a prefilter-hit counter that aborts at hit HMAX + 1, and one replay that measures the stored trail by walking it to its DP (proof.md Section 4).",
+    "One step of 256 walks executes 87315 register operations (63223 XOR, 12225 AND, 8831 OR, 2965 NOT, 71 calls, returns and iota XORs; no loads or stores): the prefix P (rounds 0 and 1, linear-structure affine forms), the generic rounds 2..13 as a cycle of 8 shared bodies on two register banks (body (r - 2) mod 8 + 1 for round r, called with JAL/JR, iota by XOR of the all-ones register), the last body forced to the bank-X polarity by target rows, and the last round E; lazy theta, 10-gate chi rows and the annealed polarity plan of 71fefe66 per block (generator gen4.c, proof.md Section 3).",
+    "Cost model collision-frontier-v5, unit 4065: N = Tb x 87335 + replay + R + PRE = 116730997109657970929420559714528273743243 word operations, every operation of the assembled other code counted (2715 instructions, proof.md Section 4.3 and Appendix D), PRE = a clock bound on every generator run: the charged run gen4 4096 0 3, the inspection run, the cycle-length selection runs and the build steps (preprocessing_log2 48); time_log2 = 124.43320 by the integer certificate of Appendix A.",
+    "Machine model (declared prices of the cost model of this entry, proof.md Section 3.6; the benchmark fixes neither): a declared file of 3536 registers of 256 bits counted as 113152 bytes of memory, an operation on registers one word operation, every load and store of the other code charged; 5 bytes per straight-line instruction (stored once per block), 32 bytes per instruction of the other code, the calls and returns of the step included; PERM one unit. The conventions of 71fefe66 (from 67f781f8) with a larger register file.",
+    "Memory at most 1042508 bytes <= 2^20 (search phase: registers, step code, other code, table, walk state, data image; proof.md Section 6); the generator run precedes the search and is charged with its image, a 16,384-byte stack and the block files it writes.",
+    "Success at least 0.39 for one attempt over the fresh word rho, under the score-critical premise H_rand of 71fefe66 (over the algorithm's coin rho the program on the fixed target succeeds with at least the random-function probability of proof.md Section 5), with failure terms F6 (a colliding trail longer than LRC), F2, F3, F4 and the hit-counter abort F5 < 2^-1000 (proved)."
+  ],
+  "baseline_improved": "sha3-256-r15-nominal-v2",
+  "heuristics": [
+    {
+      "id": "H_rand",
+      "role": "score-critical",
+      "statement": "Premise H_rand (the premise of 71fefe66, our use): over the algorithm's coins, the program run on the fixed SHA3-256-r15 target (F(u) = SHA3-256-r15(m(u)) xor PD, with the linear-structure message embedding m of proof.md Section 2) succeeds with probability at least the probability computed in proof.md Section 5 for a uniformly random function F from 256-bit values to 256-bit values. The only coin is the uniform word rho; given rho the run is deterministic. In the random-function model one attempt succeeds with probability at least 0.39 after the failure terms.",
+      "scope": "The fixed function F of proof.md Section 2 on the points of one attempt: about 0.999146 x 2^128 evaluations in 256 lockstep walks from starts rho + i, i < 65120. Only the pair-coincidence rate among evaluated images and the distinguished-point rate enter the bound. The step program, the cost, the memory and the failure terms are derived, not assumed.",
+      "extrapolation": "Not an estimate of the success probability for the fixed target. Organizer-executed program checks: rho-w22 runs the whole search with the claimed step at width 22; proj-w256 runs eight chained full-width steps and tests 22-bit agreement (model 0.3934 per trial). Our own runs on the block files of this package (proof.md Section 7.2): pair-coincidence rates on three 32-bit windows among 2^24 images of uniform inputs, of consecutive starts and of chained iterates, and single-bit difference statistics.",
+      "evidence_ids": [
+        "proof:257-268",
+        "proof:310-320",
+        "proof:321-333"
+      ],
+      "limitations": "Our theory; no proof. No run reaches 2^128 and no full collision is claimed. The checks work at 22 and 32 bits. A pair-coincidence deficit eps costs about 0.5 log2(1/(1 - eps)) bits of time."
+    }
+  ],
+  "experiment_manifest": "experiments/manifest.json",
+  "certificate_manifest": "certificates/manifest.json"
 }
