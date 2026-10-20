@@ -1,1 +1,21 @@
-{"schema_version":2,"certificates":[]}
+{
+ "schema_version": 2,
+ "certificates": [
+  {
+   "id": "orchard-r3-pair-0",
+   "type": "hash-collision-witness-v2",
+   "message_a": "certificates/message-a.bin",
+   "message_b": "certificates/message-b.bin",
+   "expected_digest": "8e4912f5228858f90e46cbb635589e9c01383777416b05d3aa2d66e55752790f",
+   "target_profile": "poseidon-orchard-r3-prefix-v1"
+  },
+  {
+   "id": "orchard-r3-pair-1",
+   "type": "hash-collision-witness-v2",
+   "message_a": "certificates/message-a1.bin",
+   "message_b": "certificates/message-b1.bin",
+   "expected_digest": "79144d3d82b554a371b526c55f436564664ba8459b5355215730f4d0027ac124",
+   "target_profile": "poseidon-orchard-r3-prefix-v1"
+  }
+ ]
+}
