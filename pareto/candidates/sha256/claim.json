@@ -1,20 +1,45 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha256-r37-prefix-v1",
+  "target_profile": "sha256-r62-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 37,
+  "rounds": 62,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 124.14398,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 20,
+    "preprocessing_log2": 16.60807,
     "success_probability": 0.39,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "sha256-r37-nominal-v2",
+  "restrictions": [
+    "Two distinct 64-byte messages M(x), M(y), x != y 256-bit chain values: W0..W7 a constant prefix (a_1 = K9 - K8, a_2 = -K9, a_3..a_8 = 0), W8 = y0, W9 = y1, W(8+k) = y_k - K(8+k) for k = 2..7 (y0..y7 the big-endian words of x). FIPS padding adds a second block: 128 bytes, two blocks, block 2 = padding only, standard IV, steps 0 to 61 on each block, feed-forward, the complete 256-bit digest (sha256-r62-prefix-v1). Found as a collision of the walk g(x) = f(x) XOR q, f = walk B of mitchuski's 4684dfc2, an explicit bijection of the block-1 working state after step 61 (proof Section 1): g(x) = g(y) gives equal block-1 states, equal chaining values and equal digests. Plain birthday search with distinguished points; no differential or structural property of the 62 steps is used.",
+    "Machine model (the declared prices of this entry's cost model, proof Section 3.1): a classical load/store machine with 256-bit words and 1024 registers (1021 data, 3 pointers) under collision-frontier-v5; 4744 operations (C of sha256-r62) to the unit. Charged, one operation each: every XOR, AND, OR, NOT, set, move, load, store, pointer addition, compare, branch and the random word. A main-loop body record (register-to-register XOR, AND, OR or NOT, no immediate operand) is 5 bytes (an opcode and three 10-bit register fields), the price of dariolina's 6b678689; every other instruction is 36 bytes. The operation ledger is the exact count of the records of the submitted program (83328 per batch, 83365 with stage 1 and the batch loop), listed by `python3 experiments/bssha.py --text` and counted by `--ledger` (proof Appendix A).",
+    "time_log2 is an upper bound: every term of proof.md Section 3.4 is enforced by a halt of the program (B batches, e2max stage-1 hits, 64792 table keys, 2 cut trails, a recovery of at most c + 2^48 batches, one recovery), and the bound charges each at its limit. The attempt is single: one fresh uniform 256-bit word r, no restart, no amplification, no stored collision, no advice. Distinguished points: low 32 bits zero and the next 90 bits below 981 (density 981 / 2^122). The generator that builds the program at setup is charged (200 operations per primitive call and per emitted record: 473069200).",
+    "Memory: 64792 table entries of 8 bytes (518336 bytes) plus 477120 bytes of code (83328 body records of 5 bytes = 416640, plus 1680 other instructions of 36 bytes = 60480) plus 16,384 bytes of counters plus 32768 bytes for the 1024 registers plus 3968 bytes for the recovery array: 1048576 bytes <= 2^20; claimed as 2^20. The setup phase (the generator's code image of 4316 wasm instructions at 36 bytes and its scratch of 108801 bytes, with the final code size and the counters) is 757681 bytes, proof 3.6. The generator fits in 2^20 (proof Section 3.6, Appendix A).",
+    "Success probability at least 0.39: Lemma 2 of proof.md Section 4 (bounded restart, the detection delay integrated over the remaining batches, the cut count proved; no premise) proves it for a uniformly random function (bound 0.39000, exact certificate 0.390000001000 in Appendix A); H1, score-critical (clauses (a) to (d), declared and not proved), says the real attempt succeeds at least as often. Nothing else in the bound is heuristic. If the hazard were (1 - eps) / N the plan needs extra time: 0.0073 bit for eps = 0.01, 0.0371 bit for eps = 0.05, 0.0763 bit for eps = 0.10, 0.2083 bit for eps = 0.25.",
+    "The declared experiments run this program in the organizer sandbox: bssha-n16 (one attempt of the 256-lane search per trial on the low 16 bits of the complete digest, DP = low 2 bits zero) and proj-k0-w256 (256 points at width 256 per trial, a pair when two complete digests agree in the low 16 bits). The organizer recomputes the complete two-block digest of every returned pair. They are program checks: no number of the claim is estimated from their counts and no sampling premise is used. No outside code or library is used.",
+    "No nonuniform advice; the prefix W0..W7 is a constant of the program, computed in closed form. Credited derivative (dependencies, same lane) of 9acbe341-d2ee-42ef-ae85-4075fe7e234e (124.15417), 87cb17fa-d025-4066-bd13-91d9936ce327 (124.28559), 4684dfc2-cdac-4441-af91-c9979e2888a9 (124.26094), 1884db5b-acc6-42e7-ac3c-5877e77b8277 (124.22926), 3642e1cd-e391-41a7-81e0-456c02e4becd (124.31538), 6b678689-e6a2-42b0-87d8-fff55432f2f6 (124.41766), 744875ec-f063-4208-8075-b61192ac4d69 (124.83147), 44870635-2031-4c6a-aa62-c44672c7f338 (118.346) and 38912d66-c0d0-4238-9058-1e8a2775f695 (120.46): our 87cb17fa (search, handlers, ledger, Lemma 2 v2, unrolled kernel, C generator), walk B (4684dfc2, 1884db5b), carry-in absorption (3642e1cd), the 5-byte body price (6b678689), no feed-forward and the zeroing prefix (744875ec), two-block messages (44870635, 38912d66). preprocessing_log2 = 16.60807 is the setup and generator row, also inside time_log2."
+  ],
+  "baseline_improved": "sha256-r62-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  "experiment_manifest": "experiments/manifest.json",
+  "heuristics": [
+    {
+      "id": "H1-random-function-model",
+      "role": "score-critical",
+      "statement": "Model premise, four clauses. Let F be a uniformly random function from 256-bit values to 256-bit values. For the fixed target, the probability that the single attempt of the search succeeds, with the walk g(x) = f(x) XOR q (f(x) = walk B, an explicit bijection of the working state after 62 steps of block 1 of the 64-byte message M(x) of proof Section 1, which padding makes two blocks; x the 256-bit chain value; g(x) = g(y) implies equal digests), is at least the probability P_F, over the fresh word r and a uniformly random F, that the same search succeeds when every evaluation of g is replaced by F (lazy sampling). Clauses: (a) distinct evaluated inputs collide with probability 2^-256, uniform and independent outputs; (b) the iterates from r + t have the first-collision law of a random mapping; (c) a point is a distinguished point (low 32 bits zero and the next 90 bits below 981) with probability 981 / 2^122, independently of the collision events; (d) adaptivity: the program chooses its points, and which trails finish, are cut or abort, from earlier outputs of g; given the whole history of the run and which later outputs are distinguished points, a fresh evaluation equals a given earlier non-distinguished output with probability at least 2^-256 (the lazy-sampling hazard of F). Proof.md Section 4 (Lemma 2, bounded restart with the detection delay integrated) proves P_F >= 0.390000001000 for F from the lazy-sampling hazard alone; (d) is the premise that g has that hazard. This is a comparison of two success events, not a statement about the entropy of r. Nothing else in the success bound is heuristic.",
+      "scope": "The fixed target sha256-r62-prefix-v1 restricted to the 64-byte messages M(x) of proof Section 1 (two blocks after padding), the 2^128-scale evaluation of g along about 62900 trails of mean length 2^112.06 started from r + t, 256 trails at a time. Not claimed for other messages, other round counts, or evaluations beyond this scale.",
+      "extrapolation": "Our theory: the 62-step SHA-256 map g behaves along the trails of this program as a random function of 256 bits, with collision hazard 1 / N per fresh evaluation; the regime is the 2^128-scale search along trails of mean length 2^112.06. The organizer experiments bssha-n16 and proj-k0-w256 run this program on the real target at reduced width (the search at width 16) and at full width for 256 points with 16-bit projections; they are program checks, the organizer recomputes the complete two-block digest of every returned pair, no number of the claim is estimated from their counts, and no sampling premise is used. Extrapolation from these sizes to width 256 and 2^128 evaluations is by the premise only. If the collision hazard is (1 - eps) / N instead of 1 / N (clause (d), or a deficit eps in clause (a)), the plan of this program needs, to restore 0.39: 0.0073 bit for eps = 0.01, 0.0371 bit for eps = 0.05, 0.0763 bit for eps = 0.10, 0.2083 bit for eps = 0.25. Support (proof Section 5): the generic premise of van Oorschot-Wiener parallel collision search, on which this track's generic entries rest (board status review: 3017c952 at round 51, 1884db5b at round 57, 3642e1cd, 6b678689 and 4684dfc2 at round 64, our d4f8f4e4 to 05004d0b at rounds 40 to 53 with this H1); a hazard deficit would separate 62-step SHA-256 from a random function. The reduced-scale observations of proof Section 5 are reproducible observations beside their reference values, not estimates.",
+      "evidence_ids": [
+        "experiment:bssha-n16",
+        "experiment:proj-k0-w256",
+        "proof:92-165",
+        "proof:166-176",
+        "proof:177-183"
+      ],
+      "limitations": "A model premise about one fixed function, not a theorem: on the target the run is a deterministic function of r. It cannot be tested at width 256; the experiments reach width 16 and 16-bit projections of 256 points per trial and do not measure collision structure at 2^128 evaluations. The bound has no margin above 0.39 (B is the least multiple of 10^24 that reaches it), so any hazard deficit is repaired by extra time, priced above: 0.0073 bit for eps = 0.01 (Tp 976); 0.0371 bit for eps = 0.05 (Tp 956); 0.0763 bit for eps = 0.10 (Tp 930); 0.2083 bit for eps = 0.25 (Tp 849)."
+    }
+  ],
+  "submission_state": "ready",
+  "lane": "exploratory"
 }
