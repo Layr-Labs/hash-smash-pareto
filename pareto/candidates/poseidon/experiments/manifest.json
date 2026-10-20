@@ -1,0 +1,197 @@
+{
+ "schema_version": 1,
+ "experiments": [
+  {
+   "id": "hone-layers2a",
+   "kind": "python-message-pairs-v1",
+   "scope": "The line of proof Section 1 with two S-box layers after it (rounds 2 and 3 of the target permutation; degree 25, m = 12); one uniform centre for each organizer seed of trial index 0 mod 3 (the other trials are reported as skipped; parts a, b, c together cover every trial).",
+   "hypothesis": "Premise H-ONE at two layers: the fraction of centres with 1 <= k(c) <= 16 is at least 0.30, the success premise this package uses (the hyperoctahedral law value 0.39347 is given as a reference only; this hypothesis was written when the counts of these experiment ids, emulated with the public seeds, were already known); premise H-NORMAL at two layers: the remainder sequence of (g_c, Y - 1) is normal (observation normal = 1). Both are reported per trial as observations; no message pair is returned, so the organizer success count is 0 by design.",
+   "program": "experiments/hone_layers.py",
+   "event": {
+    "kind": "digest-xor-mask",
+    "mask_hex": "0100000000000000000000000000000000000000000000000000000000000000",
+    "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  },
+  {
+   "id": "hone-layers2b",
+   "kind": "python-message-pairs-v1",
+   "scope": "The line of proof Section 1 with two S-box layers after it (rounds 2 and 3 of the target permutation; degree 25, m = 12); one uniform centre for each organizer seed of trial index 1 mod 3 (the other trials are reported as skipped; parts a, b, c together cover every trial).",
+   "hypothesis": "Premise H-ONE at two layers: the fraction of centres with 1 <= k(c) <= 16 is at least 0.30, the success premise this package uses (the hyperoctahedral law value 0.39347 is given as a reference only; this hypothesis was written when the counts of these experiment ids, emulated with the public seeds, were already known); premise H-NORMAL at two layers: the remainder sequence of (g_c, Y - 1) is normal (observation normal = 1). Both are reported per trial as observations; no message pair is returned, so the organizer success count is 0 by design.",
+   "program": "experiments/hone_layers.py",
+   "event": {
+    "kind": "digest-xor-mask",
+    "mask_hex": "0100000000000000000000000000000000000000000000000000000000000000",
+    "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  },
+  {
+   "id": "hone-layers2c",
+   "kind": "python-message-pairs-v1",
+   "scope": "The line of proof Section 1 with two S-box layers after it (rounds 2 and 3 of the target permutation; degree 25, m = 12); one uniform centre for each organizer seed of trial index 2 mod 3 (the other trials are reported as skipped; parts a, b, c together cover every trial).",
+   "hypothesis": "Premise H-ONE at two layers: the fraction of centres with 1 <= k(c) <= 16 is at least 0.30, the success premise this package uses (the hyperoctahedral law value 0.39347 is given as a reference only; this hypothesis was written when the counts of these experiment ids, emulated with the public seeds, were already known); premise H-NORMAL at two layers: the remainder sequence of (g_c, Y - 1) is normal (observation normal = 1). Both are reported per trial as observations; no message pair is returned, so the organizer success count is 0 by design.",
+   "program": "experiments/hone_layers.py",
+   "event": {
+    "kind": "digest-xor-mask",
+    "mask_hex": "0100000000000000000000000000000000000000000000000000000000000000",
+    "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  },
+  {
+   "id": "hone-layers3a",
+   "kind": "python-message-pairs-v1",
+   "scope": "The same line with three S-box layers (rounds 2, 3 and partial round 4; degree 125, m = 62); one uniform centre for each organizer seed of trial index 0 to 5 (the rest reported as skipped, for the time limit).",
+   "hypothesis": "Premises H-ONE and H-NORMAL at three layers, as above (fraction at least 0.30; every computed sequence normal); k(c) and normal are observations; no message pair is returned.",
+   "program": "experiments/hone_layers.py",
+   "event": {
+    "kind": "digest-xor-mask",
+    "mask_hex": "0100000000000000000000000000000000000000000000000000000000000000",
+    "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  },
+  {
+   "id": "hone-layers3b",
+   "kind": "python-message-pairs-v1",
+   "scope": "The same line with three S-box layers (rounds 2, 3 and partial round 4; degree 125, m = 62); one uniform centre for each organizer seed of trial index 6 to 11 (the rest reported as skipped, for the time limit).",
+   "hypothesis": "Premises H-ONE and H-NORMAL at three layers, as above (fraction at least 0.30; every computed sequence normal); k(c) and normal are observations; no message pair is returned.",
+   "program": "experiments/hone_layers.py",
+   "event": {
+    "kind": "digest-xor-mask",
+    "mask_hex": "0100000000000000000000000000000000000000000000000000000000000000",
+    "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  },
+  {
+   "id": "hone-layers3c",
+   "kind": "python-message-pairs-v1",
+   "scope": "The same line with three S-box layers (rounds 2, 3 and partial round 4; degree 125, m = 62); one uniform centre for each organizer seed of trial index 12 to 17 (the rest reported as skipped, for the time limit).",
+   "hypothesis": "Premises H-ONE and H-NORMAL at three layers, as above (fraction at least 0.30; every computed sequence normal); k(c) and normal are observations; no message pair is returned.",
+   "program": "experiments/hone_layers.py",
+   "event": {
+    "kind": "digest-xor-mask",
+    "mask_hex": "0100000000000000000000000000000000000000000000000000000000000000",
+    "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  },
+  {
+   "id": "hone-layers2a-rep2",
+   "kind": "python-message-pairs-v1",
+   "scope": "Pre-declared replicate 2 of hone-layers2a: the same program and computation on the fresh organizer seeds of this id. The line of proof Section 1 with two S-box layers after it (rounds 2 and 3 of the target permutation; degree 25, m = 12); one uniform centre for each organizer seed of trial index 0 mod 3 (the other trials are reported as skipped; parts a, b, c together cover every trial).",
+   "hypothesis": "Premise H-ONE at two layers: the fraction of centres with 1 <= k(c) <= 16 is at least 0.30, the success premise this package uses (the hyperoctahedral law value 0.39347 is given as a reference only; this hypothesis was written when the counts of these experiment ids, emulated with the public seeds, were already known); premise H-NORMAL at two layers: the remainder sequence of (g_c, Y - 1) is normal (observation normal = 1). Both are reported per trial as observations; no message pair is returned, so the organizer success count is 0 by design.",
+   "program": "experiments/hone_layers.py",
+   "event": {
+    "kind": "digest-xor-mask",
+    "mask_hex": "0100000000000000000000000000000000000000000000000000000000000000",
+    "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  },
+  {
+   "id": "hone-layers2b-rep2",
+   "kind": "python-message-pairs-v1",
+   "scope": "Pre-declared replicate 2 of hone-layers2b: the same program and computation on the fresh organizer seeds of this id. The line of proof Section 1 with two S-box layers after it (rounds 2 and 3 of the target permutation; degree 25, m = 12); one uniform centre for each organizer seed of trial index 1 mod 3 (the other trials are reported as skipped; parts a, b, c together cover every trial).",
+   "hypothesis": "Premise H-ONE at two layers: the fraction of centres with 1 <= k(c) <= 16 is at least 0.30, the success premise this package uses (the hyperoctahedral law value 0.39347 is given as a reference only; this hypothesis was written when the counts of these experiment ids, emulated with the public seeds, were already known); premise H-NORMAL at two layers: the remainder sequence of (g_c, Y - 1) is normal (observation normal = 1). Both are reported per trial as observations; no message pair is returned, so the organizer success count is 0 by design.",
+   "program": "experiments/hone_layers.py",
+   "event": {
+    "kind": "digest-xor-mask",
+    "mask_hex": "0100000000000000000000000000000000000000000000000000000000000000",
+    "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  },
+  {
+   "id": "hone-layers2c-rep2",
+   "kind": "python-message-pairs-v1",
+   "scope": "Pre-declared replicate 2 of hone-layers2c: the same program and computation on the fresh organizer seeds of this id. The line of proof Section 1 with two S-box layers after it (rounds 2 and 3 of the target permutation; degree 25, m = 12); one uniform centre for each organizer seed of trial index 2 mod 3 (the other trials are reported as skipped; parts a, b, c together cover every trial).",
+   "hypothesis": "Premise H-ONE at two layers: the fraction of centres with 1 <= k(c) <= 16 is at least 0.30, the success premise this package uses (the hyperoctahedral law value 0.39347 is given as a reference only; this hypothesis was written when the counts of these experiment ids, emulated with the public seeds, were already known); premise H-NORMAL at two layers: the remainder sequence of (g_c, Y - 1) is normal (observation normal = 1). Both are reported per trial as observations; no message pair is returned, so the organizer success count is 0 by design.",
+   "program": "experiments/hone_layers.py",
+   "event": {
+    "kind": "digest-xor-mask",
+    "mask_hex": "0100000000000000000000000000000000000000000000000000000000000000",
+    "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  },
+  {
+   "id": "hone-layers2a-rep3",
+   "kind": "python-message-pairs-v1",
+   "scope": "Pre-declared replicate 3 of hone-layers2a: the same program and computation on the fresh organizer seeds of this id. The line of proof Section 1 with two S-box layers after it (rounds 2 and 3 of the target permutation; degree 25, m = 12); one uniform centre for each organizer seed of trial index 0 mod 3 (the other trials are reported as skipped; parts a, b, c together cover every trial).",
+   "hypothesis": "Premise H-ONE at two layers: the fraction of centres with 1 <= k(c) <= 16 is at least 0.30, the success premise this package uses (the hyperoctahedral law value 0.39347 is given as a reference only; this hypothesis was written when the counts of these experiment ids, emulated with the public seeds, were already known); premise H-NORMAL at two layers: the remainder sequence of (g_c, Y - 1) is normal (observation normal = 1). Both are reported per trial as observations; no message pair is returned, so the organizer success count is 0 by design.",
+   "program": "experiments/hone_layers.py",
+   "event": {
+    "kind": "digest-xor-mask",
+    "mask_hex": "0100000000000000000000000000000000000000000000000000000000000000",
+    "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  },
+  {
+   "id": "hone-layers2b-rep3",
+   "kind": "python-message-pairs-v1",
+   "scope": "Pre-declared replicate 3 of hone-layers2b: the same program and computation on the fresh organizer seeds of this id. The line of proof Section 1 with two S-box layers after it (rounds 2 and 3 of the target permutation; degree 25, m = 12); one uniform centre for each organizer seed of trial index 1 mod 3 (the other trials are reported as skipped; parts a, b, c together cover every trial).",
+   "hypothesis": "Premise H-ONE at two layers: the fraction of centres with 1 <= k(c) <= 16 is at least 0.30, the success premise this package uses (the hyperoctahedral law value 0.39347 is given as a reference only; this hypothesis was written when the counts of these experiment ids, emulated with the public seeds, were already known); premise H-NORMAL at two layers: the remainder sequence of (g_c, Y - 1) is normal (observation normal = 1). Both are reported per trial as observations; no message pair is returned, so the organizer success count is 0 by design.",
+   "program": "experiments/hone_layers.py",
+   "event": {
+    "kind": "digest-xor-mask",
+    "mask_hex": "0100000000000000000000000000000000000000000000000000000000000000",
+    "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  },
+  {
+   "id": "hone-layers2c-rep3",
+   "kind": "python-message-pairs-v1",
+   "scope": "Pre-declared replicate 3 of hone-layers2c: the same program and computation on the fresh organizer seeds of this id. The line of proof Section 1 with two S-box layers after it (rounds 2 and 3 of the target permutation; degree 25, m = 12); one uniform centre for each organizer seed of trial index 2 mod 3 (the other trials are reported as skipped; parts a, b, c together cover every trial).",
+   "hypothesis": "Premise H-ONE at two layers: the fraction of centres with 1 <= k(c) <= 16 is at least 0.30, the success premise this package uses (the hyperoctahedral law value 0.39347 is given as a reference only; this hypothesis was written when the counts of these experiment ids, emulated with the public seeds, were already known); premise H-NORMAL at two layers: the remainder sequence of (g_c, Y - 1) is normal (observation normal = 1). Both are reported per trial as observations; no message pair is returned, so the organizer success count is 0 by design.",
+   "program": "experiments/hone_layers.py",
+   "event": {
+    "kind": "digest-xor-mask",
+    "mask_hex": "0100000000000000000000000000000000000000000000000000000000000000",
+    "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  },
+  {
+   "id": "hone-layers2a-rep4",
+   "kind": "python-message-pairs-v1",
+   "scope": "Pre-declared replicate 4 of hone-layers2a: the same program and computation on the fresh organizer seeds of this id. The line of proof Section 1 with two S-box layers after it (rounds 2 and 3 of the target permutation; degree 25, m = 12); one uniform centre for each organizer seed of trial index 0 mod 3 (the other trials are reported as skipped; parts a, b, c together cover every trial).",
+   "hypothesis": "Premise H-ONE at two layers: the fraction of centres with 1 <= k(c) <= 16 is at least 0.30, the success premise this package uses (the hyperoctahedral law value 0.39347 is given as a reference only; this hypothesis was written when the counts of these experiment ids, emulated with the public seeds, were already known); premise H-NORMAL at two layers: the remainder sequence of (g_c, Y - 1) is normal (observation normal = 1). Both are reported per trial as observations; no message pair is returned, so the organizer success count is 0 by design.",
+   "program": "experiments/hone_layers.py",
+   "event": {
+    "kind": "digest-xor-mask",
+    "mask_hex": "0100000000000000000000000000000000000000000000000000000000000000",
+    "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  },
+  {
+   "id": "hone-layers2b-rep4",
+   "kind": "python-message-pairs-v1",
+   "scope": "Pre-declared replicate 4 of hone-layers2b: the same program and computation on the fresh organizer seeds of this id. The line of proof Section 1 with two S-box layers after it (rounds 2 and 3 of the target permutation; degree 25, m = 12); one uniform centre for each organizer seed of trial index 1 mod 3 (the other trials are reported as skipped; parts a, b, c together cover every trial).",
+   "hypothesis": "Premise H-ONE at two layers: the fraction of centres with 1 <= k(c) <= 16 is at least 0.30, the success premise this package uses (the hyperoctahedral law value 0.39347 is given as a reference only; this hypothesis was written when the counts of these experiment ids, emulated with the public seeds, were already known); premise H-NORMAL at two layers: the remainder sequence of (g_c, Y - 1) is normal (observation normal = 1). Both are reported per trial as observations; no message pair is returned, so the organizer success count is 0 by design.",
+   "program": "experiments/hone_layers.py",
+   "event": {
+    "kind": "digest-xor-mask",
+    "mask_hex": "0100000000000000000000000000000000000000000000000000000000000000",
+    "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  },
+  {
+   "id": "hone-layers2c-rep4",
+   "kind": "python-message-pairs-v1",
+   "scope": "Pre-declared replicate 4 of hone-layers2c: the same program and computation on the fresh organizer seeds of this id. The line of proof Section 1 with two S-box layers after it (rounds 2 and 3 of the target permutation; degree 25, m = 12); one uniform centre for each organizer seed of trial index 2 mod 3 (the other trials are reported as skipped; parts a, b, c together cover every trial).",
+   "hypothesis": "Premise H-ONE at two layers: the fraction of centres with 1 <= k(c) <= 16 is at least 0.30, the success premise this package uses (the hyperoctahedral law value 0.39347 is given as a reference only; this hypothesis was written when the counts of these experiment ids, emulated with the public seeds, were already known); premise H-NORMAL at two layers: the remainder sequence of (g_c, Y - 1) is normal (observation normal = 1). Both are reported per trial as observations; no message pair is returned, so the organizer success count is 0 by design.",
+   "program": "experiments/hone_layers.py",
+   "event": {
+    "kind": "digest-xor-mask",
+    "mask_hex": "0100000000000000000000000000000000000000000000000000000000000000",
+    "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  },
+  {
+   "id": "hone-layers3a-rep2",
+   "kind": "python-message-pairs-v1",
+   "scope": "Pre-declared replicate 2 of hone-layers3a: the same program and computation on the fresh organizer seeds of this id. The same line with three S-box layers (rounds 2, 3 and partial round 4; degree 125, m = 62); one uniform centre for each organizer seed of trial index 0 to 5 (the rest reported as skipped, for the time limit).",
+   "hypothesis": "Premises H-ONE and H-NORMAL at three layers, as above (fraction at least 0.30; every computed sequence normal); k(c) and normal are observations; no message pair is returned.",
+   "program": "experiments/hone_layers.py",
+   "event": {
+    "kind": "digest-xor-mask",
+    "mask_hex": "0100000000000000000000000000000000000000000000000000000000000000",
+    "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  }
+ ]
+}

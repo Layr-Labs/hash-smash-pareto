@@ -1,20 +1,90 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "poseidon-orchard-r0-prefix-v1",
+  "submission_state": "ready",
+  "target_profile": "poseidon-orchard-r6-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 0,
+  "rounds": 6,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 36.70833,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
+    "memory_log2_bytes": 34.07985,
     "preprocessing_log2": 0,
-    "success_probability": 0.39,
+    "success_probability": 0.50999,
     "nonuniform_advice_log2_bytes": 0
   },
   "restrictions": [],
-  "baseline_improved": "poseidon-orchard-r0-nominal-v2",
+  "baseline_improved": "poseidon-orchard-r6-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
   "lane": "exploratory",
-  "heuristics": []
+  "heuristics": [
+    {
+      "id": "H-ONE",
+      "statement": "The number of centres c in F_p with 1 <= k(c) <= 16 is at least 0.30 p, where k(c) is the number of nonzero squares S with g_c(S) = 0 (the degree of gcd(g_c, S^((p-1)/2) - 1)), for the line of proof Section 1 at this round count.",
+      "role": "score-critical",
+      "scope": "poseidon-orchard-r6-prefix-v1, the line of proof Section 1 (lane 0 constant at the round-1 S-box input), centres uniform on F_p.",
+      "extrapolation": "From the hyperoctahedral Poisson(1/2) law (P(k >= 1) = 0.39347) and from k(c) counts at small degree on this line to degree m of this round count.",
+      "evidence_ids": [
+        "proof:271-300",
+        "proof:301-327",
+        "experiment:hone-layers2a",
+        "experiment:hone-layers2b",
+        "experiment:hone-layers2c",
+        "experiment:hone-layers3a",
+        "experiment:hone-layers3b",
+        "experiment:hone-layers3c",
+        "experiment:hone-layers2a-rep2",
+        "experiment:hone-layers2b-rep2",
+        "experiment:hone-layers2c-rep2",
+        "experiment:hone-layers2a-rep3",
+        "experiment:hone-layers2b-rep3",
+        "experiment:hone-layers2c-rep3",
+        "experiment:hone-layers2a-rep4",
+        "experiment:hone-layers2b-rep4",
+        "experiment:hone-layers2c-rep4",
+        "experiment:hone-layers3a-rep2"
+      ],
+      "limitations": "Not proved at this degree; false for permutation polynomials and decomposable F with imprimitive monodromy; the small-degree counts test degrees 12 and 62 only."
+    },
+    {
+      "id": "H-NORMAL",
+      "statement": "The remainder sequence of (g_c, Y - 1) is normal down to deg G, so the half-gcd executes at most the schedule charged in proof Section 5; the time bound is conditional on it.",
+      "role": "score-critical",
+      "scope": "The cost of the gcd stage of this package.",
+      "extrapolation": "From the normal-sequence observations of the organizer experiments on this line at two and three S-box layers (degrees 12 and 62), the mock-versus-executed validation at degrees up to 39062 (including instances with deg G from 3 to 9) and the executed r = 1, 2, 3 runs to degree m.",
+      "evidence_ids": [
+        "proof:240-270",
+        "proof:3330-3658",
+        "experiment:hone-layers2a",
+        "experiment:hone-layers2b",
+        "experiment:hone-layers2c",
+        "experiment:hone-layers3a",
+        "experiment:hone-layers3b",
+        "experiment:hone-layers3c",
+        "experiment:hone-layers2a-rep2",
+        "experiment:hone-layers2b-rep2",
+        "experiment:hone-layers2c-rep2",
+        "experiment:hone-layers2a-rep3",
+        "experiment:hone-layers2b-rep3",
+        "experiment:hone-layers2c-rep3",
+        "experiment:hone-layers2a-rep4",
+        "experiment:hone-layers2b-rep4",
+        "experiment:hone-layers2c-rep4",
+        "experiment:hone-layers3a-rep2"
+      ],
+      "limitations": "On a non-normal sequence the gcd is still correct but its cost differs from the charged schedule."
+    },
+    {
+      "id": "H2-cost-convention",
+      "statement": "Prices of proof Section 3.0: field operations 1, loads and stores 2 (access and address), loops 3 per iteration (unrolled by 8 where streaming) plus 2 per exit, a declared 16-word register file, and a 1 MiB allowance for code, constants, registers and stack.",
+      "role": "supporting",
+      "scope": "The time and memory claims of this package.",
+      "extrapolation": "None; a declared convention.",
+      "evidence_ids": [
+        "proof:93-195",
+        "proof:196-239"
+      ],
+      "limitations": "The contract fixes no register count or code-size rule; the allowance is a declared bound, not a measured binary."
+    }
+  ],
+  "experiment_manifest": "experiments/manifest.json"
 }
