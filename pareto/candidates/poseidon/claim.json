@@ -1,20 +1,60 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "poseidon-orchard-r0-prefix-v1",
+  "submission_state": "ready",
+  "target_profile": "poseidon-orchard-r32-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 0,
+  "rounds": 32,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 126.22929,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 20.0,
+    "preprocessing_log2": 38.20559,
     "success_probability": 0.39,
     "nonuniform_advice_log2_bytes": 0
   },
   "restrictions": [],
-  "baseline_improved": "poseidon-orchard-r0-nominal-v2",
+  "baseline_improved": "poseidon-orchard-r32-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
   "lane": "exploratory",
-  "heuristics": []
+  "heuristics": [
+    {
+      "id": "H1-fixed-map-random-function",
+      "statement": "For the fixed r = 32 walk map family F_rho0 of proof Section 1, with rho0 and x_0 drawn as in proof Section 3, the search of proof Section 3 at the parameters of proof Section 9 succeeds with probability at least 0.39 (the random-function bound of proof Section 5 is 0.3900024127182048512159623481164369397980347275362).",
+      "role": "score-critical",
+      "scope": "poseidon-orchard-r32-prefix-v1, the two-round line of proof Section 1, the parameters of proof Section 9.",
+      "extrapolation": "From a proved bound for a uniformly random function and from measurements at output widths 16 to 32 bits to the full 254-bit map; the bound exceeds 0.39 by 2.41e-06, so the premise needs the fixed map's success to be within that of the random-function value.",
+      "evidence_ids": [
+        "proof:77-105",
+        "proof:106-127",
+        "proof:128-178",
+        "proof:179-240",
+        "proof:274-350",
+        "proof:1117-1208",
+        "proof:1919-1989",
+        "proof:1990-2067",
+        "proof:2184-2287",
+        "experiment:r32-search-w14"
+      ],
+      "limitations": "Unproved. The pooled standard error of the collision-rate measurement is about 0.017 (about 3.4% at two standard errors), far above the deficit the filed budget tolerates: the budget has essentially no robustness margin (proof Section 9 gives the cost of absorbing a deficit)."
+    },
+    {
+      "id": "H2-machine-register-file",
+      "statement": "Operation prices on the register machine of proof Section 7, whose listing (machine.py) is the algorithm: a declared file of 349 registers of 256 bits and 4-byte instructions, both counted in memory; field operations (canonical results), integer and bit operations, register moves and RAND 1; loads and stores 2 (access and address); compare-and-branch 2; jumps 1; instruction fetch not charged.",
+      "role": "score-critical",
+      "scope": "The cost and memory claims of this package.",
+      "extrapolation": "None; a declared convention, the same kind as the published entries' register files (the dependency 43caeb6a declares 469 at r = 56; our in-review 9f8717f0 declares 223 at r = 23; this package declares 349 at r = 32).",
+      "evidence_ids": [
+        "proof:241-256",
+        "proof:257-273",
+        "proof:274-350",
+        "proof:48-76",
+        "proof:631-1116",
+        "proof:1720-1811",
+        "proof:2184-2287",
+        "experiment:r32-listing-w10"
+      ],
+      "limitations": "The contract fixes no register count; proof Section 7 states the cost of a smaller file or of charging instruction fetch."
+    }
+  ],
+  "experiment_manifest": "experiments/manifest.json"
 }
