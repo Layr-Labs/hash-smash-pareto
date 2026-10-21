@@ -1,20 +1,42 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha3-256-r5-prefix-v1",
+  "target_profile": "sha3-256-r24-prefix-v1",
+  "rounds": 24,
+  "lane": "exploratory",
   "attack_class": "ordinary-collision",
-  "rounds": 5,
+  "baseline_improved": "sha3-256-r24-nominal-v2",
+  "submission_state": "ready",
+  "certificate_manifest": "certificates/manifest.json",
+  "experiment_manifest": "experiments/manifest.json",
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 124.5079,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 19.93114,
     "success_probability": 0.39,
+    "preprocessing_log2": 36,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "sha3-256-r5-nominal-v2",
-  "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  "restrictions": [
+    "Ordinary collision construction for the complete 24-round SHA3-256 hash (sha3-256-r24-prefix-v1) on 128-byte one-block messages m(u) whose six variable rate lanes carry the 256-bit search point and whose other rate lanes are fixed public constants; 24 is the complete Keccak-f[1600] round count, so this is the full SHA3-256. No collision is exhibited and the attack is not executed at full scale.",
+    "time_log2 and memory_log2_bytes are worst-case bounds for the fixed program image on a load/store machine with a declared file of 3573 registers of 256 bits whose 114336 bytes are inside the memory bound; every computed-address access is charged, each evaluation of the target is charged one complete compression, and the rare stage-2 work is bounded by a counted budget of 32 Q/2^32 enforced by a halt. No trail is ever cut: the program has no age cap and no cut scan. Instruction fetch is not charged as a primitive operation; charging it at one 256-bit load per 32 bytes of the code a batch traverses -- not of the image, which a looped step fetches many times over -- raises the time to 124.71633, and the comparator declares the same convention, so a comparison under the alternative convention would have to reprice both sides. The normalized objective equals the time because memory is below 2^20 bytes.",
+    "Preprocessing is charged in two parts, 375368283586560 word operations, preprocessing_log2 36. First, the step's blocks are inherited from submission c9a7e62c and are the output of its generator run gen4 4096 0 3, charged at the 93,893,306,875,904 word operations that entry declares, not excluded because the blocks are rebuilt inside the program. Second, our own computation for this candidate -- the bound evaluations and exact certifications that selected its constants, the priced comparison that chose the design, and the validation runs -- is charged at a ceiling of 2^48 word operations over itemised upper bounds, because its output is embedded in the program and the cost model reaches it whether it is called search or arithmetic. Not charged: writing the program, proof and tools, which is not computation in this cost model. No table, no advice, no stored data beyond the program image. A dependency on c9a7e62c is declared.",
+    "success_probability rests on the random-function theorem of proof Section P (certified lower bound 0.390000081356, a margin of 8.1356E-8 over 0.39, recomputed inside the organizer's executor by the declared experiment sha3-256-r24-looped-bound-v1) and on the declared heuristic H1. Step 5 of Section P, the stage-2 budget, is re-derived for this program rather than inherited from our age-capped entries, because a merged trail that is never cut can follow a stored path or loop a stored cycle until the horizon; its failure budget has about 14.9 bits of headroom, which is separate from the success-probability margin above and from the unproved H1 transfer. The machine experiment is implementation and cost evidence only."
+  ],
+  "heuristics": [
+    {
+      "id": "H1-fixed-target-random-function",
+      "role": "score-critical",
+      "statement": "For the fixed walk f(u) = SHA3-256_r24(m(u)) XOR PD at the complete 24-round SHA3-256, the success probability of this frozen program over its uniform offset rho is at least the random-function lower bound of proof Section P (certified value 0.390000081356), and in particular at least 0.39.",
+      "scope": "Transfers the random-function theorem of proof Section P to the fixed SHA3-256 target. The algorithm is generic: beyond evaluating the hash it uses only the message layout of proof Section 1.1, which keeps round 0 affine and is a property of the layout rather than of the permutation, and the proof uses only that answers to fresh queries along the lane-serialized search are uniform and independent of the history.",
+      "extrapolation": "No experiment in this package evidences this premise. The declared machine experiment is implementation and cost evidence: it establishes that the emitted image is the specified program and that every charged cost is the one the ledger uses, on 16-bit projections and on sampled full-width lanes. The declared bound experiment recomputes the random-function bound exactly and says nothing about the transfer. The step from the theorem to this fixed target is an exchange of quantifiers, from an average over the random function for every offset to an average over the single offset for one fixed function, which this package assumes and does not prove.",
+      "limitations": "Plausible, not established. The random-function bound exceeds 0.39 by only 8.1356E-8, so any fixed-target deficit larger than that defeats the claim, and no experiment at any feasible width could detect a deficit of that size. The stage-2 failure budget's 14.9 bits of headroom (proof Section P.3) is not margin on this premise. A reviewer who rejects H1 should reject the success probability and with it the entry.",
+      "evidence_ids": [
+        "experiment:sha3-256-r24-looped-bound-v1",
+        "experiment:sha3-256-r24-looped-machine-v1",
+        "proof:284-377",
+        "proof:378-390",
+        "proof:200-283"
+      ]
+    }
+  ]
 }

@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "sha3-256-r24-looped-machine-v1",
+      "kind": "python-message-pairs-v1",
+      "scope": "The complete no-cut machine program on the exact sha3-256-r24-prefix-v1 hash, for a machine with a declared file of 3573 registers of 256 bits, serialized into its byte image and decoded again before execution. The step is inherited from submission c9a7e62c and credited in proof Sections 3.4 and 10: the program rebuilds its ten blocks from the generator decisions that entry publishes and REFUSES TO RUN unless every block has its published length and hashes to the SHA-256 its proof prints, then asserts the step's geometry (60733 five-byte words stored once, 10 KERNEL headers, 29 calls and returns, 147305 operations executed per batch) and its output polarity PD. The image round trip asserts every block word, every round's iota group, every relocated call target and every return, the 20-bit immediates, the byte count, the deployed constants read back from the image, and the 64-bit record packing with a 47-bit key and a 17-bit identifier, which is what a capacity above 65,536 requires. The run then checks 14 control-flow fixtures against an independent scalar reference covering every termination, both replay guards included, and the measured cost of every handler against its closed form at the deployed parameters. Per organizer trial it runs a 16-bit projected search end to end with the complete program and with the scalar reference, requiring agreement on every outcome field, and compares sampled lanes and one full-width random batch with the library SHA3-256 of m(u). No trail is ever cut in any of these runs: the program has no age cap and no cut scan. A 16-bit projection leaves only nine key bits above the predicate (k <= w - d - 4), so the dominant termination is a false key match (code 2) rather than a recovered pair, while the fixtures cover every termination deterministically.",
+      "hypothesis": "The decoded image implements the frozen specification: it agrees with the scalar reference on every fixture and projected trial (termination code, pair, insertions, stage-2 batches, starts, batches and compressions), every handler's measured cost equals its closed form, every inherited block matches its published hash and length, every call target and return survives relocation into our 20-bit immediate, and every sampled lane equals the library SHA3-256 of m(u) xored with PD. What is asserted is that agreement, not a rate of returned pairs: the projected pair rate is a property of the narrow projected key and carries no claim. Observations are participant counts; they are implementation and cost evidence only and no full-width probability is inferred from them.",
+      "program": "experiments/sha3_machine.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "ffff000000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "sha3-256-r24-looped-bound-v1",
+      "kind": "python-message-pairs-v1",
+      "scope": "The exact random-function success bound of proof Section P for the frozen parameters, recomputed inside the organizer's executor in 60-digit decimal arithmetic with every exponential, quotient and product rounded in the direction that weakens the bound and exact rationals elsewhere. The program asserts that the parameters it prices are the deployed ones: density 1/2^112, which is 112 zero planes and no window test, a 47-bit key, capacity 67456, replay cap 21/2/theta, the stage-2 budget 32 Q/2^32 that step 5 of Section P requires, and the absence of any age cap. It returns no message pair and ignores the trial seeds, certifying once and reporting the same row for every trial.",
+      "hypothesis": "The frozen parameters satisfy the bound of proof Section P with certified lower bound 0.390000081356, a margin of 8.1356E-8 over the required 0.39, and the reported loss terms equal those of the proof's table. This recomputation establishes the random-function bound only; the transfer to the fixed target is the declared heuristic H1 and is not evidenced here.",
+      "program": "experiments/sha3_machine.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    }
+  ]
+}
