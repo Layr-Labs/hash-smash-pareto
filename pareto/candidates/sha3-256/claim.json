@@ -1,20 +1,73 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha3-256-r5-prefix-v1",
+  "submission_state": "ready",
+  "target_profile": "sha3-256-r24-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 5,
+  "rounds": 24,
+  "lane": "exploratory",
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 124.50813,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 20,
+    "preprocessing_log2": 36,
     "success_probability": 0.39,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "sha3-256-r5-nominal-v2",
-  "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  "restrictions": [
+    "Two distinct 128-byte one-block messages m(a), m(b) for sha3-256-r24-prefix-v1. The fixed injective embedding places the 256-bit point in lanes 1, 6, 11=u0^u1^K11 and 4, 9, 14=u2^u3^K14; every other message lane is an S3-04 constant. F(u)=SHA3-256-r24(m(u))^PD, so a collision of F at distinct points is an ordinary collision of the complete padded target.",
+    "One step of 256 walks executes 147252 word operations: S3-04 affine prefix P, 21 generic rounds through eight shared bit-sliced bodies on two fixed banks, 78 explicit iota XORs, 42 calls and returns, and final digest block E. The independently generated packed blocks contain 60332 instructions; the step has no loads, stores or data-dependent branches.",
+    "One uniform 256-bit rho is the attempt's only coin. Trail i starts at rho+i modulo 2^256 for i=0..66719. The deterministic 256-walk search uses theta=959*2^-122, 16680 table words with four 64-bit records each, a replay cap of 58214318514280978804933101300482048 evaluations, and Tb=1327992259278900420605797256497463296 lockstep steps. Each record has a valid bit, a 46-bit key and a 17-bit trail identifier. The replay refuses trails over the cap; the main search never cuts a trail.",
+    "Collision-frontier-v5 unit 6504. Exact charged total N=196726229563718670526410399795092668422689 word operations includes Tb*147272, replay, every handler bound, table setup, restarts, the hit cap and 2^48 preprocessing operations. The integer/Decimal ledger gives time_log2 124.50813 rounded upward to five decimals.",
+    "Declared word-RAM machine: 3476 256-bit registers, packed 39-bit straight-line instructions, 32-byte control instructions, and every executed word primitive charged once. PERM in replay costs one r24 target unit. Code fetch and decode have no separate charge, matching the credited entries' declared convention.",
+    "Peak memory is 1044273 bytes in the search and 1022609 bytes in generation, both below 2^20. Search memory includes the register file, all code, table, walk state and data image. Generation includes the 616350-byte freestanding image, a 112104-byte compiler-derived maximum call-chain stack bound and all 294155 retained packed outputs.",
+    "Success is at least 0.39 for one attempt under H_rand, the same score-critical random-function transfer premise used by the credited lineage. The random-function calculation itself and all failure terms are explicit; no full-width collision is claimed or precomputed."
+  ],
+  "baseline_improved": "sha3-256-r24-nominal-v2",
+  "heuristics": [
+    {
+      "id": "H_rand",
+      "role": "score-critical",
+      "statement": "For the fixed r24 chain function F and a uniform fresh 256-bit rho, the concrete distinguished-point program succeeds with at least the probability computed for a uniformly random function from 256 bits to 256 bits. Given rho the program is deterministic.",
+      "scope": "One attempt with 256 lockstep walks, 66720 possible trails, theta=959*2^-122, the stated replay cap and about 0.999070*2^128 evaluations.",
+      "extrapolation": "The organizer experiment regenerates every exact packed block, checks all hashes and counts, compares the emitted schedule with a scalar reference on eight points, and runs the complete rho-to-starts, distinguished-point table, restart, merge and replay search at width 22. A separate full-width projection run and 65536 local chained evaluations remain bounded implementation checks. None reaches the full birthday scale.",
+      "evidence_ids": [
+        "proof:104-116",
+        "proof:118-219",
+        "proof:260-346",
+        "proof:375-387",
+        "experiment:rho-r24-w22",
+        "experiment:proj-r24-full-width"
+      ],
+      "limitations": "This is a heuristic transfer, not a theorem about fixed SHA3-256. No run reaches 2^128 work and no full collision witness is supplied. The score changes if the full-scale pair-coincidence rate differs from the random-function model."
+    },
+    {
+      "id": "H_reg",
+      "role": "supporting",
+      "statement": "The declared 256-bit word RAM has 3476 registers. Register operations cost one word operation; all search loads and stores are charged. The 111232-byte register file is included in memory.",
+      "scope": "The bit-sliced step and search handlers only; it does not affect the mathematical success bound.",
+      "extrapolation": "None. This is a declared machine convention under a cost model that does not fix a register count.",
+      "evidence_ids": [
+        "proof:83-102",
+        "proof:348-373"
+      ],
+      "limitations": "A different fixed-register machine could require spills and a different ledger."
+    },
+    {
+      "id": "H_code",
+      "role": "supporting",
+      "statement": "Each straight-line instruction is packed in 39 bits: a 3-bit opcode and three 12-bit register fields. Callable control instructions use the credited 32-byte format. The search memory ledger counts every retained byte.",
+      "scope": "Code-memory accounting for the generated step and the credited search routines.",
+      "extrapolation": "None. The local checker decodes both development and packed streams. The organizer experiment independently regenerates the packed streams, validates every opcode and register field, exercises trail IDs 65535, 65536 and 66719 in all four record slots, rejects 66720, and requires the declared hashes, per-op counts, stored count and executed count.",
+      "evidence_ids": [
+        "proof:83-116",
+        "proof:150-170",
+        "proof:348-373",
+        "experiment:rho-r24-w22",
+        "experiment:proj-r24-full-width"
+      ],
+      "limitations": "A larger retained encoding would reduce table capacity and change both the search parameters and the score."
+    }
+  ],
+  "experiment_manifest": "experiments/manifest.json",
+  "certificate_manifest": "certificates/manifest.json"
 }

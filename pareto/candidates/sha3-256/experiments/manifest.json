@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "rho-r24-w22",
+      "kind": "python-message-pairs-v1",
+      "scope": "Decode the hash-bound plan data, independently rebuild P, G, B1 through B8, E and PD, validate every packed opcode and register field, require every packed-block hash and per-op count, require 60332 stored instructions and 147252 executed operations, and compare the exact emitted schedule with a scalar Keccak reference on eight full-width points. Check the full-size 46-bit-key/17-bit-ID record at IDs 65535, 65536 and 66719 in all four slots and reject ID 66720. Then run the proof's complete search at width 22: derive rho from the organizer seed, create 256 starts rho+i, execute the regenerated bit-sliced step in lockstep, truncate each image to 22 bits, apply the 5/128 distinguished-point rule, probe four 64-bit records per table word, restart walks, detect an end match, measure and align both trails, replay to their first merge, and return its two predecessor messages. The reduced run uses 750 table words, 3000 trails, a replay cap of 256 and a 400-step attempt deadline. At this small width, a refused replay restarts that walk, and a failed attempt deterministically derives another rho from the same organizer seed, so every trial can return evidence. The full-size claim instead halts on replay refusal and uses one rho.",
+      "hypothesis": "Every returned pair consists of distinct complete 128-byte messages whose 24-round target digests agree on the low 22 bits. The experiment demonstrates the whole deterministic search state machine and the connection from rho to recovered predecessors at bounded width. It makes no statistical or cost inference about the 256-bit search.",
+      "program": "experiments/combined.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "ffff3f0000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "proj-r24-full-width",
+      "kind": "python-message-pairs-v1",
+      "scope": "Once per organizer request, decode hash-bound plan data, independently rebuild P, G, B1 through B8, E and PD, validate every packed opcode, register and table-record field, require every packed-block hash and per-op count, require 60332 stored instructions and 147252 executed operations, and execute the exact schedule on eight fixed full-width points against a separate scalar Keccak reference. Then, for each organizer seed, derive 17 points, run four scalar chain steps and inspect 68 images for a low-12-bit agreement.",
+      "hypothesis": "If the 68 projected images are independent uniform 12-bit values, a trial succeeds with probability 1-prod_(i=0..67)(1-i/4096)=0.4283525380. A returned pair is independently recomputed by the organizer as two distinct complete 128-byte messages with the declared 12-bit digest agreement. Null trials remain in the output.",
+      "program": "experiments/combined.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "ff0f000000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    }
+  ]
+}
