@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "b3r7-toy-birthday",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/toy_birthday.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "ff0f000000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "scope": "The search loop of proof Section 2 at a 12-bit scale: for each organizer trial the program derives fresh 32-byte candidate messages from the trial seed, hashes each with its own r7 BLAKE3 compression (verified byte-for-byte against verifier/blake3.py on 64 random messages), and returns the first pair whose digests agree on the low 12 bits of the first two digest bytes. It reports the evaluation count per trial. It does not search for a full collision, does not scale to the declared 2^128, and is not evidence for the declared cost.",
+      "hypothesis": "If the loop implements a birthday search, the number of evaluations per trial should track sqrt(pi/2 * 2^12) = 80.2 rather than 2^12, and every returned pair should satisfy the organizer's mask check against the trusted r7 digest. Measured locally on 256 seeded trials: 0.90 s wall, mean 77.4 evaluations per trial, maximum 295, and 256 of 256 pairs verified against verifier/blake3.py. The observation is a scaling corroboration of H1 and nothing more: the constant at width 12 is consistent with 1.2533 up to sampling noise, and no claim about the width-256 search is inferred from it."
+    }
+  ]
+}

@@ -1,20 +1,64 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "blake3-r1-prefix-v1",
+  "submission_state": "ready",
+  "target_profile": "blake3-r7-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 1,
+  "rounds": 7,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 128.34,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
+    "memory_log2_bytes": 20.0,
     "preprocessing_log2": 0,
     "success_probability": 0.39,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "blake3-r1-nominal-v2",
+  "restrictions": [
+    "Target blake3-r7-prefix-v1 exactly: unkeyed BLAKE3-256 with prefix rounds 0..6 in every chunk, parent and root compression, standard IV, standard message permutation, full 256-bit output as the first 32 little-endian root output bytes.",
+    "Both colliding messages are complete 32-byte inputs, so each hash is one chunk compression (CHUNK_START|CHUNK_END, counter 0) followed by the root compression (ROOT). No free-start, compression-only or truncated-output collision is claimed.",
+    "The attack is generic: parallel collision search (van Oorschot-Wiener) on h(x) = blake3-r7(x). The declared work is the expected search length sqrt(pi*N/2) = 1.2533 x 2^128 evaluations for N = 2^256, with the 0.39 success probability floor; no cryptanalytic weakness of BLAKE3 or of its 7-round prefix is asserted, and improvesNominalReference is false by construction.",
+    "Accounting: each evaluation is one target compression; six word primitives per evaluation (digest-word load, distinguished-point mask test, comparison, branch, counter) are charged at 6/1470 units with the BLAKE3 r7 reference operation cost 1470 extrapolated from the organizer's r1 = 222 and r2 = 430 (208 per additional round). Total 2^128.3256 x 1.00408 = 2^128.3315, declared 128.34 (rounded up). At C = 222 the same bookkeeping gives 128.36; the sensitivity is declared in proof Section 7.",
+    "Preprocessing and advice are zero rather than omitted: the search starts from fresh random start values with no precomputed table, no stored distinguished-point database and no nonuniform advice. Every evaluation of every walk, including walks discarded as rho cycles, lies inside the declared expectation.",
+    "Memory is 2^20 bytes exactly: 2^14 distinguished-point records of 32 bytes (2^19) sorted in place, plus program code, working state and one replay path bounded by 2^19. No digest table is retained. Under hashsmash-scalar-tm-v1 the memory term is log2(2^20 / 2^20) = 0.",
+    "This row sets the generic cost at the top of the admitted round range 3..7 so that later cryptanalytic rows can be compared against it. It is not a certificate: no colliding pair is exhibited, because exhibiting one would cost the declared 2^128 evaluations."
+  ],
+  "baseline_improved": "blake3-r7-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
+  "experiment_manifest": "experiments/manifest.json",
   "lane": "exploratory",
-  "heuristics": []
+  "heuristics": [
+    {
+      "id": "H1-vow-birthday",
+      "role": "score-critical",
+      "statement": "Parallel collision search on a random 256-bit function finds a collision in expected sqrt(pi*N/2) = 1.2533 x 2^128 evaluations with N = 2^256, and q = 2^128 distinct evaluations already yield a collision with probability 1 - exp(-q^2/2N) = 0.3935, above the declared 0.39.",
+      "scope": "The iteration function h(x) = blake3-r7(x) on 32-byte values, modelled as a random function from {0,1}^256 to {0,1}^256. The 1.2533 constant covers walk restarts and the rho-cycle discard and replay treatment.",
+      "extrapolation": "Van Oorschot and Wiener, Parallel Collision Search with Cryptanalytic Applications, Journal of Cryptology 12(1), 1999: the expected number of evaluations with a distinguished-point memo is sqrt(pi*N/2) up to a factor 1 + O(2^-w) in the distinguished-point width w, with w = 113 here.",
+      "evidence_ids": [
+        "proof:44-50",
+        "experiment:b3r7-toy-birthday"
+      ],
+      "limitations": "The constant is an expectation, not a high-probability bound; a reviewer who prices a 0.9-probability search instead would raise the declared time by about 0.4 bit. The 0.39 floor is declared at the q = 2^128 birthday point, which is conservative relative to the expected work charged."
+    },
+    {
+      "id": "H2-memory-floor",
+      "role": "supporting",
+      "statement": "The whole working set is 2^20 bytes: 2^14 distinguished-point records of 32 bytes sorted in place, plus code, state and one replay path bounded by 2^19 bytes; no digest table is retained and no memory is retained across restarts beyond the sorted memo.",
+      "scope": "The online search program only. There is no preprocessing phase and therefore no preprocessing memory.",
+      "extrapolation": "Memory accounting of the shipped search loop; the distinguished-point width 2^-113 sets the number of records (2^14) for a 2^128-evaluation search.",
+      "evidence_ids": [
+        "proof:78-84"
+      ],
+      "limitations": "Code size is bounded rather than measured byte for byte; the bound 2^19 leaves 100 percent headroom over a compiled search loop of a few hundred instructions with a 512 KiB sorted memo."
+    },
+    {
+      "id": "H3-no-preprocessing",
+      "role": "score-critical",
+      "statement": "Preprocessing and nonuniform advice are exactly zero: the search begins from fresh random 32-byte start values with no precomputed table, no stored collision, no distinguished-point database and no advice derived from any prior run.",
+      "scope": "Every input to the search program: its code, its random coins and the target profile.",
+      "extrapolation": "The program's only state before the first evaluation is its own code and the fresh random start values; nothing about the target is precomputed, so there is no omitted search to charge.",
+      "evidence_ids": [
+        "proof:106-109"
+      ],
+      "limitations": "If a reviewer holds that the generic birthday bound for a standard hash embeds a preprocessing assumption, the correct charge is 0 anyway: the bound is information-theoretic in the digest width, not in any table."
+    }
+  ]
 }
