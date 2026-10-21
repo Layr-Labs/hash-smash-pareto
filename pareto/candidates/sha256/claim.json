@@ -1,20 +1,48 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha256-r37-prefix-v1",
+  "target_profile": "sha256-r40-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 37,
+  "rounds": 40,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 123.91192,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 20,
+    "preprocessing_log2": 47.47027,
     "success_probability": 0.39,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "sha256-r37-nominal-v2",
+  "restrictions": [
+    "Two distinct 64-byte messages M(x), M(y). W0..W7 are the fixed prefix in proof Section 1. W8=y0, W9=y1, and W10..W15 are y2..y7 minus K10..K15 modulo 2^32. This is a bijection from the 256-bit chain value x. FIPS padding adds one fixed second block. The target uses the standard IV, steps 0..39 on each block, and feed-forward. The walk g is an explicitly invertible encoding of the block-1 working state XOR the fixed polarity mask e7309a100cc5bf67eea64df025e3b2545785e20fdeb3df8208948c9c227bb195. A collision of g gives equal complete digests.",
+    "Classical 256-bit word RAM under collision-frontier-v5, C=2896. The declared machine has 929 256-bit registers, 926 data and three pointers. Every XOR, AND, OR, NOT, move, set, load, store, addition, comparison, branch, and random word is charged. Its native body instruction is exactly 32 bits: a 2-bit opcode and three 10-bit register fields, fetched and executed directly at one operation per instruction under the same pricing convention as the accepted native 5-byte format. No decoder or interpreter runs in the normative path; Prog.run, Prog.compile, and Prog.fast are test-only mirrors. Recovery and control use native fixed 5-byte instructions. The kernel has 43647 instructions; stage 1 and loop control add 22 and 3 operations per batch.",
+    "The single attempt uses one fresh uniform r, no restart, no amplification, no stored collision, and no advice. Distinguished points have low 20 bits zero and the next 102 bits below 2101. The table stores 136004 completed trails in 136266 trail-index slots. Each 48-bit slot stores key+1; zero is the empty sentinel, and the slot position is the trail number. Recovery recomputes the stored trail length and is charged for two passes of at most c+2^48 calls.",
+    "Exact ledger: B=1324531803055719000000000000000000000, c=32898551061787541832935729240636801, and N=57943024946780646873611801817502375963436 word operations. log2(N/2896)=123.9119129117. The claim rounds upward to 123.91192. Final setup and emission cost 186808673 operations. The 1641-evaluation offset search costs 461900436782186496 operations. The 365-evaluation selector search costs 102738366499389440 operations. All are included in N and preprocessing_log2.",
+    "Search memory is 182818 bytes of code, 817596 bytes of table, 16384 bytes of counters and copies, 29728 bytes of registers, and 2048 bytes of recovery arrays: 1048574 bytes. Normative setup adds a 215244-byte wasm emitter image and 74173 bytes of itemized scratch to the final code, counters, registers, and recovery arrays: 520395 bytes. The sequential preprocessing searches peak below setup. Search is the overall peak. The self-test asserts every body, control, key, and trail field boundary.",
+    "For a uniformly random 256-bit function, proof Section 4 and Appendix A give P_F at least 0.390000001000 using exact integers and outward-rounded 60-digit decimals. H1 is the only score-critical premise: it says this fixed SHA-256 walk succeeds at least as often as that random function in this attempt. H1 is declared, not proved.",
+    "The freestanding C source embedded as GEN_C is the normative setup emitter. Compiled to wasm32 with the stated clang 18.1.3 and LLD 22.1.2 flags, its exported run function executes exactly 92997536 measured wasm operators and emits 43647 records. Before every declared experiment, the byte-exact Python BoundedEmitter mirror checks all 15 C fields, the C source hash, stream hash 885c76492ea4caa497752afad7ae041f334bb55f1b776df41e7a50ae68f9b338, polarity mask, bounds, and ordinary-builder equality. Circuit optimizations are exact equivalences checked by the self-test; they are not premises.",
+    "The declared organizer experiments run the normative emitted program. bssha-n16 performs one width-16 search attempt per trial. proj-k0-w256 evaluates 256 full-width points and forms the complete two-block digest. rf-model-r20 runs 128 two-lane searches on the actual emitted walk truncated to 20 bits with scaled distinguished-point, table, and restart logic. The second 128 organizer seeds commit a holdout calibration seed for 48 complete null ensembles, each with 128 groups sharing one lazy random function. Collision Pearson and globally-fresh-input DP statistics must each have add-one empirical rank at least 0.05. The organizer recomputes every returned message-pair event. The reduced-width model check supports but does not prove H1 at width 256.",
+    "Credited derivative of a4c6ba2c-25e0-4d35-80e9-ae2ea22eb05d, d22ae1b2-2368-460a-b6d4-1e5e37ceb735, and 95263e47-d61b-43a6-bb46-30ced2488280, with the same-challenge lineage listed in package-work/dependencies.json. a4c6ba2c supplies the round-40 kernel, search, allocator, recovery, and proof. The round-64 lineage supplies the charged selector and bounded-emitter discipline. New here are the one-gate frozen reduction choice, fixed 4-byte body format, fixed 5-byte control formats, 48-bit sentinel table, and revised plan and ledger."
+  ],
+  "baseline_improved": "sha256-r40-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  "experiment_manifest": "experiments/manifest.json",
+  "heuristics": [
+    {
+      "id": "H1-random-function-model",
+      "role": "score-critical",
+      "statement": "Let F be a uniformly random function from 256-bit values to 256-bit values. The probability that the single bounded attempt using the fixed walk g succeeds is at least the probability that the same attempt succeeds when every evaluation is replaced by lazy sampling from F. Clauses: (a) distinct fresh inputs have independent uniform outputs and collision hazard 2^-256; (b) iterates from r+t have the first-collision law of a random mapping; (c) a fresh output is distinguished with probability 2101/2^122 independently of collisions; (d) after conditioning on the adaptive history and later DP flags, a fresh output equals any fixed earlier non-DP output with probability at least 2^-256. Proof Section 4 proves P_F >= 0.390000001000 for F. Clause (d) is the premise that g retains that hazard.",
+      "scope": "The sha256-r40-prefix-v1 target restricted to the 64-byte message family in proof Section 1, about 2^128 evaluations, approximately 133989 finished trails of mean length 2^110.963, and 256 simultaneous trails. It is not claimed for other message families, rounds, or scales.",
+      "extrapolation": "The full-width collision event cannot be sampled. The functional experiments check the exact program at width 16 and 16-bit projections of 256 full-width evaluations. The reduced-width model experiment tests first-collision bins and globally-fresh-input distinguished-point density on the actual walk at width 20 against complete shared-function ensemble nulls. Extrapolation from width 20 to the full attempt is by H1 only. A collision-hazard surplus helps; a deficit requires a larger charged plan.",
+      "evidence_ids": [
+        "experiment:bssha-n16",
+        "experiment:proj-k0-w256",
+        "experiment:rf-model-r20",
+        "proof:207-276",
+        "proof:279-290",
+        "proof:293-299"
+      ],
+      "limitations": "H1 is a model premise about one fixed function, not a theorem. The model experiment has 20-bit outputs, 128 observed groups, 48 null ensembles, a 2048-evaluation cap, empirical-rank resolution 1/49, and scaled density 1/32. It does not reach 2^128 evaluations, observe full-width collisions, or estimate the claimed full-width success probability. The exact circuit equivalences, record counts, memory bounds, and random-function certificate do not depend on H1."
+    }
+  ],
+  "submission_state": "ready",
+  "lane": "exploratory"
 }
