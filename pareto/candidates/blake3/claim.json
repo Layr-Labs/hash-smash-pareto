@@ -1,20 +1,58 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "blake3-r1-prefix-v1",
+  "submission_state": "ready",
+  "target_profile": "blake3-r7-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 1,
+  "rounds": 7,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 124.90969,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 20,
+    "preprocessing_log2": 29.56113,
     "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
+    "nonuniform_advice_log2_bytes": 5
   },
-  "restrictions": [],
-  "baseline_improved": "blake3-r1-nominal-v2",
+  "restrictions": [
+    "The messages are distinct 64-byte strings K || x and K || y. K is the fixed 32-byte prefix 0000008000000000000000800000000000000080000000000000000000000000, and x and y are distinct 256-bit little-endian integers. Each message is one BLAKE3 block with standard IV, counter 0, length 64, flags 11, seven rounds and the complete 256-bit root digest.",
+    "The walk is g(x) = f(x) XOR q for the fixed output-polarity mask q = 435ce946177aeb0342c1963f123ebb02537dabf38aa8e0eb030a731ce33b4869. A collision of g is exactly a collision of f. This is a generic birthday search and claims no differential or weakness of BLAKE3.",
+    "One 256-lane step has 44,266 gates: 36,277 XOR, 3,306 AND and 4,683 OR. The generated line uses 773 registers. The step retains 11d961ad's exact polarity-specific mask-0x10 columns, adds the published mask-0x07 forms to the charged dry search, and uses the two-gate constant-one carry for opposite stored polarities. The prefix comes from a 241-evaluation coordinate descent charged at the fixed bound 241*2^28 = 64,692,944,896 word operations. All capacity, layout, Tp and probability-constant planner paths, including the C verifier's exhaustive scan, are separately charged 2^40 operations.",
+    "A batch costs 44,282 operations: 44,266 gates, a 12-operation AND checkpoint, and four operations to load, increment, store and branch on the batch counter. A passing batch is charged 29 more operations, including persistent-state loads and stores for the passing and next-limit checks. Limits are checked on passing batches, the main row charges B + 3,000 batches, and the probability proof charges failure if a check is later than 3,000 batches.",
+    "The table is a split quotient filter with 128,232 slots and capacity 128,231. Each 32-bit key slot has a 29-bit remainder and occupied, continuation and shifted bits; a separate fixed-width packed stream stores one 17-bit trail number per slot. Both streams are 256-bit-word aligned and occupy 785,440 bytes including their final padded words. The 16-bit quotient is implied by the run's home bucket. The maximum reachable trail number is 128,488, below 2^17. The exact 45-bit table-code alias union bound is included in H1's loss budget. Lookup and insertion have separate 8*S loop-body countdowns, and every finished trail is charged 2048*S operations for both bounded traversals.",
+    "Recovery stores both time-zero checkpoints, checks c_r before every compression, recomputes both trail lengths, stores at most 8,192 checkpoint pairs in the former table region, rejects endpoint aliases, already-aligned starts and equal predecessors, then uses at most 16 single-lane probes and one joint walk. Every loop has a halt. The exact total is 58,732,585,165,449,845,312,332,925,565,340,669,003,859 word operations. Division by C = 1,470 gives unrounded time_log2 124.909684496472; 124.90969 is the submitted upper bound.",
+    "The emitted image has 44,297 native four-byte XOR/AND/OR records, 1,558 native five-byte packed-recovery records and 1,335 conservative thirty-six-byte control records, for 233,038 bytes. The priced step executes four-byte records directly; there is no decoder, interpreter, expanded stream or decode buffer in any priced path. Python is a test-only byte-exact mirror. The control emitter resolves labels and virtual registers and emits primitive setup, cut, slice, quotient-filter, packed-field and recovery loops; 300 unreachable padding records cost memory but no operations. Persistent state is explicitly loaded from and stored to memory. All organizer experiments invoke the emitter and assert the census. Search memory is 233,038 bytes of code, 24,800 bytes for 775 registers, 5,248 bytes of packed lane metadata and state, 32 bytes of advice and 785,440 bytes for the table: 1,048,558 bytes. Setup memory is 374,014 bytes and includes the runtime emitter image, its stack and scratch.",
+    "The attempt uses one fresh uniform 256-bit word and no restart or amplification. Under H1, the stated lazy-sampled random-function experiment succeeds with probability at least 0.390000001. H1 is the only score-critical premise. H3 declares the 775-register addressable word RAM, direct zero-test branch and instruction encodings."
+  ],
+  "baseline_improved": "blake3-r7-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
+  "experiment_manifest": "experiments/manifest.json",
   "lane": "exploratory",
-  "heuristics": []
+  "heuristics": [
+    {
+      "id": "H1-random-function-model",
+      "role": "score-critical",
+      "statement": "Let F be a uniformly random function from 256-bit values to 256-bit values. For the fixed target walk g(x) = f(x) XOR q and the stated adaptive distinguished-point program, the probability that one real attempt succeeds is assumed to be at least the probability of the same program when every fresh evaluation is answered by lazy sampling from F. Fresh outputs are uniform and independent, the iterates have the random-mapping first-collision law, membership in the all-ones distinguished set has density 1968 / 2^122 independent of collisions, and every fresh adaptive evaluation has collision hazard 2^-256.",
+      "scope": "The fixed seven-round function on K || x, the fixed mask q, and one run of 339212420267776000000000000000000000000 evaluations over about 125555.97 trails.",
+      "extrapolation": "The experiments check the shipped emitter, target messages, split quotient filter and recovery, then compare one fixed width-20 restriction with calibrated shared lazy random mappings. They do not observe the 2^128-scale collision law.",
+      "evidence_ids": [
+        "experiment:bsrho-n18",
+        "experiment:proj-prefix-w256",
+        "experiment:h1-law-n20",
+        "proof:258-390"
+      ],
+      "limitations": "H1 is a declared premise about one fixed function, not a theorem. The random-function lower bound has only the stated numerical planning margin above 0.39."
+    },
+    {
+      "id": "H3-machine-convention",
+      "role": "supporting",
+      "statement": "The machine is a load/store word RAM with 256-bit words and 775 addressable registers. XOR, AND and OR records use a two-bit opcode and three ten-bit register fields in four bytes. The packed recovery circuit uses five-byte records with an eight-bit opcode and three ten-bit fields. Every control record is conservatively charged 36 bytes, enough for a full 256-bit immediate. Every executed primitive, load, store, comparison and branch is charged, and all code and data are memory.",
+      "scope": "The generated step, stage tests, handlers, split quotient filter, recovery, setup and runtime emitter.",
+      "extrapolation": "A machine without the declared addressable register file, zero-test branch or encodings needs a separate accounting. These are not fixed by the benchmark cost model.",
+      "evidence_ids": [
+        "proof:83-257",
+        "proof:322-365",
+        "experiment:proj-prefix-w256"
+      ],
+      "limitations": "H3 is an explicit machine convention. The proof gives a complete record census and memory layout for that convention."
+    }
+  ]
 }

@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "bsrho-n18",
+      "kind": "python-message-pairs-v1",
+      "scope": "The blake3-r7-prefix-v1 target with 64-byte messages K || x (one block, flags 11), where K is 0000008000000000000000800000000000000080000000000000000000000000. Before processing the request, the program runs the shipped control emitter and asserts its byte and record census. Each trial runs one attempt of the shipped 256-lane search at width 18, including the all-ones predicate, split AND test, split quotient filter and checkpoint recovery, and returns a pair or two nulls.",
+      "hypothesis": "Every returned pair is distinct and its complete seven-round digests agree in the low 18 bits. The program recovers a merge of two width-18 trails. Trial counts are program checks, not estimates of the width-256 premise.",
+      "program": "experiments/bsrho.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "ffff030000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "proj-prefix-w256",
+      "kind": "python-message-pairs-v1",
+      "scope": "The blake3-r7-prefix-v1 target with 64-byte messages K || x at full width 256, for the fixed K stated by bsrho-n18. Before processing the request, the program runs the shipped control emitter and asserts its byte and record census. Each trial evaluates 2048 points with the shipped 44,266-gate emitter, recovers complete digests from stored planes by XOR with q, and returns a low-21-bit pair or two nulls. The three deterministic sources are uniform points, counters and iterates.",
+      "hypothesis": "Every returned pair is distinct and its complete 7-round digests agree in the low 21 bits. The experiment checks the fixed prefix, bit-sliced circuit, output mask and message construction. Counts are program checks, not estimates of the width-256 premise.",
+      "program": "experiments/bsrho.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "ffff1f0000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "h1-law-n20",
+      "kind": "python-message-pairs-v1",
+      "scope": "The blake3-r7-prefix-v1 target and shipped emitter. All 64 observed groups iterate one fixed 20-bit coordinate restriction selected from all organizer request seeds. Each of 64 null ensembles uses one shared lazy random mapping for all 64 groups. Distinguished hits count only globally fresh inputs.",
+      "hypothesis": "Four first-collision bins must score no higher than 1.25 times the largest score in a 32-ensemble calibration set after a separate 32-ensemble fit. The globally-fresh distinguished-point z-score must remain within the larger of 4 and 1.25 times the largest calibration magnitude. This is reduced-width evidence only and does not prove H1.",
+      "program": "experiments/bsrho.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "ffff030000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    }
+  ]
+}
