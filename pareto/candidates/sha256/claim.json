@@ -1,20 +1,45 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha256-r37-prefix-v1",
+  "target_profile": "sha256-r64-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 37,
+  "rounds": 64,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 124.13694,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 20,
+    "preprocessing_log2": 46.41915,
     "success_probability": 0.39,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "sha256-r37-nominal-v2",
+  "restrictions": [
+    "Two distinct 64-byte messages in the proof's bijective W8..W15 family; standard IV, 64 steps on both padded blocks, feed-forward, and all 256 digest bits.",
+    "The walk is the published walk-B state encoding XOR the published q. Equal walk outputs imply equal complete digests.",
+    "The kernel has 86375 fixed 32-bit records. Each record has a 2-bit XOR/AND/OR opcode and three 10-bit register fields. No variable-length or entropy-coded stream is used.",
+    "The full-key index table stores 99529 trails in 99787 slots. Each slot has the complete 46-bit key and one written bit. Slot position implies the trail number. The exact false-key term is charged.",
+    "Exact N=114868255753785546361703403245970871071387; log2(N/4912)=124.13693720423046990885048791749964405919423128465415038950831959937271239711881; the claim rounds upward to 124.13694.",
+    "Peak memory is 1048573 bytes and setup peak is 765907 bytes. Every opcode, register, key, slot, and table boundary is checked.",
+    "The normative C source SHA-256 is 71ff2359a1a531e000bcc4f3b73fcea18b519ca5954593b712eedc175230730f, stripped wasm SHA-256 is d4928b7973f29e308fe18b4080b34a23447b5dff8896f44622adf9b58d3d5cad, and emitted SLP SHA-256 is 0c9e0356c48cc1a7f4f8c143822517aa59d4c6a08a9e96d560381e8fbc79adc4. The organizer executes the byte-exact Python mirror.",
+    "Both offline searches are charged by structural envelopes. H1 is the only score-critical premise and is declared, not proved.",
+    "Credited derivative of 7523902c-ff00-468e-8214-fa0cfdeaa4ef, d22ae1b2-2368-460a-b6d4-1e5e37ceb735, 95263e47-d61b-43a6-bb46-30ced2488280, and their same-challenge lineage."
+  ],
+  "baseline_improved": "sha256-r64-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  "experiment_manifest": "experiments/manifest.json",
+  "heuristics": [
+    {
+      "id": "H1-random-function-model",
+      "role": "score-critical",
+      "statement": "The fixed walk succeeds at least as often as the exact bounded attempt against a lazy-sampled uniformly random 256-bit function, including its adaptive 2^-256 collision hazard and independent DP lottery.",
+      "scope": "The sha256-r64-prefix-v1 target, the proof's 64-byte message family, about 2^128 evaluations, and 256 trails.",
+      "extrapolation": "Experiments test code and reduced-width events. Extrapolation to the full attempt is by H1 only.",
+      "evidence_ids": [
+        "experiment:bssha-n16",
+        "experiment:proj-k0-w256",
+        "proof:1-240"
+      ],
+      "limitations": "H1 is not a theorem. The experiments do not observe a full-width collision or estimate the claimed success probability."
+    }
+  ],
+  "submission_state": "ready",
+  "lane": "exploratory"
 }

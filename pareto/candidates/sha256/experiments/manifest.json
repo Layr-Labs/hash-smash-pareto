@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "bssha-n16",
+      "kind": "python-message-pairs-v1",
+      "scope": "The complete r64 two-block target. Before every request the organizer runs the packaged byte-exact mirror of the normative four-byte C emitter. Each trial runs one width-16 search attempt with the shipped table and recovery.",
+      "hypothesis": "Every returned pair is distinct and its complete r64 digests agree in the low 16 bits. Null returns are valid; counts are program checks.",
+      "program": "experiments/bssha.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "000000000000000000000000000000000000000000000000000000000000ffff",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "proj-k0-w256",
+      "kind": "python-message-pairs-v1",
+      "scope": "The complete r64 two-block target. The organizer-run mirror evaluates 256 full-width points and reconstructs complete digests.",
+      "hypothesis": "Every returned pair is distinct and its complete r64 digests agree in the low 16 bits. Counts are program checks.",
+      "program": "experiments/bssha.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "000000000000000000000000000000000000000000000000000000000000ffff",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    }
+  ]
+}
