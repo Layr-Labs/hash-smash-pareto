@@ -1,3 +1,2034 @@
-# Organizer draft
+# SHA3-256 round 7: compact-controller distinguished-point search
 
-Not a submission or qualified baseline. See ../../README.md.
+## 1. Target and construction
+
+The target is `sha3-256-r7-prefix-v1`: the complete padded one-block SHA3-256 hash with the first 7 Keccak-f[1600] rounds.  For a 256-bit point u split into four little-endian 64-bit words, the injective six-lane embedding writes u0,u1,u0 xor u1 xor K11 to lanes 1,6,11 and u2,u3,u2 xor u3 xor K14 to lanes 4,9,14.  All other lanes, including the `0x8000000000000006` padding lane, are fixed by the constants in the shipped generator.  Define g(u)=H_r(m(u)) xor PD.  Distinct points colliding under g give distinct 128-byte messages colliding under the complete target; xoring the same PD is bijective.
+
+The shipped experiment source contains the frozen decisions and a bounded generator for the retained incumbent step.  It emits the native packed program and compares a Python test mirror with scalar selected-round Keccak.  The normalized plan text has SHA-256 `872976569c57282f5d6e76c6ef3ce24119b016cedbce0aac601d332abb3374a8`.  No step, graph, allocation, polarity or encoding rule is imported at run time.
+
+## 2. Step ISA and exact count
+
+One bit-sliced word represents 256 walks.  The declared word-RAM machine includes `fixed5` as its native static instruction format, with the opcode and fixed-width register fields stated in Appendix B.  XOR, AND, OR and NOT each cost one word operation, so the native step has 33,215 executed instructions.  Each native record is charged as the one word operation it performs; there is no separate charge for fetching or decoding.  Python and C unpackers are test mirrors outside the priced machine.  They do not execute in the search and contribute no hidden decoder to BSTEP.  The 15-operation distinguished-point prefilter and five native loop/control operations give BSTEP=33,235.  The frozen construction work is charged in Section 7.
+
+The source bindings are:
+- `experiments/compact.py`: SHA-256 `ae24c2964bb63204c39fd54acafc274e8c997efb34a00c8cf98b4cbd7a784cbd`.
+
+## 3. Compact controller and table
+
+The retained controller is rewritten in the same 32-byte fixed instruction format.  On a hit, 256 stores copy the carried planes to a 256-word scratch matrix.  A charged indexed gather loop reads one point; a charged indexed setwalk loop replaces one lane; 256 fixed loads restore the planes.  The static controller has 964 instructions and 30,848 bytes, SHA-256 `266f44df032ce1d10741784ec2f1ed48b909ab87dd7e01bc9d142be234ecd03a`.  Appendix C is the normative emitter.  The organizer experiment invokes it, requires this byte count and hash, decodes the emitted bytes and executes setup, evalF, table probe, restart, scratch gather/setwalk, replay success, recovery and replay failure.
+
+The table has 23,632 256-bit words and 4 slots per word, capacity U=94,528.  The effective endpoint key width is 46 bits.  Each 64-bit slot contains one written bit, 46 endpoint-key bits and a 17-bit stored trail number.  All boundary values are checked by the shipped experiment.
+
+## 4. Search algorithm
+
+Choose one uniform 256-bit r.  Start 256 walks at r+i.  Advance in lockstep with the bit-sliced step.  A point is distinguished with exact probability theta=726/2^121.  At each distinguished point the controller gathers the endpoint, probes every table word, inserts or replays a matching pair, then restarts the affected lane.  The replay cap is LRC=39282590625172486808280587279794176; Tb=1325913257825164395830610567679180800; the replay has 61977 bins of width 633825300114114700748351602688.  The first real predecessor collision is returned and converted to the two messages.
+
+## 5. Probability space and H1
+
+For comparator F, lazy sampling supplies an independent uniform image at each fresh input.  Put `n=2^256`, `q=1-theta`, `E=256*Tb`, replay-bin width `w=633825300114114700748351602688`, and `J=61977`.  The birthday lower bound after e evaluations is `G(e)=1-exp(-e(e-1)/(2n))`.  If the first image coincidence needs a tail in bin j to reach the common distinguished point, its covered contribution is
+
+```
+SUM_(j=1..J) (q^((j-1)w)-q^(jw)) * G(256*(Tb-jw)).
+```
+
+The union subtraction covers every early halt or false candidate:
+
+- `F6`, replay-cap refusal.  Summation by parts gives `G6=q^LRC*(1+LRC*theta)`.  The bound is `2*G6*(1-exp(-E^2/(2n)-E^3/(3n^2)))*(1-E/n)^(-U)`.
+- `F2`, table exhaustion.  With `mu=E*theta` and `k=U-256`, Chernoff gives `exp(-mu+k*(1+ln(mu/k)))` for at least k post-initial distinguished outputs.
+- `F3`, a self-coincidence inside one trail.  The union bound is `U/(theta^2*n)`.
+- Start/replay coincidence is bounded by `2^-90`.
+- Endpoint-key alias is `U^2*2^-(key_bits+1)`.  This is charged at the live effective key width 46.
+- `F5`, hit-cap abort.  In one lockstep step a prefilter hit requires at least one of 256 fresh images to have its top 16 bits zero, so its conditional probability is at most `256*2^-16=2^-8`.  These indicators are dominated by a binomial variable of mean `Tb/2^8`.  With `delta=2^-20` and emitted cap `floor((1+delta)*Tb/2^8)+1=5179353602791344399328806017433601`, multiplicative Chernoff gives `exp(-delta^2*Tb/(2^8*(2+delta))) < 2^-1000`.
+- Decimal and formula rounding receives a further `2^-60` subtraction.
+
+Subtracting the upper endpoints of all seven failure intervals from the lower endpoint of the covered term is one union bound.  The outward-rounded result is `0.3900000002190494612840076994362468154212837489556686220987074267138371342552258979122443772116049632`, at least 0.39.  At `Tb-2475880078570760549798248448` the outward upper endpoint is `0.3899999990947843576495381188426910976777911902471834285811507694209594342557313349604867192404642828`, below 0.39.  Thus the live Tb is the first admitted grid point.
+
+The certificate intervals are:
+
+| term | lower | upper |
+|---|---:|---:|
+| covered success | 0.3902776840438017235259576989488082772985820470760263795429000859525958421892778697301623547457415295 | 0.3902776840438017235259576989488082772985820470760263795429000859525958421892778697301623547457415297 |
+| replay-cap refusal F6 | 0.0002016015237550126496731576212067632560358410217843070097871031835147821332973123021717646825594881183 | 0.0002016015237550126496731576212067632560358410217843070097871031835147821332973123021717646825594881185 |
+| table exhaustion F2 | 0.000001645152303414084329398451812596032781378911304105681934084528889863177300032318539877214021962663800 | 0.000001645152303414084329398451812596032781378911304105681934084528889863177300032318539877214021962663802 |
+| self-coincidence F3 | 0.00001094629854138682087592681131373843620274874970592476227337234099067307181507031244071063755511539132 | 0.00001094629854138682087592681131373843620274874970592476227337234099067307181507031244071063755511539134 |
+| start/replay collision | 8.077935669463160887416100508495730991853633895516395568847656249999999999999999999999999999999999999E-28 | 8.077935669463160887416100508495730991853633895516395568847656250000000000000000000000000000000000001E-28 |
+| endpoint alias | 0.00006349085015244781970977783203124999999999999999999999999999999999999999999999999999999999999999999999 | 0.00006349085015244781970977783203125000000000000000000000000000000000000000000000000000000000000000000001 |
+| hit cap F5 | 9.332636185032188789900895447238171696170914463717080246217143397959669109757756344544403270978811023E-302 | 9.332636185032188789900895447238171696170914463717080246217143397959669109757756344544403270978811025E-302 |
+| numeric rounding | 8.673617379884035472059622406959533691406249999999999999999999999999999999999999999999999999999999999E-19 | 8.673617379884035472059622406959533691406250000000000000000000000000000000000000000000000000000000001E-19 |
+
+The organizer certificate manifest can declare only `hash-collision-witness-v2` objects.  This probability certificate is therefore not mislabeled as a collision witness.  It is embedded here and in the canonical `success-certificate` organizer experiment, which recomputes the covered sum and all failure terms at 100-digit precision, checks every outward interval and requires the union lower endpoint to reach 0.39.  Its plan binding is SHA-256 `872976569c57282f5d6e76c6ef3ce24119b016cedbce0aac601d332abb3374a8`.
+
+### Appendix A certificate record
+
+```json
+{
+  "computed_bound": "0.3900000002190494612840076994362468154212837489556686220987074267138371342552258979122443772116049634",
+  "computed_previous": "0.3899999990947843576495381188426910976777911902471834285811507694209594342557313349604867192404642826",
+  "covered_success": {
+    "lower": "0.3902776840438017235259576989488082772985820470760263795429000859525958421892778697301623547457415295",
+    "upper": "0.3902776840438017235259576989488082772985820470760263795429000859525958421892778697301623547457415297"
+  },
+  "failure_intervals": {
+    "endpoint_alias": {
+      "lower": "0.00006349085015244781970977783203124999999999999999999999999999999999999999999999999999999999999999999999",
+      "upper": "0.00006349085015244781970977783203125000000000000000000000000000000000000000000000000000000000000000000001"
+    },
+    "hit_cap_F5": {
+      "lower": "9.332636185032188789900895447238171696170914463717080246217143397959669109757756344544403270978811023E-302",
+      "upper": "9.332636185032188789900895447238171696170914463717080246217143397959669109757756344544403270978811025E-302"
+    },
+    "numeric_rounding": {
+      "lower": "8.673617379884035472059622406959533691406249999999999999999999999999999999999999999999999999999999999E-19",
+      "upper": "8.673617379884035472059622406959533691406250000000000000000000000000000000000000000000000000000000001E-19"
+    },
+    "replay_cap_F6": {
+      "lower": "0.0002016015237550126496731576212067632560358410217843070097871031835147821332973123021717646825594881183",
+      "upper": "0.0002016015237550126496731576212067632560358410217843070097871031835147821332973123021717646825594881185"
+    },
+    "self_coincidence_F3": {
+      "lower": "0.00001094629854138682087592681131373843620274874970592476227337234099067307181507031244071063755511539132",
+      "upper": "0.00001094629854138682087592681131373843620274874970592476227337234099067307181507031244071063755511539134"
+    },
+    "start_replay_collision": {
+      "lower": "8.077935669463160887416100508495730991853633895516395568847656249999999999999999999999999999999999999E-28",
+      "upper": "8.077935669463160887416100508495730991853633895516395568847656250000000000000000000000000000000000001E-28"
+    },
+    "table_exhaustion_F2": {
+      "lower": "0.000001645152303414084329398451812596032781378911304105681934084528889863177300032318539877214021962663800",
+      "upper": "0.000001645152303414084329398451812596032781378911304105681934084528889863177300032318539877214021962663802"
+    }
+  },
+  "key_bits": 46,
+  "parameters": {
+    "DK": 10,
+    "DPLO": 145,
+    "DT": 726,
+    "HF": 111,
+    "J": 61977,
+    "LRC": 39282590625172486808280587279794176,
+    "Tb": 1325913257825164395830610567679180800,
+    "W": 633825300114114700748351602688,
+    "granularity": 2475880078570760549798248448
+  },
+  "plan_sha256": "872976569c57282f5d6e76c6ef3ce24119b016cedbce0aac601d332abb3374a8",
+  "previous_grid_upper": "0.3899999990947843576495381188426910976777911902471834285811507694209594342557313349604867192404642828",
+  "round": 7,
+  "rounding": "100-digit Decimal; every published endpoint moved one representable value outward",
+  "schema": "hashsmash-random-function-success-v1",
+  "target": "0.39",
+  "trails": 94528,
+  "union_lower": "0.3900000002190494612840076994362468154212837489556686220987074267138371342552258979122443772116049632"
+}
+```
+
+H1 is solely the aggregate comparison stated in claim.json; all independence and conditional statements in this section concern comparator F, never deterministic g.
+
+## 6. Memory
+
+The retained non-table, non-controller regions total 253,190 bytes.  They comprise the native step/prefilter, its declared register file, 256 lane identifiers, 256 lane starts, walk state and the 16-word replay data image.  The compact controller is 30,848 bytes, scratch is 8,192 bytes and the table is 756,224 bytes.  Total peak search memory is therefore 253190+30848+8192+756224=1,048,454 bytes, below 2^20.  The bounded generator is scheduled before search; its outputs are retained and its scratch is below the same peak.
+
+## 7. Exact operations and score
+
+Main work is Tb*BSTEP.  The exact ledger is:
+
+- main: 44066727123819338695430342216817573888000
+- replay: 227799743035375251001219125635526426703
+- rare handlers/setup: 668136614760083427513416054766748403
+- preprocessing: 639935714496512
+- N: 44295195003469474029859075398443581559618
+
+The frozen plan text has SHA-256 `872976569c57282f5d6e76c6ef3ce24119b016cedbce0aac601d332abb3374a8`. Every construction phase runs before the search. Target permutations and word operations are accounted separately:
+
+| construction phase | operation class | target permutations | word operations | compression equivalent |
+|---|---|---:|---:|---:|
+| frozen constants, polarity plan and native-step generation | word operations | 0 | 76917041598464 | 76917041598464/1897 |
+| exact compact-table and Tb replan | word operations | 0 | 562949953421312 | 562949953421312/1897 |
+| controller emission, packing, hashing and package checks | word operations | 0 | 68719476736 | 68719476736/1897 |
+
+Total preprocessing is 0 target permutations plus 639935714496512 word operations, or exactly 639935714496512/1897 target-compression units. The total N below keeps it in word operations and divides by C only once.
+
+The exact replan charge covers at most 64 float evaluations over J bins at 2^16 word operations per bin, four 80-digit Decimal evaluations at 2^24 per bin, and 2^32 fixed work; it is rounded upward to 2^49. Controller construction is rounded upward to 2^36 and covers record emission, packing, SHA-256, decoding tests, path tests and manifest generation.
+
+Every executed controller record costs one operation except PERM, which costs C=1897.  Division by C and upward five-decimal rounding gives time_log2 124.13478; the unrounded value is 124.13477004055539834310819973862789091803938247318750427671180543859305218211620.
+
+## 8. Support, sensitivity and credit
+
+The generic parallel collision method is supported by Paul C. van Oorschot and Michael J. Wiener, “Parallel Collision Search with Cryptanalytic Applications,” Journal of Cryptology 12(1):1–28 (1999), DOI 10.1007/PL00003816.  The generic entries in this track use the same aggregate random-function premise.  This construction selects no differential and claims no weakness in Keccak.  A collision-hazard deficit of epsilon can be priced by replacing the comparator pair hazard by (1-epsilon) times its value and rerunning the exact certificate; the certificate is monotone in this factor, while all circuit and memory ledgers stay unchanged.
+
+This is a credited derivative of incumbent `e7fe95a2-5537-475f-a55c-5eb0004b73c8` at round 7 and of our compact-controller round-24 entry `911bffce-8e7a-4502-90ab-c69a473fff48`.  The incumbent's step, native encoding, embedding and replay design are preserved; the controller/table graft and this package are new.  All needed constants, decisions, executors and checks are shipped here, so no proof step defers to another submission.
+
+## 9. Reproduction
+
+The organizer runs the single canonical `experiments/compact.py` only in its bounded networkless sandbox.  For the retained-step experiment ids it regenerates the native program and checks scalar Keccak.  For `exact-controller` it invokes Appendix C, emits and hashes the controller, decodes and executes those exact bytes, checks table boundaries, evaluates g on full-width points and exercises success and failure paths.  For `success-certificate` it recomputes Appendix A.  Candidate-local checks bind every number above to the frozen live-plan record.
+
+## Appendix B. Frozen native-step generator and test mirror
+
+The canonical organizer source stores this text with LZMA solely to remain inside the 64 KiB experiment-source budget.  This readable copy is normative for the retained step.
+
+```python
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import sys, json, hashlib
+
+M64 = (1 << 64) - 1
+RCA = [0x1, 0x8082, 0x800000000000808A, 0x8000000080008000, 0x808B, 0x80000001, 0x8000000080008081, 0x8000000000008009,
+       0x8A, 0x88, 0x80008009, 0x8000000A, 0x8000808B, 0x800000000000008B, 0x8000000000008089, 0x8000000000008003,
+       0x8000000000008002, 0x8000000000000080, 0x800A, 0x800000008000000A, 0x8000000080008081, 0x8000000000008080,
+       0x80000001, 0x8000000080008008]
+ROT = [[0, 36, 3, 41, 18], [1, 44, 10, 45, 2], [62, 6, 43, 15, 61], [28, 55, 25, 21, 56], [27, 20, 39, 8, 14]]
+NR = 7                         
+PLAN = """
+trial 0
+nr 7 optmode 3 trick 1 lasttrick 1 notfold 0
+F1 ffffffffff8ffeff0100000000000000000000000018010000000000000000000200000000d00000
+G1 00000000000000000000000000000000000000000000000000000000000000000000000000000000
+FG 2 000000480000809000000005000000128400001020000000000006211280200818c22000438c0211 60800a58188860100000044050800300600c410000001082002888400003108c0000000180020480
+FG 3 0a0a8011020000000001092d0440204801020002285082084000004010042001070c0400500c0022 081040000819100200e080204180008510000a0023810000a800020000818008004000a002184069
+FG 4 0804800004081d444000300046004000400040000000040001000501407000050290008000000010 000010a088301184810400000801200c80040200040ac61010000016024001809510280808008000
+FG 5 448020480020604b00014000008000008000308002801128040c9060238104004880208889001000 00180401800020c40810c00300200000001064808400c00810054000366002002140040208089030
+FG 6 00000004000000000090001000000000000040001800000000000010000000002000000000000000 00000002008000404100000800000000000000000000000000034400400a00000000000140020000
+PHI 0 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+PHI 1 0000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+PHI 2 0000000000000000000100000000000000000000000002000040000000002000000001000020008000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000080000200022100000008000000000000804000000000000000000400004000004000001000000000000000000000000000000000000001000000000002000004000000800000000000000000000000000000000
+PHI 3 0010010000000000010000000000000800000000000000000000000000000000000000080000000000000000040000002020000000000001000000000000020002000000000000000000000000000000000000000000000300000000000100000000000000000000000040000018000000010000800000080000000000000000010000000000000000000000000000000008000000000000000008000000000000000000000000000000000100000000000000001000000001000200000000000000000000000000
+PHI 4 0000020000000000000000000000000000000000000000000000000000400000000000000000000000000000000000800020000000400000000000000000000200000001000000000000040080000000000040000000000000000000000000000000000000000000000000040000000000040000000000000000000000080000000000000000000000000000000000000000001000000000001000000000000000000000000000000000000000000000000400000000000000000000000000000000800080000000
+PHI 5 0000000000000000000000000000000800000000000004004000000000000000000000000000000000000000000000000000000000000002000004000000000000000000000000000000000000000000410040000000000000020000000000002080000010000000000000000000000000000800000000000000000000000800000000000000000000010000400000000000010000010000004000000000000000000000800008000002000002000000000000000000000400000000000002000000000000000000
+PHI 6 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+"""
+PL = {}
+for _ln in PLAN.strip().split("\n"):
+    _t = _ln.split()
+    if _t[0] in ("trial", "F1", "G1"): PL[_t[0]] = _t[1]
+    elif _t[0] == "FG": PL[("FG", int(_t[1]))] = (_t[2], _t[3])
+    elif _t[0] == "PHI": PL[("PHI", int(_t[1]))] = _t[2]
+TRIAL = int(PL["trial"])            
+PROG_SHA256 = "bba94fdf69e855344c247b7a36f6018e925108379e3896f52364d5ad49c05c60"
+NINSTR = 33215
+NREG = 2304
+NC = -1
+O_IN, O_XOR, O_AND, O_OR, O_NOT = 0, 1, 2, 3, 4
+
+
+def consts(trial):
+    
+    K = [0x0000000000000000, 0xffffffffffffffff, 0xffffffffffffffff, 0x0000000000000000, 0xffffffffffffffff, 0xffffffffffffffff, 0x8000000000000006, 0x0000000000000000, 0x0000000000000000, 0x0000000000000000, 0xffffffffffffffff, 0x0000000000000000, 0x0000000000000000, 0xffffffffffffffff, 0xffffffffffffffff, 0xffffffffffffffff] + [0] * 9
+    K[16] = 0x8000000000000006
+    return K
+
+
+KL = consts(TRIAL)
+
+
+
+class Gen:
+    def __init__(self):
+        self.op, self.a, self.b, self.k, self.lin = [], [], [], [], []
+        self.form, self.fidx, self.cons = [], {}, {}
+
+    def new(self, op, a, b):
+        self.op.append(op); self.a.append(a); self.b.append(b); self.k.append(0); self.lin.append(-1)
+        return len(self.op) - 1
+
+    def consn(self, op, a, b):
+        if op != O_NOT and a > b: a, b = b, a
+        key = (op, a, b)
+        n = self.cons.get(key)
+        if n is None:
+            n = self.new(op, a, b); self.cons[key] = n
+        return n
+
+    def fadd(self, m, node):
+        f = len(self.form); self.form.append((m, node)); self.fidx[m] = f
+        return f
+
+    def xorv(self, a, b):
+        if a[0] == NC: return (b[0], b[1] ^ a[1])
+        if b[0] == NC: return (a[0], a[1] ^ b[1])
+        if a[0] == b[0]: return (NC, a[1] ^ b[1])
+        la, lb = self.lin[a[0]], self.lin[b[0]]
+        if la >= 0 and lb >= 0:
+            m = self.form[la][0] ^ self.form[lb][0]
+            kk = self.k[a[0]] ^ self.k[b[0]]
+            if m == 0: return (NC, kk ^ a[1] ^ b[1])
+            f = self.fidx.get(m)
+            if f is not None:
+                n3 = self.form[f][1]
+                return (n3, kk ^ a[1] ^ b[1] ^ self.k[n3])
+            n = self.new(O_XOR, min(a[0], b[0]), max(a[0], b[0]))
+            self.k[n] = kk; self.lin[n] = self.fadd(m, n)
+            return (n, a[1] ^ b[1])
+        return (self.consn(O_XOR, a[0], b[0]), a[1] ^ b[1])
+
+    def notv(self, a):
+        if a[0] == NC: return a
+        before = len(self.op)
+        n = self.consn(O_NOT, a[0], 0)
+        if len(self.op) > before and self.lin[a[0]] >= 0:
+            self.lin[n] = self.lin[a[0]]; self.k[n] = self.k[a[0]] ^ 1
+        return (n, a[1] ^ 1)
+
+    def and2(self, a, b, sel=0):
+
+        if a[0] == NC: return b if a[1] else (NC, 0)
+        if b[0] == NC: return a if b[1] else (NC, 0)
+        if a[0] == b[0]: return a if a[1] == b[1] else (NC, 0)
+        if a[1] == 0 and b[1] == 0: return (self.consn(O_AND, a[0], b[0]), 0)
+        if a[1] == 1 and b[1] == 1: return (self.consn(O_OR, a[0], b[0]), 1)
+        A, B = (a[0], b[0]) if a[1] == 0 else (b[0], a[0])
+        if sel:
+            na = self.notv((A, 0))
+            return (self.consn(O_OR, na[0], B), 1)
+        t = self.consn(O_AND, A, B)
+        return self.xorv((A, 0), (t, 0))
+
+
+def cost_term(b1, b2):
+    if b1[0] == NC or b2[0] == NC or b1[0] == b2[0]: return 0
+    return 1 if (b1[1] ^ 1) == b2[1] else 2
+
+
+def row_choose(b, need):
+
+    distinct = all(v[0] != NC for v in b) and len(set(v[0] for v in b)) == 5
+    best, bc, bj = -1, 1 << 30, -1
+    for j in range(-1, 5 if distinct else 0):
+        if j >= 0 and not ((need >> j) & 1 and (need >> ((j + 1) % 5)) & 1): continue
+        for s in range(32):
+            c = 0; bb = list(b)
+            for X in range(5):
+                if s >> X & 1:
+                    if b[X][0] == NC: c = 1 << 29
+                    else: bb[X] = (b[X][0], b[X][1] ^ 1); c += 1
+            for X in range(5):
+                if need >> X & 1:
+                    if X == j:
+                        k = (j + 1) % 5; p1, p2 = bb[(k + 1) % 5], bb[(k + 2) % 5]
+                        if (p1[1] ^ 1) == p2[1]: c += cost_term((bb[k][0], bb[k][1] ^ (p1[1] ^ 1)), bb[(X + 2) % 5])
+                        else: c += 1                                   
+                    else: c += cost_term(bb[(X + 1) % 5], bb[(X + 2) % 5])
+            if c < bc: bc, best, bj = c, s, j
+    return best, bj
+
+
+TAB = {}
+for _L in (0, 1):
+    for _p in range(32):
+        TAB[(_L, _p)] = row_choose([(X, (_p >> X) & 1) for X in range(5)], 0x0F if _L else 0x1F)
+
+
+def bits(h, n):
+    v = int.from_bytes(bytes.fromhex(h), "little")
+    return [(v >> i) & 1 for i in range(n)]
+
+
+def build():
+    g = Gen()
+    for j in range(256):
+        n = g.new(O_IN, 0, 0); g.lin[n] = g.fadd(1 << j, n)
+    S = [[(NC, (KL[l] >> z) & 1) for z in range(64)] for l in range(25)]
+    for z in range(64):
+        S[1][z] = (z, (KL[1] >> z) & 1); S[6][z] = (64 + z, (KL[6] >> z) & 1)
+        S[4][z] = (128 + z, (KL[4] >> z) & 1); S[9][z] = (192 + z, (KL[9] >> z) & 1)
+    for z in range(64):
+        S[11][z] = g.xorv(g.xorv((z, 0), (64 + z, 0)), (NC, (KL[11] >> z) & 1))
+        S[14][z] = g.xorv(g.xorv((128 + z, 0), (192 + z, 0)), (NC, (KL[14] >> z) & 1))
+    for r in range(NR):
+        last = r == NR - 1
+        if r == 1: ff, gg = bits(PL["F1"], 320), bits(PL["G1"], 320)
+        elif r >= 2: ff, gg = bits(PL[("FG", r)][0], 320), bits(PL[("FG", r)][1], 320)
+        else: ff = gg = [0] * 320
+        phi = bits(PL[("PHI", r)], 1600)
+        C = [[None] * 64 for _ in range(5)]
+        D_ = [[None] * 64 for _ in range(5)]
+        for x in range(5):
+            s = S[x][63]
+            for y in range(1, 5): s = g.xorv(s, S[x + 5 * y][63])
+            C[x][63] = g.notv(s) if gg[x * 64 + 63] else s
+        for z in range(64):
+            if z < 63:
+                for x in range(5):
+                    s = S[x][z]
+                    for y in range(1, 5): s = g.xorv(s, S[x + 5 * y][z])
+                    C[x][z] = g.notv(s) if gg[x * 64 + z] else s
+            for x in range(5):
+                D_[x][z] = g.xorv(C[(x + 4) % 5][z], C[(x + 1) % 5][(z + 63) & 63])
+                if ff[x * 64 + z]: D_[x][z] = g.notv(D_[x][z])
+        NS = [row[:] for row in S]
+        nY, need = (1, 0x0F) if last else (5, 0x1F)
+        for Y in range(nY):
+            for z in range(64):
+                b = []
+                for X in range(5):
+                    y, x = X, (3 * Y + X) % 5
+                    zz = (z - ROT[x][y]) & 63
+                    b.append(g.xorv(S[x + 5 * y][zz], D_[x][zz]))
+                if all(v[0] != NC for v in b) and len(set(v[0] for v in b)) == 5:
+                    best, bj = TAB[(int(last), sum(v[1] << X for X, v in enumerate(b)))]
+                else:
+                    best, bj = row_choose(b, need)
+                for X in range(5):
+                    if best >> X & 1: b[X] = g.notv(b[X])
+                k = (bj + 1) % 5
+                if bj >= 0:                                          
+                    p1, p2 = b[(k + 1) % 5], b[(k + 2) % 5]
+                    sel = ((b[(bj + 2) % 5][1] ^ 1) ^ b[k][1]) if (p1[1] ^ 1) != p2[1] else 0
+                    NS[k + 5 * Y][z] = g.xorv(b[k], g.and2((p1[0], p1[1] ^ 1), p2, sel))
+                for X in range(5):
+                    if need >> X & 1:
+                        if bj >= 0 and X == k: continue
+                        t1 = NS[k + 5 * Y][z] if X == bj else b[(X + 1) % 5]     
+                        t = g.and2((t1[0], t1[1] ^ 1), b[(X + 2) % 5], phi[(X + 5 * Y) * 64 + z])
+                        NS[X + 5 * Y][z] = g.xorv(b[X], t)
+        for z in range(64):
+            NS[0][z] = (NS[0][z][0], NS[0][z][1] ^ ((RCA[r] >> z) & 1))
+        S = NS
+    out = [S[j >> 6][j & 63] for j in range(256)]
+    PD = 0
+    for j, v in enumerate(out):
+        assert v[0] != NC and v[0] >= 256
+        PD |= v[1] << j
+    return g, [v[0] for v in out], PD
+
+
+def allocate(g, outn):
+    nn = len(g.op)
+    live = [False] * nn
+    for n in outn: live[n] = True
+    for i in range(nn - 1, 255, -1):
+        if live[i]:
+            live[g.a[i]] = True
+            if g.op[i] != O_NOT: live[g.b[i]] = True
+    last = [0] * nn
+    for i in range(256, nn):
+        if live[i]:
+            last[g.a[i]] = i
+            if g.op[i] != O_NOT: last[g.b[i]] = i
+    outj = {}
+    for j, n in enumerate(outn): last[n] = 0xFFFF; outj[n] = j
+    outdef = list(outn)
+    reg = [0] * nn
+    busy = [False] * NREG
+    free = list(range(NREG - 1, 255, -1))
+    for j in range(256):
+        reg[j] = j
+        if last[j]: busy[j] = True
+    code, prog, peak = {O_XOR: 0, O_AND: 1, O_OR: 2, O_NOT: 3}, [], 0
+    for i in range(256, nn):
+        if not live[i]: continue
+        op, a = g.op[i], g.a[i]
+        b = a if op == O_NOT else g.b[i]
+        for k, o in enumerate((a, b)):
+            if k == 1 and o == a: break
+            if last[o] == i:
+                r = reg[o]; busy[r] = False
+                if r >= 256: free.append(r)
+        if i in outj:
+            d = outj[i]; assert not busy[d]
+        elif free:
+            d = free.pop()
+        else:
+            d = next(r for r in range(256) if not busy[r] and outdef[r] >= last[i])
+        busy[d] = True; reg[i] = d; peak = max(peak, d + 1)
+        prog.append((code[op], d, reg[a], 0 if op == O_NOT else reg[g.b[i]]))
+    return prog, peak
+
+
+def encode(prog):
+    out = bytearray()
+    for c, d, a, b in prog:
+        out += (c | d << 3 | a << 15 | b << 27).to_bytes(5, "little")
+    return bytes(out)
+
+
+def compile_prog(prog):
+
+    P = tuple(prog)
+
+    def step(R, A):
+        for c, d, a, b in P:
+            if c == 0: R[d] = R[a] ^ R[b]
+            elif c == 1: R[d] = R[a] & R[b]
+            elif c == 2: R[d] = R[a] | R[b]
+            else: R[d] = R[a] ^ A
+    return step
+
+
+
+def _perm_src():
+
+    L = ["def perm(a, rounds):", " " + ",".join("a%d" % i for i in range(25)) + " = a", " for rc in RCA[:rounds]:"]
+    for x in range(5): L.append("  c%d = a%d ^ a%d ^ a%d ^ a%d ^ a%d" % (x, x, x + 5, x + 10, x + 15, x + 20))
+    for x in range(5): L.append("  d%d = c%d ^ (((c%d << 1) | (c%d >> 63)) & M64)" % (x, (x + 4) % 5, (x + 1) % 5, (x + 1) % 5))
+    for x in range(5):
+        for y in range(5):
+            r = ROT[x][y]; i = x + 5 * y; o = y + 5 * ((2 * x + 3 * y) % 5)
+            L.append("  v = a%d ^ d%d; b%d = %s" % (i, x, o, "(((v << %d) | (v >> %d)) & M64)" % (r, 64 - r) if r else "v"))
+    for y in range(5):
+        for x in range(5):
+            L.append("  a%d = b%d ^ (~b%d & b%d)" % (x + 5 * y, x + 5 * y, (x + 1) % 5 + 5 * y, (x + 2) % 5 + 5 * y))
+    L.append("  a0 ^= rc")
+    L.append(" a[:] = [" + ",".join("a%d" % i for i in range(25)) + "]")
+    L.append(" return a")
+    return "\n".join(L)
+
+
+exec(compile(_perm_src(), "perm", "exec"))
+
+
+def digest(msg, rounds=NR):
+    blk = bytearray(136 * (len(msg) // 136 + 1)); blk[:len(msg)] = msg
+    blk[len(msg)] ^= 6; blk[-1] ^= 0x80
+    st = [0] * 25
+    for o in range(0, len(blk), 136):
+        for i in range(17): st[i] ^= int.from_bytes(blk[o + 8 * i:o + 8 * i + 8], "little")
+        perm(st, rounds)
+    return b"".join(st[i].to_bytes(8, "little") for i in range(4))
+
+
+def msg_of(u):
+    l = [KL[i] for i in range(16)]
+    u0, u1, u2, u3 = [(u >> (64 * i)) & M64 for i in range(4)]
+    l[1], l[6], l[11], l[4], l[9], l[14] = u0 ^ KL[1], u1 ^ KL[6], u0 ^ u1 ^ KL[11], u2 ^ KL[4], u3 ^ KL[9], u2 ^ u3 ^ KL[14]
+    return b"".join(v.to_bytes(8, "little") for v in l)
+
+
+def F_ref(u, PD):
+    return int.from_bytes(digest(msg_of(u)), "little") ^ PD
+
+
+
+def setup():
+    for m in (b"", b"abc", bytes(135), bytes(200)):
+        assert digest(m, 24) == hashlib.sha3_256(m).digest()
+    g, outn, PD = build()
+    prog, peak = allocate(g, outn)
+    assert hashlib.sha256(encode(prog)).hexdigest() == PROG_SHA256 and len(prog) == NINSTR and peak <= NREG
+    return compile_prog(prog), PD, len(prog)
+
+
+def to_planes(points, T):
+
+    planes = [0] * 256
+    for t in range(T):
+        for l, u in enumerate(points[t]):
+            g = 256 * t + l
+            j = 0
+            while u:
+                if u & 1: planes[j] |= 1 << g
+                u >>= 1; j += 1
+    return planes
+
+
+def lane_value(R, g, width=256):
+    v = 0
+    for j in range(width):
+        v |= ((R[j] >> g) & 1) << j
+    return v
+
+
+def check_step(step, PD):
+    import random
+    rnd = random.Random(1)
+    pts = [[rnd.getrandbits(256) for _ in range(256)]]
+    R = [0] * NREG
+    R[:256] = to_planes(pts, 1)
+    A = (1 << 256) - 1
+    cur = pts[0]
+    for _ in range(2):
+        step(R, A)
+        cur = [F_ref(u, PD) for u in cur]
+        for l in range(0, 256, 15):
+            assert lane_value(R, l) == cur[l]
+
+
+def shake(data, n):
+    return hashlib.shake_256(data).digest(n)
+
+
+
+W, H, DK, DTT, LC, U, TB = 22, 4, 3, 5, 256, 3000, 400      
+
+
+def rho_w(trials, step, PD):
+    T = len(trials)
+    A = (1 << (256 * T)) - 1
+    mask = (1 << W) - 1
+    R = [0] * NREG
+    seeds = [bytes.fromhex(t["seed"]) for t in trials]
+    rho, nid, att, astart = [0] * T, [0] * T, [-1] * T, [0] * T
+    table = [dict() for _ in range(T)]
+    done = [None] * T
+    obs = [dict(steps=0, trails=0, attempts=0, stored=0, replay_evals=0) for _ in range(T)]
+    lid, lst = [0] * (256 * T), [0] * (256 * T)
+    pend = []
+
+    def f_small(u):
+        return F_ref(u, PD) & mask
+
+    def is_dp(x):
+        return x & ((1 << H) - 1) == 0 and (x >> H) & ((1 << DK) - 1) < DTT
+
+    def new_attempt(t, c):
+        att[t] += 1; obs[t]['attempts'] += 1
+        rho[t] = int.from_bytes(shake(seeds[t] + att[t].to_bytes(4, 'little'), 8), 'little') & mask
+        table[t].clear(); nid[t] = 256; astart[t] = c
+        for l in range(256):
+            g = 256 * t + l
+            lid[g] = l; lst[g] = c
+            pend.append((g, (rho[t] + l) & mask))
+        obs[t]['trails'] += 256
+
+    def apply_pending():
+        if not pend: return
+        clr = 0
+        for g, _ in pend: clr |= 1 << g
+        for j in range(W):
+            st = 0
+            for g, x in pend:
+                if (x >> j) & 1: st |= 1 << g
+            R[j] = (R[j] & ~clr & A) | st
+        del pend[:]
+
+    def replay(sa, sb, lb, t):
+        if lb > LC: return None                        
+        a, la = sa, 0                                  
+        while True:
+            a = f_small(a); la += 1
+            if is_dp(a) or la >= LC: break
+        obs[t]['replay_evals'] += la
+        if not is_dp(a): return None
+        a, b = sa, sb
+        for _ in range(abs(la - lb)):
+            if la > lb: a = f_small(a)
+            else: b = f_small(b)
+        obs[t]['replay_evals'] += abs(la - lb)
+        if a == b: return None
+        for _ in range(min(la, lb) + 1):
+            na, nb = f_small(a), f_small(b)
+            obs[t]['replay_evals'] += 2
+            if na == nb: return a, b
+            a, b = na, nb
+        return None
+
+    for t in range(T): new_attempt(t, 0)
+    apply_pending()
+    c = 0
+    while any(d is None for d in done):
+        c += 1
+        if c > 4000: raise RuntimeError("no pair")
+        step(R, A)
+        for j in range(W, 256): R[j] = 0               
+        anyv = 0
+        for j in range(H): anyv |= R[j]
+        dpm = A ^ anyv                                  
+        eq, lt = dpm, 0                                 
+        for i in range(DK):
+            p = R[H + DK - 1 - i]
+            if (DTT >> (DK - 1 - i)) & 1: lt |= eq & (A ^ p); eq &= p
+            else: eq &= A ^ p
+        dpm = lt
+        img = [R[j].to_bytes(32 * T, "little") for j in range(W)]          
+        events = []
+        while dpm:
+            low = dpm & -dpm
+            events.append(low.bit_length() - 1)
+            dpm ^= low
+        seen, fresh = set(), set()
+        for g in events:
+            t = g >> 8
+            if g in seen or done[t] is not None or t in fresh: continue
+            seen.add(g)
+            x = sum(((img[j][g >> 3] >> (g & 7)) & 1) << j for j in range(W))
+            ln = c - lst[g]
+            tb = table[t]
+            if x in tb:
+                ida = tb[x]
+                if ida != lid[g]:
+                    r = replay((rho[t] + ida) & mask, (rho[t] + lid[g]) & mask, ln, t)
+                    if r is not None:
+                        done[t] = r; obs[t]['steps'] = c - astart[t]; obs[t]['stored'] = len(tb)
+                        continue
+            else:
+                tb[x] = lid[g]
+            if nid[t] >= U:
+                new_attempt(t, c); fresh.add(t); continue
+            i = nid[t]; nid[t] += 1; obs[t]['trails'] += 1
+            lid[g] = i; lst[g] = c
+            pend.append((g, (rho[t] + i) & mask))
+        for t in range(T):
+            if done[t] is None and c - astart[t] >= TB: new_attempt(t, c)
+        apply_pending()
+    return done, obs
+
+
+
+def proj_w(trials, step, PD, steps=8, bits=22):
+    T = len(trials)
+    A = (1 << (256 * T)) - 1
+    pts = []
+    for tr in trials:
+        raw = shake(bytes.fromhex(tr["seed"]) + b"proj", 32 * 256)
+        pts.append([int.from_bytes(raw[32 * l:32 * l + 32], "little") for l in range(256)])
+    R = [0] * NREG
+    R[:256] = to_planes(pts, T)
+    from array import array
+    allkeys = []                            
+
+    def point(t, l, s):                     
+        u = pts[t][l]
+        for _ in range(s): u = F_ref(u, PD)
+        return u
+
+    for s in range(steps):
+        step(R, A)
+        cols = [bin(R[j] | (1 << (256 * T)))[:2:-1] for j in range(bits)]   
+        allkeys.append(array("I", (int("".join(c[g] for c in reversed(cols)), 2) for g in range(256 * T))))
+        del cols
+    done = [None] * T
+    for t in range(T):
+        st = {}
+        for s in range(steps):
+            ks = allkeys[s]
+            for l in range(256):
+                key = ks[256 * t + l]
+                o = st.get(key)
+                if o is None:
+                    st[key] = (l, s)
+                else:
+                    a, b = point(t, o[0], o[1]), point(t, l, s)
+                    if a != b:
+                        done[t] = (a, b, s); break
+            if done[t] is not None: break
+    return done
+
+
+def main():
+    step, PD, nins = setup()
+    check_step(step, PD)
+    req = json.load(sys.stdin)
+    if req["schema_version"] != 1 or req["target_profile"] != "sha3-256-r%d-prefix-v1" % NR:
+        raise ValueError("unexpected organizer target")
+    mask = ((1 << 22) - 1).to_bytes(32, "little")
+    if req["event"] != {"kind": "digest-xor-mask", "mask_hex": mask.hex(), "expected_hex": "00" * 32}:
+        raise ValueError("unexpected organizer event")
+    trials = req["trials"]
+    out = []
+    if req["experiment_id"] == "rho-w22":
+        done, obs = rho_w(trials, step, PD)
+        for t, tr in enumerate(trials):
+            a, b = done[t]
+            ma, mb = msg_of(a), msg_of(b)
+            assert ma != mb and (int.from_bytes(digest(ma), "little") ^ int.from_bytes(digest(mb), "little")) & ((1 << W) - 1) == 0
+            out.append({"trial": tr["trial"], "message_a_hex": ma.hex(), "message_b_hex": mb.hex(), "observations": obs[t]})
+    elif req["experiment_id"] == "proj-w256":
+        done = proj_w(trials, step, PD)
+        for t, tr in enumerate(trials):
+            if done[t] is None:
+                out.append({"trial": tr["trial"], "message_a_hex": None, "message_b_hex": None})
+            else:
+                a, b, s = done[t]
+                out.append({"trial": tr["trial"], "message_a_hex": msg_of(a).hex(), "message_b_hex": msg_of(b).hex(), "observations": {"step": s}})
+    else:
+        raise ValueError("unknown experiment")
+    json.dump({"schema_version": 1, "trials": out}, sys.stdout, separators=(",", ":"), sort_keys=True)
+    sys.stdout.write("\n")
+
+
+if __name__ == "__main__":
+    main()
+
+```
+
+## Appendix C. Normative controller emitter and experiment
+
+The following is the bounded normative emitter.  `experiments/compact.py`
+invokes this emitter, verifies the instruction count, byte length and SHA-256,
+then decodes and executes the emitted program.
+
+```python
+#!/usr/bin/env python3
+"""Emitter for the compact selected-round search controller.
+
+The step keeps its 256 carried planes in registers.  On a distinguished-point
+hit, this controller copies those planes to a 256-word scratch matrix.  Two
+small indexed loops then gather one lane or replace one lane.  Static loads
+restore the planes before the next step.  The rare handler does more work, but
+the retained 32-byte control image is much smaller than two fully unrolled
+bit-matrix routines.
+"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+from enum import IntEnum
+from typing import Optional
+
+
+MASK256 = (1 << 256) - 1
+MASK64 = (1 << 64) - 1
+UNIT = 6_504
+LNK = 3_528
+
+
+class Op(IntEnum):
+    XOR = 0
+    AND = 1
+    OR = 2
+    NOT = 3
+    ADD = 4
+    SUB = 5
+    SHL = 6
+    SHR = 7
+    EQ = 8
+    LT = 9
+    MOV = 10
+    ADDI = 11
+    SUBI = 12
+    SHLI = 13
+    SHRI = 14
+    ANDI = 15
+    EQI = 16
+    LTI = 17
+    MOVI = 18
+    LD = 19
+    ST = 20
+    LDA = 21
+    BNZ = 22
+    BZ = 23
+    JMP = 24
+    JAL = 25
+    JR = 26
+    RND = 27
+    PERM = 28
+    HALT = 29
+
+
+COMPARE_OPS = {Op.EQ, Op.LT, Op.EQI, Op.LTI}
+
+# Persistent search registers.
+R_COUNTER = LNK + 1
+R_NEXT_ID = LNK + 2
+R_RHO = LNK + 3
+R_ONES = LNK + 4
+R_PREFILTER = LNK + 5
+R_HITS = LNK + 6
+R_LINK = LNK + 7
+R_LINK2 = LNK + 8
+R_ZERO = LNK + 9
+
+# Handler temporaries.  Step temporaries are dead while the handler runs.
+R_LANE = 256
+R_DPM = 257
+R_C1 = 258
+R_ACC = 259
+R_TMP = 260
+R_RECORD = 261
+R_SLOT = 262
+R_WORD = 263
+R_FLAG = 264
+R_X = 265
+R_Y = 266
+R_POINT = 267
+R_MASK = 268
+R_PTR = 269
+R_INDEX = 270
+R_ID = 271
+R_REPEATED = 272
+R_ONEBIT = 273
+R_P = 280
+R_Q = 281
+R_N = 282
+R_MIN = 283
+R_LA = 284
+R_LB = 285
+R_U = 286
+R_F = 287
+R_FP = 288
+R_PD = 289
+R_X0 = 290
+R_X1 = 291
+R_X2 = 292
+R_X3 = 293
+R_TQ = 294
+R_STATE = 300
+NREGS = LNK + 12
+
+
+@dataclass(frozen=True)
+class Layout:
+    table_words: int
+    slots_per_word: int = 5
+    slot_bits: int = 51
+
+    def __post_init__(self):
+        if self.table_words < 264 or self.table_words % 8:
+            raise ValueError("table_words must be a multiple of eight and at least 264")
+        if self.slots_per_word * self.slot_bits > 256:
+            raise ValueError("slots do not fit one word")
+        if self.slot_bits < 2:
+            raise ValueError("a slot needs a written bit and at least one key bit")
+
+    @property
+    def key_bits(self) -> int:
+        return self.slot_bits - 1
+
+    @property
+    def capacity(self) -> int:
+        return self.table_words * self.slots_per_word
+
+    @property
+    def home_bits(self) -> int:
+        return self.table_words.bit_length()
+
+    @property
+    def scratch(self) -> int:
+        return self.table_words
+
+    @property
+    def lane_ids(self) -> int:
+        return self.scratch + 256
+
+    @property
+    def lane_starts(self) -> int:
+        return self.lane_ids + 256
+
+    @property
+    def data(self) -> int:
+        return self.lane_starts + 256
+
+    @property
+    def memory_words(self) -> int:
+        return self.data + 16
+
+
+def trail_number(index: int, layout: Layout) -> int:
+    if not 0 <= index < layout.capacity:
+        raise ValueError("trail index is outside the table capacity")
+    word = index % layout.table_words
+    slot = index // layout.table_words
+    return word | ((layout.slot_bits * slot) << layout.home_bits)
+
+
+def decode_trail_number(number: int, layout: Layout) -> tuple[int, int]:
+    word = number & ((1 << layout.home_bits) - 1)
+    shift = number >> layout.home_bits
+    if word >= layout.table_words or shift % layout.slot_bits:
+        raise ValueError("invalid encoded trail number")
+    slot = shift // layout.slot_bits
+    if slot >= layout.slots_per_word:
+        raise ValueError("invalid encoded trail slot")
+    return word, slot
+
+
+def record_for_key(key: int, layout: Layout) -> int:
+    if not 0 <= key < 1 << layout.key_bits:
+        raise ValueError("key does not fit the record")
+    return 1 | (key << 1)
+
+
+def slot_value(word: int, slot: int, layout: Layout) -> int:
+    if not 0 <= slot < layout.slots_per_word:
+        raise ValueError("slot is outside the word")
+    return (word >> (slot * layout.slot_bits)) & ((1 << layout.slot_bits) - 1)
+
+
+@dataclass
+class Instruction:
+    op: Op
+    d: int = 0
+    a: int = 0
+    b: int = 0
+    imm: int = 0
+
+    def encode(self) -> bytes:
+        if not (0 <= self.d < 1 << 16 and 0 <= self.a < 1 << 16 and 0 <= self.b < 1 << 16):
+            raise ValueError("register field does not fit 16 bits")
+        if not 0 <= self.imm < 1 << 192:
+            raise ValueError("immediate does not fit 192 bits")
+        return (
+            bytes([int(self.op)])
+            + self.d.to_bytes(2, "little")
+            + self.a.to_bytes(2, "little")
+            + self.b.to_bytes(2, "little")
+            + b"\0"
+            + self.imm.to_bytes(24, "little")
+        )
+
+
+class Assembly:
+    def __init__(self, layout: Layout):
+        self.layout = layout
+        self.instructions: list[Instruction] = []
+        self.labels: dict[str, int] = {}
+        self.fixups: list[tuple[int, str]] = []
+
+    def label(self, name: str) -> None:
+        if name in self.labels:
+            raise ValueError(f"duplicate label {name}")
+        self.labels[name] = len(self.instructions)
+
+    def emit(self, op: Op, d=0, a=0, b=0, imm=0, target: Optional[str] = None):
+        self.instructions.append(Instruction(op, d, a, b, imm))
+        if target is not None:
+            self.fixups.append((len(self.instructions) - 1, target))
+
+    def binary(self, op: Op, d: int, a: int, b: int):
+        self.emit(op, d, a, b)
+
+    def immediate(self, op: Op, d: int, a: int, imm: int):
+        self.emit(op, d, a, 0, imm)
+
+    def mov(self, d, a): self.emit(Op.MOV, d, a)
+    def movi(self, d, value): self.emit(Op.MOVI, d, imm=value)
+    def add(self, d, a, b): self.binary(Op.ADD, d, a, b)
+    def sub(self, d, a, b): self.binary(Op.SUB, d, a, b)
+    def xor(self, d, a, b): self.binary(Op.XOR, d, a, b)
+    def and_(self, d, a, b): self.binary(Op.AND, d, a, b)
+    def or_(self, d, a, b): self.binary(Op.OR, d, a, b)
+    def shl(self, d, a, b): self.binary(Op.SHL, d, a, b)
+    def shr(self, d, a, b): self.binary(Op.SHR, d, a, b)
+    def not_(self, d, a): self.emit(Op.NOT, d, a)
+    def addi(self, d, a, value): self.immediate(Op.ADDI, d, a, value)
+    def subi(self, d, a, value): self.immediate(Op.SUBI, d, a, value)
+    def shli(self, d, a, value): self.immediate(Op.SHLI, d, a, value)
+    def shri(self, d, a, value): self.immediate(Op.SHRI, d, a, value)
+    def andi(self, d, a, value): self.immediate(Op.ANDI, d, a, value)
+    def ld(self, d, base, offset=0): self.immediate(Op.LD, d, base, offset)
+    def st(self, base, offset, source): self.emit(Op.ST, 0, base, source, offset)
+    def lda(self, d, address): self.emit(Op.LDA, d, imm=address)
+    def jmp(self, target): self.emit(Op.JMP, target=target)
+    def jal(self, link, target): self.emit(Op.JAL, d=link, target=target)
+    def jr(self, link): self.emit(Op.JR, a=link)
+    def halt(self, code): self.emit(Op.HALT, imm=code)
+
+    def _branch(self, op: Op, target: str):
+        self.emit(op, a=R_FLAG, target=target)
+
+    def jeqi(self, a, value, target):
+        self.immediate(Op.EQI, R_FLAG, a, value); self._branch(Op.BNZ, target)
+
+    def jnei(self, a, value, target):
+        self.immediate(Op.EQI, R_FLAG, a, value); self._branch(Op.BZ, target)
+
+    def jlti(self, a, value, target):
+        self.immediate(Op.LTI, R_FLAG, a, value); self._branch(Op.BNZ, target)
+
+    def jgei(self, a, value, target):
+        self.immediate(Op.LTI, R_FLAG, a, value); self._branch(Op.BZ, target)
+
+    def jeq(self, a, b, target):
+        self.binary(Op.EQ, R_FLAG, a, b); self._branch(Op.BNZ, target)
+
+    def jne(self, a, b, target):
+        self.binary(Op.EQ, R_FLAG, a, b); self._branch(Op.BZ, target)
+
+    def jlt(self, a, b, target):
+        self.binary(Op.LT, R_FLAG, a, b); self._branch(Op.BNZ, target)
+
+    def resolve(self):
+        for index, target in self.fixups:
+            if target == "@STEP":
+                self.instructions[index].imm = (1 << 192) - 1
+            else:
+                self.instructions[index].imm = self.labels[target]
+        for index, ins in enumerate(self.instructions):
+            if max(ins.d, ins.a, ins.b) >= NREGS:
+                raise ValueError(f"instruction {index} names register outside the file")
+            if ins.op in {Op.BNZ, Op.BZ}:
+                previous = self.instructions[index - 1]
+                if previous.op not in COMPARE_OPS or previous.d != ins.a:
+                    raise ValueError(f"branch {index} does not follow its comparison")
+
+
+def _emit_message_state(a: Assembly, data: int):
+    for word in range(7):
+        a.ld(R_STATE + word, R_ZERO, data + word)
+    a.andi(R_X0, R_U, MASK64)
+    a.shri(R_X1, R_U, 64); a.andi(R_X1, R_X1, MASK64)
+    a.shri(R_X2, R_U, 128); a.andi(R_X2, R_X2, MASK64)
+    a.shri(R_X3, R_U, 192)
+    a.shli(R_TQ, R_X0, 64); a.xor(R_STATE, R_STATE, R_TQ)
+    a.shli(R_TQ, R_X1, 128); a.xor(R_STATE + 1, R_STATE + 1, R_TQ)
+    a.xor(R_STATE + 1, R_STATE + 1, R_X2)
+    a.shli(R_TQ, R_X3, 64); a.xor(R_STATE + 2, R_STATE + 2, R_TQ)
+    a.xor(R_TQ, R_X0, R_X1); a.shli(R_TQ, R_TQ, 192); a.xor(R_STATE + 2, R_STATE + 2, R_TQ)
+    a.xor(R_TQ, R_X2, R_X3); a.shli(R_TQ, R_TQ, 128); a.xor(R_STATE + 3, R_STATE + 3, R_TQ)
+
+
+def build_program(
+    layout: Layout,
+    *,
+    replay_cap: int = 43_210_406_009_979_655_608_818_122_161_651_712,
+    tb: int = 1_326_345_234_525_992_950_706_776_067_278_897_152,
+    hit_limit: int = 48_391_447_023_367_850_163_390_149_816_221_697,
+    dplo: int = 145,
+    dk: int = 10,
+    dt: int = 646,
+) -> Assembly:
+    a = Assembly(layout)
+    home_mask = (1 << layout.home_bits) - 1
+    slot_mask = (1 << layout.slot_bits) - 1
+    limit = trail_number(layout.capacity - 1, layout)
+    limit += 1
+    if layout.capacity % layout.table_words == 0:
+        limit = layout.slot_bits * layout.slots_per_word << layout.home_bits
+    threshold = dt << (dplo - dk)
+
+    a.label("start")
+    a.emit(Op.RND, d=R_RHO)
+    a.movi(R_NEXT_ID, trail_number(256, layout))
+    a.movi(R_HITS, 0); a.movi(R_COUNTER, 0); a.movi(R_ZERO, 0); a.not_(R_ONES, R_ZERO)
+    a.movi(R_PTR, 0)
+    a.label("clear")
+    for offset in range(8):
+        a.st(R_PTR, offset, R_ZERO)
+    a.addi(R_PTR, R_PTR, 8); a.jlti(R_PTR, layout.table_words + 256, "clear")
+    a.movi(R_LANE, 0)
+    a.label("initial_walks")
+    a.add(R_POINT, R_RHO, R_LANE)
+    a.st(R_LANE, layout.lane_ids, R_LANE)
+    a.st(R_LANE, layout.lane_starts, R_ZERO)
+    a.jal(R_LINK, "setwalk")
+    a.addi(R_LANE, R_LANE, 1); a.jlti(R_LANE, 256, "initial_walks")
+    a.jal(R_LINK, "restore_planes")
+    a.jmp("@STEP")
+
+    a.label("loop")
+    a.jeq(R_PREFILTER, R_ONES, "continue")
+    a.label("hit")
+    a.addi(R_HITS, R_HITS, 1); a.jlti(R_HITS, hit_limit + 1, "hit_ok"); a.halt(10)
+    a.label("hit_ok")
+    a.or_(R_TMP, dplo, dplo + 1)
+    for plane in range(dplo + 2, 240):
+        a.or_(R_TMP, R_TMP, plane)
+    a.or_(R_DPM, R_PREFILTER, R_TMP); a.not_(R_DPM, R_DPM)
+    bits = [(dt >> (dk - 1 - i)) & 1 for i in range(dk)]
+    last_one = max(i for i, bit in enumerate(bits) if bit)
+    first = True
+    for i in range(last_one + 1):
+        plane = dplo - 1 - i
+        a.not_(R_X, plane)
+        if bits[i]:
+            if first:
+                a.and_(R_Y, R_DPM, R_X); first = False
+            else:
+                a.and_(R_X, R_DPM, R_X); a.or_(R_Y, R_Y, R_X)
+            if i < last_one:
+                a.and_(R_DPM, R_DPM, plane)
+        else:
+            a.and_(R_DPM, R_DPM, R_X)
+    a.mov(R_DPM, R_Y)
+    a.addi(R_C1, R_COUNTER, 1)
+    a.jeqi(R_DPM, 0, "continue")
+
+    a.label("save_planes")
+    for plane in range(256):
+        a.st(R_ZERO, layout.scratch + plane, plane)
+    a.label("dp_loop")
+    a.jeqi(R_DPM, 0, "restore_after_hit")
+    a.label("one_dp")
+    a.movi(R_LANE, 0); a.mov(R_X, R_DPM)
+    for i, shift in enumerate((128, 64, 32, 16, 8, 4, 2, 1)):
+        a.andi(R_Y, R_X, (1 << shift) - 1)
+        a.jnei(R_Y, 0, f"ctz_{i}")
+        a.shri(R_X, R_X, shift); a.addi(R_LANE, R_LANE, shift)
+        a.label(f"ctz_{i}")
+    a.subi(R_Y, R_DPM, 1); a.and_(R_DPM, R_DPM, R_Y)
+    a.jal(R_LINK, "gather")
+
+    a.label("record")
+    a.andi(R_RECORD, R_ACC, (1 << layout.key_bits) - 1)
+    a.shli(R_RECORD, R_RECORD, 1); a.addi(R_RECORD, R_RECORD, 1)
+    a.mov(R_REPEATED, R_RECORD)
+    for slot in range(1, layout.slots_per_word):
+        a.shli(R_X, R_RECORD, layout.slot_bits * slot); a.or_(R_REPEATED, R_REPEATED, R_X)
+    a.movi(R_SLOT, 0)
+    a.label("probe")
+    a.ld(R_WORD, R_SLOT); a.xor(R_WORD, R_WORD, R_REPEATED)
+    for slot in range(layout.slots_per_word):
+        if slot:
+            a.shri(R_Y, R_WORD, layout.slot_bits * slot); a.andi(R_X, R_Y, slot_mask)
+        else:
+            a.andi(R_X, R_WORD, slot_mask)
+        a.jeqi(R_X, 0, f"match_{slot}")
+    a.addi(R_SLOT, R_SLOT, 1); a.jnei(R_SLOT, layout.table_words, "probe")
+
+    a.label("insert")
+    a.ld(R_ID, R_LANE, layout.lane_ids)
+    a.andi(R_SLOT, R_ID, home_mask); a.shri(R_Y, R_ID, layout.home_bits)
+    a.shl(R_X, R_RECORD, R_Y)
+    a.ld(R_WORD, R_SLOT); a.or_(R_WORD, R_WORD, R_X); a.st(R_SLOT, 0, R_WORD)
+    a.label("insert_done")
+    a.mov(R_TMP, R_C1); a.jal(R_LINK2, "restart"); a.jmp("dp_loop")
+
+    for slot in range(layout.slots_per_word):
+        a.label(f"match_{slot}")
+        a.movi(R_X, (layout.slot_bits * slot) << layout.home_bits)
+        a.or_(R_X, R_X, R_SLOT); a.jmp("match")
+
+    a.label("restore_after_hit")
+    a.jal(R_LINK, "restore_planes")
+    a.label("continue")
+    a.addi(R_COUNTER, R_COUNTER, 1); a.jnei(R_COUNTER, tb, "@STEP")
+    a.label("deadline")
+    a.halt(12)
+
+    a.label("restart")
+    a.jnei(R_NEXT_ID, limit, "restart_ok"); a.halt(11)
+    a.label("restart_ok")
+    a.st(R_LANE, layout.lane_ids, R_NEXT_ID); a.st(R_LANE, layout.lane_starts, R_TMP)
+    a.add(R_POINT, R_RHO, R_NEXT_ID); a.addi(R_NEXT_ID, R_NEXT_ID, 1)
+    a.andi(R_X, R_NEXT_ID, home_mask); a.jnei(R_X, layout.table_words, "restart_nowrap")
+    a.addi(R_NEXT_ID, R_NEXT_ID, (layout.slot_bits << layout.home_bits) - layout.table_words)
+    a.label("restart_nowrap")
+    a.jal(R_LINK, "setwalk"); a.jr(R_LINK2)
+
+    a.label("setwalk")
+    a.movi(R_ONEBIT, 1); a.shl(R_ONEBIT, R_ONEBIT, R_LANE); a.not_(R_MASK, R_ONEBIT)
+    a.lda(R_PTR, layout.scratch); a.movi(R_INDEX, 0)
+    a.label("setwalk_loop")
+    a.ld(R_X, R_PTR); a.and_(R_X, R_X, R_MASK)
+    a.shr(R_Y, R_POINT, R_INDEX); a.andi(R_Y, R_Y, 1); a.shl(R_Y, R_Y, R_LANE)
+    a.or_(R_X, R_X, R_Y); a.st(R_PTR, 0, R_X)
+    a.addi(R_PTR, R_PTR, 1); a.addi(R_INDEX, R_INDEX, 1)
+    a.jnei(R_INDEX, 256, "setwalk_loop"); a.jr(R_LINK)
+
+    a.label("gather")
+    a.movi(R_ACC, 0); a.lda(R_PTR, layout.scratch); a.movi(R_INDEX, 0)
+    a.label("gather_loop")
+    a.ld(R_X, R_PTR); a.shr(R_X, R_X, R_LANE); a.andi(R_X, R_X, 1)
+    a.shl(R_X, R_X, R_INDEX); a.or_(R_ACC, R_ACC, R_X)
+    a.addi(R_PTR, R_PTR, 1); a.addi(R_INDEX, R_INDEX, 1)
+    a.jnei(R_INDEX, 256, "gather_loop"); a.jr(R_LINK)
+
+    a.label("restore_planes")
+    for plane in range(256):
+        a.ld(plane, R_ZERO, layout.scratch + plane)
+    a.jr(R_LINK)
+
+    a.label("eval_f")
+    _emit_message_state(a, layout.data)
+    a.emit(Op.PERM, a=R_STATE); a.ld(R_PD, R_ZERO, layout.data + 7); a.xor(R_F, R_STATE, R_PD); a.jr(R_LINK2)
+    a.label("output_message")
+    _emit_message_state(a, layout.data); a.jr(R_LINK2)
+
+    a.label("match")
+    a.ld(R_Y, R_LANE, layout.lane_ids); a.ld(R_LB, R_LANE, layout.lane_starts); a.sub(R_LB, R_C1, R_LB)
+    a.jgei(R_LB, replay_cap + 1, "replay_fail")
+    a.add(R_P, R_RHO, R_X); a.add(R_Q, R_RHO, R_Y)
+    a.mov(R_U, R_P); a.movi(R_LA, 0)
+    a.label("measure")
+    a.jal(R_LINK2, "eval_f"); a.addi(R_LA, R_LA, 1); a.jlti(R_F, threshold, "measured")
+    a.jgei(R_LA, replay_cap, "replay_fail"); a.mov(R_U, R_F); a.jmp("measure")
+    a.label("measured")
+    a.jlt(R_LA, R_LB, "advance_q"); a.sub(R_N, R_LA, R_LB); a.mov(R_MIN, R_LB)
+    a.label("advance_p")
+    a.jeqi(R_N, 0, "lock"); a.mov(R_U, R_P); a.jal(R_LINK2, "eval_f"); a.mov(R_P, R_F); a.subi(R_N, R_N, 1); a.jmp("advance_p")
+    a.label("advance_q")
+    a.sub(R_N, R_LB, R_LA); a.mov(R_MIN, R_LA)
+    a.label("advance_q_loop")
+    a.jeqi(R_N, 0, "lock"); a.mov(R_U, R_Q); a.jal(R_LINK2, "eval_f"); a.mov(R_Q, R_F); a.subi(R_N, R_N, 1); a.jmp("advance_q_loop")
+    a.label("lock")
+    a.jeq(R_P, R_Q, "replay_fail")
+    a.label("lock_loop")
+    a.jeqi(R_MIN, 0, "replay_fail")
+    a.mov(R_U, R_P); a.jal(R_LINK2, "eval_f"); a.mov(R_FP, R_F)
+    a.mov(R_U, R_Q); a.jal(R_LINK2, "eval_f"); a.jeq(R_FP, R_F, "found")
+    a.mov(R_P, R_FP); a.mov(R_Q, R_F); a.subi(R_MIN, R_MIN, 1); a.jmp("lock_loop")
+    a.label("found")
+    a.mov(R_U, R_P); a.jal(R_LINK2, "output_message")
+    for word in range(4): a.st(R_ZERO, layout.data + 8 + word, R_STATE + word)
+    a.mov(R_U, R_Q); a.jal(R_LINK2, "output_message")
+    for word in range(4): a.st(R_ZERO, layout.data + 12 + word, R_STATE + word)
+    a.halt(1)
+    a.label("replay_fail")
+    a.halt(13)
+    a.label("end")
+    a.resolve()
+    return a
+
+
+@dataclass(frozen=True)
+class Counts:
+    instructions: int
+    setwalk: int
+    gather: int
+    restore: int
+    restart: int
+    restart_halt: int
+    hit: int
+    ctz_clear: int
+    record_slot: int
+    probe_word: int
+    insert: int
+    dp_fixed: int
+    deadline_final: int
+    eval_f: int
+    output_message: int
+    measure_iter: int
+    replay_iter: int
+    replay_const: int
+    setup: int
+
+
+def counts(a: Assembly, layout: Layout) -> Counts:
+    labels = a.labels
+    segment = lambda first, last: labels[last] - labels[first]
+    setwalk_prefix = segment("setwalk", "setwalk_loop")
+    setwalk_body = labels["gather"] - 1 - labels["setwalk_loop"]
+    setwalk = setwalk_prefix + 256 * setwalk_body + 1
+    gather_prefix = segment("gather", "gather_loop")
+    gather_body = labels["restore_planes"] - 1 - labels["gather_loop"]
+    gather = gather_prefix + 256 * gather_body + 1
+    restore = segment("restore_planes", "eval_f")
+    restart_halt = segment("restart", "restart_ok") - 1 + 1
+    restart = (segment("restart", "restart_ok") - 1) + segment("restart_ok", "setwalk") + setwalk
+    hit = (segment("hit", "hit_ok") - 1) + segment("hit_ok", "save_planes")
+    ctz_clear = segment("one_dp", "record") - 1  # omit the call to gather; gather is added below
+    record_slot = segment("record", "probe")
+    probe_word = segment("probe", "insert")
+    insert = segment("insert", "insert_done")
+    # The bound charges save and restore for every DP.  A hit with several DPs
+    # executes each copy once, so this is a safe per-DP overcount.
+    dp_fixed = 2 + 256 + ctz_clear + 1 + gather + record_slot + insert + 3 + 1 + restore
+    eval_f = segment("eval_f", "output_message") - 1 + UNIT
+    output_message = segment("output_message", "match")
+    measure_iter = eval_f + 8
+    replay_iter = 2 * eval_f + 13
+    replay_const = 79
+    # Clear TAB and scratch together, initialize 256 lanes through the looped
+    # setwalk, restore the planes, and jump to the packed step.
+    clear_iterations = (layout.table_words + 256) // 8
+    setup = segment("start", "clear") + clear_iterations * 11 + 1
+    setup += 256 * (7 + setwalk) + 1 + restore + 1
+    return Counts(
+        instructions=len(a.instructions),
+        setwalk=setwalk,
+        gather=gather,
+        restore=restore,
+        restart=restart,
+        restart_halt=restart_halt,
+        hit=hit,
+        ctz_clear=ctz_clear,
+        record_slot=record_slot,
+        probe_word=probe_word,
+        insert=insert,
+        dp_fixed=dp_fixed,
+        deadline_final=segment("deadline", "restart"),
+        eval_f=eval_f,
+        output_message=output_message,
+        measure_iter=measure_iter,
+        replay_iter=replay_iter,
+        replay_const=replay_const,
+        setup=setup,
+    )
+
+
+class Machine:
+    """Small interpreter used to execute emitted helper routines in tests."""
+
+    def __init__(self, assembly: Assembly):
+        self.assembly = assembly
+        self.reg = [0] * NREGS
+        self.mem = [0] * assembly.layout.memory_words
+        self.pc = 0
+
+    def call_subroutine(self, label: str, *, max_steps: int = 20_000):
+        self.reg[R_LINK] = len(self.assembly.instructions)
+        self.pc = self.assembly.labels[label]
+        steps = 0
+        while self.pc != len(self.assembly.instructions):
+            if steps >= max_steps:
+                raise RuntimeError("subroutine step limit exceeded")
+            self.step(); steps += 1
+        return steps
+
+    def step(self):
+        ins = self.assembly.instructions[self.pc]
+        self.pc += 1
+        r = self.reg
+        op = ins.op
+        if op == Op.MOV: r[ins.d] = r[ins.a]
+        elif op == Op.MOVI: r[ins.d] = ins.imm
+        elif op == Op.XOR: r[ins.d] = r[ins.a] ^ r[ins.b]
+        elif op == Op.AND: r[ins.d] = r[ins.a] & r[ins.b]
+        elif op == Op.OR: r[ins.d] = r[ins.a] | r[ins.b]
+        elif op == Op.NOT: r[ins.d] = r[ins.a] ^ MASK256
+        elif op == Op.ADD: r[ins.d] = (r[ins.a] + r[ins.b]) & MASK256
+        elif op == Op.SUB: r[ins.d] = (r[ins.a] - r[ins.b]) & MASK256
+        elif op == Op.SHL: r[ins.d] = (r[ins.a] << (r[ins.b] & 255)) & MASK256
+        elif op == Op.SHR: r[ins.d] = r[ins.a] >> (r[ins.b] & 255)
+        elif op == Op.ADDI: r[ins.d] = (r[ins.a] + ins.imm) & MASK256
+        elif op == Op.SUBI: r[ins.d] = (r[ins.a] - ins.imm) & MASK256
+        elif op == Op.SHLI: r[ins.d] = (r[ins.a] << (ins.imm & 255)) & MASK256
+        elif op == Op.SHRI: r[ins.d] = r[ins.a] >> (ins.imm & 255)
+        elif op == Op.ANDI: r[ins.d] = r[ins.a] & ins.imm
+        elif op == Op.EQ: r[ins.d] = int(r[ins.a] == r[ins.b])
+        elif op == Op.LT: r[ins.d] = int(r[ins.a] < r[ins.b])
+        elif op == Op.EQI: r[ins.d] = int(r[ins.a] == ins.imm)
+        elif op == Op.LTI: r[ins.d] = int(r[ins.a] < ins.imm)
+        elif op in {Op.LD, Op.LDA}:
+            if op == Op.LDA: r[ins.d] = ins.imm
+            else: r[ins.d] = self.mem[r[ins.a] + ins.imm]
+        elif op == Op.ST: self.mem[r[ins.a] + ins.imm] = r[ins.b]
+        elif op == Op.BNZ:
+            if r[ins.a] != 0: self.pc = ins.imm
+        elif op == Op.BZ:
+            if r[ins.a] == 0: self.pc = ins.imm
+        elif op == Op.JMP: self.pc = ins.imm
+        elif op == Op.JAL: r[ins.d] = self.pc; self.pc = ins.imm
+        elif op == Op.JR: self.pc = r[ins.a]
+        else:
+            raise RuntimeError(f"unsupported test opcode {op.name}")
+        if op not in {Op.ST, Op.BNZ, Op.BZ, Op.JMP, Op.JAL, Op.JR} and ins.d:
+            r[ins.d] &= MASK256
+
+
+import hashlib, json, random, sys
+from dataclasses import asdict
+base = sys.modules[__name__]
+
+MASK256 = (1 << 256) - 1
+
+
+def configure(link: int, unit: int) -> None:
+    """Move the accepted controller's persistent registers without changing code."""
+    base.UNIT = unit
+    base.LNK = link
+    names = (
+        "R_COUNTER", "R_NEXT_ID", "R_RHO", "R_ONES", "R_PREFILTER",
+        "R_HITS", "R_LINK", "R_LINK2", "R_ZERO",
+    )
+    for offset, name in enumerate(names, 1):
+        setattr(base, name, link + offset)
+    base.NREGS = link + 12
+
+
+@dataclass(frozen=True)
+class StoredLayout:
+    table_words: int
+    id_bits: int = 17
+    slots_per_word: int = 4
+    slot_bits: int = 64
+
+    def __post_init__(self):
+        if self.table_words < 264 or self.table_words % 8:
+            raise ValueError("table_words must be an aligned positive table")
+        if 4 * self.table_words > 1 << self.id_bits:
+            raise ValueError("stored trail number does not fit")
+
+    @property
+    def key_bits(self): return 63 - self.id_bits
+    @property
+    def capacity(self): return 4 * self.table_words
+    @property
+    def scratch(self): return self.table_words
+    @property
+    def lane_ids(self): return self.scratch + 256
+    @property
+    def lane_starts(self): return self.lane_ids + 256
+    @property
+    def data(self): return self.lane_starts + 256
+    @property
+    def memory_words(self): return self.data + 16
+
+
+def _emit_dp_mask(a, dplo: int, dk: int, dt: int):
+    b = base
+    a.or_(b.R_TMP, dplo, dplo + 1)
+    for plane in range(dplo + 2, 240):
+        a.or_(b.R_TMP, b.R_TMP, plane)
+    a.or_(b.R_DPM, b.R_PREFILTER, b.R_TMP); a.not_(b.R_DPM, b.R_DPM)
+    bits = [(dt >> (dk - 1 - i)) & 1 for i in range(dk)]
+    last_one = max(i for i, bit in enumerate(bits) if bit)
+    first = True
+    for i in range(last_one + 1):
+        plane = dplo - 1 - i
+        a.not_(b.R_X, plane)
+        if bits[i]:
+            if first:
+                a.and_(b.R_Y, b.R_DPM, b.R_X); first = False
+            else:
+                a.and_(b.R_X, b.R_DPM, b.R_X); a.or_(b.R_Y, b.R_Y, b.R_X)
+            if i < last_one: a.and_(b.R_DPM, b.R_DPM, plane)
+        else:
+            a.and_(b.R_DPM, b.R_DPM, b.R_X)
+    a.mov(b.R_DPM, b.R_Y)
+
+
+def _emit_ctz(a):
+    b = base
+    a.movi(b.R_LANE, 0); a.mov(b.R_X, b.R_DPM)
+    for i, shift in enumerate((128, 64, 32, 16, 8, 4, 2, 1)):
+        a.andi(b.R_Y, b.R_X, (1 << shift) - 1)
+        a.jnei(b.R_Y, 0, f"ctz_{i}")
+        a.shri(b.R_X, b.R_X, shift); a.addi(b.R_LANE, b.R_LANE, shift)
+        a.label(f"ctz_{i}")
+    a.subi(b.R_Y, b.R_DPM, 1); a.and_(b.R_DPM, b.R_DPM, b.R_Y)
+
+
+def _emit_scratch_routines(a, layout):
+    b = base
+    a.label("setwalk")
+    a.movi(b.R_ONEBIT, 1); a.shl(b.R_ONEBIT, b.R_ONEBIT, b.R_LANE); a.not_(b.R_MASK, b.R_ONEBIT)
+    a.lda(b.R_PTR, layout.scratch); a.movi(b.R_INDEX, 0)
+    a.label("setwalk_loop")
+    a.ld(b.R_X, b.R_PTR); a.and_(b.R_X, b.R_X, b.R_MASK)
+    a.shr(b.R_Y, b.R_POINT, b.R_INDEX); a.andi(b.R_Y, b.R_Y, 1); a.shl(b.R_Y, b.R_Y, b.R_LANE)
+    a.or_(b.R_X, b.R_X, b.R_Y); a.st(b.R_PTR, 0, b.R_X)
+    a.addi(b.R_PTR, b.R_PTR, 1); a.addi(b.R_INDEX, b.R_INDEX, 1)
+    a.jnei(b.R_INDEX, 256, "setwalk_loop"); a.jr(b.R_LINK)
+
+    a.label("gather")
+    a.movi(b.R_ACC, 0); a.lda(b.R_PTR, layout.scratch); a.movi(b.R_INDEX, 0)
+    a.label("gather_loop")
+    a.ld(b.R_X, b.R_PTR); a.shr(b.R_X, b.R_X, b.R_LANE); a.andi(b.R_X, b.R_X, 1)
+    a.shl(b.R_X, b.R_X, b.R_INDEX); a.or_(b.R_ACC, b.R_ACC, b.R_X)
+    a.addi(b.R_PTR, b.R_PTR, 1); a.addi(b.R_INDEX, b.R_INDEX, 1)
+    a.jnei(b.R_INDEX, 256, "gather_loop"); a.jr(b.R_LINK)
+
+    a.label("restore_planes")
+    for plane in range(256): a.ld(plane, b.R_ZERO, layout.scratch + plane)
+    a.jr(b.R_LINK)
+
+
+def _emit_replay(a, layout, replay_cap: int, threshold: int):
+    b = base
+    a.label("eval_f")
+    b._emit_message_state(a, layout.data)
+    a.emit(b.Op.PERM, a=b.R_STATE); a.ld(b.R_PD, b.R_ZERO, layout.data + 7)
+    a.xor(b.R_F, b.R_STATE, b.R_PD); a.jr(b.R_LINK2)
+    a.label("output_message")
+    b._emit_message_state(a, layout.data); a.jr(b.R_LINK2)
+
+    a.label("match")
+    a.ld(b.R_Y, b.R_LANE, layout.lane_ids); a.ld(b.R_LB, b.R_LANE, layout.lane_starts)
+    a.sub(b.R_LB, b.R_C1, b.R_LB); a.jgei(b.R_LB, replay_cap + 1, "replay_fail")
+    a.add(b.R_P, b.R_RHO, b.R_X); a.add(b.R_Q, b.R_RHO, b.R_Y)
+    a.mov(b.R_U, b.R_P); a.movi(b.R_LA, 0)
+    a.label("measure")
+    a.jal(b.R_LINK2, "eval_f"); a.addi(b.R_LA, b.R_LA, 1); a.jlti(b.R_F, threshold, "measured")
+    a.jgei(b.R_LA, replay_cap, "replay_fail"); a.mov(b.R_U, b.R_F); a.jmp("measure")
+    a.label("measured")
+    a.jlt(b.R_LA, b.R_LB, "advance_q"); a.sub(b.R_N, b.R_LA, b.R_LB); a.mov(b.R_MIN, b.R_LB)
+    a.label("advance_p")
+    a.jeqi(b.R_N, 0, "lock"); a.mov(b.R_U, b.R_P); a.jal(b.R_LINK2, "eval_f")
+    a.mov(b.R_P, b.R_F); a.subi(b.R_N, b.R_N, 1); a.jmp("advance_p")
+    a.label("advance_q")
+    a.sub(b.R_N, b.R_LB, b.R_LA); a.mov(b.R_MIN, b.R_LA)
+    a.label("advance_q_loop")
+    a.jeqi(b.R_N, 0, "lock"); a.mov(b.R_U, b.R_Q); a.jal(b.R_LINK2, "eval_f")
+    a.mov(b.R_Q, b.R_F); a.subi(b.R_N, b.R_N, 1); a.jmp("advance_q_loop")
+    a.label("lock")
+    a.jeq(b.R_P, b.R_Q, "replay_fail")
+    a.label("lock_loop")
+    a.jeqi(b.R_MIN, 0, "replay_fail")
+    a.mov(b.R_U, b.R_P); a.jal(b.R_LINK2, "eval_f"); a.mov(b.R_FP, b.R_F)
+    a.mov(b.R_U, b.R_Q); a.jal(b.R_LINK2, "eval_f"); a.jeq(b.R_FP, b.R_F, "found")
+    a.mov(b.R_P, b.R_FP); a.mov(b.R_Q, b.R_F); a.subi(b.R_MIN, b.R_MIN, 1); a.jmp("lock_loop")
+    a.label("found")
+    a.mov(b.R_U, b.R_P); a.jal(b.R_LINK2, "output_message")
+    for word in range(4): a.st(b.R_ZERO, layout.data + 8 + word, b.R_STATE + word)
+    a.mov(b.R_U, b.R_Q); a.jal(b.R_LINK2, "output_message")
+    for word in range(4): a.st(b.R_ZERO, layout.data + 12 + word, b.R_STATE + word)
+    a.halt(1)
+    a.label("replay_fail"); a.halt(13); a.label("end")
+
+
+def build_stored(layout: StoredLayout, *, replay_cap: int, tb: int,
+                 hit_limit: int, dplo: int, dk: int, dt: int):
+    """Emit the four-slot stored-trail-ID controller."""
+    b = base
+    a = b.Assembly(layout)
+    threshold = dt << (dplo - dk)
+    record_mask = (1 << 64) - 1
+    match_mask = (1 << (layout.key_bits + 1)) - 1
+
+    a.label("start")
+    a.emit(b.Op.RND, d=b.R_RHO); a.movi(b.R_NEXT_ID, 256); a.movi(b.R_HITS, 0)
+    a.movi(b.R_COUNTER, 0); a.movi(b.R_ZERO, 0); a.not_(b.R_ONES, b.R_ZERO); a.movi(b.R_PTR, 0)
+    a.label("clear")
+    for offset in range(8): a.st(b.R_PTR, offset, b.R_ZERO)
+    a.addi(b.R_PTR, b.R_PTR, 8); a.jlti(b.R_PTR, layout.table_words + 256, "clear")
+    a.movi(b.R_LANE, 0)
+    a.label("initial_walks")
+    a.add(b.R_POINT, b.R_RHO, b.R_LANE); a.st(b.R_LANE, layout.lane_ids, b.R_LANE)
+    a.st(b.R_LANE, layout.lane_starts, b.R_ZERO); a.jal(b.R_LINK, "setwalk")
+    a.addi(b.R_LANE, b.R_LANE, 1); a.jlti(b.R_LANE, 256, "initial_walks")
+    a.jal(b.R_LINK, "restore_planes"); a.jmp("@STEP")
+
+    a.label("loop"); a.jeq(b.R_PREFILTER, b.R_ONES, "continue")
+    a.label("hit")
+    a.addi(b.R_HITS, b.R_HITS, 1); a.jlti(b.R_HITS, hit_limit + 1, "hit_ok"); a.halt(10)
+    a.label("hit_ok"); _emit_dp_mask(a, dplo, dk, dt); a.addi(b.R_C1, b.R_COUNTER, 1)
+    a.label("save_planes")
+    for plane in range(256): a.st(b.R_ZERO, layout.scratch + plane, plane)
+    a.label("dp_loop"); a.jeqi(b.R_DPM, 0, "restore_after_hit")
+    a.label("one_dp"); _emit_ctz(a); a.jal(b.R_LINK, "gather")
+
+    a.label("record")
+    a.andi(b.R_RECORD, b.R_ACC, (1 << layout.key_bits) - 1)
+    a.shli(b.R_RECORD, b.R_RECORD, 1); a.addi(b.R_RECORD, b.R_RECORD, 1)
+    a.ld(b.R_ID, b.R_LANE, layout.lane_ids); a.shli(b.R_ID, b.R_ID, layout.key_bits + 1)
+    a.or_(b.R_RECORD, b.R_RECORD, b.R_ID)
+    # The low SB bits choose one of two homes, matching the incumbent layout.
+    sb = (2 * layout.table_words - 1).bit_length() - 1
+    a.andi(b.R_SLOT, b.R_ACC, (1 << sb) - 1); a.jlti(b.R_SLOT, layout.table_words, "slot_ok")
+    a.subi(b.R_SLOT, b.R_SLOT, layout.table_words); a.label("slot_ok")
+    a.label("probe")
+    a.ld(b.R_WORD, b.R_SLOT)
+    for slot in range(4):
+        if slot:
+            a.shri(b.R_Y, b.R_WORD, 64 * slot); a.andi(b.R_X, b.R_Y, record_mask)
+        else: a.andi(b.R_X, b.R_WORD, record_mask)
+        a.jeqi(b.R_X, 0, f"empty_{slot}")
+        a.xor(b.R_X, b.R_X, b.R_RECORD); a.andi(b.R_X, b.R_X, match_mask)
+        a.jeqi(b.R_X, 0, f"match_{slot}")
+    a.label("probe_next")
+    a.addi(b.R_SLOT, b.R_SLOT, 1); a.jnei(b.R_SLOT, layout.table_words, "probe")
+    a.movi(b.R_SLOT, 0); a.jmp("probe")
+    for slot in range(4):
+        a.label(f"empty_{slot}")
+        if slot:
+            a.shli(b.R_X, b.R_RECORD, 64 * slot); a.or_(b.R_WORD, b.R_WORD, b.R_X)
+        else: a.or_(b.R_WORD, b.R_WORD, b.R_RECORD)
+        a.st(b.R_SLOT, 0, b.R_WORD); a.jmp("insert_done")
+    a.label("insert_done")
+    a.mov(b.R_TMP, b.R_C1); a.jal(b.R_LINK2, "restart"); a.jmp("dp_loop")
+    for slot in range(4):
+        a.label(f"match_{slot}")
+        a.shri(b.R_X, b.R_WORD, 64 * slot + layout.key_bits + 1)
+        a.andi(b.R_X, b.R_X, (1 << layout.id_bits) - 1); a.jmp("match")
+
+    a.label("restore_after_hit"); a.jal(b.R_LINK, "restore_planes")
+    a.label("continue")
+    a.addi(b.R_COUNTER, b.R_COUNTER, 1); a.jnei(b.R_COUNTER, tb, "@STEP")
+    a.label("deadline"); a.halt(12)
+
+    a.label("restart")
+    a.jnei(b.R_NEXT_ID, layout.capacity, "restart_ok"); a.halt(11)
+    a.label("restart_ok")
+    a.st(b.R_LANE, layout.lane_ids, b.R_NEXT_ID); a.st(b.R_LANE, layout.lane_starts, b.R_TMP)
+    a.add(b.R_POINT, b.R_RHO, b.R_NEXT_ID); a.addi(b.R_NEXT_ID, b.R_NEXT_ID, 1)
+    a.jal(b.R_LINK, "setwalk"); a.jr(b.R_LINK2)
+
+    _emit_scratch_routines(a, layout)
+    _emit_replay(a, layout, replay_cap, threshold)
+    a.resolve()
+    return a
+
+
+@dataclass(frozen=True)
+class ExactCounts:
+    instructions: int
+    setwalk: int
+    gather: int
+    restore: int
+    restart: int
+    restart_halt: int
+    hit: int
+    ctz_clear: int
+    record_slot: int
+    probe_word: int
+    probe_wrap: int
+    probe_end: int
+    insert: int
+    dp_fixed: int
+    deadline_final: int
+    eval_f: int
+    output_message: int
+    measure_iter: int
+    replay_iter: int
+    replay_const: int
+    setup: int
+
+
+def counts_stored(a, layout: StoredLayout) -> ExactCounts:
+    L = a.labels; seg = lambda first, last: L[last] - L[first]
+    setwalk_prefix = seg("setwalk", "setwalk_loop")
+    setwalk_body = L["gather"] - 1 - L["setwalk_loop"]
+    setwalk = setwalk_prefix + 256 * setwalk_body + 1
+    gather_prefix = seg("gather", "gather_loop")
+    gather_body = L["restore_planes"] - 1 - L["gather_loop"]
+    gather = gather_prefix + 256 * gather_body + 1
+    restore = seg("restore_planes", "eval_f")
+    restart_halt = seg("restart", "restart_ok") - 1 + 1
+    restart = seg("restart", "restart_ok") - 1 + seg("restart_ok", "setwalk") + setwalk
+    hit = seg("hit", "hit_ok") - 1 + seg("hit_ok", "save_planes")
+    ctz_clear = seg("one_dp", "record") - 1
+    record_slot = seg("record", "probe")
+    probe_word = seg("probe", "probe_next") + 3
+    probe_wrap = 2
+    probe_end = 1 + 7 + 8 * 2 + 4
+    # Longest empty-slot write before the shared move/call/jump restart tail.
+    insert = 4
+    dp_fixed = 2 + 256 + ctz_clear + 1 + gather + record_slot + probe_end + probe_wrap + insert + 3 + 1 + restore
+    eval_f = seg("eval_f", "output_message") - 1 + base.UNIT
+    output_message = seg("output_message", "match")
+    measure_iter = eval_f + 8
+    replay_iter = 2 * eval_f + 13
+    replay_const = 79
+    clear_iterations = (layout.table_words + 256) // 8
+    setup = seg("start", "clear") + clear_iterations * 11 + 1
+    setup += 256 * (7 + setwalk) + 1 + restore + 1
+    return ExactCounts(len(a.instructions), setwalk, gather, restore, restart,
+                       restart_halt, hit, ctz_clear, record_slot, probe_word,
+                       probe_wrap, probe_end, insert, dp_fixed,
+                       seg("deadline", "restart"), eval_f, output_message,
+                       measure_iter, replay_iter, replay_const, setup)
+
+
+def build(rounds: int, slots: int, table_words: int, link: int, parameters: dict,
+          hit_limit: int):
+    configure(link, 271 * rounds)
+    if slots == 5:
+        layout = base.Layout(table_words, 5, 51)
+        assembly = base.build_program(
+            layout, replay_cap=parameters["LRC"], tb=parameters["Tb"],
+            hit_limit=hit_limit, dplo=parameters["DPLO"],
+            dk=parameters["DK"], dt=parameters["DT"],
+        )
+        counts = base.counts(assembly, layout)
+    elif slots == 4:
+        layout = StoredLayout(table_words)
+        assembly = build_stored(
+            layout, replay_cap=parameters["LRC"], tb=parameters["Tb"],
+            hit_limit=hit_limit, dplo=parameters["DPLO"],
+            dk=parameters["DK"], dt=parameters["DT"],
+        )
+        counts = counts_stored(assembly, layout)
+    else:
+        raise ValueError("unsupported table layout")
+    binary = b"".join(instruction.encode() for instruction in assembly.instructions)
+    return layout, assembly, counts, binary
+
+
+def manifest(rounds: int, slots: int, table_words: int, link: int,
+             parameters: dict, hit_limit: int) -> dict:
+    layout, assembly, counts, binary = build(
+        rounds, slots, table_words, link, parameters, hit_limit,
+    )
+    return {
+        "round": rounds, "slots": slots, "table_words": table_words,
+        "capacity": layout.capacity, "link_register": link,
+        "register_words": base.NREGS, "instructions": len(assembly.instructions),
+        "bytes": len(binary), "sha256": hashlib.sha256(binary).hexdigest(),
+        "labels": assembly.labels, "counts": asdict(counts),
+    }
+
+
+RC = (1, 32898, 9223372036854808714, 9223372039002292224, 32907,
+      2147483649, 9223372039002292353, 9223372036854808585, 138, 136,
+      2147516425, 2147483658, 2147516555, 9223372036854775947,
+      9223372036854808713, 9223372036854808579, 9223372036854808578,
+      9223372036854775936, 32778, 9223372039002259466,
+      9223372039002292353, 9223372036854808704, 2147483649,
+      9223372039002292232)
+RHO = (0, 1, 62, 28, 27, 36, 44, 6, 55, 20, 3, 10, 43, 25, 39,
+       41, 45, 15, 21, 8, 18, 2, 61, 56, 14)
+MASK64 = (1 << 64) - 1
+
+
+def rol64(value, amount):
+    return ((value << amount) | (value >> (64 - amount))) & MASK64 if amount else value
+
+
+def permute(state, rounds):
+    for constant in RC[:rounds]:
+        parity = [state[x] ^ state[x+5] ^ state[x+10] ^ state[x+15] ^ state[x+20] for x in range(5)]
+        delta = [parity[(x-1) % 5] ^ rol64(parity[(x+1) % 5], 1) for x in range(5)]
+        moved = [0] * 25
+        for y in range(5):
+            for x in range(5):
+                index = x + 5*y
+                moved[y + 5*((2*x + 3*y) % 5)] = rol64(state[index] ^ delta[x], RHO[index])
+        for y in range(5):
+            for x in range(5):
+                state[x + 5*y] = (moved[x + 5*y] ^ ((~moved[(x+1) % 5 + 5*y]) & moved[(x+2) % 5 + 5*y])) & MASK64
+        state[0] ^= constant
+
+
+def message_for(point: int, constants: tuple[int, ...]) -> bytes:
+    limbs = [(point >> (64*i)) & MASK64 for i in range(4)]
+    lanes = list(constants[:16])
+    lanes[1] ^= limbs[0]; lanes[6] ^= limbs[1]; lanes[11] ^= limbs[0] ^ limbs[1]
+    lanes[4] ^= limbs[2]; lanes[9] ^= limbs[3]; lanes[14] ^= limbs[2] ^ limbs[3]
+    return b"".join(value.to_bytes(8, "little") for value in lanes)
+
+
+def chain(point: int, constants: tuple[int, ...], pd: tuple[int, ...], rounds: int) -> int:
+    state = list(constants)
+    message = message_for(point, constants)
+    for index in range(16):
+        state[index] = int.from_bytes(message[8*index:8*index+8], "little")
+    permute(state, rounds)
+    return sum((state[index] ^ pd[index]) << (64*index) for index in range(4))
+
+
+def decode_controller(binary: bytes):
+    if len(binary) % 32:
+        raise ValueError("controller byte length")
+    result = []
+    for offset in range(0, len(binary), 32):
+        item = binary[offset:offset+32]
+        if item[7]: raise ValueError("reserved byte is nonzero")
+        result.append(base.Instruction(base.Op(item[0]),
+                                       int.from_bytes(item[1:3], "little"),
+                                       int.from_bytes(item[3:5], "little"),
+                                       int.from_bytes(item[5:7], "little"),
+                                       int.from_bytes(item[8:], "little")))
+    return result
+
+
+class Runtime:
+    """Interpreter for the exact encoded 32-byte controller program."""
+    def __init__(self, binary, labels, layout, rounds, constants, pd):
+        self.code = decode_controller(binary); self.labels = labels; self.layout = layout
+        self.rounds = rounds; self.reg = [0] * base.NREGS
+        self.mem = [0] * layout.memory_words; self.pc = 0; self.halt = None
+        self.operations = 0; self.eval_hook = None
+        for word in range(7):
+            self.mem[layout.data + word] = sum(constants[4*word+k] << (64*k) for k in range(min(4, 25-4*word)))
+        self.mem[layout.data + 7] = sum(pd[k] << (64*k) for k in range(4))
+
+    def run(self, start, stops=(), limit=2_000_000):
+        self.pc = start; steps = 0
+        while self.halt is None and self.pc not in stops:
+            if steps >= limit: raise AssertionError("controller step limit")
+            self.step(); steps += 1
+        return self.pc
+
+    def step(self):
+        if self.pc == self.labels["eval_f"] and self.eval_hook is not None:
+            self.reg[base.R_F] = self.eval_hook(self.reg[base.R_U]) & MASK256
+            self.pc = self.reg[base.R_LINK2]; return
+        instruction = self.code[self.pc]; self.pc += 1; r = self.reg
+        op = instruction.op; d, a, bb, immediate = instruction.d, instruction.a, instruction.b, instruction.imm
+        if op == base.Op.XOR: r[d] = r[a] ^ r[bb]
+        elif op == base.Op.AND: r[d] = r[a] & r[bb]
+        elif op == base.Op.OR: r[d] = r[a] | r[bb]
+        elif op == base.Op.NOT: r[d] = r[a] ^ MASK256
+        elif op == base.Op.ADD: r[d] = (r[a] + r[bb]) & MASK256
+        elif op == base.Op.SUB: r[d] = (r[a] - r[bb]) & MASK256
+        elif op == base.Op.SHL: r[d] = (r[a] << (r[bb] & 255)) & MASK256
+        elif op == base.Op.SHR: r[d] = r[a] >> (r[bb] & 255)
+        elif op == base.Op.EQ: r[d] = int(r[a] == r[bb])
+        elif op == base.Op.LT: r[d] = int(r[a] < r[bb])
+        elif op == base.Op.MOV: r[d] = r[a]
+        elif op == base.Op.ADDI: r[d] = (r[a] + immediate) & MASK256
+        elif op == base.Op.SUBI: r[d] = (r[a] - immediate) & MASK256
+        elif op == base.Op.SHLI: r[d] = (r[a] << (immediate & 255)) & MASK256
+        elif op == base.Op.SHRI: r[d] = r[a] >> (immediate & 255)
+        elif op == base.Op.ANDI: r[d] = r[a] & immediate
+        elif op == base.Op.EQI: r[d] = int(r[a] == immediate)
+        elif op == base.Op.LTI: r[d] = int(r[a] < immediate)
+        elif op == base.Op.MOVI: r[d] = immediate
+        elif op == base.Op.LD: r[d] = self.mem[r[a] + immediate]
+        elif op == base.Op.ST: self.mem[r[a] + immediate] = r[bb]
+        elif op == base.Op.LDA: r[d] = immediate
+        elif op == base.Op.BNZ:
+            if r[a]: self.pc = immediate
+        elif op == base.Op.BZ:
+            if not r[a]: self.pc = immediate
+        elif op == base.Op.JMP: self.pc = immediate
+        elif op == base.Op.JAL: r[d] = self.pc; self.pc = immediate
+        elif op == base.Op.JR: self.pc = r[a]
+        elif op == base.Op.RND: r[d] = 0xC0DEC0DE
+        elif op == base.Op.PERM:
+            state = [(r[base.R_STATE + i//4] >> (64*(i % 4))) & MASK64 for i in range(25)]
+            permute(state, self.rounds)
+            for word in range(7):
+                r[base.R_STATE + word] = sum(state[4*word+k] << (64*k) for k in range(min(4, 25-4*word)))
+            self.operations += base.UNIT - 1
+        elif op == base.Op.HALT: self.halt = immediate
+        else: raise AssertionError("unknown controller opcode")
+        self.operations += 1
+
+
+def exercise(rounds, slots, table_words, link, parameters, hit_limit,
+             constants, pd, expected_sha256):
+    layout, assembly, counts, binary = build(rounds, slots, table_words, link, parameters, hit_limit)
+    if hashlib.sha256(binary).hexdigest() != expected_sha256:
+        raise AssertionError("controller hash")
+    if len(binary) != counts.instructions * 32:
+        raise AssertionError("controller byte count")
+    point = 0x123456789ABCDEF0123456789ABCDEF
+    machine = Runtime(binary, assembly.labels, layout, rounds, constants, pd)
+    machine.reg[base.R_U] = point; machine.reg[base.R_LINK2] = len(machine.code)
+    machine.run(assembly.labels["eval_f"], (len(machine.code),))
+    if machine.reg[base.R_F] != chain(point, constants, pd, rounds):
+        raise AssertionError("controller evalF")
+
+    points = (1, 2, 3, (1 << 255) | 5)
+    machine = Runtime(binary, assembly.labels, layout, rounds, constants, pd)
+    for bit in range(256):
+        machine.mem[layout.scratch + bit] = sum(((value >> bit) & 1) << lane for lane, value in enumerate(points))
+    machine.reg[base.R_LANE] = 3; machine.reg[base.R_LINK] = len(machine.code)
+    machine.run(assembly.labels["gather"], (len(machine.code),))
+    if machine.reg[base.R_ACC] != points[3]: raise AssertionError("gather")
+    replacement = 0xDEADBEEF; machine.reg[base.R_POINT] = replacement
+    machine.reg[base.R_LINK] = len(machine.code)
+    machine.run(assembly.labels["setwalk"], (len(machine.code),))
+    machine.reg[base.R_LINK] = len(machine.code)
+    machine.run(assembly.labels["gather"], (len(machine.code),))
+    if machine.reg[base.R_ACC] != replacement: raise AssertionError("setwalk")
+
+    # Execute setup through its jump to the external packed step.  This covers
+    # table/scratch clearing, all 256 initial restarts and the static restore.
+    step_sentinel = (1 << 192) - 1
+    machine = Runtime(binary, assembly.labels, layout, rounds, constants, pd)
+    machine.run(assembly.labels["start"], (step_sentinel,), limit=1_500_000)
+    if machine.pc != step_sentinel: raise AssertionError("setup did not enter step")
+
+    if slots == 5:
+        # Matching probe in slot 3; word+slot reconstructs the trail label.
+        record = 1 | (0x12345 << 1)
+        repeated = sum(record << (51*k) for k in range(5))
+        machine = Runtime(binary, assembly.labels, layout, rounds, constants, pd)
+        machine.reg[base.R_SLOT] = 0; machine.reg[base.R_REPEATED] = repeated
+        machine.mem[0] = record << (51*3)
+        machine.run(assembly.labels["probe"], (assembly.labels["match"],), limit=10000)
+        expected = 0 | ((51*3) << layout.home_bits)
+        if machine.reg[base.R_X] != expected: raise AssertionError("indexed probe")
+        # A completely occupied nonmatching table reaches the insertion boundary.
+        other = 1 | (0x54321 << 1); full = sum(other << (51*k) for k in range(5))
+        machine = Runtime(binary, assembly.labels, layout, rounds, constants, pd)
+        machine.reg[base.R_SLOT] = 0; machine.reg[base.R_REPEATED] = repeated
+        machine.mem[:table_words] = [full] * table_words
+        machine.run(assembly.labels["probe"], (assembly.labels["insert"],), limit=1_000_000)
+        if machine.reg[base.R_SLOT] != table_words: raise AssertionError("indexed full probe")
+        last = base.trail_number(layout.capacity - 1, layout)
+        try: base.trail_number(layout.capacity, layout)
+        except ValueError: pass
+        else: raise AssertionError("indexed first invalid trail")
+    else:
+        # Stored-ID record: compare only written+key, then recover the stored ID.
+        key = 0x12345; stored_id = layout.capacity - 7
+        record = 1 | (key << 1) | (stored_id << (layout.key_bits + 1))
+        machine = Runtime(binary, assembly.labels, layout, rounds, constants, pd)
+        machine.reg[base.R_SLOT] = 0
+        machine.reg[base.R_RECORD] = 1 | (key << 1) | (17 << (layout.key_bits + 1))
+        other_record = 1 | (0x54321 << 1)
+        machine.mem[0] = other_record | (other_record << 64) | (record << (64*2)) | (other_record << (64*3))
+        machine.run(assembly.labels["probe"], (assembly.labels["match"],), limit=10000)
+        if machine.reg[base.R_X] != stored_id: raise AssertionError("stored-ID probe")
+        other = 1 | (0x54321 << 1)
+        full = sum(other << (64*k) for k in range(4))
+        machine = Runtime(binary, assembly.labels, layout, rounds, constants, pd)
+        machine.reg[base.R_SLOT] = 0; machine.reg[base.R_RECORD] = 1 | (key << 1)
+        machine.mem[:table_words] = [full] * table_words
+        machine.mem[table_words-1] = sum(other << (64*k) for k in range(3))
+        machine.run(assembly.labels["probe"], (assembly.labels["empty_3"],), limit=1_000_000)
+        if machine.reg[base.R_SLOT] != table_words - 1: raise AssertionError("stored-ID probe boundary")
+        last = layout.capacity - 1
+        if not 0 <= last < 1 << layout.id_bits or layout.capacity > 1 << layout.id_bits:
+            raise AssertionError("stored-ID field boundary")
+
+    # Restart at the last valid trail and then refuse the first invalid trail.
+    machine = Runtime(binary, assembly.labels, layout, rounds, constants, pd)
+    if slots == 5:
+        start_id = base.trail_number(layout.capacity - 1, layout)
+        expected_next = layout.slot_bits * layout.slots_per_word << layout.home_bits
+    else:
+        start_id = layout.capacity - 1; expected_next = layout.capacity
+    machine.reg[base.R_NEXT_ID] = start_id; machine.reg[base.R_LANE] = 5
+    machine.reg[base.R_TMP] = 7; machine.reg[base.R_RHO] = 9
+    machine.reg[base.R_LINK2] = len(machine.code)
+    machine.run(assembly.labels["restart"], (len(machine.code),), limit=10000)
+    if machine.mem[layout.lane_ids + 5] != start_id or machine.reg[base.R_NEXT_ID] != expected_next:
+        raise AssertionError("restart boundary")
+    machine = Runtime(binary, assembly.labels, layout, rounds, constants, pd)
+    machine.reg[base.R_NEXT_ID] = expected_next
+    machine.run(assembly.labels["restart"], limit=20)
+    if machine.halt != 11: raise AssertionError("restart cap")
+
+    # Exercise successful and false replay exits through the encoded program.
+    machine = Runtime(binary, assembly.labels, layout, rounds, constants, pd)
+    machine.reg[base.R_LANE] = 0; machine.reg[base.R_C1] = 1
+    machine.reg[base.R_RHO] = 0; machine.reg[base.R_X] = 2
+    machine.mem[layout.lane_ids] = 3; machine.mem[layout.lane_starts] = 0
+    machine.eval_hook = lambda value: 5
+    machine.run(assembly.labels["match"], limit=10000)
+    if machine.halt != 1: raise AssertionError("replay success")
+    recovered_left = b"".join(machine.mem[layout.data+8+i].to_bytes(32, "little") for i in range(4))
+    recovered_right = b"".join(machine.mem[layout.data+12+i].to_bytes(32, "little") for i in range(4))
+    if recovered_left != message_for(2, constants) or recovered_right != message_for(3, constants):
+        raise AssertionError("recovered messages")
+    machine = Runtime(binary, assembly.labels, layout, rounds, constants, pd)
+    machine.reg[base.R_LANE] = 0; machine.reg[base.R_C1] = 1
+    machine.reg[base.R_X] = 2; machine.mem[layout.lane_ids] = 3
+    machine.mem[layout.lane_starts] = 0; machine.eval_hook = lambda value: value
+    machine.run(assembly.labels["match"], limit=10000)
+    if machine.halt != 13: raise AssertionError("replay failure")
+    return manifest(rounds, slots, table_words, link, parameters, hit_limit)
+
+
+ROUND = 7
+SLOTS = 4
+TABLE_WORDS = 23632
+LINK_REGISTER = 2180
+PARAMETERS = {'DK': 10, 'DPLO': 145, 'DT': 726, 'HF': 111, 'J': 61977, 'LRC': 39282590625172486808280587279794176, 'Tb': 1325913257825164395830610567679180800, 'W': 633825300114114700748351602688, 'granularity': 2475880078570760549798248448}
+HIT_LIMIT = 5179353602791344399328806017433601
+CONSTANTS = (0, 18446744073709551615, 18446744073709551615, 0, 18446744073709551615, 18446744073709551615, 9223372036854775814, 0, 0, 0, 18446744073709551615, 0, 0, 18446744073709551615, 18446744073709551615, 18446744073709551615, 9223372036854775814, 0, 0, 0, 0, 0, 0, 0, 0)
+PD_WORDS = (16616641506936960021, 4062759603346948313, 13350310411438803819, 11611410695693929250)
+EXPECTED_INSTRUCTIONS = 964
+EXPECTED_BYTES = 30848
+EXPECTED_SHA256 = '266f44df032ce1d10741784ec2f1ed48b909ab87dd7e01bc9d142be234ecd03a'
+
+
+def projection(seed_hex):
+    raw = hashlib.shake_256(b"hashsmash-sha3-exact-controller-v1" + bytes.fromhex(seed_hex)).digest(17*32)
+    points = [int.from_bytes(raw[32*i:32*i+32], "little") for i in range(17)]
+    seen = {}; evaluations = 0
+    for _ in range(4):
+        following = []
+        for point in points:
+            image = chain(point, CONSTANTS, PD_WORDS, ROUND); evaluations += 1
+            key = image & 4095
+            previous = seen.get(key)
+            if previous is not None and previous != point:
+                return message_for(previous, CONSTANTS).hex(), message_for(point, CONSTANTS).hex(), evaluations
+            seen.setdefault(key, point); following.append(image)
+        points = following
+    return None, None, evaluations
+
+
+def organizer_main():
+    request = json.load(sys.stdin)
+    event = {"kind":"digest-xor-mask","mask_hex":"ff0f"+"00"*30,"expected_hex":"00"*32}
+    if (request.get("schema_version") != 1 or request.get("experiment_id") != "exact-controller"
+            or request.get("target_profile") != f"sha3-256-r{ROUND}-prefix-v1"
+            or request.get("event") != event):
+        raise ValueError("request")
+    emitted = manifest(ROUND, SLOTS, TABLE_WORDS, LINK_REGISTER, PARAMETERS, HIT_LIMIT)
+    if (emitted["instructions"] != EXPECTED_INSTRUCTIONS or emitted["bytes"] != EXPECTED_BYTES
+            or emitted["sha256"] != EXPECTED_SHA256):
+        raise AssertionError("normative controller emission")
+    exercise(ROUND, SLOTS, TABLE_WORDS, LINK_REGISTER, PARAMETERS, HIT_LIMIT,
+             CONSTANTS, PD_WORDS, EXPECTED_SHA256)
+    rows = []
+    for trial in request["trials"]:
+        left, right, evaluations = projection(trial["seed"])
+        rows.append({"trial":trial["trial"],"message_a_hex":left,"message_b_hex":right,
+                     "observations":{"evaluations":evaluations,"controller_instructions":EXPECTED_INSTRUCTIONS,
+                                      "controller_sha256":EXPECTED_SHA256,"controller_paths":11}})
+    json.dump({"schema_version":1,"trials":rows}, sys.stdout,
+              sort_keys=True, separators=(",",":"))
+
+
+if __name__ == "__main__": organizer_main()
+
+```
