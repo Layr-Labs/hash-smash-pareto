@@ -1,20 +1,45 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha256-r37-prefix-v1",
+  "target_profile": "sha256-r64-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 37,
+  "rounds": 64,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 124.13821,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 20,
+    "preprocessing_log2": 46.41915,
     "success_probability": 0.39,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "sha256-r37-nominal-v2",
+  "restrictions": [
+    "Two distinct 64-byte messages M(x), M(y). W0..W7 are the fixed prefix in proof Section 1. W8=y0, W9=y1, and W10..W15 are y2..y7 plus the fixed offsets dbce7a42, aaf3823d, 8d41a28c, ff214e02, 6423f959, 18000000 modulo 2^32. This is a bijection from x. FIPS padding adds a fixed second block. The target uses the standard IV, all 64 steps on each block, and feed-forward. The walk is g(x)=walkB(state64(M(x))) XOR q with q=83719e5368e5c5064d42d446b413f5fdd5bc79c27182e4541a52bdee6a59c788. The emitted registers already hold g, so stage 1 tests its low 32 physical planes without a mask. A collision of g gives equal block-1 states and therefore equal complete digests.",
+    "Classical 256-bit word RAM under collision-frontier-v5, C=4912. The machine has 1024 256-bit registers, of which 1021 are data and three are pointers. Each XOR, AND, OR, NOT, move, set, load, store, addition, comparison, branch, and random word is charged. A register-only body record with three 10-bit register fields is 5 bytes. Other instructions are 36 bytes. The emitted kernel has 86375 records; stage 1 and loop control add 34 and 3 operations per batch.",
+    "The attempt uses one fresh uniform r, no restart, no amplification, no stored collision, and no advice. Distinguished points have low 32 bits zero and the next 90 bits below 1294. The table stores 84827 trails in 85085 index-layout slots. Each slot has a 46-bit key and one written bit. Recovery recomputes the stored trail length and is charged for at most 2(c+2^48)+1 calls.",
+    "Exact time ledger: B=1326205536293000000000000000000000000, e2max=158096019779801368713378906314, c=57524550049424489090118389007495593, and N=114969150757936685030565414702563218067159 word operations. log2(N/4912)=124.1382038451458780378999733235418909642. The claim rounds upward to 124.13821. Normative C/wasm setup contributes 362844291 operations from 181015345 executed wasm operators. The 1641-evaluation offset search charges 461900436782186496 operations, or 2^48 per evaluation. The selector search that produced AH[149] and CH[4470] charges 281474976710656 operations. Proof Section 3 derives both structural envelopes. All three rows are included in N; preprocessing is 462181912121741443 operations and preprocessing_log2 is 46.41915.",
+    "Search memory is 431875 bytes of body code, 63576 bytes of other code, 499875 bytes of table, 16384 bytes of counters and copies, 32768 bytes of registers, and 4096 bytes of recovery arrays: 1048574 bytes. The normative C/wasm setup peaks at 853866 bytes: 185112 bytes for 5142 emitter instructions, 120055 bytes of scratch, and the resident program, counters, registers, and recovery arrays. The count-only offset and selector searches peak at 545639 and 550210 bytes. Search is the peak. Every field width fits its maximum.",
+    "For a uniformly random 256-bit function, the bounded-restart calculation in proof Section 5 gives P_F at least 0.390000001000 using exact integers and outward-rounded 60-digit decimal bounds. H1 is the only score-critical premise: it says the fixed SHA-256 walk succeeds at least as often as that random function in this attempt. H1 is declared, not proved.",
+    "The normative freestanding C emitter is embedded as GEN_C. Its source SHA-256 is 150d894317ba8a9f31e495a649dc1dd4f93f1bee96b12e41ee9f066e3580ac73. The deterministic stripped wasm module has SHA-256 d017ddd6dbc5237ea8fd18a87a8de7df042bfcbe34577805b9dd00d1541300f3 and emits the 431875-byte SLP with SHA-256 dc43874011ff558bd4d13f5032fb19b6773d631827647518ce1bd319d510b24a. The organizer executes packaged Python BGen and BoundedEmitter as the byte-exact mirror before every experiment request; the C/wasm build and fuel count are participant-run. bssha-n16 runs the same 256-lane search on the low 16 complete-digest bits. proj-k0-w256 evaluates 256 full-width points and forms the complete two-block digest. The organizer recomputes every returned event. These are functional checks, not estimates of the full-width success probability.",
+    "Credited derivative of d22ae1b2-2368-460a-b6d4-1e5e37ceb735 and 95263e47-d61b-43a6-bb46-30ced2488280. d22ae1b2 supplies the exact T2 columns, index-layout table, recovery accounting, plan, and its lineage. 95263e47 supplies the constant-aware selection method, bounded emitter structure, and its lineage. New here are the six fixed message offsets, recent-XOR cancellation, the 86375-record stream, and the revised ledger."
+  ],
+  "baseline_improved": "sha256-r64-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  "experiment_manifest": "experiments/manifest.json",
+  "heuristics": [
+    {
+      "id": "H1-random-function-model",
+      "role": "score-critical",
+      "statement": "Let F be a uniformly random function from 256-bit values to 256-bit values. The probability that the single bounded attempt using the fixed walk g succeeds is at least the probability that the same attempt succeeds when every evaluation is replaced by lazy sampling from F. Clauses: (a) distinct fresh inputs have independent uniform outputs and collision hazard 2^-256; (b) iterates from r+t have the first-collision law of a random mapping; (c) a fresh output is distinguished with probability 1294/2^122 independently of collisions; (d) after conditioning on the adaptive history and later DP flags, a fresh output equals any fixed earlier non-DP output with probability at least 2^-256. Proof Section 5 proves P_F >= 0.390000001000 for F. Clause (d) is the premise that g retains that hazard.",
+      "scope": "The sha256-r64-prefix-v1 target restricted to the 64-byte message family in proof Section 1, about 2^128 evaluations, trail mean 2^111.66, and 256 simultaneous trails. It is not claimed for other message families, rounds, or scales.",
+      "extrapolation": "The full-width collision event cannot be sampled. The two experiments check the exact program at width 16 and check 16-bit projections of 256 full-width evaluations. Extrapolation to the full attempt is by H1 only. A collision-hazard surplus helps; a deficit requires more time.",
+      "evidence_ids": [
+        "experiment:bssha-n16",
+        "experiment:proj-k0-w256",
+        "proof:196-226",
+        "proof:256-267"
+      ],
+      "limitations": "H1 is a model premise about one fixed function, not a theorem. The experiments do not reach 2^128 evaluations, do not observe full-width collisions, and do not estimate the claimed probability."
+    }
+  ],
+  "submission_state": "ready",
+  "lane": "exploratory"
 }
