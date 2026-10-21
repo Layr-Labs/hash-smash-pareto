@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "bssha-n16",
+      "kind": "python-message-pairs-v1",
+      "scope": "Target sha256-r50-prefix-v1 with the two-block 64-byte messages of proof Section 1. GEN_C is the normative freestanding C setup source. Before every request the organizer runs packaged Python BGen and BoundedEmitter as its byte-exact mirror, checks all 15 C fields, the source hash, q, and the 3c909f9a1b73cd35ea6b994b6dc164783ec6643f953a4d6534ef49dd455e1d8b SLP hash. The native/wasm counts are participant-run accounting. Each trial runs one complete width-16 attempt with the shipped search, table, cut rule, recovery, inverse, feed-forward, and fixed second block.",
+      "hypothesis": "Every returned pair contains distinct messages whose complete 50-step digests agree in the low 16 bits. Null returns are valid. Counts are program checks, not probability estimates.",
+      "program": "experiments/bssha.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "000000000000000000000000000000000000000000000000000000000000ffff",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "proj-k0-w256",
+      "kind": "python-message-pairs-v1",
+      "scope": "Target sha256-r50-prefix-v1 with the two-block 64-byte messages of proof Section 1. GEN_C is the normative freestanding C setup source. Before every request the organizer runs packaged Python BGen and BoundedEmitter as its byte-exact mirror, checks all 15 C fields, the source hash, q, and the 3c909f9a1b73cd35ea6b994b6dc164783ec6643f953a4d6534ef49dd455e1d8b SLP hash. The native/wasm counts are participant-run accounting. Each trial evaluates 256 full-width points from uniform, counter, or iterate sources and reconstructs their complete two-block digests.",
+      "hypothesis": "Every returned pair contains distinct messages whose complete 50-step digests agree in the low 16 bits. Counts are program checks, not probability estimates.",
+      "program": "experiments/bssha.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "000000000000000000000000000000000000000000000000000000000000ffff",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "h1-law-n20",
+      "kind": "python-message-pairs-v1",
+      "scope": "Target sha256-r50-prefix-v1 with the two-block 64-byte messages of proof Section 1. GEN_C is the normative freestanding C setup source. Before every request the organizer runs packaged Python BGen and BoundedEmitter as its byte-exact mirror, checks all 15 C fields, the source hash, q, and the 3c909f9a1b73cd35ea6b994b6dc164783ec6643f953a4d6534ef49dd455e1d8b SLP hash. The native/wasm counts are participant-run accounting. All 64 observed groups iterate one fixed 20-bit function h selected from all organizer request seeds: one coordinate injection into the actual walk g=f XOR q and one coordinate projection back. Per-group visited sets preserve shared inputs and merged tails. DP hits count only globally fresh inputs. The null has 64 complete ensembles, each with one shared lazy mapping across its 64 groups. The first 16 seeds also run the actual table, cut, restart, probe, insertion, and recovery logic on the same h.",
+      "hypothesis": "At width 20 and a 1200-step censoring point, the observed four-bin first-collision score is no larger than 1.25 times the maximum score of 32 validation null ensembles after 32 separate null ensembles estimate bin means and variances. The observed global-fresh-input DP z-score is within the larger of 4 and 1.25 times the maximum absolute validation-null z-score. The source commits the test before an organizer holdout nonce. Passing supports reduced-width consistency only; it does not prove H1 or extrapolate to width 256.",
+      "program": "experiments/bssha.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "000000000000000000000000000000000000000000000000000000000000ffff",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "h1-law-n22",
+      "kind": "python-message-pairs-v1",
+      "scope": "Target sha256-r50-prefix-v1 with the two-block 64-byte messages of proof Section 1. GEN_C is the normative freestanding C setup source. Before every request the organizer runs packaged Python BGen and BoundedEmitter as its byte-exact mirror, checks all 15 C fields, the source hash, q, and the 3c909f9a1b73cd35ea6b994b6dc164783ec6643f953a4d6534ef49dd455e1d8b SLP hash. The native/wasm counts are participant-run accounting. All 64 observed groups iterate one fixed 22-bit function h selected from all organizer request seeds, with one coordinate injection into the actual walk g=f XOR q and one coordinate projection back. Per-group visited sets preserve shared inputs and merged tails. DP hits count only globally fresh inputs. The null has 64 complete ensembles, each with one shared lazy mapping across its 64 groups. This request tests collision and DP behavior only; the width-20 request separately exercises the actual table and recovery logic.",
+      "hypothesis": "At width 22 and a 1700-step censoring point, the observed four-bin first-collision score is no larger than 1.25 times the maximum score of 32 validation null ensembles after 32 separate null ensembles estimate bin means and variances. The observed global-fresh-input DP z-score is within the larger of 4 and 1.25 times the maximum absolute validation-null z-score. The source commits the test before an organizer holdout nonce. Passing supports reduced-width consistency and a fourfold state-space persistence check only; it does not prove H1 or extrapolate to width 256.",
+      "program": "experiments/bssha.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "000000000000000000000000000000000000000000000000000000000000ffff",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    }
+  ]
+}
