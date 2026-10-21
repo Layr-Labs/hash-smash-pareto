@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "proj-r24-full-width",
+      "kind": "python-message-pairs-v1",
+      "scope": "Once per organizer request, decode hash-bound plan data, independently rebuild P, G, B1 through B8, E and PD, require every packed-block hash and per-op count, require 60332 stored instructions and 147252 executed operations, and execute the exact schedule on eight fixed full-width points against a separate scalar Keccak reference. Then, for each organizer seed, derive 17 points, run four scalar chain steps and inspect 68 images for a low-12-bit agreement.",
+      "hypothesis": "If the 68 projected images are independent uniform 12-bit values, a trial succeeds with probability 1-prod_(i=0..67)(1-i/4096)=0.4283525380. A returned pair is independently recomputed by the organizer as two distinct complete 128-byte messages with the declared 12-bit digest agreement. Null trials remain in the output.",
+      "program": "experiments/combined.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "ff0f000000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    }
+  ]
+}
