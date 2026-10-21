@@ -1,20 +1,45 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha256-r37-prefix-v1",
+  "target_profile": "sha256-r43-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 37,
+  "rounds": 43,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 123.96736,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 20,
+    "preprocessing_log2": 47.06102,
     "success_probability": 0.39,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "sha256-r37-nominal-v2",
+  "restrictions": [
+    "Two distinct 64-byte messages M(x), M(y). W0..W7 are the fixed prefix in proof Section 1; W8=y0, W9=y1; W10..W15 add the fixed offsets dbce7a42, aaf3823d, 8d41a28c, 7f214e02, 2423f959, fe640e8c. The target uses the standard IV, exactly 43 steps on both padded blocks, feed-forward, and all 256 output bits.",
+    "The walk is g(x)=walkB(state_43(M(x))) XOR q with published q=6ef84b26c912507be783289dbbd46a2125f93af4930564c9128abffc30e8f6f5. The output registers already hold g. A collision of g implies equal complete digests.",
+    "Classical 256-bit word RAM under collision-frontier-v5, reference_operation_cost=3148. The machine has 1024 registers. Body records cost five code bytes and one operation; other instructions cost 36 bytes.",
+    "The emitted kernel has 49230 records and one batch costs 49267 operations for 256 trails. Exact N=65452551416327714532973327570307789219083; log2(N/C)=123.96735340117874781016545986753502013348012833652892450075533355974773585707434; the claim rounds upward to 123.96736.",
+    "Preprocessing is 462181911963586239 operations and includes the wasm emitter plus the complete 1641-candidate offset and selector search envelopes. preprocessing_log2 rounds upward to 47.06102.",
+    "Peak memory is 1048571 bytes; setup peaks at 627181 bytes. Every table and code field fits its declared width.",
+    "The normative embedded C source has SHA-256 c412bc03de5857978582fa923faf77ce0846dd8ead1ae833aeeb6ede9233adc4; stripped wasm SHA-256 c416675f8ffa7762a13a112238fb2a81b0698b53ba7b9d2108a3f65c533d33cb; emitted SLP SHA-256 28d57f8ae9556bee145a52372f0edfae9880579367773499415fd9403e987af4. The organizer executes the packaged Python byte-exact mirror; wasm accounting is participant-run.",
+    "For a uniformly random function, the bounded-restart calculation in proof Section 2 gives P_F at least 0.390000001000. H1 is the only score-critical premise and is declared, not proved.",
+    "Credited derivative of 8170195a-5fe5-49fb-aed3-bbdc6bb476e0, d22ae1b2-2368-460a-b6d4-1e5e37ceb735, 95263e47-d61b-43a6-bb46-30ced2488280, and their same-challenge lineage."
+  ],
+  "baseline_improved": "sha256-r43-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  "experiment_manifest": "experiments/manifest.json",
+  "heuristics": [
+    {
+      "id": "H1-random-function-model",
+      "role": "score-critical",
+      "statement": "The fixed walk succeeds at least as often as the exact bounded attempt against a lazy-sampled uniformly random 256-bit function. Fresh outputs retain collision hazard 2^-256, the first-collision law of a random mapping, independent DP density, and the same hazard after conditioning on the adaptive history.",
+      "scope": "The sha256-r43-prefix-v1 target, the 64-byte message family in proof Section 1, about 2^128 evaluations, and 256 simultaneous trails.",
+      "extrapolation": "The experiments check program correctness at width 16 and full-width projections. Extrapolation to the full attempt is by H1 only.",
+      "evidence_ids": [
+        "experiment:bssha-n16",
+        "experiment:proj-k0-w256",
+        "proof:1-150"
+      ],
+      "limitations": "H1 is a model premise about one fixed function, not a theorem. The experiments do not observe full-width collisions or estimate the claimed probability."
+    }
+  ],
+  "submission_state": "ready",
+  "lane": "exploratory"
 }
