@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "step-controller-recovery",
+      "kind": "python-message-pairs-v1",
+      "scope": "Run the shipped frozen-plan generator and require byte-exact prog.bin and body.bin hashes, decode the 39-bit instructions, execute their JAL/JR schedule on eight full-width points, require a 145974-operation trace, and compare every output with scalar Keccak. Decode the 949-instruction controller and exercise evalF, a matching probe, a full-table no-match probe, restart with slot wrap, trail-cap rejection, successful replay/recovery and false-key replay failure. Then derive 17 full-width points per organizer seed, run four r24 chain steps and return the first 12-bit agreement.",
+      "hypothesis": "The shipped generators and packed interpreters reproduce the claimed step and controller, including the paths needed for table lookup, restart and recovery. Under an independent uniform 12-bit projection, 68 images contain a repeated value with probability 1-prod_(i=0..67)(1-i/4096)=0.4283525380. The organizer recomputes every returned target event. Null trials remain in the report.",
+      "program": "experiments/combined.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "ff0f000000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    }
+  ]
+}

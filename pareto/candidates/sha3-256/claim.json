@@ -1,20 +1,66 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha3-256-r5-prefix-v1",
+  "submission_state": "ready",
+  "target_profile": "sha3-256-r24-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 5,
+  "rounds": 24,
+  "lane": "exploratory",
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 124.49088,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 20,
+    "preprocessing_log2": 60,
     "success_probability": 0.39,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "sha3-256-r5-nominal-v2",
-  "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  "restrictions": [
+    "Two distinct 128-byte one-block messages m(a), m(b) for sha3-256-r24-prefix-v1. The injective S3-04 embedding places the point in lanes 1, 6, 11=u0^u1^K11 and 4, 9, 14=u2^u3^K14. F(u)=SHA3-256-r24(m(u))^PD, so a collision of F at distinct points is an ordinary collision of the complete padded target.",
+    "One bit-sliced step evaluates 256 walks in 145974 word operations: 911bffce's frozen S3-04 constants and polarity plan with chained 10-gate chi rows (every row from an exhaustively verified cost table, its output polarities pinned to the plan's) and one flipped D complement. The shipped standalone generator emits prog.bin and body.bin byte for byte, checks their SHA-256 values, and derives the 59875 stored-instruction and 145974 executed-operation ledgers.",
+    "The controller has 949 static 32-byte instructions. On a distinguished-point hit it copies the 256 carried planes to a 256-word scratch matrix. Charged indexed loops gather one walk or replace one walk, and 256 static loads restore the plane registers. The table has 18360 words and five 51-bit slots per word, for U=91800 trails. A slot stores one written bit and 50 endpoint bits; the word and slot position identify the trail.",
+    "Before setup, the loader writes the 16-word data image: seven packed state-template words with the fixed lanes and padding, one packed PD word, and eight zero output words. LDA creates an address literal. Replay reads the template and PD through charged LD instructions from the zero base, so evalF computes the same F as the bit-sliced step.",
+    "One uniform 256-bit rho is the only coin. The search uses theta=696*2^-121, replay cap 63276*2^99, Tb=535585213*2^91 lockstep steps and no trail cut. Replay rejects either trail above the cap. Every control path, scratch load/store, table probe, restart, replay evaluation and setup operation is charged.",
+    "Collision-frontier-v5 uses unit C=6504. The exact total is N=194387117646175602294056853691822571586681 word operations. This includes Tb*145994, the inherited replay bound, every inherited rare-path bound and the inherited conservative 2^60 preprocessing charge, which also covers this derivative's row-table construction and searches (below 2^40). The integer certificate gives time_log2 124.49088 rounded upward.",
+    "The search peak is 1048220 bytes: 113280 register file, 33277 prog and prefilter, 258687 body code, 30368 controller code, 8192 scratch, 587520 table, 16384 walk state and 512 data image. The table is not enlarged. The bounded generators run before the search, retain their outputs, and remain below this peak under the storage schedule in proof.md.",
+    "Success is at least 0.39 under H_rand, the score-critical premise that the fixed r24 chain function has at least the random-function success probability over rho. The random-function probability, the first-coincidence F6 term, restart, self-coincidence, 50-bit alias, hit-cap and rounding terms are stated and evaluated in proof.md. No full collision is claimed or precomputed."
+  ],
+  "baseline_improved": "sha3-256-r24-nominal-v2",
+  "heuristics": [
+    {
+      "id": "H_rand",
+      "role": "score-critical",
+      "statement": "For the fixed r24 chain function F and uniform rho, the concrete distinguished-point program succeeds with probability at least the lower bound computed for a uniformly random function from 256 bits to 256 bits. Given rho the run is deterministic.",
+      "scope": "One attempt with 256 lockstep walks, at most 91800 trails, theta=696*2^-121, the stated replay cap and 256*Tb evaluations.",
+      "extrapolation": "The organizer experiment regenerates and executes both packed step blocks, checks the 145974-operation trace against scalar Keccak, and exercises probe, restart, replay and recovery controller paths. It also checks bounded full-width projected events. It does not reach birthday scale.",
+      "evidence_ids": [
+        "proof:1-175",
+        "experiment:step-controller-recovery"
+      ],
+      "limitations": "H_rand is a heuristic transfer, not a theorem about fixed SHA3-256. No experiment reaches 2^128 work. A full-scale pair-coincidence deficit would increase the time."
+    },
+    {
+      "id": "H_reg",
+      "role": "supporting",
+      "statement": "The declared word RAM has 3540 256-bit registers. Register operations cost one word operation. The controller's memory loads and stores are explicit and charged.",
+      "scope": "The bit-sliced step and controller. This convention does not affect the random-function success calculation.",
+      "extrapolation": "None. The 113280-byte register file is included in peak memory.",
+      "evidence_ids": [
+        "proof:40-160"
+      ],
+      "limitations": "A machine with fewer registers would need spills and a different operation ledger."
+    },
+    {
+      "id": "H_code",
+      "role": "supporting",
+      "statement": "Step instructions use packed 39-bit records with a 3-bit opcode and three 12-bit register fields. Controller instructions use the declared 32-byte format. The package generators emit the retained code and bind it by SHA-256.",
+      "scope": "Code-memory accounting only. It does not change the collision probability.",
+      "extrapolation": "None. The package binds every static block with SHA-256 and the experiment rebuilds the controller.",
+      "evidence_ids": [
+        "proof:40-160",
+        "experiment:step-controller-recovery"
+      ],
+      "limitations": "A different code encoding changes table capacity and requires a new parameter certificate."
+    }
+  ],
+  "experiment_manifest": "experiments/manifest.json",
+  "certificate_manifest": "certificates/manifest.json"
 }
