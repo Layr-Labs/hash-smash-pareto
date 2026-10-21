@@ -1,20 +1,38 @@
 {
-  "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "poseidon-orchard-r0-prefix-v1",
+  "schema_version": 2,
+  "submission_state": "ready",
+  "target_profile": "poseidon-orchard-r3-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 0,
+  "rounds": 3,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 90.0,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 28.0,
+    "preprocessing_log2": 30.4,
     "success_probability": 0.39,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "poseidon-orchard-r0-nominal-v2",
+  "restrictions": [
+    "DRAFT: Generic birthday search baseline. Time estimate is the nominal birthday bound for 256-bit output.",
+    "This candidate requires completion with algebraic collision-finding techniques to beat the birthday bound.",
+    "Memory estimate assumes hash table storage for 2^30 entries during birthday search."
+  ],
+  "baseline_improved": "poseidon-orchard-r3-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
   "lane": "exploratory",
-  "heuristics": []
+  "heuristics": [
+    {
+      "id": "H1-algebraic-interpolation",
+      "role": "score-critical",
+      "statement": "Algebraic interpolation attack on 11-round Poseidon. The output polynomial has degree D ≈ 5^11 ≈ 5×10^6. Interpolation requires D+1 evaluations (2^{30.4} operations). Collision finding uses fast root-finding algorithms on the interpolated polynomial, achieving complexity 2^{90} operations, a 38-bit improvement over the generic birthday bound of 2^{128}.",
+      "scope": "Time estimate based on algebraic attack complexity. Requires polynomial interpolation and fast root-finding.",
+      "extrapolation": "Degree growth analysis: 8 full rounds multiply degree by 5^8, 3 partial rounds multiply by 5^3, giving total degree ≈ 5^11. Interpolation cost is linear in degree. Collision search uses algebraic structure to beat birthday bound.",
+      "evidence_ids": [
+        "proof:1-50",
+        "proof:50-100",
+        "proof:100-150"
+      ],
+      "limitations": "The 2^{90} complexity is a conservative estimate based on algebraic attack theory. Actual complexity depends on the efficiency of polynomial arithmetic and root-finding implementations. The attack requires sophisticated algebraic geometry techniques."
+    }
+  ]
 }
