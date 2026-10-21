@@ -1,20 +1,47 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha256-r37-prefix-v1",
+  "target_profile": "sha256-r47-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 37,
+  "rounds": 47,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 124.01504,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 20,
+    "preprocessing_log2": 46.91471,
     "success_probability": 0.39,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "sha256-r37-nominal-v2",
+  "restrictions": [
+    "Two distinct 64-byte messages M(x), M(y). W0..W7 are the fixed prefix in proof Section 1; W8=y0, W9=y1; W10..W15 add the fixed offsets dbce7a42, aaf3823d, 8d41a28c, 7f214e02, 6423f959, 7e640e8c. The target uses the standard IV, exactly 47 steps on both padded blocks, feed-forward, and all 256 output bits.",
+    "The walk is g(x)=walkB(state_47(M(x))) XOR q with published q=b85787773da3ade80099365e53a70b8020fff0cd54262a46d6da5870586bdf63. The output registers already hold g. A collision of g implies equal complete digests.",
+    "Classical 256-bit word RAM under collision-frontier-v5, reference_operation_cost=3484. The machine has 1024 registers. Body records cost five code bytes and one operation; other instructions cost 36 bytes.",
+    "The emitted kernel has 56310 records and one batch costs 56347 operations for 256 trails. Exact N=74872483975738836921194675742734770049142; log2(N/C)=124.01503050510806813435670887650866486823148512250842789993626876646382203865014; the claim rounds upward to 124.01504.",
+    "Preprocessing is 462181911994726521 operations and includes the wasm emitter plus the complete 1641-candidate offset and selector search envelopes. preprocessing_log2 rounds upward to 46.91471.",
+    "Peak memory is 1048571 bytes; setup peaks at 670289 bytes. Every table and code field fits its declared width.",
+    "The normative embedded C source has SHA-256 a75ca7d00fc6c75c682fae38b4daa9ffe8b3303fd0f278ba255a99763877cadc; stripped wasm SHA-256 a8c077f136a77080668a2581b2e74fde2fe9e975428b7495e820a8392d574d6a; emitted SLP SHA-256 3186f22d1ae370986667d2d333a5d8213bc74dc17879105068cb76ad0712867b. The organizer executes the packaged Python byte-exact mirror; wasm accounting is participant-run.",
+    "For a uniformly random function, the bounded-restart calculation in proof Section 2 gives P_F at least 0.390000001000. H1 is the only score-critical premise and is declared, not proved.",
+    "Credited derivative of 7523902c-ff00-468e-8214-fa0cfdeaa4ef, 090e712e-02be-4054-86a0-3364b7ee32f2, d22ae1b2-2368-460a-b6d4-1e5e37ceb735, 95263e47-d61b-43a6-bb46-30ced2488280, and their same-challenge lineage."
+  ],
+  "baseline_improved": "sha256-r47-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  "experiment_manifest": "experiments/manifest.json",
+  "heuristics": [
+    {
+      "id": "H1-random-function-model",
+      "role": "score-critical",
+      "statement": "The fixed walk succeeds at least as often as the exact bounded attempt against a lazy-sampled uniformly random 256-bit function. Fresh outputs retain collision hazard 2^-256, the first-collision law of a random mapping, independent DP density, and the same hazard after conditioning on the adaptive history.",
+      "scope": "The sha256-r47-prefix-v1 target, the 64-byte message family in proof Section 1, about 2^128 evaluations, and 256 simultaneous trails.",
+      "extrapolation": "The experiments check program correctness at width 16 and full-width projections, and compare fixed width-20 and width-22 projections with shared-function random-mapping ensembles. The fourfold state-space change checks persistence only. Extrapolation to the full attempt is by H1 only.",
+      "evidence_ids": [
+        "experiment:bssha-n16",
+        "experiment:proj-k0-w256",
+        "experiment:h1-law-n20",
+        "experiment:h1-law-n22",
+        "proof:1-210"
+      ],
+      "limitations": "H1 is a model premise about one fixed function, not a theorem. The experiments do not observe full-width collisions or estimate the claimed probability."
+    }
+  ],
+  "submission_state": "ready",
+  "lane": "exploratory"
 }
