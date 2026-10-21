@@ -1,20 +1,53 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha3-256-r5-prefix-v1",
+  "submission_state": "ready",
+  "target_profile": "sha3-256-r14-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 5,
+  "rounds": 14,
+  "lane": "exploratory",
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 124.39023,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 20,
+    "preprocessing_log2": 38,
     "success_probability": 0.39,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "sha3-256-r5-nominal-v2",
-  "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  "restrictions": [
+    "Two distinct 128-byte padded messages for sha3-256-r14-prefix-v1; the injective six-lane embedding and common PD xor preserve ordinary collisions.",
+    "The declared machine executes packed39 as its native step format: each packed XOR/AND/OR/NOT record costs the one word operation it performs, with no separate fetch or decode charge. The native step costs 79331 operations for 256 walks; BSTEP=79351 includes the prefilter and loop control. Python unpackers are test mirrors outside the priced machine.",
+    "The normative emitter produces 949 fixed 32-byte controller instructions (30368 bytes), SHA-256 cebe9b54759e720320305cc93b328f8bcc1b142ce9a0540c5feacbec6bfe96da; experiments/compact.py invokes the emitter, decodes its output and executes those exact bytes. Scratch is 8192 bytes and the table holds 83760 trails.",
+    "The outward-rounded success certificate is bound to plan SHA-256 7dc70bd14eb0bf89deb2c421d7dde875c20154f71f7aaa48aa828176b6908e16 and is recomputed by the success-certificate organizer experiment; its union lower endpoint is 0.3900000006834131967784384170759201038355787223463491581713379769676755193781011444552979927035748661.",
+    "The exact total is N=105751216357395103813288806542332259959726 word operations, C=3794, memory=1048476 bytes and certified success is at least 0.39 under H1."
+  ],
+  "baseline_improved": "sha3-256-r14-nominal-v2",
+  "heuristics": [
+    {
+      "id": "H1-random-function-model",
+      "role": "score-critical",
+      "statement": "H1 is one premise. Let A_g be this bounded attempt on the fixed deterministic walk g. In the real algorithm's probability space, only the fresh uniform word r is random. Let F be a uniformly random function on 256-bit values, independent of r, and let P_F = Pr_(r,F)[A_F succeeds] for the same attempt with each g evaluation replaced by lazy sampling from F. H1 asserts only the aggregate comparison Pr_r[A_g succeeds] >= P_F. Lemma 2 proves P_F >= 0.390000000683. The following four items are properties of the comparator F that Lemma 2 uses, not additional premises about g: (a) F outputs at distinct evaluated inputs are uniform and independent; (b) F iterates from the starts r+t have the random-mapping first-collision law; (c) for a fresh F output, the exact DP rule has its stated probability and is independent of the collision bookkeeping used in the proof; (d) after any lazy-sampling history, if x is a fresh input and u is a given earlier output, Pr_F[F(x)=u | history] = 2^-256. These properties of the comparator F describe the random-function behavior that H1 premises g to emulate along this program's trails in aggregate. H1 does not assign a conditional probability to the deterministic g. Such an assignment would be false: a complete history records a start r+t for known t, so the full history determines r and every later g output. The aggregate success comparison is the only heuristic step in the success bound.",
+      "scope": "The fixed target sha3-256-r14-prefix-v1, 83760 trails, theta=642*2^-121, replay cap 44408969652495446507933255042334720, 256 lanes and exactly 256*Tb evaluations.",
+      "extrapolation": "Support is stated in proof Sections 5 and 8. Paul C. van Oorschot and Michael J. Wiener, \"Parallel Collision Search with Cryptanalytic Applications\", Journal of Cryptology 12(1):1-28, 1999, DOI 10.1007/PL00003816, model a fixed iterated function from fresh starts by a random function. Generic entries of this track rest on the same premise. The separation argument identifies aggregate collision-hazard deficit as the relevant adverse behavior; the sensitivity calculation prices that deficit. The packed-step, scalar-target, table-boundary, restart and replay checks are consistency checks at their stated scopes.",
+      "evidence_ids": [
+        "experiment:success-certificate",
+        "experiment:exact-controller",
+        "proof:1-90"
+      ],
+      "limitations": "Experiments do not reach birthday scale. Circuit equivalence, instruction counts, memory bounds, and the theorem for comparator F do not depend on H1."
+    },
+    {
+      "id": "H2-register-machine",
+      "role": "supporting",
+      "statement": "The declared 256-bit word RAM retains the incumbent register-file convention; each register operation and each explicit memory operation has the cost stated in proof.md.",
+      "scope": "Step, controller and replay accounting only.",
+      "extrapolation": "None; bytes and operations are enumerated.",
+      "evidence_ids": [
+        "proof:1-90",
+        "experiment:exact-controller"
+      ],
+      "limitations": "A smaller physical register file would require a separately priced spill design."
+    }
+  ],
+  "experiment_manifest": "experiments/manifest.json",
+  "certificate_manifest": "certificates/manifest.json"
 }
