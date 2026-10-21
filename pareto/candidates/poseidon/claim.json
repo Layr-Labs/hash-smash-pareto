@@ -1,20 +1,64 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "poseidon-orchard-r0-prefix-v1",
+  "submission_state": "ready",
+  "target_profile": "poseidon-orchard-r10-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 0,
+  "rounds": 10,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 44.25088,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
-    "success_probability": 0.39,
+    "memory_log2_bytes": 43.18986,
+    "preprocessing_log2": 17.06156,
+    "success_probability": 0.39209,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "poseidon-orchard-r0-nominal-v2",
+  "restrictions": [
+    "Applies only to poseidon-orchard-r10-prefix-v1 and the line construction defined in proof.md sections 2-4; no claim is made for another round count.",
+    "Worst-case work is N_max=8917674391542572, derived by the embedded exact-integer ledger. Stage B is 148452346153805, stage C is 5971820774651476, and stage D is 2797401136817598; no predecessor total is an input.",
+    "The footprint is 10033245239008 bytes: arena 10033244869696, code/static 323584, register file 12384, offline workspace 576, and stack 32768. Section 7 lists every allocation, slab class, and call-chain frame.",
+    "Machine restriction: one 387-word file (256 field and 131 integer words); running-twiddle product passes through seven layers, eight-position column loops, four-block bodies and twiddle-one group-zero variants. No product twiddle table in C or D.",
+    "Stage D charges the normal sequence with quotient and return tests and ABORTs at the first failure after a charged prefix. H-NORMAL affects success probability only, not the time or memory bound.",
+    "success_probability is over the fresh words of section 4.1.1. Stage C zero-tests each batch prefix and ABORTs on a zero; delta_C <= 4.0750555854453142810941542469222378074239960346663657189051206052533137121425737E-55. Section 9.2 substitutes q=0.3931, delta=0.001, eps_iso=2^-48, eps_coin<2^-122, and this delta_C."
+  ],
+  "baseline_improved": "poseidon-orchard-r10-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
+  "experiment_manifest": "experiments/manifest.json",
   "lane": "exploratory",
-  "heuristics": []
+  "heuristics": [
+    {
+      "id": "H-ONE",
+      "statement": "Let p=28948022309329048855892746252171976963363056481941560715954676764349967630337 be the Pallas prime, F the fixed poseidon-orchard-r10-prefix-v1 line polynomial of degree D=152587890625, and g_c the monic odd part of F about a centre c. Let k(c) count the usable nonzero-square roots of g_c, equivalently the degree event entering Stage D. For c uniform on F_p, at least 0.3931 p centres have 1 <= k(c) <= 16. The success bound is 0.39209 and subtracts the proved Stage-C term delta_C<=4.0750555854453142810941542469222378074239960346663657189051206052533137121425737E-55.",
+      "role": "score-critical",
+      "scope": "The fixed Poseidon target poseidon-orchard-r10-prefix-v1, this line construction (the line j = 0 of the first two rounds, odd part about a centre, proof.md sections 2-3), the polynomial F of proof.md section 2.3; centres uniform on F_p. Not claimed for other round counts. The other terms of the success bound are H-NORMAL (proof.md 9.5) and proved terms: the coin bias, the stage-C zero test and the isolation lemma (proof.md 4.1.1, 9.2, 9.4); the time and memory bounds do not depend on the premise.",
+      "extrapolation": "Proof section 9.3 contains the signed-permutation moments, the 27-case toy-field table and the explicit extrapolation to depth 16. Proof section 10.3 contains the exact cycle types, specialization centres, lifted sign-kernel witnesses and deployed-constant computations through three layers.",
+      "evidence_ids": [
+        "proof:4286-4359",
+        "proof:4376-4407",
+        "experiment:euclid-gcdpos-n2-t256-a",
+        "experiment:euclid-gcdpos-n2-t256-b",
+        "experiment:euclid-gcdpos-n3-t24",
+        "experiment:line-ladder-w6"
+      ],
+      "limitations": "It concerns this F, not every polynomial of degree D: it is false for permutation polynomials (k = 0 at every centre) and for a decomposable F with imprimitive monodromy (the axis line of proof.md 10.3, Theorem C), and false at one layer (m = 2: the law gives exactly 0.375). At N = 16 neither the monodromy nor the counts are computed (Weil's bound exceeds p for the fibre powers of degree 5^16); the premise is the extrapolation of a law that is a theorem at N = 2, 3 and measured on toy fields and at N <= 5. The organizer tests compute k(c) inside the submitted program; the runner checks only the returned witness pairs, so they are evidence under trusted execution of that program, printed in full in experiments/exp_euclid.py. The success bound assumes nothing about the organizer-seeded trials (no independence or identical distribution of the trials is used)."
+    },
+    {
+      "id": "H-NORMAL",
+      "statement": "For the centre c uniform on F_p, the Euclidean remainder sequence of (g_c, R_c - 1), where g_c is the monic odd part of proof.md section 3 (degree m = 76,293,945,312) and R_c = S^((p-1)/2) mod g_c, is normal down to its gcd (deg(R_c - 1) = m - 1 and every quotient has degree 1) except with probability at most delta = 0.001 (2^-9.966). Stage D is charged for the normal sequence; every division tests its quotient degree and every call of the half-gcd its return, and on any other case the trial ends (ABORT, proof.md 4.4, 6.3). With H-ONE (q = 0.3931) and one centre (K = 1) the success bound is q - delta - delta_C - eps_coin - eps_iso = 0.39209 (proof.md 9.2). The combined lower bound is conservatively reported as 0.39209 and subtracts delta_C<=4.0750555854453142810941542469222378074239960346663657189051206052533137121425737E-55.",
+      "role": "score-critical",
+      "scope": "The pairs (g_c, R_c - 1) of the target poseidon-orchard-r10-prefix-v1, c uniform on F_p. It enters only the success probability: the time and memory bounds hold for every remainder sequence, because a trial with an abnormal sequence ends at its first failed test after executing a prefix of the charged work (proof.md 6.3). Not claimed for other round counts. The premise is bradcush's (entries e6dcb600 and 1aa56884); the organizer-run tests follow gta6rp's entries (fe269c23); the split of the success allowance (q = 0.3931 with a separate H-NORMAL delta, here 0.001) follows cryptogakusei's entry 4888e783; delta = 0.001 is that of our accepted r = 9 entry 5b96dbb5.",
+      "extrapolation": "For a uniformly random pair of degrees m and m - 1 the sequence is abnormal exactly when one of the m principal subresultant coefficients vanishes, each a nonzero polynomial of degree at most 2m in the coefficients, so by Schwartz-Zippel the probability is at most 2 m^2 / p < 2^-180.7; the premise extrapolates a much weaker form of this random-pair behaviour (delta = 0.001) to the structured pair (g_c, R_c - 1). Measured support, organizer-run (proof.md 10.5.1): the six experiments euclid-normal-n2-t256-l2-a to -f compute the complete Euclidean sequence of (g_c, R_c - 1) for this construction on the truncation F_2 of the digest polynomial (proof.md 10.3; m = 12) for 256 organizer-seeded trials of two centres each (3,072 sequences in all) and return a witness pair exactly when both sequences of a trial are normal; euclid-normal-n3-t24 and euclid-normal-n4-t2 do the same at m = 62, 312. Zero abnormal in the 3,072 sequences is a reproducible observation consistent with the premise; the organizer-seeded centres are not treated as independent unselected samples and no population bound is drawn from them (delta = 0.001 is the declared premise). Our local runs of the eight entries: 3,098 sequences, all normal. Reported by our earlier entries, not organizer-run (proof.md 10.5): the complete sequences on the sibling targets with r' = 0 (8 centres, m = 7,812) and r' = 1 (2 centres, m = 39,062), every quotient of degree 1.",
+      "evidence_ids": [
+        "proof:4364-4373",
+        "experiment:euclid-normal-n2-t256-l2-a",
+        "experiment:euclid-normal-n2-t256-l2-b",
+        "experiment:euclid-normal-n2-t256-l2-c",
+        "experiment:euclid-normal-n2-t256-l2-d",
+        "experiment:euclid-normal-n2-t256-l2-e",
+        "experiment:euclid-normal-n2-t256-l2-f",
+        "experiment:euclid-normal-n3-t24",
+        "experiment:euclid-normal-n4-t2"
+      ],
+      "limitations": "The Schwartz-Zippel bound does not transfer, because the coefficients of R_c have degree about p in those of g_c. The success bound stays at least 0.39 for every delta <= 0.0030999 (proof.md 9.2(d)), above the stated delta = 0.001. The organizer-run tests are at m = 12 to 312, far below m; normality is computed inside the submitted program and the runner checks only the returned witness pairs. The success bound assumes nothing about the organizer-seeded trials (no independence or identical distribution of the trials is used)."
+    }
+  ]
 }
