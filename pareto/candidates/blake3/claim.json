@@ -1,20 +1,56 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "blake3-r1-prefix-v1",
+  "target_profile": "blake3-r7-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 1,
+  "rounds": 7,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 124.91595,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 20,
+    "preprocessing_log2": 17.02,
     "success_probability": 0.39,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "blake3-r1-nominal-v2",
+  "restrictions": [
+    "Two distinct 64-byte messages 0^32 || x and 0^32 || y, with x and y distinct 256-bit little-endian integers. Each is one chunk and one block with standard IV, counter 0, length 64, flags 11, seven rounds, and the complete 256-bit root digest. The walk is g(x) = f(x) XOR q for one fixed polarity mask q, so a collision of g is exactly a collision of f. This is a generic birthday search and uses no differential property of BLAKE3.",
+    "Declared machine convention H3: a classical load/store machine with 256-bit words, 256-bit immediates, and 800 counted registers. C(blake3-r7) is 1470. One 256-lane step is 44,310 gates: 36,312 XOR, 3,337 AND, and 4,661 OR. The stage-1 filter costs 34 operations and loop control costs 3, so one main-loop batch costs 44,347 operations. The generated line needs 773 registers and has no spill, move, load, store, or complement instruction.",
+    "The 44,310-gate line keeps f88f3751's nine-gate pair-carry column except when the stored input-polarity mask is 0x10. Exact SAT synthesis gives a nine-gate full column for that context and an eight-gate penultimate column when u' is dead; exhaustive independent checks cover all 32 rows of each used relation. An unrestricted eight-gate UNSAT run is disclosed only as a development observation, with solver version and CNF/proof hashes in proof.md. It is not part of this claim.",
+    "The exact work ledger uses Tp 1398, B 1325746535010000000000000000000000000 batches, table capacity 91,483, c 60851639292013316069988306050030081, one cut maximum, one charged terminal full-table event, and 2*capr+1 packed recovery calls. Total charged work is 58,988,094,089,452,902,017,216,346,428,406,269,062,049 word operations. Division by 1470 gives unrounded time_log2 124.915947152086; 124.91595 is a conservative submitted upper bound.",
+    "Search-phase memory is 274,662 bytes of emitted and register-allocated code, 25,600 bytes for 800 registers, 16,384 bytes for counters and the plane copy, and 91,483 eight-byte table entries: 1,048,510 bytes. The program listing has SHA-256 080d18f04edc5d4e65f6d17d095bf315a7ffacb0e0617ec5c18b207092740ec8. The setup phase is 445,186 bytes and includes the same code, counters and register file, a conservatively charged 2,200-instruction generator image, and 49,340 bytes of generator scratch and globals. The larger phase is below 2^20, so the scalar memory term is zero.",
+    "The attempt uses one fresh uniform 256-bit word and no restart, amplification, stored collision, prefix, or advice. The inherited random-function Lemma 2, recomputed at the new parameters, gives 0.390000001000 for an ideal random function. H1 is the sole score-critical premise transferring that lower bound to the fixed BLAKE3 walk. Every ledger term is bounded by a program halt.",
+    "Credited derivative of f88f3751-f08b-4561-a764-a04b5f7a899a and its parent b9f7a2bc-2ba7-4a34-a4c0-8efa7527fba1. Their relation, birthday search, table layout, recovery, probability lemma, five-byte instruction convention, experiment design, and lineage are retained. This entry contributes the exact polarity-context synthesis, independent C generator and register allocator, independent complete-digest tests, and the recomputed ledger."
+  ],
+  "baseline_improved": "blake3-r7-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  "experiment_manifest": "experiments/manifest.json",
+  "heuristics": [
+    {
+      "id": "H1-random-function-model",
+      "role": "score-critical",
+      "statement": "Let F be a uniformly random function from 256-bit values to 256-bit values. For the fixed target walk g(x) = f(x) XOR q, the probability that the single stated attempt succeeds is assumed to be at least the probability of the same adaptive distinguished-point search with every fresh evaluation replaced by lazy sampling from F. Distinct fresh inputs have uniform independent outputs, the iterates have the random-mapping first-collision law, distinguished-point membership has density 1398 / 2^122 independent of collisions, and a fresh adaptive evaluation has the corresponding 2^-256 collision hazard. Proof.md proves the 0.39 lower bound for F; only the transfer from F to g is heuristic.",
+      "scope": "The fixed blake3-r7-prefix-v1 function on 64-byte messages 0^32 || x, the fixed generated polarity mask q, and one run of 339391112962560000000000000000000000000 evaluations over about 89237.66 trails.",
+      "extrapolation": "The organizer experiments check the circuit and recovery at reduced width and complete 256-bit circuit outputs on small samples. They do not observe the 2^128-scale collision law. The passage to that scale is H1, not an empirical estimate.",
+      "evidence_ids": [
+        "experiment:bsrho-n18",
+        "experiment:proj-k0-w256",
+        "proof:1-38",
+        "proof:96-189"
+      ],
+      "limitations": "H1 is a model premise about one fixed function, not a theorem. The submitted bound has essentially no probability margin above 0.39; a real collision-hazard deficit requires extra charged work."
+    },
+    {
+      "id": "H3-machine-convention",
+      "role": "supporting",
+      "statement": "The cost model fixes 256-bit word operations but not a register count or instruction encoding. This entry declares 800 registers, counts their 25,600 bytes in both setup and search, and charges every operation, load, store, move, random word, compare, and branch. The independently generated 44,310-gate line allocates in 773 registers. The complete emitted program has 45,882 five-byte register-format instructions and 1,257 thirty-six-byte instructions; proof.md states its canonical listing hash.",
+      "scope": "The 256-lane loop body, event handlers, table, recovery, setup, and in-attempt circuit generator. Search and setup phase memory are accounted separately and the maximum is reported.",
+      "extrapolation": "A machine with fewer than 773 registers would need charged spills. The claim is for the declared 800-register convention only.",
+      "evidence_ids": [
+        "proof:39-95",
+        "proof:190-215"
+      ],
+      "limitations": "The benchmark does not prescribe this register file or five-byte encoding. The construction therefore states them as its own machine convention and counts their memory explicitly."
+    }
+  ],
+  "submission_state": "ready",
+  "lane": "exploratory"
 }
