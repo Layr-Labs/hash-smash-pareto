@@ -1,20 +1,47 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha256-r37-prefix-v1",
+  "target_profile": "sha256-r59-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 37,
+  "rounds": 59,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 124.10953,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 20,
+    "preprocessing_log2": 46.5481,
     "success_probability": 0.39,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "sha256-r37-nominal-v2",
+  "restrictions": [
+    "Two distinct 64-byte messages M(x), M(y). W0..W7 are the fixed prefix in proof Section 1; W8=y0, W9=y1; W10..W15 add the fixed offsets dbce7a42, aaf3823d, 8d41a28c, 7f214e02, 6423f959, 08000000. The target uses the standard IV, exactly 59 steps on both padded blocks, feed-forward, and all 256 output bits.",
+    "The walk is g(x)=walkB(state_59(M(x))) XOR q with published q=3a7b6c304683f1da9aa8f568050ccf116e5a78c6d242ab1d78a921de25fa3184. The output registers already hold g. A collision of g implies equal complete digests.",
+    "Classical 256-bit word RAM under collision-frontier-v5, reference_operation_cost=4492. The machine has 1024 registers. The kernel uses 1021 data registers, below the 10-bit limit. Native body records are four bytes and execute directly for one operation; recovery and control records are fixed five-byte instructions.",
+    "The emitted kernel has 77547 records and one batch costs 77584 operations for 256 trails. Exact N=103069227204672229266285029727903980808141; log2(N/C)=124.10952333768970746536846020297760735478459559131608453389890038571881121070890; the claim rounds upward to 124.10953.",
+    "Preprocessing is 462181912075443059 operations and includes the wasm emitter plus the complete 1641-candidate offset and selector search envelopes. preprocessing_log2 rounds upward to 46.54810.",
+    "Peak memory is 1048576 bytes; setup peaks at 664714 bytes. Every table and code field fits its declared width.",
+    "The normative embedded C source has SHA-256 7e7d3b14936029099f0d7f7282fe7ac16d28e6853f446df014894c03f9821c5a; stripped wasm SHA-256 935effd6d5be02b398616374312dcd0d4e6a40b0390caf9c34472ba2ed33a6a9; emitted native-record image SHA-256 6142b14f285673ae0e01a76edbd53996bdd37c352e46028716d08e21fbecb991. The organizer executes the packaged Python byte-exact test mirror; the priced machine has no decoder or interpreter.",
+    "For a uniformly random function, the bounded-restart calculation in proof Section 2 gives P_F at least 0.390000001000. H1 is the only score-critical premise and is declared, not proved.",
+    "Credited derivative of 7523902c-ff00-468e-8214-fa0cfdeaa4ef, ff37a322-c5e7-4656-bb89-02f1a5d0e213, 64dc4a97-0669-428b-976c-7eacc6cba143, d22ae1b2-2368-460a-b6d4-1e5e37ceb735, 95263e47-d61b-43a6-bb46-30ced2488280, and their same-challenge lineage."
+  ],
+  "baseline_improved": "sha256-r59-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  "experiment_manifest": "experiments/manifest.json",
+  "heuristics": [
+    {
+      "id": "H1-random-function-model",
+      "role": "score-critical",
+      "statement": "Model premise comparing two success events. Let F be a uniformly random function on 256-bit values. The probability that this single attempt succeeds for the fixed walk g is at least the probability P_F that the same bounded program succeeds when every g evaluation is replaced by lazy sampling from F. Clauses: (a) outputs on distinct evaluated inputs are uniform and independent, with collision hazard 2^-256; (b) iterates from the starts r+t have the first-collision law of a random mapping; (c) the exact DP rule, low 32 bits zero and the next 90-bit field below 1761, is independent of collision events and has probability 1761/2^122; (d) adaptivity does not lower the hazard: conditioned on the complete prior run history and later DP classifications, a fresh evaluation equals any given earlier non-DP output with probability at least 2^-256. Lemma 2 proves P_F >= 0.390000001000 from the lazy-sampling hazard alone. Clause (d) transfers that hazard to g. Nothing else in the success bound is heuristic.",
+      "scope": "The fixed target sha256-r59-prefix-v1 and the 64-byte message family of proof Section 1: about 112373.12 trails, mean trail length 2^111.21782, 256 simultaneous lanes, and exactly 339283359291136000000000000000000000000 evaluations. No claim is made for another message family, round count, or evaluation scale.",
+      "extrapolation": "Support of H1 is stated in proof Section 5. (1) H1 is the generic premise of parallel collision search with distinguished points. Paul C. van Oorschot and Michael J. Wiener, \"Parallel Collision Search with Cryptanalytic Applications\", Journal of Cryptology 12(1):1-28, 1999, DOI 10.1007/PL00003816, model a fixed compression function iterated from fresh starts, without a chosen input difference, by a random function. The generic entries of this track use the same premise: mitchuski 3017c952-db81-4c15-8782-d191a7d479ee (r51), mitchuski 1884db5b-acc6-42e7-ac3c-5877e77b8277 (r57), mitchuski 4684dfc2-cdac-4441-af91-c9979e2888a9 (r64), lamb356 3642e1cd-e391-41a7-81e0-456c02e4becd (r64), dariolina 6b678689-e6a2-42b0-87d8-fff55432f2f6 (r64), ours 7523902c-ff00-468e-8214-fa0cfdeaa4ef (r64), ours 7347a2b6-63db-4f1c-965f-c4dc1596bb22 (r41), ours 60dbf898-8af2-4f6b-9aa1-cbc971c2f674 (r42), ours 332b47e1-37c3-4b55-90e4-6c62514fc608 (r43), ours 5ed693e8-e780-4e70-b4f7-9faea9ae4ea1 (r45), ours 4aed9243-f6b8-40ae-8588-2bd00b82eb82 (r46), ours ff37a322-c5e7-4656-bb89-02f1a5d0e213 (r40). (2) Clause (d) fails in the adverse direction only if g, along its own iterates, collides less often than a random function by a factor 1-eps. Such a property would separate this 59-step function from a random function in a way no published result shows. This entry chooses no input difference and uses no differential property. (3) A higher collision hazard helps. The live-plan sensitivity calculation prices a deficit exactly: eps=0.01: 0.00725170 bit (Tp 1752); eps=0.05: 0.03700851 bit (Tp 1716); eps=0.10: 0.07601425 bit (Tp 1671); eps=0.25: 0.20755925 bit (Tp 1525). (4) The organizer program checks agree with random-function reference values at their scopes. proj-k0-w256 returned 104 of 256 against 100.53 expected. bssha-n16 returned 171 of 256; an exact-plan lazy-random-function reference over 10,000,000 mappings gives probability 0.6958435 with standard error 0.00014548, or 178.14 per 256. These counts are consistency checks, not inputs to the score.",
+      "evidence_ids": [
+        "experiment:bssha-n16",
+        "experiment:proj-k0-w256",
+        "proof:46-88",
+        "proof:194-217",
+        "proof:218-234"
+      ],
+      "limitations": "H1 cannot be tested at width 256: the experiments reach the complete search at width 16 and 16-bit projections of 256 full-width points, so they cannot measure the full-width collision hazard or the success probability at 2^128 scale. The exact sensitivity costs above restore 0.39 under specified hazard deficits: eps=0.01: 0.00725170 bit (Tp 1752); eps=0.05: 0.03700851 bit (Tp 1716); eps=0.10: 0.07601425 bit (Tp 1671); eps=0.25: 0.20755925 bit (Tp 1525). Circuit equivalences, instruction counts, memory bounds, and the theorem for F do not depend on H1."
+    }
+  ],
+  "submission_state": "ready",
+  "lane": "exploratory"
 }

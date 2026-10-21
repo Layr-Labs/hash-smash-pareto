@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "bssha-n16",
+      "kind": "python-message-pairs-v1",
+      "scope": "Target sha256-r59-prefix-v1 with the two-block 64-byte messages of proof Section 1. GEN_C is the normative freestanding C setup source. Before every request the organizer runs packaged Python BGen and BoundedEmitter as its byte-exact mirror, checks the 14 material C fields, the source hash, q, and the 6142b14f285673ae0e01a76edbd53996bdd37c352e46028716d08e21fbecb991 native-record hash. The Python code is a test mirror that packs logical tuples; no decoder or interpreter belongs to the priced machine. The native/wasm setup counts are participant-run accounting. Each trial runs one complete width-16 attempt with the shipped search, table, cut rule, recovery, inverse, feed-forward, and fixed second block.",
+      "hypothesis": "Every returned pair contains distinct messages whose complete 59-step digests agree in the low 16 bits. Null returns are valid. Counts are program checks, not probability estimates.",
+      "program": "experiments/bssha.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "000000000000000000000000000000000000000000000000000000000000ffff",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "proj-k0-w256",
+      "kind": "python-message-pairs-v1",
+      "scope": "Target sha256-r59-prefix-v1 with the two-block 64-byte messages of proof Section 1. GEN_C is the normative freestanding C setup source. Before every request the organizer runs packaged Python BGen and BoundedEmitter as its byte-exact mirror, checks the 14 material C fields, the source hash, q, and the 6142b14f285673ae0e01a76edbd53996bdd37c352e46028716d08e21fbecb991 native-record hash. The Python code is a test mirror that packs logical tuples; no decoder or interpreter belongs to the priced machine. The native/wasm setup counts are participant-run accounting. Each trial evaluates 256 full-width points from uniform, counter, or iterate sources and reconstructs their complete two-block digests.",
+      "hypothesis": "Every returned pair contains distinct messages whose complete 59-step digests agree in the low 16 bits. Counts are program checks, not probability estimates.",
+      "program": "experiments/bssha.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "000000000000000000000000000000000000000000000000000000000000ffff",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    }
+  ]
+}
