@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "r54-search-w14",
+      "kind": "python-message-pairs-v1",
+      "scope": "Reduced-width w=14 distinguished-point walk on the 783-operation multiplicative-coin equivalent step function for r=54 partial rounds (N=2^14=16384, K=23, VB=142, WG=119, MCAP=64, Delta=512, S=207, G=128, GPOS=255), returning canonical 64-byte Orchard input pairs (nk, rho) per organizer trial without multi-seed retry.",
+      "hypothesis": "Supporting reduced-width evidence for H1: on the BBLP 2-round affine input line with multiplicative coin rho0 in F_p^* and shifted origin W(x) = (rho0*x - d0) mod p, the 783-operation step function truncated to the low w=14 digest bits exhibits empirical single-trial collision recovery rate consistent with the Lemma 3 random-mapping bound and produces organizer-verified 14-bit Orchard Poseidon digest collisions.",
+      "program": "experiments/r54_search.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "ff3f000000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "r54-listing-w10",
+      "kind": "python-message-pairs-v1",
+      "scope": "Instruction-by-instruction execution of the compiled H2 register-machine program (19,523 instructions, 341 registers, 332 constants, K=23, VB=142, WG=119) at reduced width w=10 (N=2^10=1024, MCAP=32, Delta=64, S=69, G=48, GPOS=95) across all 256 organizer trials, cross-checked against the reference Python search and worst-case operation ledger.",
+      "hypothesis": "Direct mechanical verification of H2: the compiled register-machine instruction listing (including online rho0-constant scaling in setup, 23-unrolled 783-op step blocks, 142-bit value and 119-bit gap bit-packing in table_mem, single-segment DP recovery, and 5th-root message reconstruction) produces identical exit statuses and canonical Orchard message pairs to the reference algorithm on every trial while strictly obeying the closed-form worst-case operation bound.",
+      "program": "experiments/r54_listing.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "ff03000000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    }
+  ]
+}
