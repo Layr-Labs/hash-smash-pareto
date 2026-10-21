@@ -1,20 +1,56 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "blake3-r1-prefix-v1",
+  "submission_state": "ready",
+  "target_profile": "blake3-r5-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 1,
+  "rounds": 5,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 124.84817,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 20,
+    "preprocessing_log2": 30.041,
     "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
+    "nonuniform_advice_log2_bytes": 5
   },
-  "restrictions": [],
-  "baseline_improved": "blake3-r1-nominal-v2",
+  "restrictions": [
+    "Messages are distinct 64-byte strings K || x and K || y for fixed prefix 0000008000000000000000800000000000000080000000000000000000000000; x and y are distinct little-endian 256-bit integers. The target uses the standard IV, counter 0, length 64, flags 11, 5 prefix rounds and all 256 output bits.",
+    "The walk is g(x)=f(x) XOR q for the fixed emitted polarity mask. One step has 30410 gates and uses 773 registers. This is a generic birthday search and claims no differential or weakness of BLAKE3.",
+    "The table is a seven-byte quotient filter with 116112 slots and capacity 116111: 36 stored key bits, 16 implied quotient bits, three filter bits, and a fixed 17-bit trail number. Word-aligned streams occupy 812800 bytes.",
+    "The exact operation total is 40353670902116666804367123481291840535235; division by C=1054 gives unrounded time_log2 124.848164562748. The submitted value is the next five-decimal upper endpoint.",
+    "The static image has 30441 native five-byte bitwise records, 1084 native five-byte recovery records, and 1335 36-byte controls, totaling 205685 bytes. No decoded compact instruction stream is used.",
+    "Search memory is 1048565 bytes and setup memory is 346661 bytes. Persistent counters and limits reside in the charged metadata region.",
+    "Recovery stores time-zero checkpoints, checks its cap before each call, snapshots packed outputs before input restoration, and rejects aliases, aligned starts, unequal endpoints, and equal predecessors.",
+    "One fresh uniform start is used with no amplification. Under H1, the stated lazy-sampled random-function program succeeds with probability at least 0.390000001002. H1 is score-critical; H3 is the supporting machine convention."
+  ],
+  "baseline_improved": "blake3-r5-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
+  "experiment_manifest": "experiments/manifest.json",
   "lane": "exploratory",
-  "heuristics": []
+  "heuristics": [
+    {
+      "id": "H1-random-function-model",
+      "role": "score-critical",
+      "statement": "For the fixed 5-round walk and exact adaptive distinguished-point program, success is assumed to be at least the success probability of the same program with fresh evaluations answered by a lazy-sampled uniform random function on 256-bit values.",
+      "scope": "The fixed target on K || x, one run of 339151839689728000000000000000000000000 evaluations, and the stated halts, table, and recovery.",
+      "extrapolation": "The experiments execute the shipped program and compare a fixed width-20 restriction with calibrated shared random mappings. They do not observe the full 256-bit graph.",
+      "evidence_ids": [
+        "experiment:bsrho-n18",
+        "experiment:h1-law-n20",
+        "proof:120-260"
+      ],
+      "limitations": "H1 is a declared premise about one fixed function, not a theorem derived from the experiments."
+    },
+    {
+      "id": "H3-machine-convention",
+      "role": "supporting",
+      "statement": "The machine is a 256-bit load/store word RAM with 775 addressable registers, native five-byte register records, conservative 36-byte controls, and direct zero-test branches. Every code and data byte is charged.",
+      "scope": "The step, stage filter, handlers, quotient filter, recovery, setup, and runtime emitter.",
+      "extrapolation": "A machine without these declared encodings and registers requires separate accounting.",
+      "evidence_ids": [
+        "proof:180-235",
+        "experiment:proj-prefix-w256"
+      ],
+      "limitations": "H3 is an explicit machine convention rather than an organizer-fixed encoding."
+    }
+  ]
 }
