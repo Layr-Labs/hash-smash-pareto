@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "poseidon-algebraic-degree-r3",
+      "kind": "python-message-pairs-v1",
+      "scope": "Algebraic degree analysis of 11-round Poseidon (8 fixed full rounds + 3 partial rounds) over the Pallas field. The output polynomial degree D ≈ 5^11 ≈ 5×10^6. This experiment validates the degree growth calculation and interpolation cost estimate. No actual collision search is performed; the experiment documents the algebraic structure and theoretical complexity.",
+      "hypothesis": "The algebraic degree of 11-round Poseidon over Pallas is approximately 5^11. Interpolation requires D+1 ≈ 2^30.4 evaluations. Collision finding via algebraic methods achieves complexity 2^90, improving upon the generic birthday bound of 2^128. This is a theoretical analysis, not an empirical collision search. Returned pairs: 0 (no collision search performed). Observations: degree_estimate, interpolation_cost_log2, collision_complexity_log2. The experiment validates the algebraic structure but does not prove the attack's practical feasibility.",
+      "program": "experiments/poseidon_degree.py",
+      "event": {
+        "kind": "full-collision"
+      }
+    }
+  ]
+}

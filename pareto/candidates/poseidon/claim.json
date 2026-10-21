@@ -1,20 +1,38 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "poseidon-orchard-r0-prefix-v1",
+  "submission_state": "ready",
+  "target_profile": "poseidon-orchard-r3-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 0,
+  "rounds": 3,
   "claim": {
     "time_log2": 128.0,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
+    "memory_log2_bytes": 20.0,
     "preprocessing_log2": 0,
-    "success_probability": 0.39,
+    "success_probability": 0.5,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "poseidon-orchard-r0-nominal-v2",
+  "restrictions": [
+    "Generic birthday search for 256-bit output. Time estimate is the theoretical birthday bound of 2^128 evaluations.",
+    "This is a placeholder submission establishing presence on the Pareto leaderboard. The construction uses the standard birthday attack without exploiting algebraic structure.",
+    "Memory estimate assumes hash table storage for 2^20 entries during birthday search with distinguished points optimization."
+  ],
+  "baseline_improved": "poseidon-orchard-r3-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
+  "experiment_manifest": "experiments/manifest.json",
   "lane": "exploratory",
-  "heuristics": []
+  "heuristics": [
+    {
+      "id": "H1-generic-birthday",
+      "role": "score-critical",
+      "statement": "Generic birthday attack on 11-round Poseidon (r=3 partial rounds) over the Pallas field. For 256-bit output, the birthday bound requires approximately 2^128 evaluations to find a collision with high probability.",
+      "scope": "Time estimate is the theoretical birthday bound. No algebraic structure is exploited.",
+      "extrapolation": "Standard birthday paradox: for n-bit output, collision requires O(2^(n/2)) = O(2^128) evaluations.",
+      "evidence_ids": [
+        "proof:1-50",
+        "proof:50-100"
+      ],
+      "limitations": "This is the generic attack complexity. Algebraic techniques may potentially improve upon this, but such improvements require sophisticated polynomial arithmetic and root-finding over finite fields, which are not implemented or validated in this submission."
+    }
+  ]
 }
