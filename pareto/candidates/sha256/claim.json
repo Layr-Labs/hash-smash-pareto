@@ -1,20 +1,79 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha256-r37-prefix-v1",
+  "target_profile": "sha256-r39-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 37,
+  "rounds": 39,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 98.9228,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 34.247927513443585,
+    "preprocessing_log2": 74,
     "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
+    "nonuniform_advice_log2_bytes": 12
   },
-  "restrictions": [],
-  "baseline_improved": "sha256-r37-nominal-v2",
+  "restrictions": [
+    "C39 PB=0 ordinary-collision construction for sha256-r39-prefix-v1 only. Every trial uses a fresh random 64-byte first block and one random A0; every candidate is verified by two complete second-block compressions before output.",
+    "The online run contains exactly N=1173433569311756739413236012 trial slots and a global cap of 8*64*N target-compression units. Reaching the cap returns failure. Preprocessing adds at most 2^74 target-compression units.",
+    "The probability claim is exploratory and conditional on H1 matching-class transfer to uniform real chaining values, H2 fresh-trial success amplification including correlated siblings, H3 construction of the remaining core/j/group parameters, and the measured rate/cost transfer stated below.",
+    "Memory is a complete 19 GiB peak. It includes the 17 GiB + 4 B inverse table, 1 GiB construction positions, and the remaining 1 GiB - 4 B for code, parameters, allocator, stack, messages, counters, lookup buffers, and retained randomness."
+  ],
+  "baseline_improved": "sha256-r39-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  "experiment_manifest": "experiments/manifest.json",
+  "heuristics": [
+    {
+      "id": "H1-real-class-transfer",
+      "role": "score-critical",
+      "statement": "For each fresh random first block, H=F39(IV,M0) behaves as an independent uniform chaining value for the C39 matching class and the modular tail event. Thus the reconstructed-class mean tail probability applies to a real first block.",
+      "scope": "The fixed C39 core, j=adc6d187, q-aware list 3630571a..., PB=0 table, and sha256-r39-prefix-v1.",
+      "extrapolation": "Fresh q and modular-tail campaigns sample the exact matching-class output population of the frozen deterministic list. H1 transfers their conditional mean to the one real H of a fresh first-block trial.",
+      "evidence_ids": [
+        "experiment:gold39-evidence",
+        "proof:96-109",
+        "proof:110-117"
+      ],
+      "limitations": "The approximately 2^-75 tail event cannot be observed directly on real chaining values. The list was frozen before fresh q/tail holdout, but fixed reproducibility seeds are not ideal coins and matching-class checks do not prove the real-chain transfer."
+    },
+    {
+      "id": "H2-fresh-trial-amplification",
+      "role": "score-critical",
+      "statement": "A fresh-first-block trial succeeds with probability at least p0=2^-90.38540845807911, including any dependence among sibling outputs, and distinct fresh trials amplify as independent Bernoulli trials.",
+      "scope": "The N fresh-first-block trials and fixed global work cap in proof Section 8.",
+      "extrapolation": "The exact 1/64 and M factors times separate q Hoeffding and tail Student 99.9% endpoints supply p0. N makes untruncated success at least 0.516. The Markov/union-bound wrapper subtracts at most 1/8 and leaves at least 0.391.",
+      "evidence_ids": [
+        "experiment:gold39-evidence",
+        "proof:110-117",
+        "proof:118-131"
+      ],
+      "limitations": "Linearity proves expected successful outputs, not probability of at least one. H2 is the explicit sibling conversion. Hoeffding assumes ideal iid prefix coins; Student-t tail coverage is model-dependent; together the marginal models imply a 99.8% simultaneous nominal guarantee. The A2-free bound is not used."
+    },
+    {
+      "id": "H3-parameter-search",
+      "role": "score-critical",
+      "statement": "The documented C39 preprocessing constructs the core, j=adc6d187, 50 group labels, and the exact q-aware list within 2^74 target-compression units and the 19 GiB peak.",
+      "scope": "One-time construction of the C39 core, j/group labels, and list SHA-256 3630571a... used by this candidate.",
+      "extrapolation": "The list construction is deterministic and replays byte-identically after 126,025,728 prefix checks; a complete exact q-aware route is bounded below 2^68 units. The 2^74 total also covers the declared 34-free-bit core search and published j/group parameter search.",
+      "evidence_ids": [
+        "experiment:gold39-evidence",
+        "proof:9-14",
+        "proof:162-171"
+      ],
+      "limitations": "The submitted list no longer depends on the missing historical list transcript. The release still omits the original search transcript for the core, j and 50 group labels; their discovery bound remains the score-critical part of H3. The full exact q-aware enumeration was specified but not physically completed."
+    },
+    {
+      "id": "H4-cost-rate-transfer",
+      "role": "score-critical",
+      "statement": "The true expected charged work of one fresh-first-block C39 trial is at most 64 target-compression units, and the measured branch frequencies transfer to the full run.",
+      "scope": "The exact algorithm in proof Section 4 under collision-frontier-v5 with C39=2812 and each random table lookup charged as one full compression.",
+      "extrapolation": "A conservative itemized ledger with every bucket scan charged at the 224-entry maximum gives 9.031045 units and the declaration raises it to 64. The prior 2^34-trial counters support branch envelopes; the one-entry list change and fresh q holdout are covered by the rounded bounds.",
+      "evidence_ids": [
+        "experiment:gold39-evidence",
+        "proof:23-63",
+        "proof:132-155"
+      ],
+      "limitations": "The experiment runs self-contained formulas and checks endpoint and cost-row-sum arithmetic, not a full native 17 GiB implementation or every primary counter. The 7.087x slack covers the declared primitive census, but H4 remains a score-critical cost/rate premise."
+    }
+  ],
+  "submission_state": "ready",
+  "lane": "exploratory"
 }

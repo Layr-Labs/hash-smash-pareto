@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "gold39-evidence",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/gold39.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "Self-contained C39 participant-source evidence for q-aware list 3630571a.... Trial 0 internally checks the Table 23 SFS pair, complete solver and prefix predicate on 16 distinct real-H records, all 299 selected A3 values/50 groups, stored table histogram, fresh q/tail endpoint arithmetic, cost-row sum, and stored success value. Remaining trials replay one embedded prefix record chosen by organizer seed.",
+      "hypothesis": "The submitted source's deterministic identities and stored arithmetic match the claim. All returned message pairs are null, so the organizer treats the internal numbers as untrusted participant observations; this experiment does not measure the approximately 2^-90.43 event, attack cost, or parameter discovery."
+    }
+  ]
+}
