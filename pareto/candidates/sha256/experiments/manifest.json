@@ -1,0 +1,155 @@
+{
+  "experiments": [
+    {
+      "event": {
+        "kind": "full-collision"
+      },
+      "hypothesis": "This disjoint slice has the reported number satisfying both exact W9 predicates.",
+      "id": "r39-w9-slice-0",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/weighted39.py",
+      "scope": "Exact native census of W9 words in [0,2^29)."
+    },
+    {
+      "event": {
+        "kind": "full-collision"
+      },
+      "hypothesis": "This disjoint slice has the reported number satisfying both exact W9 predicates.",
+      "id": "r39-w9-slice-1",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/weighted39.py",
+      "scope": "Exact native census of W9 words in [2^29,2*2^29)."
+    },
+    {
+      "event": {
+        "kind": "full-collision"
+      },
+      "hypothesis": "This disjoint slice has the reported number satisfying both exact W9 predicates.",
+      "id": "r39-w9-slice-2",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/weighted39.py",
+      "scope": "Exact native census of W9 words in [2*2^29,3*2^29)."
+    },
+    {
+      "event": {
+        "kind": "full-collision"
+      },
+      "hypothesis": "This disjoint slice has the reported number satisfying both exact W9 predicates.",
+      "id": "r39-w9-slice-3",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/weighted39.py",
+      "scope": "Exact native census of W9 words in [3*2^29,4*2^29)."
+    },
+    {
+      "event": {
+        "kind": "full-collision"
+      },
+      "hypothesis": "This disjoint slice has the reported number satisfying both exact W9 predicates.",
+      "id": "r39-w9-slice-4",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/weighted39.py",
+      "scope": "Exact native census of W9 words in [4*2^29,5*2^29)."
+    },
+    {
+      "event": {
+        "kind": "full-collision"
+      },
+      "hypothesis": "This disjoint slice has the reported number satisfying both exact W9 predicates.",
+      "id": "r39-w9-slice-5",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/weighted39.py",
+      "scope": "Exact native census of W9 words in [5*2^29,6*2^29)."
+    },
+    {
+      "event": {
+        "kind": "full-collision"
+      },
+      "hypothesis": "This disjoint slice has the reported number satisfying both exact W9 predicates.",
+      "id": "r39-w9-slice-6",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/weighted39.py",
+      "scope": "Exact native census of W9 words in [6*2^29,7*2^29)."
+    },
+    {
+      "event": {
+        "kind": "full-collision"
+      },
+      "hypothesis": "This disjoint slice has the reported number satisfying both exact W9 predicates.",
+      "id": "r39-w9-slice-7",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/weighted39.py",
+      "scope": "Exact native census of W9 words in [7*2^29,2^32)."
+    },
+    {
+      "event": {
+        "kind": "full-collision"
+      },
+      "hypothesis": "The complete-inverse expectation coordinates and exact J mass are recomputed rather than asserted.",
+      "id": "r39-coordinate-algebra",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/weighted39.py",
+      "scope": "Native recomputation of H7 and H6 translations, sigma0 ranks, and all 299 J fibres on organizer seeds."
+    },
+    {
+      "event": {
+        "kind": "full-collision"
+      },
+      "hypothesis": "The program generates tail proposals, predicates, weights, counters, and verifies every emitted semi-free-start vector.",
+      "id": "r39-fresh-sis-native",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/weighted39.py",
+      "scope": "Fresh organizer-seed 512-path, 2^18-candidate SIS generation from one real selected prefix, with a separate full-vector verifier in the same image."
+    },
+    {
+      "event": {
+        "kind": "full-collision"
+      },
+      "hypothesis": "The known prefix is recovered once and a conservative per-vector 1/R correction is computationally defined without the 17-GiB table.",
+      "id": "r39-exact-upper-count",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/weighted39.py",
+      "scope": "Eight organizer-derived matching-class points; exact low-memory inversion and full matching/J-gate count R with X no greater than R."
+    },
+    {
+      "event": {
+        "kind": "full-collision"
+      },
+      "hypothesis": "Each terminal success has a reproducible conservative 1/R weight and retains the known prefix once.",
+      "id": "r39-success-upper-count",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/weighted39.py",
+      "scope": "First eight precommitted successful vectors from frozen tail block 29; exact low-memory R with X no greater than R."
+    },
+    {
+      "event": {
+        "kind": "full-collision"
+      },
+      "hypothesis": "The 64 whole-block estimates, one-sided DKW order statistic with a one-part-per-million guard, selected-trial lambda, itemized preprocessing allowances and upward-rounded score recompute exactly.",
+      "id": "r39-weighted-arithmetic",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/weighted39.py",
+      "scope": "Exact histogram, selected-law identity, 64-block DKW/order-statistic arithmetic, A_C/A_U/A_L/DEV ledger, total work, score, and conditional H4 arithmetic for the frozen r39 evidence."
+    },
+    {
+      "event": {
+        "kind": "full-collision"
+      },
+      "hypothesis": "The admitted on-demand inverter and full prefix predicate reproduce exact X, H and target multiplicity.",
+      "id": "r39-exact-x-overlap8",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/weighted39.py",
+      "scope": "Eight precommitted ordinal-29/path-73 records; low-memory exact X compared with the frozen 22-GiB replay."
+    },
+    {
+      "event": {
+        "kind": "full-collision"
+      },
+      "hypothesis": "Eight freshly generated terminal vectors can be exact-X weighted under the admitted envelope.",
+      "id": "r39-fresh-sis-exact-x",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/weighted39.py",
+      "scope": "Fresh organizer-seeded SIS, Algorithm-R sample of eight terminal successes, forward verification and low-memory exact X in one run."
+    }
+  ],
+  "schema_version": 1
+}

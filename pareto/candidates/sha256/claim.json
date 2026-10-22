@@ -1,20 +1,137 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha256-r37-prefix-v1",
+  "target_profile": "sha256-r39-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 37,
+  "rounds": 39,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 101.09222,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 34.4594316186373,
+    "preprocessing_log2": 91.00018,
     "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
+    "nonuniform_advice_log2_bytes": 12
   },
-  "restrictions": [],
-  "baseline_improved": "sha256-r37-nominal-v2",
+  "restrictions": [
+    "C39 PB=0 ordinary-collision construction for sha256-r39-prefix-v1. A fresh ideal trial hashes a uniform 64-byte first block from the fixed IV, draws A0, completely enumerates prefix outputs, uniformly selects one output when nonempty, and verifies two complete second-block compressions.",
+    "The selected-law identity N_C/D_C >= N_C is exact under the uniform matching-class base law because D_C=E[1/X] is positive and at most one. Applying the resulting numerator to fixed-IV chaining values is the explicit H1 premise; no uniform fixed-IV density is claimed.",
+    "The tail lower quantity uses a one-sided 99.5% DKW bound on 64 nonnegative whole-block estimators, simultaneous threshold selection, and a one-part-per-million downward threshold guard. No bootstrap result enters the binding probability claim.",
+    "The wrapper uses N=5273750237090459099267675734 ideal fresh trial slots and stops before 8*64*N=2700160121390315058825049975808 target units. Preprocessing charges A_C=2^78, A_U=2^72, A_L=2^90, DEV=2^90, and 1812688333559 finite target units.",
+    "A_C/A_U/A_L/DEV and the fixed-IV and online-mean transfers are disclosed exploratory premises. The canonical-A10 result has no proof certificate, its greedy minimizer is UNKNOWN, the native lower-core conversion is not certified, and the dated DEV envelope is a conservative ledger rather than an instruction trace.",
+    "Complete memory is 23622320128 bytes (22 GiB), covering the full inverse table, construction arrays, fixed parameters, allocator, code, counters, selected-output state, and evidence processing."
+  ],
+  "baseline_improved": "sha256-r39-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  "experiment_manifest": "experiments/manifest.json",
+  "heuristics": [
+    {
+      "id": "H1-fixed-iv-matching-class",
+      "role": "score-critical",
+      "statement": "The corrected uniform-matching-class numerator N_C=E_U[Y/X] lower-bounds the actual selected-output tail quantity needed for chaining values H=F39(IV,M0) produced by fresh uniform first blocks.",
+      "scope": "The fixed C39 core, j=adc6d187, 299-entry list, complete PB=0 count X(H,A0), and the first 64 selected fixed-IV prefix blocks.",
+      "extrapolation": "Within the uniform matching-class model, the H-to-W18..W23 map is bijective, reservoir density is proportional to 1/X, and N_C/D_C>=N_C because 0<D_C<=1. The claim transfers that lower quantity to the actual fixed-IV chaining-value law.",
+      "evidence_ids": [
+        "experiment:r39-coordinate-algebra",
+        "experiment:r39-exact-x-overlap8",
+        "experiment:r39-fresh-sis-exact-x",
+        "experiment:r39-weighted-arithmetic",
+        "proof:117-162"
+      ],
+      "limitations": "No positive lower density comparison between fixed-IV chaining values and the uniform matching class is proved. Exact-X replays establish multiplicities and implementation behavior at bounded points, not this distributional transfer."
+    },
+    {
+      "id": "H2-one-selected-output",
+      "role": "score-critical",
+      "statement": "For each complete ideal fresh trial, P(success)=P(X>0) times the conditional probability that its uniformly reservoir-selected output succeeds, and independent ideal trials amplify this event.",
+      "scope": "Complete PB=0 enumeration, one-item reservoir selection, the bounded-draw implementation, and the fixed global work cap.",
+      "extrapolation": "The fresh 2^24 campaign found 406 nonempty trials and replayed every output and choice. Reservoir induction assigns probability 1/X to every output; the nominal run applies the identity to independent ideal fresh coins.",
+      "evidence_ids": [
+        "experiment:r39-exact-upper-count",
+        "experiment:r39-weighted-arithmetic",
+        "proof:46-94",
+        "proof:117-148"
+      ],
+      "limitations": "Public deterministic seeds establish reproducibility, not ideal randomness or independence at the nominal scale. The bounded rejection-loop failure is charged separately."
+    },
+    {
+      "id": "H3A-upper-characteristic",
+      "role": "score-critical",
+      "statement": "Construction of the inherited Table-23 characteristic and exact upper target fits A_C=2^78 target units.",
+      "scope": "The exact 39-step Table-23 upper trajectory, characteristic relations, and upper interface consumed by the frozen C39 lower construction.",
+      "extrapolation": "The valid 7c4 submission gives an exact Table-23 base construction claim of 2^36, with exact row-16/17 DFS, exact downward inversion and a 256-candidate slice. The present allowance adds 42 bits of nominal room.",
+      "evidence_ids": [
+        "experiment:r39-coordinate-algebra",
+        "experiment:r39-weighted-arithmetic",
+        "proof:101"
+      ],
+      "limitations": "The full 2^34 candidate space and characteristic discovery were not rerun. The cited result is plausible_not_refuted, not human acceptance or a strict certified upper bound."
+    },
+    {
+      "id": "H3B-upper-a10-fallback",
+      "role": "score-critical",
+      "statement": "The bounded arbitrary-A10 upper reconstruction fits A_U=2^72 target units under the declared 2^40 word-operations per core-second conversion.",
+      "scope": "All 2^32 A10 values for U39, including CNF generation, capped solving, independent scalar decoding, failures, and constant-size sweep state.",
+      "extrapolation": "Each value receives a complete 2812 one-core-second envelope; division by C39=2812 makes the full range exactly 2^72 target units. Target and non-target controls run successfully, and two SAT backends report no U39 solution below the scalar-verified target A10.",
+      "evidence_ids": [
+        "experiment:r39-weighted-arithmetic",
+        "proof:103-109"
+      ],
+      "limitations": "The full sweep was not executed. The seconds-to-word-operations conversion is an explicit conservative premise. Neither UNSAT backend emitted a proof certificate, and a generic greedy minimizer remained UNKNOWN at its first query."
+    },
+    {
+      "id": "H3C-lower-core",
+      "role": "score-critical",
+      "statement": "The complete three-stage lower-core construction, failures, verification, and deterministic selector fit A_L=2^90 target units.",
+      "scope": "The exact semantic lower core, j=adc6d187, fifty labels, 299-entry list, all failed lower searches, CNF work, and selector execution.",
+      "extrapolation": "Three full assignments replay byte-for-byte, all 354583 clauses and 983289 literals verify, and the selector recovers the frozen list. A pessimistic partial source sensitivity is 2^74.469 target units, leaving 15.531 bits to A_L.",
+      "evidence_ids": [
+        "experiment:r39-coordinate-algebra",
+        "experiment:r39-weighted-arithmetic",
+        "proof:111"
+      ],
+      "limitations": "A complete selector-equivalent x86/VEX-to-v5 scalar conversion is not proved; stages 1 and 2 lack complete matching traces. A_L is an exploratory reserve, not strict certification."
+    },
+    {
+      "id": "H3D-development-envelope",
+      "role": "score-critical",
+      "statement": "All other construction development, failed runs, compilation, verification, serialization, and evidence processing fit DEV=2^90 target units.",
+      "scope": "Charged local r39 construction work in the 48-hour interval 2026-10-21T00:00:00Z through 2026-10-23T00:00:00Z on the recorded shared host.",
+      "extrapolation": "The dated ledger charges 2^20 CPU threads and 2^10 accelerators for 2^18 seconds at 2^40 and 2^47 word operations per device-second, then multiplies by 2^10 for services. This is below 2^76.713 target units, leaving 13.287 bits.",
+      "evidence_ids": [
+        "experiment:r39-weighted-arithmetic",
+        "proof:113"
+      ],
+      "limitations": "The inventory and arithmetic are checked, but the rates and service multiplier are conservative accounting premises, not measured traces. Model authorship is outside the classical construction. Work outside the interval or host requires an expanded ledger."
+    },
+    {
+      "id": "H4-fixed-iv-online-mean",
+      "role": "score-critical",
+      "statement": "Complete expected online work is at most 64 target units per fixed-IV ideal fresh trial, including failed trials, lookup scans, enumeration, randomness, memory operations, recovery, and verification.",
+      "scope": "The complete one-selected-output C39 solver and the fixed global work counter under collision-frontier-v5.",
+      "extrapolation": "Exact H7/H6 coordinate translations, the complete W9 census and all J fibres give a 9.084819-unit analytic sensitivity under ideal-uniform CV words. The submitted 64-unit mean transfers that behavior with more than a factor-seven reserve to fixed-IV chaining values.",
+      "evidence_ids": [
+        "experiment:r39-w9-slice-0",
+        "experiment:r39-coordinate-algebra",
+        "experiment:r39-weighted-arithmetic",
+        "proof:283-296"
+      ],
+      "limitations": "A uniform random first block does not prove ideal-uniform independent CV words. Finite campaign branch rates and source-level allowances are not a full-scale instruction-metered deployment."
+    },
+    {
+      "id": "H5-dkw-whole-block",
+      "role": "score-critical",
+      "statement": "For the ideal iid whole-block experiment, the one-sided 99.5% DKW bound gives corrected tail mean at least 6.4850968671385134838601336609171013369152069091796875e-24; union with the exact 99.5% nonempty endpoint gives lambda at least 1.376004436391093605946960115075346160866308669737053319549560546875e-28.",
+      "scope": "Sixty-four frozen selected-prefix blocks, 512 SIS paths per block, Algorithm-R samples of at most 512 terminal successes per positive path, and the simultaneous 25th-order-statistic threshold.",
+      "extrapolation": "The ideal uncapped whole-block statistic is unbiased under ideal independent coins. The archived 16-draw helper fails a whole block closed to Z=0 on exhaustion, so the executed statistic is pointwise no greater and the lower bound remains conservative. DKW holds simultaneously in every threshold, so selecting the best observed order statistic adds no multiple-testing penalty; a 1ppm guard covers archived binary64 accumulation.",
+      "evidence_ids": [
+        "experiment:r39-fresh-sis-native",
+        "experiment:r39-exact-x-overlap8",
+        "experiment:r39-fresh-sis-exact-x",
+        "experiment:r39-weighted-arithmetic",
+        "proof:164-223"
+      ],
+      "limitations": "The 64 blocks must be iid draws under the declared ideal fresh-coin experiment, and the SIS/Algorithm-R semantics must hold. The per-draw cap failure is below 2^-736 and remains below 2^-696 over 2^40 draws, but public seeds prove replay rather than iid coins. H1 fixed-IV transfer remains separate. The old bootstrap is historical sensitivity only and is not used."
+    }
+  ],
+  "submission_state": "ready",
+  "lane": "exploratory"
 }
