@@ -1,20 +1,42 @@
 {
-  "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "poseidon-orchard-r0-prefix-v1",
-  "attack_class": "ordinary-collision",
-  "rounds": 0,
-  "claim": {
-    "time_log2": 128.0,
-    "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
-    "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
-  },
-  "restrictions": [],
-  "baseline_improved": "poseidon-orchard-r0-nominal-v2",
-  "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+ "schema_version": 3,
+ "target_profile": "poseidon-orchard-r56-prefix-v1",
+ "attack_class": "ordinary-collision",
+ "rounds": 56,
+ "claim": {
+  "time_log2": 126.21091,
+  "time_unit": "target-compressions",
+  "memory_log2_bytes": 20,
+  "preprocessing_log2": 48,
+  "success_probability": 0.39,
+  "nonuniform_advice_log2_bytes": 0
+ },
+ "restrictions": [
+  "Two distinct 64-byte messages with equal digests for the Orchard hash with 56 partial rounds (poseidon-orchard-r56-prefix-v1), found as a collision F(x) = F(y), x != y, of the walk F(x) = digest(message(kappa x - E0_0)) / OUTSCALE_kappa: message() is the injective parametrisation of the input line on which rounds 0 and 1 are affine, kappa a random nonzero coin. Birthday search, one trail with distinguished points (x < (2^126 + 1) T), one table, single-gap recovery (credit 43caeb6a).",
+  "Cost model orchard-field-ram-v2, C = 1392. Field ADD and MUL 1/C each; every other primitive 256-bit word operation (AND, OR, shift, comparison, conditional branch, move, load, store, random word) 1/C; a conditional branch on the unsigned order of two registers is one conditional branch. Every evaluation executes the 807-operation step program (329 ADD, 478 MUL; proof.md Section 2, Appendix C). The 327 step constants are kappa-monomials set per attempt (1,237 operations, charged) in a declared file of 387 registers counted in memory.",
+  "Ledger (proof.md Section 6, instruction listings): a trail step is 807 + 1 operations, plus 2 per block of 18 unrolled steps; recovery at most 3G + d - 1 evaluations of 807 + 6; table, bisection, messages, constants and setup 14,992,292,142 operations; offline derivation charged at 2^58 (Section 6a). Every halt charged at its limit: total 137058920690089353106219371723203503313662 operations, log2(total / 1392) = 126.2109046, claimed 126.21091 (rounded up). One attempt; no restart, amplification or advice.",
+  "Memory: 28,090 table entries of one 32-byte word, a side array of 16-bit high parts (1,756 words), the start word, 16,300 instructions at 4 bytes, constants, the 387-register file and the kappa setup: 1,048,560 bytes, below 2^20 (proof.md Section 7).",
+  "Success probability at least 0.39 under the declared premise H1: Lemma 2 (proof.md Section 5) proves 0.39000000156998899443 for a uniformly random function at the filed budget; H1 carries it to the real map (Section 8, with the price of a margin). The program is printed in proof.md Appendix B (standard library only). One organizer-run experiment (lowbits-birthday, Section 9). No full collision is produced or claimed; the claim is the cost of the search."
+ ],
+ "baseline_improved": "poseidon-orchard-r56-nominal-v2",
+ "certificate_manifest": "certificates/manifest.json",
+ "experiment_manifest": "experiments/manifest.json",
+ "heuristics": [
+  {
+   "id": "H1-random-function-model",
+   "role": "score-critical",
+   "statement": "At the filed budget n = 133558715 * 2^100, where Lemma 2 gives 0.39000000157 for a uniformly random function, the search of proof.md Section 3 on the real map F(x) = digest(message(kappa x - E0_0)) / OUTSCALE_kappa, with uniform coins kappa and x_0, succeeds with probability at least 0.39.",
+   "scope": "Target poseidon-orchard-r56-prefix-v1, inputs on the line of proof.md Section 1, one trail with the parameters of Section 3 (S = 1.6936e38 evaluations). Only the success probability rests on it; the step program, recovery, ledger and memory are proved or checked exactly (Sections 2, 4, 6, 7).",
+   "extrapolation": "Organizer-run experiment lowbits-birthday (256 trials, this target's digest at r = 56, first 14 bits, fresh inputs; Section 9) checks the collision rate of the real digest at reduced width. H1 applies the random-function law to F at full width over 2^127 steps. Sensitivity (Section 8, exact from plan): collision-rate factor c = 1, 0.9, 0.75, 0.6, 0.5, 0.4 gives 0.3900, 0.3591, 0.3097, 0.2565, 0.2188, 0.1792; restoring 0.39 with a margin epsilon costs log2(1 + epsilon) bits (0.0144 at 1 %, 0.1375 at 10 %).",
+   "evidence_ids": [
+    "proof:35-47",
+    "proof:83-89",
+    "proof:90-93",
+    "experiment:lowbits-birthday"
+   ],
+   "limitations": "H1 is not proved; it concerns the average over the coin kappa, which is what Lemma 2 bounds. The experiment observes 14-bit digest agreement only and does not certify the full-width law."
+  }
+ ],
+ "submission_state": "ready",
+ "lane": "exploratory"
 }
