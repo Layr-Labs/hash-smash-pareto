@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "bsrho-n18",
+      "kind": "python-message-pairs-v1",
+      "scope": "blake3-r5-prefix-v1 with 64-byte messages K || x, K=0000008000000000000000800000000000000080000000000000000000000000. The request rebuilds the emitter and runs the reduced-width all-ones search, quotient filter, and checkpoint recovery.",
+      "hypothesis": "Every returned pair is distinct and its complete 5-round digests agree in the low 18 bits. Counts are program checks, not a width-256 estimate.",
+      "program": "experiments/bsrho.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "ffff030000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "proj-prefix-w256",
+      "kind": "python-message-pairs-v1",
+      "scope": "blake3-r5-prefix-v1 with 64-byte messages K || x, K=0000008000000000000000800000000000000080000000000000000000000000. The request rebuilds the emitter and evaluates 2,048 full-width points with the shipped bit-sliced step.",
+      "hypothesis": "Every returned pair is distinct and its complete 5-round digests agree in the low 21 bits. This checks the prefix, step, mask, and messages.",
+      "program": "experiments/bsrho.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "ffff1f0000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "h1-law-n20",
+      "kind": "python-message-pairs-v1",
+      "scope": "blake3-r5-prefix-v1 with 64-byte messages K || x, K=0000008000000000000000800000000000000080000000000000000000000000. All 64 observed groups iterate one fixed 20-bit coordinate restriction of the shipped walk. Each of 64 null ensembles uses one shared lazy random mapping for all 64 groups. Distinguished hits count only globally fresh inputs.",
+      "hypothesis": "Four first-collision bins must score no higher than 1.25 times the largest score in a 32-ensemble calibration set after a separate 32-ensemble fit. The globally-fresh distinguished-point z-score must remain within the larger of 4 and 1.25 times the largest calibration magnitude. This is reduced-width evidence only.",
+      "program": "experiments/bsrho.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "ffff030000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    }
+  ]
+}
