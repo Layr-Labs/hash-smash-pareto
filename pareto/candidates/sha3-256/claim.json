@@ -1,20 +1,55 @@
 {
-  "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha3-256-r5-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 5,
-  "claim": {
-    "time_log2": 128.0,
-    "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
-    "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
-  },
-  "restrictions": [],
-  "baseline_improved": "sha3-256-r5-nominal-v2",
+  "baseline_improved": "sha3-256-r10-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
+  "claim": {
+    "memory_log2_bytes": 20,
+    "nonuniform_advice_log2_bytes": 0,
+    "preprocessing_log2": 36,
+    "success_probability": 0.39,
+    "time_log2": 124.28232,
+    "time_unit": "target-compressions"
+  },
+  "experiment_manifest": "experiments/manifest.json",
+  "heuristics": [
+    {
+      "evidence_ids": [
+        "experiment:success-certificate",
+        "experiment:exact-controller",
+        "proof:1-8"
+      ],
+      "extrapolation": "van Oorschot-Wiener 1999, the common generic-track premise, separation and priced sensitivity in proof Section 6, plus exact-program consistency checks.",
+      "id": "H1-random-function-model",
+      "limitations": "Experiments do not reach birthday scale; circuit, memory and comparator-F arithmetic do not depend on H1.",
+      "role": "score-critical",
+      "scope": "The fixed r10 chain, 120000 trails, exact DP threshold, replay cap, 256 lanes and at most 256*Tb evaluations.",
+      "statement": "H1 is one premise. Let A_g be this bounded attempt on the fixed deterministic walk g. In the real algorithm's probability space, only the fresh uniform word r is random. Let F be a uniformly random function on 256-bit values, independent of r, and let P_F = Pr_(r,F)[A_F succeeds] for the same attempt with each g evaluation replaced by lazy sampling from F. H1 asserts only the aggregate comparison Pr_r[A_g succeeds] >= P_F. Appendix A proves P_F >= 0.39. The following clauses are properties of comparator F used by that proof, not additional premises about g: outputs at distinct fresh inputs are uniform and independent; its iterates have the random-mapping first-collision law; a fresh output satisfies the exact distinguished-point predicate with its stated probability independently of prior collision bookkeeping; and after any lazy-sampling history, a fresh input maps to any fixed earlier output with probability 2^-256. H1 assigns no per-history conditional probability to deterministic g because the history determines r and hence all later g outputs. The aggregate success comparison is the only heuristic step."
+    },
+    {
+      "evidence_ids": [
+        "experiment:exact-controller",
+        "proof:3-5"
+      ],
+      "extrapolation": "None; emitted records and retained bytes are enumerated.",
+      "id": "H2-native-machine",
+      "limitations": "A different physical machine would require repricing.",
+      "role": "supporting",
+      "scope": "Step, controller and replay accounting.",
+      "statement": "The declared word RAM natively executes the packed two-address step and native8 controller formats at the per-record costs in proof.md; test decoders are outside the priced machine."
+    }
+  ],
   "lane": "exploratory",
-  "heuristics": []
+  "restrictions": [
+    "Two distinct 128-byte one-block messages for sha3-256-r10-prefix-v1 under the injective six-lane embedding of proof Section 2.",
+    "The native two-address step has 52750 executed records, 186186 bytes and SHA-256 d09da68c7b6cadd1ff8ba5f7702e90967ab3828692a0acae2a8b89526c8cdea2; no priced decoder exists.",
+    "The separate native two-address prefilter has 15 OR records, 49 bytes, destination register 1931 and SHA-256 02ffc1321a5ab8263554046357c9cc8a07f7692f001765a54031b45e95fbe1cc; the experiment executes its emitted bytes.",
+    "The chained-chi table has 1,024 entries, checksum c8fa4bd9170966dc, and both shipped builders verify every selected entry against all 32 concrete row inputs before use.",
+    "The native8 controller has 1002 instructions, 12 literals, 8400 bytes and SHA-256 ccb74604abb01c7b961c48caca9f2c1a6054bd91dc98377d960a7cf8928bdd71; the experiment executes its emitted bytes and checks the all-no-DP limit halt.",
+    "The table has 24000 words and 120000 positional 51-bit slots; every packed-field boundary is exercised.",
+    "Appendix A and the experiment certify success >= 0.39. Exact N=70092796163740754510829396230109810348972, C=2710, memory=1041547 bytes, preprocessing=116996521586176 word operations."
+  ],
+  "rounds": 10,
+  "schema_version": 3,
+  "submission_state": "ready",
+  "target_profile": "sha3-256-r10-prefix-v1"
 }
