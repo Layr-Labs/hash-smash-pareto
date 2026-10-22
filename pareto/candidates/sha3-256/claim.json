@@ -1,20 +1,71 @@
 {
-  "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha3-256-r5-prefix-v1",
-  "attack_class": "ordinary-collision",
-  "rounds": 5,
-  "claim": {
-    "time_log2": 128.0,
-    "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
-    "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
+ "attack_class": "ordinary-collision",
+ "baseline_improved": "sha3-256-r24-nominal-v2",
+ "certificate_manifest": "certificates/manifest.json",
+ "claim": {
+  "memory_log2_bytes": 20,
+  "nonuniform_advice_log2_bytes": 0,
+  "preprocessing_log2": 38,
+  "success_probability": 0.39,
+  "time_log2": 124.47641,
+  "time_unit": "target-compressions"
+ },
+ "experiment_manifest": "experiments/manifest.json",
+ "heuristics": [
+  {
+   "evidence_ids": [
+    "experiment:success-certificate",
+    "experiment:exact-controller",
+    "proof:173-228",
+    "proof:271-388"
+   ],
+   "extrapolation": "van Oorschot-Wiener 1999, the common generic-track premise, separation and priced sensitivity in proof Section 6, plus exact-program consistency checks.",
+   "id": "H1-random-function-model",
+   "limitations": "Experiments do not reach birthday scale; circuit, memory and comparator-F arithmetic do not depend on H1.",
+   "role": "score-critical",
+   "scope": "The fixed r24 chain, 91720 trails, exact DP threshold, replay cap, 256 lanes and at most 256*Tb evaluations.",
+   "statement": "H1 is one premise. Let A_g be this bounded attempt on the fixed deterministic walk g. In the real algorithm's probability space, only the fresh uniform word r is random. Let F be a uniformly random function on 256-bit values, independent of r, and let P_F = Pr_(r,F)[A_F succeeds] for the same attempt with each g evaluation replaced by lazy sampling from F. H1 asserts only the aggregate comparison Pr_r[A_g succeeds] >= P_F. Appendix A proves P_F >= 0.39. The following clauses are properties of comparator F used by that proof, not additional premises about g: outputs at distinct fresh inputs are uniform and independent; its iterates have the random-mapping first-collision law; a fresh output satisfies the exact distinguished-point predicate with its stated probability independently of prior collision bookkeeping; and after any lazy-sampling history, a fresh input maps to any fixed earlier output with probability 2^-256. H1 assigns no per-history conditional probability to deterministic g because the history determines r and hence all later g outputs. The aggregate success comparison is the only heuristic step."
   },
-  "restrictions": [],
-  "baseline_improved": "sha3-256-r5-nominal-v2",
-  "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  {
+   "evidence_ids": [
+    "experiment:exact-controller",
+    "proof:23-91"
+   ],
+   "extrapolation": "None statistical: a declared convention. Executed checks validate the program with this allocation, not the convention's cost of register access.",
+   "id": "H_reg",
+   "limitations": "A smaller required register file would add loads and stores absent from this ledger; the success argument is unaffected.",
+   "role": "supporting",
+   "scope": "The register file used by the straight-line program and the search; it affects the time and memory ledgers only, not the success bound.",
+   "statement": "Machine convention: the 256-bit word RAM of collision-frontier-v5 with a declared file of 1939 registers of 256 bits (1928 used by the straight line; the search state begins at register 1928; handler temporaries reuse dead straight-line registers above 255). An operation on register operands costs one word operation, with no load or store; every load and store of the other code is a charged word operation (proof Sections 3.6 and 4). The 62048 bytes of the file are counted as memory. The cost model fixes no register count."
+  },
+  {
+   "evidence_ids": [
+    "experiment:exact-controller",
+    "proof:23-91",
+    "proof:104-172",
+    "proof:229-247"
+   ],
+   "extrapolation": "None statistical: a declared machine convention, new and contestable (no accepted entry keeps decoder state beyond the code position). The experiment streams the RC block with the bounded decoder, asserts the stored forms and window references read from the bits, re-encodes the decoded records to the parent's exact image, and compares full register files over consecutive batches.",
+   "id": "H_code",
+   "limitations": "If window maintenance were charged as word-RAM work the score would rise: about 235 extra operations per batch (about 0.0016 per record) erase the gain over the parent. The literal charges priced in Section 3.6 add 1.0 to 3.3 bits; one indirect register access per window reference adds about 1.12 bits; refusing the encoding on the memory side puts memory at 1177699 bytes, above 2^20. The success bound is unaffected.",
+   "role": "score-critical",
+   "scope": "The straight-line code bytes and the uncharged decoding of operand names; the table size that the freed memory buys.",
+   "statement": "Code-encoding convention: the cost model fixes no instruction encoding. The straight line and prefilter are stored as the RC block of proof Section 3.6 (374089 bytes): prefix-coded forms, explicit destinations unless short, and source operands given either as an 11-bit register or as the destination of one of the previous 16 records (or, in the first 16 records, a reset name). Decoding reads code bits only and keeps 216 bits of non-addressable control state, reset at each block entry (charged one operation). Exactly one stored record executes per primitive operation. Window maintenance and operand resolution are treated as instruction decoding and are not charged; the other code uses 8-byte words and a literal pool (8272 bytes)."
+  }
+ ],
+ "lane": "exploratory",
+ "restrictions": [
+  "Two distinct 128-byte one-block messages for sha3-256-r24-prefix-v1 under the injective six-lane embedding of proof Section 2.",
+  "The bit-sliced straight line has 144722 register operations. It is stored, followed by the prefilter, as the RC block of proof Section 3.6: 144737 records, 374089 bytes, SHA-256 9515a581d4b5d38e03e7662df0466516ef1e94bb2bcea2e3bdcf8455f793f7ff. The block decodes to records whose two-address re-encoding is the parent's 503426-byte image, SHA-256 275722b84ae9f840ad4c95c0fb782cfec2338efb1a6eab144d0d7e6a8522c41a.",
+  "The 15-OR prefilter (destination register 1932) is the last 15 records of the RC block. Its two-address re-encoding has 49 bytes and SHA-256 70556574176bd68efe064c4622378fdc5bfd59aaa1cbf1618fe2451a830f5a01. The experiment executes it by streaming.",
+  "The chained-chi table has 1,024 entries, checksum c8fa4bd9170966dc, and both shipped builders verify every selected entry against all 32 concrete row inputs before use.",
+  "The assembled other code has 986 8-byte instruction words, 12 32-byte literals, 8272 bytes and SHA-256 333562c28a3dc0e1537f6408c78ec10534d02986a9717ffa85a9080914e0d4d4. The experiment executes it, checks the all-no-DP limit halt, and runs two controller back-edges through the streamed RC block.",
+  "Machine conventions H_reg and H_code (proof Section 3.6). H_reg (supporting): 1939 registers of 256 bits, whose 62048 bytes count as memory; a register-operand operation costs one word operation, and every load and store of the other code is charged. H_code (score-critical): the straight line is stored as the RC block. Each record is one charged operation, and each block entry one more (decoder reset). Operands may name the destination of one of the previous 16 records or a reset name; that window is 216 bits of non-addressable decoder control state, counted as 32 bytes, and its maintenance is uncharged decoding. Other code: 8-byte words plus literal pool (8272 bytes).",
+  "The table has 18344 words and 91720 positional 51-bit slots; every packed-field boundary is exercised.",
+  "Appendix A and the experiment certify success >= 0.39. Exact N=192446993703165203378624853847617760848388, C=6504, memory=1048345 bytes, preprocessing=1409324217821184 word operations."
+ ],
+ "rounds": 24,
+ "schema_version": 3,
+ "submission_state": "ready",
+ "target_profile": "sha3-256-r24-prefix-v1"
 }
