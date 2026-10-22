@@ -1,0 +1,29 @@
+{
+ "schema_version": 1,
+ "experiments": [
+  {
+   "id": "search-w14-raw-bits",
+   "kind": "python-message-pairs-v1",
+   "scope": "The claim's search (proof.md Section 3) run per organizer trial on the map x -> the 14 low bits of digest(message(kappa x - E0_0)), x in [0, 2^14), on the claim's input line of the selected Orchard Poseidon target at its own round count: kappa and x_0 are the low 254 bits of two words of the trial seed (kappa = 1 if zero), x_0 reduced to 14 bits; DP test x < 2^11, table of 64, detection window 90, single-gap recovery (G = 78, positioning cap G + 89), trail 144. The map is the claim's F without the division by OUTSCALE_kappa. A success is a recovered pair of distinct line messages whose digests agree on the 14 low bits; a failed attempt returns nulls.",
+   "hypothesis": "Reproducible observation at width 14 of the claim's search on the digest-bit map of its own line, for comparison with the value 0.3884 of the same search on a uniformly random map of 2^14 points (our measurement, 200,000 runs). No probability is inferred from the count. Says nothing about full width, about the division by OUTSCALE_kappa, about cost or the full-width success probability; that extrapolation is H1.",
+   "program": "experiments/exp_linewalk.py",
+   "event": {
+    "kind": "digest-xor-mask",
+    "mask_hex": "ff3f000000000000000000000000000000000000000000000000000000000000",
+    "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  },
+  {
+   "id": "trail-w14-exact-walk",
+   "kind": "python-message-pairs-v1",
+   "scope": "The claim's walk F(x) = digest(message(kappa x - E0_0)) / OUTSCALE_kappa itself, at full width in the Pallas field, on the claim's input line of the selected Orchard Poseidon target: per organizer trial kappa and x_0 are the low 254 bits of two words of the trial seed (kappa = 1 if zero), OUTSCALE_kappa = OUTSCALE_1 kappa^(5^62), 128 outputs x_{i+1} = F(x_i). A success is a returned pair of distinct line messages, two trail points, whose digests agree on the 14 low bits; the program returns the first such pair of the trail, or nulls. Table, distinguished points and recovery are not part of this experiment.",
+   "hypothesis": "Reproducible observation of the walk F: the 14 low bits of the raw digests along its trail repeat within 128 outputs, for comparison with the value 0.3919 of independent uniform 14-bit values (1 - prod_{i=1..127} (1 - i / 2^14), exact). No probability is inferred from the count. Says nothing about the search, its success probability at full width or its cost; that extrapolation is H1.",
+   "program": "experiments/exp_linewalk.py",
+   "event": {
+    "kind": "digest-xor-mask",
+    "mask_hex": "ff3f000000000000000000000000000000000000000000000000000000000000",
+    "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  }
+ ]
+}
