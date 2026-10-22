@@ -1,0 +1,17 @@
+{
+ "schema_version": 1,
+ "experiments": [
+  {
+   "id": "line-walk",
+   "kind": "python-message-pairs-v1",
+   "scope": "The claim's search (proof.md Section 3) run per organizer trial on the restricted map f(x) = 14 event bits of digest(message(kappa x - E0_0)), x in [0, 2^14), of the selected Orchard Poseidon target at its own round count: the claim's input line, a nonzero coin kappa and start x_0 from the trial seed, DP test x < 2^11, table of 64, detection window 90, single-gap recovery (G = 78, positioning cap G + 89), trail 144. A success is a recovered pair of distinct line messages whose digests agree on the 14 event bits; a failed attempt returns nulls.",
+   "hypothesis": "Premise H1 at width 14: the number k of successful trials out of 256 follows the random-map reference p0 = 0.3884 (the same search on a uniformly random map of 2^14 points). Pre-declared rule: the premise at this width is rejected if k <= 80 (probability <= 0.0070 under p0). Power against a random map on 2^14 / c points: 0.49 at c = 0.75, 0.97 at c = 0.6. Says nothing about full width, cost or the full-width success probability; that extrapolation is H1.",
+   "program": "experiments/exp_linewalk.py",
+   "event": {
+    "kind": "digest-xor-mask",
+    "mask_hex": "fffc000000000000000000000000000000000000000000000000000000000000",
+    "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  }
+ ]
+}

@@ -1,20 +1,42 @@
 {
-  "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "poseidon-orchard-r0-prefix-v1",
-  "attack_class": "ordinary-collision",
-  "rounds": 0,
-  "claim": {
-    "time_log2": 128.0,
-    "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
-    "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
-  },
-  "restrictions": [],
-  "baseline_improved": "poseidon-orchard-r0-nominal-v2",
-  "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+ "schema_version": 3,
+ "target_profile": "poseidon-orchard-r56-prefix-v1",
+ "attack_class": "ordinary-collision",
+ "rounds": 56,
+ "claim": {
+  "time_log2": 126.21255,
+  "time_unit": "target-compressions",
+  "memory_log2_bytes": 20,
+  "preprocessing_log2": 48,
+  "success_probability": 0.39,
+  "nonuniform_advice_log2_bytes": 0
+ },
+ "restrictions": [
+  "Two distinct 64-byte messages with equal digests for the Orchard hash with 56 partial rounds (poseidon-orchard-r56-prefix-v1), found as a collision F(x) = F(y), x != y, of the walk F(x) = digest(message(kappa x - E0_0)) / OUTSCALE_kappa: message() is the injective parametrisation of the input line on which rounds 0 and 1 are affine, kappa a random nonzero coin. Birthday search, one trail with distinguished points (x < (2^126 + 1) T), one bit-packed table (142-bit value, 119-bit index gap per entry), single-gap recovery (credit 43caeb6a).",
+  "Cost model orchard-field-ram-v2, C = 1392. Field ADD and MUL 1/C each; every other primitive 256-bit word operation (AND, OR, shift, comparison, conditional branch, move, load, store, random word) 1/C; a comparison and a conditional branch are two operations. Every evaluation executes the 807-operation step program (329 ADD, 478 MUL; proof.md Section 2, Appendix C). The 327 step constants are kappa-monomials set per attempt (1,237 operations, charged) in a declared file of 387 registers counted in memory.",
+  "Ledger (proof.md Section 6, instruction listings): a trail step is 807 + 2 operations (CMPLT, BZ), plus 2 per block of 18 unrolled steps; recovery at most 3G + d - 1 evaluations of 807 + 6; table, index passes, messages, constants and setup 16,282,762,984 operations; offline parameter search (--tune, 85 cells, metered 2^39.15) charged at 2^58 (Section 6a). Every halt charged at its limit: total 137215184878174913969505127226939604471902 operations, log2(total / 1392) = 126.2125485, claimed 126.21255 (rounded up). One attempt; no restart, amplification or advice.",
+  "Memory (proof.md Section 7, allocation list): table 29,844 words (29,271 packed entries of 261 bits and one pad word) 955,008, start word 32, 16,318 instructions at 4 bytes 65,272, constants 10,816, register file 12,384, kappa setup 5,056: 1,048,568 bytes, below 2^20. Output in registers; the offline derivation runs before the attempt with no table.",
+  "Success probability at least 0.39 under the declared premise H1: Lemma 2 (proof.md Section 5) proves 0.39000000061813340752 for a uniformly random function at the filed budget; H1 carries it to the real map (Section 8: deviation model and the price of a margin). The program is printed in proof.md Appendix B (standard library only). One organizer-run experiment (line-walk, Section 9). No full collision is produced or claimed; the claim is the cost of the search."
+ ],
+ "baseline_improved": "poseidon-orchard-r56-nominal-v2",
+ "certificate_manifest": "certificates/manifest.json",
+ "experiment_manifest": "experiments/manifest.json",
+ "heuristics": [
+  {
+   "id": "H1-random-function-model",
+   "role": "score-critical",
+   "statement": "At the filed budget n = 133554866 * 2^100, where Lemma 2 gives 0.39000000062 for a uniformly random function, the search of proof.md Section 3 on the real map F(x) = digest(message(kappa x - E0_0)) / OUTSCALE_kappa, with uniform coins kappa and x_0, succeeds with probability at least 0.39.",
+   "scope": "Target poseidon-orchard-r56-prefix-v1, inputs on the line of proof.md Section 1, one trail with the parameters of Section 3 (S = 1.6936e38 evaluations). Only the success probability rests on it; the step program, recovery, ledger and memory are proved or checked exactly (Sections 2, 4, 6, 7).",
+   "extrapolation": "Organizer-run experiment line-walk (Section 9) runs this search (line, coin family, DP test, table, single-gap recovery) on the restricted map at width 14, with the budget at the random-map reference 0.3884 and a pre-declared rule (reject if k <= 80 of 256; power 0.97 against a random map on 2^14 / 0.6 points). H1 carries the random-map behaviour to full width over 2^127 steps. Deviation model (Section 8): a random map on N / c points with the same DP fraction gives 0.3900, 0.3591, 0.3098, 0.2566 at c = 1, 0.9, 0.75, 0.6; restoring 0.39 with a margin epsilon costs log2(1 + epsilon) bits (0.0144 at 1 %).",
+   "evidence_ids": [
+    "proof:37-50",
+    "proof:94-100",
+    "proof:101-107",
+    "experiment:line-walk"
+   ],
+   "limitations": "H1 is not proved; it concerns the average over the coin kappa, which is what Lemma 2 bounds. The experiment runs the search at width 14 only and does not run the full-width walk; the deviation table holds under its stated random-map model only."
+  }
+ ],
+ "submission_state": "ready",
+ "lane": "exploratory"
 }
