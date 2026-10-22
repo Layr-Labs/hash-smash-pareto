@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "selected39-evidence",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/selected39.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "Self-contained deterministic evidence for the complete PB=0 one-selected-output construction: core/list/formulas, sixteen fresh real-H selected prefixes, 2^24 campaign summaries, table histograms, 64 selected-tail blocks, endpoint/score arithmetic, memory, deterministic cross-j selection and lower-core replay hashes.",
+      "hypothesis": "Stored deterministic identities, selected-output probability conversion, complete-prefix records and conditional score arithmetic are internally consistent. Returned pairs are null. H1 selected transfer, nominal bootstrap coverage, H3 construction cost and H4 full-run cost transfer remain explicit premises."
+    }
+  ]
+}

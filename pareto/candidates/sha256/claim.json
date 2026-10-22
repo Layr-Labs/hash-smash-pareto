@@ -1,20 +1,71 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha256-r37-prefix-v1",
+  "target_profile": "sha256-r39-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 37,
+  "rounds": 39,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 99.50469,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 34.4594316186373,
+    "preprocessing_log2": 74,
     "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
+    "nonuniform_advice_log2_bytes": 12
   },
-  "restrictions": [],
-  "baseline_improved": "sha256-r37-nominal-v2",
+  "restrictions": [
+    "C39 PB=0 ordinary-collision construction for sha256-r39-prefix-v1 only. Every trial uses a fresh random 64-byte first block and A0, completely enumerates prefix outputs, uniformly reservoir-selects one output when nonempty, and verifies that output with two complete second-block compressions.",
+    "The run contains N=1756406089356818651915999597 ideal fresh trial slots and stops before exceeding 8*64*N target units. Preprocessing separately charges 2^74 target units and all finite construction/evidence work.",
+    "The 0.39 claim is exploratory and conditional on H1 selected matching-class transfer and nominal tail coverage, H3 upper-advice and native-SAT construction within 2^74, and H4 complete mean work at most 64 units. The exact selected-output identity needs no sibling-independence, output-cap, or retained-successful-mass premise.",
+    "Complete memory is 22 GiB. It covers the 17 GiB+4-byte resident inverse table, 18 GiB+4-byte table-build arrays, fixed parameters, allocator, code, stacks, counters, output workspace and retained randomness."
+  ],
+  "baseline_improved": "sha256-r39-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  "experiment_manifest": "experiments/manifest.json",
+  "heuristics": [
+    {
+      "id": "H1-selected-class-transfer",
+      "role": "score-critical",
+      "statement": "The fresh selected-prefix SIS block mean applies to the actual uniformly selected output of a nonempty real-H trial, and the nominal one-sided block-bootstrap endpoint lower-bounds that mean.",
+      "scope": "The fixed C39 core, j=adc6d187, list 5532657e..., complete PB=0 enumeration and uniform one-output reservoir rule.",
+      "extrapolation": "The first 64 selected outputs from the fresh 2^24-trial campaign are sampled in trial order. Each receives the unchanged 512-path matching-class tail estimator. Their nominal endpoint is combined with the exact binomial nonempty endpoint.",
+      "evidence_ids": [
+        "experiment:selected39-evidence"
+      ],
+      "limitations": "The inverse tail sampler varies the matching-class chaining value. Selection may correlate with unobserved matching coordinates. The block bootstrap has no proved rare-event coverage theorem; its distribution-free lower endpoint is zero; deterministic seeds are not ideal coins."
+    },
+    {
+      "id": "H2-one-selected-output",
+      "role": "score-critical",
+      "statement": "For a complete fresh trial, P(success)=P(X>0)*P(the uniform reservoir output succeeds | X>0). Independent ideal fresh trials amplify this selected event.",
+      "scope": "Complete PB=0 enumeration, one-item reservoir sampling and the fixed global work cap.",
+      "extrapolation": "The 2^24 fresh campaign observed 406 nonempty trials and independently replayed all 450 outputs and all 406 choices. Exact reservoir induction replaces the rejected expected-sibling conversion.",
+      "evidence_ids": [
+        "experiment:selected39-evidence"
+      ],
+      "limitations": "The binomial endpoint assumes ideal independent trials. Fixed public PRNG seeds only reproduce the evidence. The 16-attempt rejection failure is explicitly bounded below 2^-664 over the full nominal run."
+    },
+    {
+      "id": "H3-parameter-search",
+      "role": "score-critical",
+      "statement": "The supplied upper trajectory, characteristic/relations and complete native lower-core work, followed by the executed cross-j selector, fit the charged 2^74 target-unit preprocessing allowance.",
+      "scope": "One-time construction of the exact semantic core, j=adc6d187, fifty labels and list 5532657e... used by the candidate.",
+      "extrapolation": "Three SAT stages reproduce the exact lower core and 354583 clauses are independently checked. The deterministic sixteen-j/four-finalist selector executes 506008224 tests and recovers the exact j/list. Predecessor Table-23 evidence supports the supplied upper advice.",
+      "evidence_ids": [
+        "experiment:selected39-evidence"
+      ],
+      "limitations": "Upper-trajectory and characteristic discovery plus complete native SAT primitive work remain unpriced. Dependency attribution gives no cost exemption. The 2^74 statement is an explicit premise, not a certified construction bound."
+    },
+    {
+      "id": "H4-cost-rate-transfer",
+      "role": "score-critical",
+      "statement": "Complete expected online work is at most 64 target units per fresh trial and the measured branch rates transfer to the full ideal run.",
+      "scope": "The complete one-selected-output solver under collision-frontier-v5, including failed trials, enumeration, randomness, memory operations and final verification.",
+      "extrapolation": "The complete PB=0 campaign gives bounded inputs for a 9.0632-unit itemized envelope. The claim retains a factor above seven and charges every bucket scan at 224 entries although the observed complete-table maximum is 46.",
+      "evidence_ids": [
+        "experiment:selected39-evidence"
+      ],
+      "limitations": "The campaign is finite and deterministically seeded. The source-level primitive allowances are not an instruction-metered full deployment; the 64-unit mean remains a score-critical transfer premise."
+    }
+  ],
+  "submission_state": "ready",
+  "lane": "exploratory"
 }
