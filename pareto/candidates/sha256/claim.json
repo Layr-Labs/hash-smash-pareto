@@ -1,20 +1,121 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha256-r37-prefix-v1",
+  "target_profile": "sha256-r39-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 37,
-  "claim": {
-    "time_log2": 128.0,
-    "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
-    "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
-  },
-  "restrictions": [],
-  "baseline_improved": "sha256-r37-nominal-v2",
+  "rounds": 39,
+  "baseline_improved": "sha256-r39-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
+  "experiment_manifest": "experiments/manifest.json",
   "lane": "exploratory",
-  "heuristics": []
+  "claim": {
+    "time_log2": 117.823,
+    "time_unit": "target-compressions",
+    "memory_log2_bytes": 20,
+    "preprocessing_log2": 82.000000000001,
+    "success_probability": 0.39,
+    "nonuniform_advice_log2_bytes": 7.322
+  },
+  "restrictions": [
+    "Target sha256-r39-prefix-v1: standard IV/padding/feed-forward,39 steps in every compression and full256-bit output. Output two distinct128-byte ordinary messages M0||M1 and M0||M1prime, followed by the common standard padding block.",
+    "Engine-only derivative of0b2616e3. ID21/age10,39-bit table records,2^27-evaluation windows,MAXS768,CUTP256,WHEEL1024,table171520 buckets/26130 words. Unique IDs stop at2^21 and completely drain. QFULL3328+256<=QCAP3584.",
+    "Local conservative endpoint only:73 fixed fresh pairs/eight shards, no replacement or adaptive stopping. One575000 charge per actual online generator attempt; relocation8*kernel_len once; all capped/failed attempts retained. The unchanged tail uses only q_tail=-75.47.",
+    "Shipped B=785725203045486750480484226083 and combined W_BUDGET=826106938315636759516197761465236950948 includes6B driver operations. Total=(W_BUDGET+2^52)/2812+2^82+2^36. Exact log2=117.82221527513362096, upward117.823. No second driver addition.",
+    "Candidate direct mean bounds use fixed one-sided99.5% Student t72=2.646 each,Bonferroni99% simultaneous under an inherited iid/Student heuristic. mu+=1051393213,g-=126718.38. Claws,groups/claw and paired ratios are diagnostics; conditional success>=.390009999998 uses H1/H2/H5.",
+    "Modeled native arena1048128 bytes includes8192 registers,7800 kernels,150408 nonkernel code,836160 table,45408 other state and160 advice;448 spare. Generator scratch reuses table before clearing. Physical Python/evidence memory is separate and policy-dependent.",
+    "GW.ops=575000 is self-contained conservative billing,not a literal meter or native575000-op halt implementation. Native code/register/workspace enforcement and admissible offline evidence/advice construction remain explicit score-critical contracts; local readiness is not organizer acceptance.",
+    "Preprocessing is exactly2^82 evidence reserve plus inherited2^36 advice construction; preprocessing_log2=82.000000000001 is an outward metadata bound. Advice is the160-byte published Table23 pair and CV. Statistical/native/preprocessing-memory admission is not established by organizer regression checks."
+  ],
+  "heuristics": [
+    {
+      "id": "H1-claw-model",
+      "role": "score-critical",
+      "statement": "Fresh first-block windows are iid; true per-window work mean<=1051393213 and distinct-group mean>=126718.38; W17/free-word behavior after a claw transfers as required by the base construction.",
+      "scope": "Exact shipped ID21/age10 walk and2^27 windows on sha256-r39-prefix-v1.",
+      "extrapolation": "73 fresh fixed candidate rows with exact conservative repricing, fixed2.646 marginal99.5% Student bounds and Bonferroni joint99% model coverage; extrapolated to B windows.",
+      "limitations": "Student/iid coverage is heuristic,not distribution-free. Deterministic seed streams do not certify ideal randomness; graph/scalar checks do not prove cryptographic uniformity. The success.39 bound conditions on these true-mean premises.",
+      "evidence_ids": [
+        "proof:25-36",
+        "proof:47-60",
+        "proof:85-100",
+        "experiment:r39-window-small"
+      ]
+    },
+    {
+      "id": "H2-tail",
+      "role": "score-critical",
+      "statement": "For this claw distribution,p_tail>=2^-75.47 under the inherited carrier/SMC/parity/transfer premises. QDECL and tail source are unchanged.",
+      "scope": "Rows18..38 of the published Table23 characteristic with exact F8/F9 filters and W17 fixed.",
+      "extrapolation": "Inherited14 public-seed SMC replays and class-specific/pooled Student evidence in Section8; no new tail endpoint.",
+      "limitations": "Unbiased SMC product laws do not give finite-sample Student coverage without assumptions. Public replay is not fresh confirmation. The small older cross-check set alone does not clear the declaration.",
+      "evidence_ids": [
+        "proof:101-116",
+        "experiment:r39-tail-01",
+        "experiment:r39-tail-02",
+        "experiment:r39-tail-03",
+        "experiment:r39-tail-04",
+        "experiment:r39-tail-05",
+        "experiment:r39-tail-06",
+        "experiment:r39-tail-07",
+        "experiment:r39-tail-08",
+        "experiment:r39-tail-09",
+        "experiment:r39-tail-10",
+        "experiment:r39-tail-11",
+        "experiment:r39-tail-12",
+        "experiment:r39-tail-13",
+        "experiment:r39-tail-14"
+      ]
+    },
+    {
+      "id": "H3-advice-construction",
+      "role": "score-critical",
+      "statement": "The160-byte published advice can be constructed within2^36 target-compressions and64KiB reusable resident scratch under the inherited enumeration estimate.",
+      "scope": "Only the dense characteristic,not preselected online tail words.",
+      "extrapolation": "Exact row-fibre/downward inversion and256-candidate slice checks plus the inherited2^34-candidate construction model.",
+      "limitations": "Checks on one base/slice do not prove a uniform whole-enumeration runtime or external advice-admission policy; this remains an explicit heuristic.",
+      "evidence_ids": [
+        "proof:13-24",
+        "proof:133-138",
+        "experiment:r39-transplant-claw"
+      ]
+    },
+    {
+      "id": "H5-group-independence",
+      "role": "score-critical",
+      "statement": "Distinct connected groups of claws supply independent success trials with lower probability (585/524288)*2^-32*2^-75.47; only one opportunity per group is required.",
+      "scope": "Per-CV namespaces and full32-bit opposite-parity claw endpoints,with duplicate edges removed.",
+      "extrapolation": "Independent component reconstruction over all146 archived windows and direct candidate group-mean endpoint.",
+      "limitations": "Graph reconstruction establishes counts,not independence between groups or independence from W8/W9/W17/tail events. No mean group/claw product supplies the score.",
+      "evidence_ids": [
+        "proof:25-36",
+        "proof:47-60",
+        "proof:85-100"
+      ]
+    },
+    {
+      "id": "H6-native-implementation",
+      "role": "score-critical",
+      "statement": "The modeled native generator/routines faithfully implement the reference within reserved code/register/workspace and575000 literal operations per attempt,with an enforceable skip/halt contract.",
+      "scope": "Native word-RAM implementation; GW.ops constant575000 bills every attempt without an external observer.",
+      "extrapolation": "Current Clang artifact/direct CODE VM/Wasmtime/Python records agree on all archived CV/bank cases,each below the budget; conservative source and all attempts are priced.",
+      "limitations": "Constant billing does not emit/enforce a native capped implementation or prove the universal bound. Historical Zig is not equated with Clang. Python physical execution is not the claimed native cost.",
+      "evidence_ids": [
+        "proof:37-46",
+        "proof:61-84",
+        "proof:85-100"
+      ]
+    },
+    {
+      "id": "H7-memory-admission",
+      "role": "score-critical",
+      "statement": "The native1048128-byte arena and sequential table-reused scratch are sufficient,and separate offline evidence storage is admissible under the benchmark memory/preprocessing policy.",
+      "scope": "Modeled online engine/advice construction;2^82 work reserve covers evidence operations.",
+      "extrapolation": "Full disjoint memory map with448 bytes spare and corrected1755+12 generator census.",
+      "limitations": "An emitted complete native image/workspace certificate and organizer acceptance of offline evidence memory are absent. Worker RSS/raw files exceed1MiB and are explicitly disclosed; charging them online changes normalization.",
+      "evidence_ids": [
+        "proof:61-84",
+        "proof:133-138"
+      ]
+    }
+  ],
+  "submission_state": "ready"
 }
