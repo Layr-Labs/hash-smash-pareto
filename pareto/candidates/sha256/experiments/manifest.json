@@ -1,0 +1,165 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "r39-transplant-claw",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39joint.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "The 39-step compression and advice construction of sha256-r39-prefix-v1 as used by the construction (proof.md Sections 2, 10 and 11). Trial 0 runs the shipped program's Attack.claw on the published Table 23 pair (chaining value CV_PUB, a0 = A[4], u = W1) with the folded kernel built for CV_PUB, and runs verify_advice_construction(): the exact 32-bit bit-by-bit DFS fibre solver solve_row_exact on row 16 (G16) and row 17 (G17(g)), exact downward step inversion from steps 10..15 to CV_PUB (invert_downward), and enumeration of a 256-candidate local slice of the step-15 free bits. Trials 1 to 255 draw a chaining value, an even a0 and an odd u from the trial seed, recover a1, build the first message and its partner from the construction, and compare the 39-step trajectories of both with the published pair. Every trial output is verified by hard assert statements in r39joint.py.",
+      "hypothesis": "Hard-asserted in r39joint.py._e1 (capped at <= 16 keys per trial). Trial 0 (16 keys): claw_returned_pair 1, passed_f9 1, passed_f8 1, passed_w17 1, pair_is_published 1, sfs_collision 1, published_w16_is_g 1, published_w17 1, kernel_records 734, claw_ops 6173, blk_census 150, g16_fibre_size 2, g17_fibre_size 1, fibre_dfs_ops 1944 (< 2812 = 1 compression), advice_slice_hits 1, ops_per_cand 408 (< 4 * 2812 = 4 compressions). Trial 1 (10 keys) additionally reports all 7 verify_advice_construction() keys including downward_inv_ok 1 and advice_slice_cands 256 alongside transplant_ok 1, w1_is_u 1, w16_identity 1. Trials 1 to 255: transplant_ok 1 (the states A[6..19] and E[10..19] of both messages equal the published ones), w1_is_u 1, w16_identity 1 (W16 - g = F(u) - F(a0) mod 2^32) on all 255."
+    },
+    {
+      "id": "r39-window-small",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39joint.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "Trials 0 to 3 run 4 independent windows of the shipped program (folded 256-lane kernel, every parameter of class P unchanged: DP = low 7 bits zero, table 26,052 words, queue 3,584 (QFULL 3,328), timing wheel 2,048, keep-longer, packed 39-bit records, short-trail skip, MAXS 1536 / CUTP 512, parking stage 2 and the decoupled catch-up D0 82 / KRES 6 as in proof.md Section 3) on 4 first blocks drawn from the organizer trial seeds, cut to 2^22 walk evaluations (16,384 iterations of 256 lanes) each = 2^24 walk evaluations total (3,270 distinct claws and 3,270 distinct claw groups), in check mode: every raw claw is asserted to satisfy F(a0) = F(u), a0 even, u odd and W16 = g by build and expand, and every distinct claw and group is checked for F8, F9, W17 low-8/12-bit matches, 100% distinct (W8, W9, W17, W18) tuples, 256-bin chi-square uniformity of W17 mod 2^8 and W18 mod 2^8, and lag-1 group autocorrelation of (W9 in F9, W17[0], W18[0]). Trial 4 runs one 2^22 window twice in check mode, first with QFULL 64, MAXS 192 and CUTP 64 (forcing stage-2 park/resume and trail cuts) and then with the shipped QFULL 3328, and checks that both find the same claws when neither run drops a pair (the equality relies on zero drops; this seed has none in either run); it then runs the cut scan with the shipped MAXS 1536 on all 256 lanes, and runs the window a third time with the trail-id counter started at 2^20 - 2000 to check that stage 1 ends when the ids run out and stage 2 drains. Trials 0 to 3 also hard-assert that every block of the batched DP-hit groups and batched stage-2 inserts executed (hb_init, hb_sel, hb_close, hb_add, hb_last, hb_ext, hb_v, hb_lp, hb_ins, delta_lanes, qins, qflush, s2_fl), fewer hit groups than DP lanes, at least one stage-2 window conflict, fewer flushes than queued inserts and at least one lane move (every lane move is preceded by a flush call); trial 4's id-exhaustion run asserts that the stop falls inside a partly restarted hit group (stop_grp 1).",
+      "hypothesis": "Hard-asserted in r39joint.py (WIN_EXP and serve()): across trials 0..3 (2^24 walk evaluations), distinct_claws = [805, 835, 792, 838] (3,270 total), distinct_groups = [805, 835, 792, 838] (3,270 total, ratio 1.0000), dp_hits = [32865, 32680, 32802, 32979], matches = [1705, 1751, 1636, 1645], stage2_iterations = [2582, 2363, 2306, 2305], raw_claws = [821, 849, 813, 857], passed_f9 = [11, 12, 10, 19] (52 total vs 51.9 expected), passed_f8 = [0, 0, 1, 1] (2 joint F9 & F8 passes vs 3.65 expected), f8_all = [52, 76, 56, 44] (228 total vs 229.9 expected), w17_low8 = [3, 0, 2, 6] (11 total vs 12.77 expected), w17_low12 = [0, 0, 0, 2] (2 total vs 0.80 expected), kernel_records = [741, 719, 726, 692], ops = [22813491, 22244948, 22286274, 21685942], blk_census = [1168, 1168, 1238, 1238]. Across all 3,270 groups, serve() asserts 256-bin chi-square of W17 mod 256 is 241.19 (255 df) and W18 mod 256 is 246.36 (255 df), and lag-1 autocorrelation of (W9 in F9, W17[0], W18[0]) is < 0.02 (-0.0162, 0.0070, -0.0062). Trial 4 (T4_EXP, hard-asserted): the forced run (QFULL 64, MAXS 192, CUTP 64) and the shipped-QFULL run of the same window find identical distinct-claw sets and raw claw counts whenever neither run drops a pair (the equality relies on zero drops; on this seed both runs have drops 0, which is asserted through T4_EXP); the forced run has parks >= 1, resumes >= 1, cuts >= 1 and ends with nothing parked and an empty queue; a cut scan at MAXS 1536 cuts all 256 lanes; a third run of the same window with the trail-id counter started at 2^20 - 2000 ends stage 1 when the ids run out (idc = 2^20, before 16,384 iterations), drains stage 2 to an empty queue with nothing parked and keeps every trail length below 2,048 (check mode); and distinct_claws 432, raw_claws 433, dp_hits 32761, matches 928, stage2_iterations 714, parks 14, resumes 14, cuts 7436, ops 21912366, blk_census 1234, drops 0, idc_stop_iteration 976, idc_stop_stage2_iterations 459."
+    },
+    {
+      "id": "r39-tail3-01",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39tail.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "Replica of the tail probability p_tail (rows 18 to 38 of the Table 23 transplant) on the selected target: trial 0 an 800-particle SMC over E18..E23 with exact 1- and 2-step look-ahead (the estimator of the accepted 4487063, unchanged), trials 1 to 20 the rows-24..38 Monte Carlo at 80 x 2048 proposals each, every collision verified by two 39-step compressions. This run is one of the 14 fresh organizer runs of this entry (ids r39-tail3-01..14, fresh seed streams); verify_smc_stats() hard-asserts the stage-18 calibration (c18 = 206/65536), this set's parity totals [813, 780, 853, 812] (chi-square 3.29 on 3 df), this set's linear mean above QDECL = -75.44, and the pooled five-set one-sided 99.9% Satterthwaite bound -75.42033 > QDECL (inverse-variance pooling over the published constants of 4487063, 19034ce, 7c4da9b7 and 022fed5e plus this entry's fresh runs; the prior linear-scale constants converted by the documented delta-method identities inside the program).",
+      "hypothesis": "This run reproduces its packed EXP entry exactly (stage counts, carrier, verified hits, parity classes). The pooled declaration is pre-registered (the rule of 022fed5e, frozen from the four public sets before this entry's runs; the rule on those four alone declares -75.44) and lands mechanically: pooled mean -75.3426, se 0.0230, df 53, bound -75.42033, declared -75.44. No probability, rate or population bound is drawn beyond the declared bound; the pooled log-scale bound lower-bounds the linear mean by Jensen."
+    },
+    {
+      "id": "r39-tail3-02",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39tail.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "Replica of the tail probability p_tail (rows 18 to 38 of the Table 23 transplant) on the selected target: trial 0 an 800-particle SMC over E18..E23 with exact 1- and 2-step look-ahead (the estimator of the accepted 4487063, unchanged), trials 1 to 20 the rows-24..38 Monte Carlo at 80 x 2048 proposals each, every collision verified by two 39-step compressions. This run is one of the 14 fresh organizer runs of this entry (ids r39-tail3-01..14, fresh seed streams); verify_smc_stats() hard-asserts the stage-18 calibration (c18 = 206/65536), this set's parity totals [813, 780, 853, 812] (chi-square 3.29 on 3 df), this set's linear mean above QDECL = -75.44, and the pooled five-set one-sided 99.9% Satterthwaite bound -75.42033 > QDECL (inverse-variance pooling over the published constants of 4487063, 19034ce, 7c4da9b7 and 022fed5e plus this entry's fresh runs; the prior linear-scale constants converted by the documented delta-method identities inside the program).",
+      "hypothesis": "This run reproduces its packed EXP entry exactly (stage counts, carrier, verified hits, parity classes). The pooled declaration is pre-registered (the rule of 022fed5e, frozen from the four public sets before this entry's runs; the rule on those four alone declares -75.44) and lands mechanically: pooled mean -75.3426, se 0.0230, df 53, bound -75.42033, declared -75.44. No probability, rate or population bound is drawn beyond the declared bound; the pooled log-scale bound lower-bounds the linear mean by Jensen."
+    },
+    {
+      "id": "r39-tail3-03",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39tail.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "Replica of the tail probability p_tail (rows 18 to 38 of the Table 23 transplant) on the selected target: trial 0 an 800-particle SMC over E18..E23 with exact 1- and 2-step look-ahead (the estimator of the accepted 4487063, unchanged), trials 1 to 20 the rows-24..38 Monte Carlo at 80 x 2048 proposals each, every collision verified by two 39-step compressions. This run is one of the 14 fresh organizer runs of this entry (ids r39-tail3-01..14, fresh seed streams); verify_smc_stats() hard-asserts the stage-18 calibration (c18 = 206/65536), this set's parity totals [813, 780, 853, 812] (chi-square 3.29 on 3 df), this set's linear mean above QDECL = -75.44, and the pooled five-set one-sided 99.9% Satterthwaite bound -75.42033 > QDECL (inverse-variance pooling over the published constants of 4487063, 19034ce, 7c4da9b7 and 022fed5e plus this entry's fresh runs; the prior linear-scale constants converted by the documented delta-method identities inside the program).",
+      "hypothesis": "This run reproduces its packed EXP entry exactly (stage counts, carrier, verified hits, parity classes). The pooled declaration is pre-registered (the rule of 022fed5e, frozen from the four public sets before this entry's runs; the rule on those four alone declares -75.44) and lands mechanically: pooled mean -75.3426, se 0.0230, df 53, bound -75.42033, declared -75.44. No probability, rate or population bound is drawn beyond the declared bound; the pooled log-scale bound lower-bounds the linear mean by Jensen."
+    },
+    {
+      "id": "r39-tail3-04",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39tail.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "Replica of the tail probability p_tail (rows 18 to 38 of the Table 23 transplant) on the selected target: trial 0 an 800-particle SMC over E18..E23 with exact 1- and 2-step look-ahead (the estimator of the accepted 4487063, unchanged), trials 1 to 20 the rows-24..38 Monte Carlo at 80 x 2048 proposals each, every collision verified by two 39-step compressions. This run is one of the 14 fresh organizer runs of this entry (ids r39-tail3-01..14, fresh seed streams); verify_smc_stats() hard-asserts the stage-18 calibration (c18 = 206/65536), this set's parity totals [813, 780, 853, 812] (chi-square 3.29 on 3 df), this set's linear mean above QDECL = -75.44, and the pooled five-set one-sided 99.9% Satterthwaite bound -75.42033 > QDECL (inverse-variance pooling over the published constants of 4487063, 19034ce, 7c4da9b7 and 022fed5e plus this entry's fresh runs; the prior linear-scale constants converted by the documented delta-method identities inside the program).",
+      "hypothesis": "This run reproduces its packed EXP entry exactly (stage counts, carrier, verified hits, parity classes). The pooled declaration is pre-registered (the rule of 022fed5e, frozen from the four public sets before this entry's runs; the rule on those four alone declares -75.44) and lands mechanically: pooled mean -75.3426, se 0.0230, df 53, bound -75.42033, declared -75.44. No probability, rate or population bound is drawn beyond the declared bound; the pooled log-scale bound lower-bounds the linear mean by Jensen."
+    },
+    {
+      "id": "r39-tail3-05",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39tail.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "Replica of the tail probability p_tail (rows 18 to 38 of the Table 23 transplant) on the selected target: trial 0 an 800-particle SMC over E18..E23 with exact 1- and 2-step look-ahead (the estimator of the accepted 4487063, unchanged), trials 1 to 20 the rows-24..38 Monte Carlo at 80 x 2048 proposals each, every collision verified by two 39-step compressions. This run is one of the 14 fresh organizer runs of this entry (ids r39-tail3-01..14, fresh seed streams); verify_smc_stats() hard-asserts the stage-18 calibration (c18 = 206/65536), this set's parity totals [813, 780, 853, 812] (chi-square 3.29 on 3 df), this set's linear mean above QDECL = -75.44, and the pooled five-set one-sided 99.9% Satterthwaite bound -75.42033 > QDECL (inverse-variance pooling over the published constants of 4487063, 19034ce, 7c4da9b7 and 022fed5e plus this entry's fresh runs; the prior linear-scale constants converted by the documented delta-method identities inside the program).",
+      "hypothesis": "This run reproduces its packed EXP entry exactly (stage counts, carrier, verified hits, parity classes). The pooled declaration is pre-registered (the rule of 022fed5e, frozen from the four public sets before this entry's runs; the rule on those four alone declares -75.44) and lands mechanically: pooled mean -75.3426, se 0.0230, df 53, bound -75.42033, declared -75.44. No probability, rate or population bound is drawn beyond the declared bound; the pooled log-scale bound lower-bounds the linear mean by Jensen."
+    },
+    {
+      "id": "r39-tail3-06",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39tail.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "Replica of the tail probability p_tail (rows 18 to 38 of the Table 23 transplant) on the selected target: trial 0 an 800-particle SMC over E18..E23 with exact 1- and 2-step look-ahead (the estimator of the accepted 4487063, unchanged), trials 1 to 20 the rows-24..38 Monte Carlo at 80 x 2048 proposals each, every collision verified by two 39-step compressions. This run is one of the 14 fresh organizer runs of this entry (ids r39-tail3-01..14, fresh seed streams); verify_smc_stats() hard-asserts the stage-18 calibration (c18 = 206/65536), this set's parity totals [813, 780, 853, 812] (chi-square 3.29 on 3 df), this set's linear mean above QDECL = -75.44, and the pooled five-set one-sided 99.9% Satterthwaite bound -75.42033 > QDECL (inverse-variance pooling over the published constants of 4487063, 19034ce, 7c4da9b7 and 022fed5e plus this entry's fresh runs; the prior linear-scale constants converted by the documented delta-method identities inside the program).",
+      "hypothesis": "This run reproduces its packed EXP entry exactly (stage counts, carrier, verified hits, parity classes). The pooled declaration is pre-registered (the rule of 022fed5e, frozen from the four public sets before this entry's runs; the rule on those four alone declares -75.44) and lands mechanically: pooled mean -75.3426, se 0.0230, df 53, bound -75.42033, declared -75.44. No probability, rate or population bound is drawn beyond the declared bound; the pooled log-scale bound lower-bounds the linear mean by Jensen."
+    },
+    {
+      "id": "r39-tail3-07",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39tail.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "Replica of the tail probability p_tail (rows 18 to 38 of the Table 23 transplant) on the selected target: trial 0 an 800-particle SMC over E18..E23 with exact 1- and 2-step look-ahead (the estimator of the accepted 4487063, unchanged), trials 1 to 20 the rows-24..38 Monte Carlo at 80 x 2048 proposals each, every collision verified by two 39-step compressions. This run is one of the 14 fresh organizer runs of this entry (ids r39-tail3-01..14, fresh seed streams); verify_smc_stats() hard-asserts the stage-18 calibration (c18 = 206/65536), this set's parity totals [813, 780, 853, 812] (chi-square 3.29 on 3 df), this set's linear mean above QDECL = -75.44, and the pooled five-set one-sided 99.9% Satterthwaite bound -75.42033 > QDECL (inverse-variance pooling over the published constants of 4487063, 19034ce, 7c4da9b7 and 022fed5e plus this entry's fresh runs; the prior linear-scale constants converted by the documented delta-method identities inside the program).",
+      "hypothesis": "This run reproduces its packed EXP entry exactly (stage counts, carrier, verified hits, parity classes). The pooled declaration is pre-registered (the rule of 022fed5e, frozen from the four public sets before this entry's runs; the rule on those four alone declares -75.44) and lands mechanically: pooled mean -75.3426, se 0.0230, df 53, bound -75.42033, declared -75.44. No probability, rate or population bound is drawn beyond the declared bound; the pooled log-scale bound lower-bounds the linear mean by Jensen."
+    },
+    {
+      "id": "r39-tail3-08",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39tail.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "Replica of the tail probability p_tail (rows 18 to 38 of the Table 23 transplant) on the selected target: trial 0 an 800-particle SMC over E18..E23 with exact 1- and 2-step look-ahead (the estimator of the accepted 4487063, unchanged), trials 1 to 20 the rows-24..38 Monte Carlo at 80 x 2048 proposals each, every collision verified by two 39-step compressions. This run is one of the 14 fresh organizer runs of this entry (ids r39-tail3-01..14, fresh seed streams); verify_smc_stats() hard-asserts the stage-18 calibration (c18 = 206/65536), this set's parity totals [813, 780, 853, 812] (chi-square 3.29 on 3 df), this set's linear mean above QDECL = -75.44, and the pooled five-set one-sided 99.9% Satterthwaite bound -75.42033 > QDECL (inverse-variance pooling over the published constants of 4487063, 19034ce, 7c4da9b7 and 022fed5e plus this entry's fresh runs; the prior linear-scale constants converted by the documented delta-method identities inside the program).",
+      "hypothesis": "This run reproduces its packed EXP entry exactly (stage counts, carrier, verified hits, parity classes). The pooled declaration is pre-registered (the rule of 022fed5e, frozen from the four public sets before this entry's runs; the rule on those four alone declares -75.44) and lands mechanically: pooled mean -75.3426, se 0.0230, df 53, bound -75.42033, declared -75.44. No probability, rate or population bound is drawn beyond the declared bound; the pooled log-scale bound lower-bounds the linear mean by Jensen."
+    },
+    {
+      "id": "r39-tail3-09",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39tail.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "Replica of the tail probability p_tail (rows 18 to 38 of the Table 23 transplant) on the selected target: trial 0 an 800-particle SMC over E18..E23 with exact 1- and 2-step look-ahead (the estimator of the accepted 4487063, unchanged), trials 1 to 20 the rows-24..38 Monte Carlo at 80 x 2048 proposals each, every collision verified by two 39-step compressions. This run is one of the 14 fresh organizer runs of this entry (ids r39-tail3-01..14, fresh seed streams); verify_smc_stats() hard-asserts the stage-18 calibration (c18 = 206/65536), this set's parity totals [813, 780, 853, 812] (chi-square 3.29 on 3 df), this set's linear mean above QDECL = -75.44, and the pooled five-set one-sided 99.9% Satterthwaite bound -75.42033 > QDECL (inverse-variance pooling over the published constants of 4487063, 19034ce, 7c4da9b7 and 022fed5e plus this entry's fresh runs; the prior linear-scale constants converted by the documented delta-method identities inside the program).",
+      "hypothesis": "This run reproduces its packed EXP entry exactly (stage counts, carrier, verified hits, parity classes). The pooled declaration is pre-registered (the rule of 022fed5e, frozen from the four public sets before this entry's runs; the rule on those four alone declares -75.44) and lands mechanically: pooled mean -75.3426, se 0.0230, df 53, bound -75.42033, declared -75.44. No probability, rate or population bound is drawn beyond the declared bound; the pooled log-scale bound lower-bounds the linear mean by Jensen."
+    },
+    {
+      "id": "r39-tail3-10",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39tail.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "Replica of the tail probability p_tail (rows 18 to 38 of the Table 23 transplant) on the selected target: trial 0 an 800-particle SMC over E18..E23 with exact 1- and 2-step look-ahead (the estimator of the accepted 4487063, unchanged), trials 1 to 20 the rows-24..38 Monte Carlo at 80 x 2048 proposals each, every collision verified by two 39-step compressions. This run is one of the 14 fresh organizer runs of this entry (ids r39-tail3-01..14, fresh seed streams); verify_smc_stats() hard-asserts the stage-18 calibration (c18 = 206/65536), this set's parity totals [813, 780, 853, 812] (chi-square 3.29 on 3 df), this set's linear mean above QDECL = -75.44, and the pooled five-set one-sided 99.9% Satterthwaite bound -75.42033 > QDECL (inverse-variance pooling over the published constants of 4487063, 19034ce, 7c4da9b7 and 022fed5e plus this entry's fresh runs; the prior linear-scale constants converted by the documented delta-method identities inside the program).",
+      "hypothesis": "This run reproduces its packed EXP entry exactly (stage counts, carrier, verified hits, parity classes). The pooled declaration is pre-registered (the rule of 022fed5e, frozen from the four public sets before this entry's runs; the rule on those four alone declares -75.44) and lands mechanically: pooled mean -75.3426, se 0.0230, df 53, bound -75.42033, declared -75.44. No probability, rate or population bound is drawn beyond the declared bound; the pooled log-scale bound lower-bounds the linear mean by Jensen."
+    },
+    {
+      "id": "r39-tail3-11",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39tail.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "Replica of the tail probability p_tail (rows 18 to 38 of the Table 23 transplant) on the selected target: trial 0 an 800-particle SMC over E18..E23 with exact 1- and 2-step look-ahead (the estimator of the accepted 4487063, unchanged), trials 1 to 20 the rows-24..38 Monte Carlo at 80 x 2048 proposals each, every collision verified by two 39-step compressions. This run is one of the 14 fresh organizer runs of this entry (ids r39-tail3-01..14, fresh seed streams); verify_smc_stats() hard-asserts the stage-18 calibration (c18 = 206/65536), this set's parity totals [813, 780, 853, 812] (chi-square 3.29 on 3 df), this set's linear mean above QDECL = -75.44, and the pooled five-set one-sided 99.9% Satterthwaite bound -75.42033 > QDECL (inverse-variance pooling over the published constants of 4487063, 19034ce, 7c4da9b7 and 022fed5e plus this entry's fresh runs; the prior linear-scale constants converted by the documented delta-method identities inside the program).",
+      "hypothesis": "This run reproduces its packed EXP entry exactly (stage counts, carrier, verified hits, parity classes). The pooled declaration is pre-registered (the rule of 022fed5e, frozen from the four public sets before this entry's runs; the rule on those four alone declares -75.44) and lands mechanically: pooled mean -75.3426, se 0.0230, df 53, bound -75.42033, declared -75.44. No probability, rate or population bound is drawn beyond the declared bound; the pooled log-scale bound lower-bounds the linear mean by Jensen."
+    },
+    {
+      "id": "r39-tail3-12",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39tail.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "Replica of the tail probability p_tail (rows 18 to 38 of the Table 23 transplant) on the selected target: trial 0 an 800-particle SMC over E18..E23 with exact 1- and 2-step look-ahead (the estimator of the accepted 4487063, unchanged), trials 1 to 20 the rows-24..38 Monte Carlo at 80 x 2048 proposals each, every collision verified by two 39-step compressions. This run is one of the 14 fresh organizer runs of this entry (ids r39-tail3-01..14, fresh seed streams); verify_smc_stats() hard-asserts the stage-18 calibration (c18 = 206/65536), this set's parity totals [813, 780, 853, 812] (chi-square 3.29 on 3 df), this set's linear mean above QDECL = -75.44, and the pooled five-set one-sided 99.9% Satterthwaite bound -75.42033 > QDECL (inverse-variance pooling over the published constants of 4487063, 19034ce, 7c4da9b7 and 022fed5e plus this entry's fresh runs; the prior linear-scale constants converted by the documented delta-method identities inside the program).",
+      "hypothesis": "This run reproduces its packed EXP entry exactly (stage counts, carrier, verified hits, parity classes). The pooled declaration is pre-registered (the rule of 022fed5e, frozen from the four public sets before this entry's runs; the rule on those four alone declares -75.44) and lands mechanically: pooled mean -75.3426, se 0.0230, df 53, bound -75.42033, declared -75.44. No probability, rate or population bound is drawn beyond the declared bound; the pooled log-scale bound lower-bounds the linear mean by Jensen."
+    },
+    {
+      "id": "r39-tail3-13",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39tail.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "Replica of the tail probability p_tail (rows 18 to 38 of the Table 23 transplant) on the selected target: trial 0 an 800-particle SMC over E18..E23 with exact 1- and 2-step look-ahead (the estimator of the accepted 4487063, unchanged), trials 1 to 20 the rows-24..38 Monte Carlo at 80 x 2048 proposals each, every collision verified by two 39-step compressions. This run is one of the 14 fresh organizer runs of this entry (ids r39-tail3-01..14, fresh seed streams); verify_smc_stats() hard-asserts the stage-18 calibration (c18 = 206/65536), this set's parity totals [813, 780, 853, 812] (chi-square 3.29 on 3 df), this set's linear mean above QDECL = -75.44, and the pooled five-set one-sided 99.9% Satterthwaite bound -75.42033 > QDECL (inverse-variance pooling over the published constants of 4487063, 19034ce, 7c4da9b7 and 022fed5e plus this entry's fresh runs; the prior linear-scale constants converted by the documented delta-method identities inside the program).",
+      "hypothesis": "This run reproduces its packed EXP entry exactly (stage counts, carrier, verified hits, parity classes). The pooled declaration is pre-registered (the rule of 022fed5e, frozen from the four public sets before this entry's runs; the rule on those four alone declares -75.44) and lands mechanically: pooled mean -75.3426, se 0.0230, df 53, bound -75.42033, declared -75.44. No probability, rate or population bound is drawn beyond the declared bound; the pooled log-scale bound lower-bounds the linear mean by Jensen."
+    },
+    {
+      "id": "r39-tail3-14",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39tail.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "Replica of the tail probability p_tail (rows 18 to 38 of the Table 23 transplant) on the selected target: trial 0 an 800-particle SMC over E18..E23 with exact 1- and 2-step look-ahead (the estimator of the accepted 4487063, unchanged), trials 1 to 20 the rows-24..38 Monte Carlo at 80 x 2048 proposals each, every collision verified by two 39-step compressions. This run is one of the 14 fresh organizer runs of this entry (ids r39-tail3-01..14, fresh seed streams); verify_smc_stats() hard-asserts the stage-18 calibration (c18 = 206/65536), this set's parity totals [813, 780, 853, 812] (chi-square 3.29 on 3 df), this set's linear mean above QDECL = -75.44, and the pooled five-set one-sided 99.9% Satterthwaite bound -75.42033 > QDECL (inverse-variance pooling over the published constants of 4487063, 19034ce, 7c4da9b7 and 022fed5e plus this entry's fresh runs; the prior linear-scale constants converted by the documented delta-method identities inside the program).",
+      "hypothesis": "This run reproduces its packed EXP entry exactly (stage counts, carrier, verified hits, parity classes). The pooled declaration is pre-registered (the rule of 022fed5e, frozen from the four public sets before this entry's runs; the rule on those four alone declares -75.44) and lands mechanically: pooled mean -75.3426, se 0.0230, df 53, bound -75.42033, declared -75.44. No probability, rate or population bound is drawn beyond the declared bound; the pooled log-scale bound lower-bounds the linear mean by Jensen."
+    }
+  ]
+}
