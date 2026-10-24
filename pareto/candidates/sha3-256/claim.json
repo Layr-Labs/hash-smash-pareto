@@ -1,20 +1,81 @@
 {
-  "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha3-256-r5-prefix-v1",
-  "attack_class": "ordinary-collision",
-  "rounds": 5,
-  "claim": {
-    "time_log2": 128.0,
-    "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
-    "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
+ "attack_class": "ordinary-collision",
+ "baseline_improved": "sha3-256-r24-nominal-v2",
+ "certificate_manifest": "certificates/manifest.json",
+ "claim": {
+  "memory_log2_bytes": 20,
+  "nonuniform_advice_log2_bytes": 0,
+  "preprocessing_log2": 38,
+  "success_probability": 0.39,
+  "time_log2": 124.4743,
+  "time_unit": "target-compressions"
+ },
+ "experiment_manifest": "experiments/manifest.json",
+ "heuristics": [
+  {
+   "evidence_ids": [
+    "experiment:success-certificate",
+    "experiment:exact-controller",
+    "proof:175-230"
+   ],
+   "extrapolation": "van Oorschot-Wiener 1999, the common generic-track premise, separation and priced sensitivity in proof Section 6, plus exact-program consistency checks.",
+   "id": "H1-random-function-model",
+   "limitations": "Experiments do not reach birthday scale; circuit, memory and comparator-F arithmetic do not depend on H1.",
+   "role": "score-critical",
+   "scope": "The fixed r24 chain, 71520 trails, exact DP threshold, replay cap, 256 lanes and at most 256*Tb evaluations.",
+   "statement": "H1 is one premise. Let A_g be this bounded attempt on the fixed deterministic walk g. In the real algorithm's probability space, only the fresh uniform word r is random. Let F be a uniformly random function on 256-bit values, independent of r, and let P_F = Pr_(r,F)[A_F succeeds] for the same attempt with each g evaluation replaced by lazy sampling from F. H1 asserts only the aggregate comparison Pr_r[A_g succeeds] >= P_F. Appendix A proves P_F >= 0.39. The following clauses are properties of comparator F used by that proof, not additional premises about g: outputs at distinct fresh inputs are uniform and independent; its iterates have the random-mapping first-collision law; a fresh output satisfies the exact distinguished-point predicate with its stated probability independently of prior collision bookkeeping; and after any lazy-sampling history, a fresh input maps to any fixed earlier output with probability 2^-256. H1 assigns no per-history conditional probability to deterministic g because the history determines r and hence all later g outputs. The aggregate success comparison is the only heuristic step."
   },
-  "restrictions": [],
-  "baseline_improved": "sha3-256-r5-nominal-v2",
-  "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  {
+   "evidence_ids": [
+    "experiment:exact-controller",
+    "proof:27-38"
+   ],
+   "extrapolation": "None statistical: a declared convention. Executed checks validate the program with this allocation, not the convention's cost of register access.",
+   "id": "H_reg",
+   "limitations": "A smaller required register file would add loads and stores absent from this ledger; the success argument is unaffected.",
+   "role": "supporting",
+   "scope": "The register file used by the straight-line program and the search; it affects the time and memory ledgers only, not the success bound.",
+   "statement": "Machine convention: the 256-bit word RAM of collision-frontier-v5 with a declared file of 1943 registers of 256 bits (1932 used by the straight line; the search state begins at register 1932; handler temporaries reuse dead straight-line registers above 255). An operation on register operands costs one word operation, with no load or store; every load and store of the other code is a charged word operation (proof Sections 3.6 and 4). The 62176 bytes of the file are counted as memory. The cost model fixes no register count."
+  },
+  {
+   "evidence_ids": [
+    "experiment:exact-controller",
+    "proof:27-38",
+    "proof:52-53"
+   ],
+   "extrapolation": "None statistical: a declared convention. Executed checks parse both encodings in software to validate the program and measured byte counts.",
+   "id": "H_code",
+   "limitations": "A requirement of 32 bytes per straight-line instruction would add code memory; the success argument is unaffected.",
+   "role": "supporting",
+   "scope": "The code rows of the memory ledger; it does not affect the success bound.",
+   "statement": "Code-memory charging convention: a declared encoding, since the cost model and the target profile fix none. The straight line and prefilter are stored in the two-address encoding of proof Section 3.6 (502488 bytes measured); the other code is stored in 1000 8-byte instruction words followed by 12 literal words of 32 bytes (8384 bytes measured). The encoding determines the code bytes counted in memory."
+  },
+  {
+   "evidence_ids": [
+    "experiment:exact-controller",
+    "proof:65-174"
+   ],
+   "extrapolation": "None statistical. The per-iteration charges extrapolate linearly from calibration points of the identical binary under the identical limits, verified across two iteration counts, three flip bounds and three chain modes; the period-1 charge extrapolates from a measured per-pair-evaluation cost that an independent fit confirms; the wall-time conversion applies a measured CPython instruction rate for a workload of the same shape. The cited experiment record is the evidence for the per-emission wall-time ceiling, since each of its runs performs one complete step build. The counts of iterations, runs and emissions are asserted from the development record and are not reproducible from this package.",
+   "id": "H_preprocessing_rate_bounds",
+   "limitations": "The full annealing campaigns, the exhaustive period-1 scan at flip bound 2 (56 flip pairs per state) and the historical Python runs were not re-executed under instruction counting, so their charges are estimates from calibration, extrapolation and wall time rather than measurements of those runs, and the campaign counts they multiply are assertions. Preprocessing enters N additively against a main term of 191481016876183479086368240569130502062080 word operations. If the true word-RAM cost of R24H's rows were k times their charge (k the charge-weighted average ratio), the form an error in the instruction-to-operation mapping would take, preprocessing_log2 would stay 37 for k up to 1.69 and be 38, 39 and 40 for k up to 4.19, 9.18 and 19.18, so the claimed 38 would be understated above k = 4.19; time_log2 would stay 124.4743 for any k below about 3 x 10^21, and the memory bound would not change.",
+   "role": "supporting",
+   "scope": "The preprocessing rows of proof Section 5 and this claim's preprocessing_log2 of 38. It does not enter the straight-line time ledger, the memory ledger or the success bound.",
+   "statement": "Preprocessing rate assumptions: every R24H preprocessing row of proof Section 5 is a recorded count times a charge that is a measured hardware instruction count rounded up, the original model rate where it exceeds the measurement, an extrapolation from a measured per-unit cost, or an assumed wall-time ceiling times a measured CPython instruction rate; the Section 5 table states which for each row. Four classes of assumption remain. (1) Calibration extrapolation: the annealing rows multiply recorded iteration counts by charges of 20000 and 96000 instructions per iteration, above the 2985, 19740 and 95139 measured at the one, eleven and fifty-six flip pairs the cost function examines at flip bounds 0, 1 and 2, on calibration runs of 100,000 and 400,000 iterations of the same binary under the same limits, which are linear in iterations and independent of the chain length and of the open-chain mode (90846 and 95155 measured for the 21-state open chain and a 22-state cycle); the full campaigns were not re-executed under instruction counting. (2) Per-unit extrapolation: the exhaustive period-1 row charges 3300000000000 for a scan whose cost function examines 56 flip pairs per state (the counts at bounds 0, 1 and 2 are 1, 11 and 56 and nest), above the 2632546516992 that the 1401 instructions per pair-evaluation measured on the one-pair scan give for 56 pairs and about twice the 1.59e12 that the annealing fit's 837.75 per pair-evaluation models, all counted in retired instructions; only the one-pair scan was re-executed. (3) Wall-time ceilings and campaign counts: the historical exploratory Python runs and the organizer-executor phases are charged by assumed ceilings (about 1,500 s, 20 s per emission or executor phase, 600 s for integration) times a measured rate of 2^34 instructions per second, and the iteration, run and emission counts come from the development record, which is not part of this package. (4) Instruction-to-operation mapping: one retired user-space instruction of the measured programs is charged as one word-RAM operation. This is not a bound in either direction. The word RAM has no multiplication, division or floating point, and the native programs are byte-serial: per-block sampling finds 1.6 to 3.0 per cent multiply or divide (about 4 per cent in the dominant inner loop, counted statically), 8 to 18 per cent memory-operand instructions and up to 2.6 per cent floating point (proof Section 5; the CPython phases were not sampled), so emulating them literally would plausibly cost more than 1.69 operations per instruction, the factor that would lift the charged total above 2^37 target compressions; the claimed preprocessing_log2 is therefore 38, which holds up to 4.19. A word-RAM implementation packing the lane polarities into words could cost less, but none is exhibited; the claimed value rests on this declared mapping."
+  }
+ ],
+ "lane": "exploratory",
+ "restrictions": [
+  "Two distinct 128-byte one-block messages for sha3-256-r24-prefix-v1 under the injective six-lane embedding of proof Section 2.",
+  "The bit-sliced straight line has 144275 register operations, is stored in 502439 bytes under H_code, and has SHA-256 97c608b3bb29fea70cb013f63438349beca85aad8e593f17f96105bd15d2d09b.",
+  "The separate prefilter has 15 OR operations, 49 encoded bytes, destination register 1936 and SHA-256 88ad15d4b5a89d38385fdb42179b15636e53cafe9cc5ed670c5a56b5bb849543; the experiment executes the emitted register program.",
+  "The chained-chi table has 1,024 entries, checksum c8fa4bd9170966dc, and both shipped builders verify every selected entry against all 32 concrete row inputs before use.",
+  "The assembled other code has 1000 8-byte instruction words, 12 32-byte literals, 8384 bytes and SHA-256 c07c54fa1bd80afd48fe5dc4fc9de0933c5e9f50da3f818401cc33ce584f6f0c; the experiment executes it and checks the all-no-DP limit halt. Appendix B's inherited record table with the register relocation stated in Section 3 re-encodes to exactly these bytes.",
+  "Machine conventions H_reg and H_code (role supporting; the cost model and target profile fix neither; proof Section 3.6): H_reg declares 1943 registers of 256 bits, whose 62176 bytes are counted as memory; an operation on register operands costs one word operation, with no load or store, and every load and store of the other code is charged. H_code is a declared encoding: the straight line and prefilter use the measured two-address encoding (502488 bytes), while the other code uses 8-byte words plus its literal pool (8384 bytes); the encoding determines the code bytes counted in memory. A fourth declared heuristic, H_preprocessing_rate_bounds (role supporting, proof Section 5), covers the four classes of assumption behind the preprocessing rows (calibration extrapolation, per-unit extrapolation, wall-time ceilings with asserted campaign counts, and the instruction-to-operation mapping); Section 5 states each row's charge kind.",
+  "The table has 14304 words and 71520 positional 51-bit slots; every packed-field boundary is exercised.",
+  "Appendix A and the experiment certify success >= 0.39. Exact N=192165716196777386384290819687942285102696, C=6504, memory=1047672 bytes, preprocessing=645454893139968 word operations."
+ ],
+ "rounds": 24,
+ "schema_version": 3,
+ "submission_state": "ready",
+ "target_profile": "sha3-256-r24-prefix-v1"
 }
