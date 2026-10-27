@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "truncated-brent7",
+      "kind": "python-message-pairs-v1",
+      "scope": "256 organizer-seeded rho values; exact selected 56-round Orchard hash, projected to a closed 7-bit state map; at most 54 projected-map calls per trial. Returned pairs are checked only for the seven low digest bits.",
+      "hypothesis": "The selected fixed function shows small-projection cycle collision behavior compatible with the declared ideal-map heuristic; this experiment does not measure the full 254-bit search.",
+      "program": "experiments/exp_brent7.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "7f00000000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "fullwidth-trail8",
+      "kind": "python-message-pairs-v1",
+      "scope": "256 organizer-seeded rho and full-width start values; twenty sequential exact 56-round Orchard hashes per trial; report the first collision in eight low digest bits only.",
+      "hypothesis": "Full-width adaptive trails of the selected target have low-byte output occupancy compatible with a random-map short-trail baseline; this does not measure full-field collisions.",
+      "program": "experiments/exp_brent7.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "ff00000000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    }
+  ]
+}
