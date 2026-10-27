@@ -1,3 +1,691 @@
-# Organizer draft
+# Orchard Poseidon, r = 9: algebraic collision algorithm. Two free rounds on a line, odd part about a random centre, inversion-free half-gcd on three rows, one centre, register-file passes of up to seven layers
 
-Not a submission or qualified baseline. See ../../README.md.
+## 1. Claim
+
+Target: `poseidon-orchard-r9-prefix-v1` (Orchard P128Pow5T3 over Pallas, full rounds 0-3, nine partial rounds 4, 5, 6, 7, 8, 9, 10, 11 and 12, full rounds 60-63, state `[nk, rho, 2^65]`, digest = coordinate 0). Output: two distinct canonical pairs `(nk, rho)` with equal digests.
+
+Authorship. This package is the r = 9 entry `b7c37468` (Jbenisek) with two changes made by this entry, both in low-order rows: (i) every line evaluation of stage B is the straight-line program `L` of Appendix L (`135 + 12 r = 243` field operations: scaled lanes and sparse partial rounds in the form of the r = 56 entries `3a1b25b6`, `9fb982e8`, `69e14209`, re-derived and checked by our own program) in place of the `C(9) = 405` operations charged per evaluation; the loop around the evaluations is otherwise unchanged, so row B loses exactly `38,654,705,664 * (405 - 243) = 6,262,062,317,568` (section 6); (ii) stage E keeps its polynomials in field registers and charges every field operation once, with an inversion-free gcd (Appendix S), row E `12,603,760` in place of `166,079,773`. Stages A, C, D, F and G, the arena, the premises, the success bound and the experiments are those of `b7c37468` unchanged; text that says "our" entry or "we" outside the changed parts refers to the authors of `b7c37468`. Where the text of `b7c37468` describes a line evaluation by the charge `C(r)`, this entry runs `L` (`L(x) = F(x - E0_0) / OUTSCALE`, Appendix L; evaluating `L(c' + s) - L(c' - s)` with `c' = c + E0_0` gives `2 s g_c(s^2) / OUTSCALE`, and the normalisation to monic removes the constant). Totals: `N_max = 1,661,893,369,966,637` (was `1,661,893,369,966,637`), `time_log2 = 41.89998`, `memory_log2_bytes = 40.90706` (`2,061,813,924,896` bytes: `16,384` bytes of code and static data added for `L`, its constants and stage E), normalized cost `62.80704` (was `62.81246`). This entry is an algorithm (sections 2-4) with an operation count that bounds every run (sections 6-7) and a success probability derived from two score-critical premises, `H-ONE` (section 9.1, a statement about the fraction of centres at which the fixed digest polynomial has between 1 and 16 usable roots) and `H-NORMAL` (section 9.5, the normality of the remainder sequence, allowance `delta = 0.001`); section 9.2 derives the success probability from them. Stage D is charged for the normal remainder sequence with the ABORT on any other case (section 6.3), so the time and memory bounds use no premise on the sequences.
+
+* The algorithm: draw a centre `c` uniformly from `F_p` from fresh random words, build the odd part `g_c` of the line polynomial by evaluation and one inverse transform, compute `R = S^((p-1)/2) mod g_c` in the value domain on `K_cos = 15` cosets of size `h = 2^30` with the direct between-coset product (bradcush `4bcabff8`; Harvey, van der Hoeven, Lecerf, arXiv 1407.3361, 9.6; every transform pass in the block form of the declared register file of 256 field registers of 256 bits and 135 integer registers, 4.2, 4.3V), take `G = gcd(g_c, R - 1)` by the inversion-free half-gcd on three rows of bradcush `4bcabff8` (outer step `k = 2^j - 1 <= 2^30 - 1`, each matrix applied to the whole pair by the direct whole-pair or fixed-slot apply of 0xplemonade `ff21bd28` on transforms of at most `3 * 2^30` points, section 4.4), charged for every remainder sequence, and if `G` has degree between 1 and `DMAX = 16` isolate a root of `G` in at most `Z = 64` rounds, take its square root, map back and verify the two inputs with the reference hash. One centre is tried (`K = 1`), on a single thread; the trial runs to its end or ABORTs stage D on an abnormal remainder sequence (6.3), when the allocator is reset and the run ends without output; a verified collision ends the algorithm.
+* `success_probability = 0.392099999999996447`: a lower bound for the probability, over the algorithm's fresh random words, that the centre yields a verified collision on the fixed target: `P >= 1 - (1 - q + delta)^K - K (eps_coin + eps_iso) = q - delta - eps_coin - eps_iso` with `q = 0.3931` (the premise `H-ONE`, section 9.1), `delta = 0.001` the allowance of the premise `H-NORMAL` for an abnormal remainder sequence (section 9.5), `K = 1`, `eps_iso < 2^-48`, `eps_coin < 2^-122` (sections 4.1.1, 9.2). The value the formula gives with those eps bounds is `0.392099999999996447` (at or above the organizer floor 0.39).
+* `time_log2 = 41.89998` in target-compression units (`C(9) = 405` primitive operations per unit): the operation count that bounds every run, derived in section 6 as `T_fixed + K * T_trial + T_off` with `K = 1`, stage C in the value domain (4.3V), stage D the inversion-free half-gcd on three rows charged for the normal remainder sequence with the quotient and return tests and the ABORT on any other case (4.4, 6.3; the time bound holds for every sequence, because an abnormal trial ends at its first failed test after executing a prefix of the charged work), and stage E at its cap of `Z` rounds at degree `DMAX`. `N_max = 1,661,893,369,966,637` operations, `log2(N_max / 405) = 41.8999711447`, rounded up at five decimals. The offline derivation of the constants (section 6.2) is counted exactly, `T_off = 136,785` operations, and charged at its declared cap of 1,000,000 operations; that cap is inside `N_max` and is declared as `preprocessing_log2 = 20` (one quantity, not added twice).
+* `memory_log2_bytes = 40.90706` (`2,061,813,924,896` bytes: the footprint of `b7c37468`, `2,061,813,908,512` bytes, plus `16,384` bytes of code and static data for `L`, its constants and the register-resident stage E, section 7). Under the pareto convention `time_log2 + max(0, memory_log2_bytes - 20)` this gives `41.89998 + 20.90706 = 62.80704` (`b7c37468`: `62.81246`); the time-only scalar is `41.89998`, and the memory is reviewed separately.
+* Coins: the only randomness is the cost model's random-word primitive, fresh and independent, one operation per word; `65` words at most (section 4.1.1), and a draw (one word) costs 31 operations. There is no other input and no advice (`nonuniform_advice_log2_bytes = 0`).
+* The method (two free rounds on a special line, so that the digest is a univariate polynomial of degree `5^15`, then the roots of its odd part about a centre, found with a gcd against `S^((p-1)/2) - 1`) is the two-round bypass of Bariant, Bouvier, Leurent and Perrin (ToSC 2022/3) combined with a Cantor-Zassenhaus style root search; credits are in the submission note.
+* Against our r = 9 entry `acbf1dc0` (time + memory penalty 62.87075, the same algorithm, premises and experiments), four changes: (i) the apply of `adj(M)` in each outer step of stage D is the direct whole-pair or the fixed-slot apply plan of 0xplemonade's entry `ff21bd28` (credited) on transforms of at most `3 * 2^30` points, four matrix spectra, two operand/output spectra and one pointwise pass, in place of the block products of the memory cap (4.4; 11 fixed-slot and 38 direct applies, Appendix E.2); (ii) a radix-32 group forms its 31 twiddles in registers at 36 operations (the 6 operations of the former spilled twiddles removed, 4.2); (iii) step 5 of stage C runs the batch inversion in chunks of `2^16` elements, its auxiliary array `2^16` elements (was `h`; 4.3V); (iv) the stage table holds two tables of `2^15` powers of omega in place of the `h` powers, every word the passes and the bit-1 pointwise pass read from it formed as a product of one entry of each, charged (4.3V). Row C `1,221,329,706,044,169` (was `1,219,382,289,883,327`), row D `423,693,056,091,947` (was `438,344,005,056,576`); `N_max` `1,661,893,369,966,637`, time_log2 `41.90540` (was `41.91635`); the high-water mark of the pool is `g`, `R`, `R1`, `G1` alone, `2,061,584,302,336` bytes (was `2,130,303,798,976`), the footprint `2,061,813,908,512` bytes, memory_log2 `40.90706` (was `40.95440`); time + memory penalty `62.81246`. Our entry `acbf1dc0` against our r = 9 entry `6be9f608` (time + memory penalty 62.96657), one change, to the machine of its transform passes (4.2), the machine of our r = 15 entry `c7ef0551` and the entries `625bbb03`, `d4b13ccd`, `1dcbb731` of 0xplemonade: the register file is 256 field registers of 256 bits and 135 integer registers (was 64 field registers), counted in the memory (`12,512` bytes, 7); every block-form pass takes 1 to 7 layers (blocks of up to 128 points with their 127 twiddles in registers, no spilled twiddle); the layers of each transform are split into passes by the exact minimum of the charges of 4.2; in group 0 of a pass the root is 1 and its butterflies whose twiddle is 1 are 2 operations; the element offsets of every pass are set at its start and charged (`2^k + 5` per pass, 4.2); the inner transforms of stage C run the passes `5, 6, 6, 6, 7`. The block bodies and offset routines new to this entry are counted as code (`172,212` bytes in all for the block bodies, 4.2, 7). Row C `1,219,382,289,883,327` (was `1,288,422,088,724,820`), row D `438,344,005,056,576` (was `484,736,034,519,632`); the footprint `2,130,601,021,920` bytes, `2^40.95440` (unchanged at five decimals); the algorithm, the premises, the success bound and the experiments are unchanged. Our entry `6be9f608` against our r = 9 entry `5b96dbb5` (time + memory penalty 62.97716), one change to its algorithm: the block loops of the transform passes (the product passes of 4.2: the inner transforms of stage C, the products of stages C and D) are unrolled by four, a block charged 3 control in place of 5 (4.2), with `12,768` bytes of code (one 4-byte instruction per operation, 4.2) added to the footprint (7); the `576`-byte working set of the offline derivation (6.2) is counted in the footprint, and the footprint is claimed rounded up at five decimals. Row C `1,288,422,088,724,820` (was `1,294,218,630,274,672`), row D `484,736,034,519,632` (was `491,416,954,070,299`); the footprint `2,130,599,275,500` bytes, `2^40.95440` (was `2^40.955` at three decimals); the premises, the success bound and the experiments are unchanged. Our entry `5b96dbb5` against our r = 9 entry `f99e1fb1` (time + memory penalty 63.13718), two changes to its algorithm: (i) stage C runs on `K_cos = 15` cosets of `h = 2^30` points and the between-coset product of every extension is formed directly in registers (the `K_cos x K_cos` Toeplitz product, Harvey, van der Hoeven, Lecerf, arXiv 1407.3361, 9.6) in place of the cyclic convolution of length `256` on `114` cosets of `2^27` points (4.3V); row C `1,294,218,630,274,672` (was `1,581,751,995,545,735`); the convolution of length `32` is one more plan size (plan_invN misses `166,806`, was `163,717`); the four arrays of `n1 = 16,106,127,360` words raise the stage-C high-water mark: arena `2,130,630,122,048` bytes (was `1,967,421,497,472`), still reached in stage C step 5, `memory_log2_bytes = 40.955` (was `40.840`); (ii) the product step `M = M1 [[Q, 1], [b^2, 0]] M2` of each half-gcd node runs on the two rows `Y - 1`, `Y + 1` (`2n` points) in place of three; its entries have degree at most `2n - 1` on the normal sequence (4.4); row D `491,416,954,070,299` (was `583,754,982,997,865`). Every other row, the premises, the success bound and the experiments are unchanged. Our entry `f99e1fb1` against our filed r = 9 entry `06132a03` (time + memory penalty 63.17484, the same algorithm and package), two changes: (i) steps 2-8 of stage C read no word of the init twiddle table, so it is released after step 1 and rebuilt for stage D after step 8 by a second call of `ntt_init` (4.3V, 7); row C `1,581,751,995,545,735` (was `1,581,734,815,658,178`); arena `1,967,421,497,472` bytes (was `2,036,140,974,272`), the high-water mark still reached in stage C; (ii) the block products of the memory cap run at the block length `2^30` (transforms of `2^31` points, one row) in place of `3 * 2^28`, a `3*2^a`-point block transform is charged as the radix-3 layer and three rows of `2^a` points (in `06132a03` it was charged as one row of `2^(a+1)` points, an undercount), and the block size enters the plan_invN misses as one more size (4.4, 4.5); row D `583,754,982,997,865` (was `566,624,691,718,081`). Every other row, the premises and the experiments are unchanged. `06132a03` is our filed `43f8d8b8` (time + memory penalty 63.56345) with two changes: (i) the loads and stores of the data words of the transform-pass blocks are charged one operation each, base plus index (4.2; the wording of the accepted `89b451ff` and `070a02b2`); (ii) the outer steps of stage D run bradcush's inversion-free half-gcd on three rows (entry `4bcabff8`; the transform reuse of `b30de9bf`), as in our r = 3 entry `bcf8e01c`, ported to `r = 9` and charged in this cost model (section 4.4), in place of the lean cofactor-free node of bradcush `e6dcb600`/`1aa56884`. Row C `1,581,734,815,658,178` (was `1,809,844,608,973,170`), row D `566,624,691,718,081` (was `1,007,839,492,582,635`); arena `2,036,140,974,272` bytes (was `2,036,422,948,800`), the high-water mark of one trial still reached in stage C (section 7). Every other charge, the premises and the experiments are unchanged.
+* `43f8d8b8` is our filed r = 9 entry `b0ee9e30` (time + memory penalty 63.83088) with one change: the transforms run on the 64-register machine stated as a restriction in claim.json, as in our r = 3 entries `ef123c2b`/`253629b9`: every transform pass (the inner transforms of stage C, the products of stages C and D) runs blocks of `2^k` points with the `2^k - 1` twiddles of its group in registers, and the inner transforms of `2^27` points run the passes `4, 4, 4, 5, 5, 5` (4.2, 4.3V). Stage C falls from `2,233,950,532,573,330` to `1,809,844,608,973,170` operations and stage D from `1,162,288,107,277,055` to `1,007,839,492,582,635`; the memory is unchanged. `b0ee9e30` is our entry `e76bdab0` with four changes under the same cost model: (i) stage C computed in the value domain on cosets (section 4.3V, the method of bradcush `4bcabff8`); (ii) stage D the lean cofactor-free half-gcd charged for the normal remainder sequence with the quotient and return tests and the ABORT on any other case, the premise `H-NORMAL` of bradcush (entries `e6dcb600`, `1aa56884`) in the organizer-run form of gta6rp (entry `bef31fdd`) (sections 4.4, 6.3, 9.5, 10.5.1); (iii) the success allowance split between the two premises as in cryptogakusei's entry `4888e783`: `H-ONE` at `q = 0.3931` (9.1) and `H-NORMAL` at `delta = 0.001` (9.5), so one centre (`K = 1`) clears the floor (9.2); (iv) the stage-D memory cap of weijiekoh's entry `a78f526e` (outer half-gcd step `k <= DMAX`, long applies by in-place block products), ported into this program and charged in this cost model (4.4, 7). The per-trial rows A, B, E, F, G and the evidence are the same family; the memory is the actual allocator high-water mark of one trial (section 7).
+* Declared heuristics (claim.json): `H-ONE` (score-critical, section 9.1), a statement about the fraction of good centres, and `H-NORMAL` (score-critical for the success probability only, section 9.5), bradcush's premise on the normality of the remainder sequence stated with the allowance `delta = 0.001` and supported by organizer-run tests (gta6rp's recipe, entry `bef31fdd`). Both are statements about probability. The machine (256 field registers of 256 bits and 135 integer registers, and constants as immediates; every load, store and spill counted) is stated as a restriction in claim.json, as the accepted entries `89b451ff` and `fb176310` state theirs, not as a heuristic (4.2). The costs are the declared cost model of this entry, not heuristics: the charging rules of section 4.2 with that register file, the inversion-free half-gcd of stage D with the apply plans of 4.4 charged for the normal remainder sequence with the quotient and return tests and the ABORT on any other case (section 6.3; the time and memory bounds hold for every sequence), and the arena of section 7, the capacity of the allocator of section 4.2 on the allocation sequence of one trial, found by simulation (Appendix E). Everything else is proved or counted here.
+
+## 2. Two free rounds: a line in the input plane
+
+Notation. `p = 0x40000000000000000000000000000000224698fc094cf91b992d30ed00000001`, `p mod 5 = 2`, so `gcd(5, p-1) = 1` and `x -> x^5` is a bijection of `F_p` with inverse `x -> x^e`, `e = (4(p-1)+1)/5` (254 bits). `M` is the deployed 3x3 MDS, `c_{i,k}` the deployed round constant `k` of round `i` (read from the organizer constants; never regenerated).
+
+2.1 Round 0. With `U = (nk + c_{0,0})^5`, `V = (rho + c_{0,1})^5`, `K = (2^65 + c_{0,2})^5` the state after round 0 is `M (U, V, K)^T`. `(nk, rho) -> (U, V)` is a bijection of `[0,p)^2` (inverse `nk = U^e - c_{0,0}`, `rho = V^e - c_{0,1}`), so every `(U, V)` has exactly one canonical preimage. `K` is a constant.
+
+2.2 Round 1. The S-box input is `x_k = M_{k0} U + M_{k1} V + b_k`, `b_k = M_{k2} K + c_{1,k}`, affine in `(U, V)`. The algorithm uses the line `j = 0`. With `I = {i1, i2} = {0,1,2} \ {j}`, let `Q = (U_Q, V_Q)` be the solution of `x_{i1} = x_{i2} = 0` (the 2x2 determinant `M_{i1,0} M_{i2,1} - M_{i1,1} M_{i2,0}` is a minor of the MDS, nonzero on the deployed constants, checked). Let `(a, b) = (M_{j,1}, -M_{j,0})` and `(U, V) = Q + tau (a, b)`. Then `x_j = kappa` is constant and `x_i = d_i tau` for `i in I`, `d_i = M_{i0} a + M_{i1} b` (`d_j = 0`). With `W = tau^5` the round-1 S-box output is `v0 + W v1`, `v0 = kappa^5 e_j`, `v1 = sum_{i in I} d_i^5 e_i` (the supports are disjoint). After the round-1 MDS and the round-2 constants the state is `alpha + beta W` with `alpha = M v0 + c_2`, `beta = M v1`, affine in `W`.
+
+2.3 Digest polynomial. Rounds 2, 3 (full), 4, 5, 6, 7, 8, 9, 10, 11, 12 (partial), 60, 61, 62, 63 (full) put fifteen S-box layers on top of an affine map, and the digest is row 0 of the last MDS. So the digest equals `F(W)` with `deg F <= 5^15 = D = 30,517,578,125`. The leading coefficient is obtained by propagating leading coefficients through the fifteen layers (a partial round contributes only coordinate 0 at the top degree); on the deployed constants it is nonzero for the line used: `f_D(0) = 0x38489183ee8ea6531b0262aa997881736e2e11b4da7afe2fb7083021c88caae2` (computed by the propagation just described, with the same code reproducing the constants of the executed entries at r = 3, 4, 5; so `deg F = D` exactly). For random `tau`, `F(tau^5)` equals the reference hash of the canonical inputs built from `tau` (checked at the executed round counts on random `tau` against an independent big-integer reference that reproduces the 11 public Orchard vectors).
+
+2.4 Collision criterion. If `W1 != W2` and `F(W1) = F(W2)` then `tau1 != tau2` (`x -> x^5` is injective), hence `(U, V)` differ (`(a, b) != 0`), hence the canonical pairs `(nk, rho)` differ, and the digests are equal. Every `W in F_p` is `tau^5` for exactly one `tau`.
+
+## 3. Odd part with a centre
+
+For a centre `c in F_p` write `F(c + s) - F(c - s) = 2 s g_c(s^2)`. Because `D = 2m + 1` with `m = 15,258,789,062`, `g_c` has degree exactly `m` and leading coefficient `f_D(0)` (independent of `c`, nonzero), so `g_c` can be made monic. A collision pair with midpoint `c` is exactly `W1 = c + s`, `W2 = c - s` with `s != 0` in `F_p`, i.e. `S = s^2` a nonzero square with `g_c(S) = 0`. The useful roots are the roots in `F_p` with `S^((p-1)/2) = 1`: they are the roots of `G = gcd(g_c, S^((p-1)/2) - 1)` (roots that are nonsquares give `s` outside `F_p`; `S = 0` is not a root of `S^((p-1)/2) - 1`). `G` divides the squarefree `S^((p-1)/2) - 1`, so `G` is a product of `deg G` distinct linear factors over `F_p`.
+
+Construction of `g_c` by evaluation. At this r no transform of `H >= m + 1` points exists: `p - 1 = 2^32 * 3 * q` has roots of unity of order `3 * 2^a` for `a <= 32` only, and `m + 1 = 15,258,789,063 > 3 * 2^32`. Let `B = 3 * 2^31 = 6,442,450,944`, `zeta` a primitive `2B`-th root of unity (`2B = 3 * 2^32` divides `p - 1`) and `omega = zeta^2`, a primitive `B`-th root. Let `kappa = ceil((m + 1) / B) = 3` and `v_k = k + 1` for `k = 0..kappa-1`, `u_k = v_k^2`; the `kappa` numbers `n_k = u_k^B` are pairwise distinct (checked). The evaluation points are `s_{k,i} = v_k zeta^i` for `k < kappa`, `i < B`, so that `S_{k,i} = s_{k,i}^2 = u_k omega^i`, and `g_c(S_{k,i}) = (F(c + s_{k,i}) - F(c - s_{k,i})) / (2 s_{k,i})`. Write `g_c(x) = sum_{t < kappa} x^{tB} h_t(x)` with `deg h_t < B`. For `y = omega^i` we have `y^B = 1`, hence `g_c(u_k y) = w_k(y)` with `w_k(y) = sum_t n_k^t h_t(u_k y)`, a polynomial of degree `< B`. One inverse transform of size `B` of the values `(g_c(S_{k,i}))_i` returns the coefficients `w_k[j] = u_k^j sum_t n_k^t h_t[j]`. After multiplication by `u_k^{-j}`, for every `j < B` the numbers `W_k[j] = sum_t n_k^t h_t[j]` (`k < kappa`) are the values of the polynomial `sum_t h_t[j] X^t` at the distinct nodes `n_k`: a `kappa x kappa` Vandermonde system, whose inverse (`kappa^2` constants, fixed in the source) returns `h_0[j], ..., h_{kappa-1}[j]`, that is the coefficients `g_c[j + tB]`. The `2 kappa B = 38,654,705,664` evaluations of `F` are each charged as one target-compression unit (`C(9) = 405` operations), although a line evaluation (affine start, the remaining rounds, one row of the last MDS) is a strict subset of the work of a full reference permutation. The extra work of the loop (two additions for the points, one subtraction, one multiplication by `1/(2 s_{k,i})`, two multiplications for the recurrences of `s_{k,i}` and `1/s_{k,i}`, one store with its address operation, the loop control, the update of the row counter, and the executed shifts, masks, ors and loop control of the bit-reversed index, which are counted inside that function) and the recombination (per `j`: `kappa` multiplications for the running powers `u_k^{-j}`, `kappa` for the scaling, `kappa^2` multiplications and `kappa (kappa - 1)` additions for the Vandermonde system, `kappa` loads and `kappa` stores) are charged on top.
+
+## 4. The algorithm (at most K centres, one thread)
+
+### 4.1 Stages, coins and the stopping rule
+
+```
+init:   twiddle table (once)
+setup:  the line (line_setup) (once)
+for t = 1, 2, ..., K:                 [the test t <= K is made at the start of every trial; no exit except success]
+  A  c := a uniform element of F_p from one fresh random word (4.1.1)
+  B  g := monic g_c, by section 3 (38,654,705,664 evaluations + 3 inverse NTTs of size 6,442,450,944 + the recombination of the 3 cosets + the nonzero-leading-coefficient test + normalisation)
+  C  R := S^((p-1)/2) mod g, in the value domain on K_cos = 15 cosets of size h = 2^30, the between-coset product of every extension formed directly in registers (section 4.3V): 222 squaring steps, 45 of them also multiplying by S; the init twiddle table released after step 1, rebuilt (ntt_init) after step 8
+  D  G := gcd(g, R - 1) (monic): the inversion-free half-gcd on three rows with the apply plans of `ff21bd28`, charged for every remainder sequence (section 4.4), by the normal-sequence trace with the quotient and return tests (6.3)
+  E  if deg G = 0 or deg G > DMAX: trial ends. Otherwise isolate a root S of G (4.1.2); if none within Z = 64 rounds: trial ends.
+  F  s := sqrt(S) (Tonelli-Shanks, 2-adicity 32); W1 = c + s, W2 = c - s; tau_i = W_i^e; (U,V)_i = Q + tau_i (a,b); nk_i = U_i^e - c_{0,0}, rho_i = V_i^e - c_{0,1}
+  G  verify: the two reference hashes (405 operations each) are equal and the pairs differ -> output; otherwise the trial ends
+```
+
+4.1.1 Coins. The only randomness is the cost-model random-word primitive. The words are fresh, independent and uniform on `[0, 2^256)`. A centre is `c = w mod p` for one word `w` (at most three conditional subtractions); the isolation of stage E draws at most 64 further words, reduced the same way. At most 65 words per run; a draw is 31 operations. There is no rejection and no retry. The reduction is not exactly uniform on `F_p`: `2^256 = 3p + r` with `0 < p - r = 4(p - 2^254) < 2^127.1`, so every residue has 3 or 4 preimages and `w mod p` is within statistical distance `r (p - r) / (p 2^256) < 2^-128.9` of uniform on `F_p`. Over the 65 words the distance is `eps_coin <= 65 * 2^-128.9 < 2^-122`, and the success bound (9.2) subtracts it.
+
+4.1.2 Stage E: isolating a root of `G`. With `1 <= deg G <= DMAX = 16`, a Cantor-Zassenhaus split with random shifts isolates one linear factor in at most `Z = 64` rounds at degree `<= 16`; `eps_iso < 2^-48` bounds the probability that 64 rounds fail to isolate a root when `deg G >= 1` (section 9.4).
+
+### 4.2 Machine model and charging rules (summary; `C(9) = 405`)
+
+Every field operation, load, store, control operation and random word is one primitive operation; `C(r) = 216 + 21 r = 405` primitive operations is one target-compression unit. The register file is 256 field registers of 256 bits and 135 integer registers, `391` words, each counted as a 32-byte word in the memory (section 7; the machine restriction of claim.json, the machine of our r = 15 entry `c7ef0551` and the entries `625bbb03`, `d4b13ccd`, `1dcbb731` of 0xplemonade): the field registers hold the up to 128 values and 127 twiddles of a block of up to 7 layers, so no twiddle of a block is spilled; the integer registers hold the 128 element offsets of a block and 7 words (the block base of the loads and of the stores, the twiddle base, the block, group and pass counters, the stride); these counts are taken from the kernels the counting program runs (Appendix E.3: field `2^k` values, `2^k - 1` twiddles and 1 product, integer `2^k` offsets and 7, at `k = 7`); every other value is charged as a load or store; a load or store of a data word of a block of a transform pass is one operation, its address the base plus index of the load or store itself: one load per word fetched from memory and one store per word written, the wording of the accepted entries `89b451ff` and `070a02b2`), the only register assumption. Every transform pass of `k` layers at level `l0` of a `2^a`-point transform runs `2^(a-k)` blocks of `2^k` points, each `2^k` loads and `2^k` stores at one operation each (base plus index), `k 2^(k-1)` butterflies at 3 and 3 control (`2 * 2^k + 3 k 2^(k-1) + 3`, `k = 1` to `7`: the block loop is unrolled by four, its counter, test and branch, 3 operations per four blocks, charged 1 per block, and the 2 address updates, the block base moved for the loads and for the stores, every element offset held in an integer register; a block loop of one or two blocks is straight code), and `2^l0` groups, each forming its `2^k - 1` twiddles once in registers from the twiddle table (radix 16: two loads of two words, one multiplication, three squarings, eleven multiplications by register constants and 5 control, 24; radix 32: two loads of two words, one multiplication, four squarings, twenty-two multiplications by register constants and 5 control, 36; radix 64 and 128: two loads of two words, the `2^k - 1` twiddles one multiplication each and 5 control, `2^k + 8`, 72 and 136; `k <= 3`: 16), plus `9 k + 19` per forward pass and `9 k + 20` per inverse pass; and every pass (forward, inverse, and the pass fused with the pointwise product) sets the element offsets of its blocks at its start, since they depend on its level `l0` (offset `i` is `i` times the stride `2^(a-l0-k)`): one straight-line routine per `k`, call and return 2, the stride 3 (two subtractions and a shift), offset 0 set to zero 1, and each further offset the previous one plus the stride, 1 each: `2^k + 5` per pass (133 at `k = 7`), charged in every pass of stages C and D and in the split below. In group 0 of a pass the root is 1: its blocks run a straight-line variant of the body in which the `2^k - 1` butterflies whose twiddle is 1 are their addition and subtraction, 2 operations (`2^k - 1` fewer per block); group 0 keeps its full group charge. The layers of a transform are split into passes by the exact minimum of these charges over the splits into passes of 1 to 7 layers (computed offline; a static table of the splits, `2 x 33` words, `2,112` bytes, section 7); the last pass of a product, the pass fused with the pointwise product, keeps at most 4 layers, and the row transforms of the stage-D nodes and the block transforms of 4.5 take up to 7 in every pass. The code of the block bodies: the three further copies of each body of 1 to 5 layers unrolled by four (forward and inverse, each at its full charge), four copies of each of the `18` bodies new to this entry (the forward and inverse bodies of 6 and 7 layers and the group-0 bodies of 1 to 7 layers), the twiddle routines of the groups of 6 and 7 layers and the seven offset routines of 1 to 7 layers (`2^k + 5` each, `289` in all) hold `43,053` primitive operations, one 4-byte instruction each (the instruction width of the machine declared by cryptogakusei `1533f8f0`, its H2): `172,212` bytes of code, added to the footprint (section 7); the algorithm runs on one thread, no dispatch. Allocation: one preallocated arena; a block is a 64-byte header plus the payload rounded up to a multiple of 64 bytes. A block of more than `2^24` bytes is served by the two-ended pool (one region, two ends, first-fit in address order, the statements marked `# pool:H` using the high end and, with the depth-parity placement of section 7, the end `(j + bit8) mod 2` of a half-gcd node at depth `j`); every smaller block by its slab class (the least `j >= 7` with `2^j >= need`, a slot of `2^j` bytes). The allocators are charged per executed load, store, comparison, branch and address computation, inside the stage rows (a pool request `97` operations besides the walk and `13` per block examined, a slab request at most `126`, a free `81` for a slab block and at most `105` for a pool block). The memory of both allocators is the arena of section 7.
+
+### 4.3V Stage C in the value domain, on cosets of a subgroup of order `h = 2^30` (the method of bradcush `4bcabff8`), with the direct between-coset product
+
+The residue `R = S^((p-1)/2) mod g` is carried by its values on `K_cos = 15` cosets `5^k H`, `k = 0..K_cos-1`, of the subgroup `H` of order `h = 2^30` (the extension uses the `2 K_cos = 30` cosets `5^0 H, ..., 5^(2 K_cos - 1) H`). The cosets are distinct because `5^(d h) != 1` for `1 <= d <= 2 K_cos - 1` and `ord(5^h) = (p-1)/h >= 2 K_cos`; `h | p - 1`; and `n1 = K_cos h = 16,106,127,360 >= m + 1`. A squaring step is a pointwise square on the current point set plus one change of point set (an extension) built from `2 K_cos` inner transforms of `h` points and, at each of the `h` positions, the between-coset product that carries the `K_cos` values of the position on the nodes of one set to its `K_cos` values on the nodes of the other: the Lagrange interpolation from `K_cos` distinct nodes, a `K_cos x K_cos` matrix that is Toeplitz in the geometric node order, with `2 K_cos - 1 = 29` distinct entries (the kernel). The product is formed directly in registers (the direct evaluation of Harvey, van der Hoeven, Lecerf, arXiv 1407.3361, 9.6, in place of the cyclic convolution of length `Lx = 32` of bradcush `4bcabff8`): the `2 K_cos - 1` kernel constants are loaded once per group of `VCNT = 1,024` positions (2 each); per position the `K_cos` inputs are brought in with their running factors (8 each), the `K_cos^2 = 225` multiplications and `K_cos (K_cos - 1) = 210` additions of the product run in registers (`K_cos + 2 K_cos - 1 + 1 = 45 <= 64` words), the `K_cos` outputs leave with their factors (8 each), and 5 for the loop and the address; a group adds 20 and 3 for its loop, the phase 2, and the running factors of the inputs and of the outputs are set from their base table before the phase (`7 K_cos + 2` each). One extension is `2 (7 K_cos + 2) + (h / VCNT) (20 + 3 + 2 (2 K_cos - 1) + VCNT (8 K_cos + K_cos^2 + K_cos (K_cos - 1) + 8 K_cos + 5)) + 2 = 730,229,375,192` operations besides its `2 K_cos` inner transforms (Appendix E.1); it computes the same `K_cos` sums of `K_cos` products per position as the convolution, so the same values result and no premise is added. The start monomial is `S^v`, `v = 2^31 = 2,147,483,648` a multiple of `h` (VSHIFT = 2). There are `222` squaring steps, `45` of them also multiplying by `S` (a streaming shift). The evaluation of `q` uses `Kq = 3` rows and a convolution of length `Lq = 24`; the chirp evaluation of `g` at the `2 K_cos` nodes uses a convolution of length `Le = 48`; the two interpolations of step 8 use the convolution of length `Lx = 32`; the kernel spectra of these convolutions (the extension kernel among them) are built at the entry of the stage and kept in the stage table. The equality of the value-domain and coefficient-domain residue is exact (it composes exact inner transforms with the exact Lagrange interpolation of polynomials of degree `< K_cos` from `K_cos` distinct nodes); no premise is added. `g` and `R` are held whole (one array each; the top-node pieces of bradcush's lemma 4.8(b) are not used). The inner transforms of `h = 2^30` points run the passes `5, 6, 6, 6, 7` (top-down; the split of 4.2). The init twiddle table is read only in step 1 (the Newton reciprocal and the product `q`, transforms up to `3 * 2^31` points). Steps 2-8 read no word of it: their transforms are the inner transforms of `h` points and the convolutions of lengths `Lx = 32`, `Lq = 24` and `Le = 48`, and their passes form the group twiddles from two tables of `2^15` words built at the entry of the stage, `TL[i] = omega^(rev15(i))` and `TH[i] = omega^(2^15 rev15(i))` (`omega` of order `h`, `rev15` the 15-bit reversal, transform order): the power at position `t = 2^15 t1 + t0` of a table of `h` entries in transform order is `TH[t0] TL[t1]`, so every word a pass loaded from such a table is formed by splitting its index (2), two loads and one multiplication, 10 more per group of a pass (two words per group), charged in the kernel spectra and in steps 2-8. The pointwise pass of a step with bit 1 multiplies by the power of its position the same way, its positions in blocks of `2^15` with the factor `TL[t1]` of the block in a register: 17 per position (was 16) and 10 per block (Appendix E.1). Step 5 runs the batch inversion of each coset in chunks of `2^16` elements: per chunk the prefix products into one auxiliary array of `2^16` elements, one inversion with its zero test, the backward pass, and 9 of chunk control. The tables (`30 K` constants, `2 * 2^15` powers, the kernel spectra) and the auxiliary array are blocks below `2^24` bytes (slab classes of 4.2). So the init table (`2^31` words, a block of `68,719,476,800` bytes) is released after step 1 (one free, `105`) and rebuilt for stage D after step 8 by a second call of `ntt_init` (one allocation, `212`, and `17,179,887,292`, the init row). Placement (section 7): `R` in coefficient form and `R1` are taken from the high end, above `g`, before step 1, so the release leaves the low end empty; `G1` then starts at the bottom of the low end, and the rebuilt table returns to the bottom of the low end, its place after init, so stage D starts with the low end `[table]` and the high end `[g, R]`. A trial that stops inside steps 2-8 (a zero prefix product in step 5) ends the run (`K = 1`). The step-by-step operation count is expanded in Appendix E.1 (where `K_cos` is `K`) and totals **row C = 1,221,329,706,044,169** (section 6).
+
+### 4.4 Stage D: the inversion-free half-gcd on three rows (bradcush `4bcabff8`), with the apply plans of `ff21bd28`, charged for every remainder sequence
+
+`G = gcd(g, R - 1)` is computed by bradcush's inversion-free half-gcd (entry `4bcabff8`, with the transform reuse of `b30de9bf`; read as text only, ported and charged in this cost model as in our r = 3 entry `bcf8e01c`). Matrices and remainders are kept up to nonzero scalars with pseudo-division (`b^2 a = Q b + e`, `Q` of degree 1 on the normal sequence), so no field inversion runs inside the recursion; the gcd is the same up to a scalar and is made monic at the end. A node of budget `k = 2^j - 1` makes two child calls of budget `2^(j-1) - 1`; its products run on `3 * 2^(j-1)` points, the rows `Y - 1`, `Y + 1`, `Y - i` (`Y = X^n`, `n = 2^(j-1)`), each a power-of-two transform of `n` points in the block form of 4.2 after a twist, joined by a 3-row CRT for `(c, d) = adj(M1)(a, b)` on the top window; then the pseudo-division and the product `M = M1 [[Q, 1], [b^2, 0]] M2` on the two rows `Y - 1`, `Y + 1` only (`2n` points; 2-row CRT `lo = (u + v)/2`, `hi = (u - v)/2` with the `1/2` folded into the `1/n` of the inverse, 10 operations per point). The product needs no third row: on the normal sequence every quotient has degree 1 and `b^2` is a constant, so a matrix of `s` steps has entries of degree at most `s`; the entries of `M1`, `M2` (budget `n - 1`) have degree at most `n - 1` and those of `M` at most `2n - 1 < 2n`, and the values on the `2n` points with `X^(2n) = 1` determine `M` exactly (the 2n-point product of van der Hoeven, arXiv 2212.12389, Prop. 7, here without its leading-coefficient correction). A node reaches its product only after the quotient tests of its children and of its own pseudo-division have passed (6.3), so the degree bound holds whenever the product runs. These `2n` points are the row `Y' - 1` (`Y' = X^(2n)`) of the parent, so the values of `M` there are returned to the parent with no transform; the row `Y - 1` values of each child's matrix are returned by the child, the row values of `M1` are kept from the apply and reused in the product, and of `M2` only the row `Y + 1` is transformed (both rows when its children are base cases, which return coefficients only). The twist roots of order `2n` and `4n` (`4n <= 2^31`, so they exist in `F_p`) come from the squaring chain of the running twiddle factors of the row transform (4.2); the scales `1/2^a` (`a <= 29`) are a table of 29 words built at the entry of stage D (`1/2 = (p + 1)/2` an immediate, 28 multiplications). The base case (budget 63) runs two remainder steps per pass over its window.
+
+Driver: while `(n - 1)/2 >= 127`, one outer step calls the node on the top window of the pair with `k = 2^j - 1` the largest with `k <= min(2^30 - 1, (n - 1)/2)` (below the outer cap `DMAX = 3 * 2^29` of weijiekoh `a78f526e`), applies `adj(M)` to the whole pair in place, and makes one division with the quotient test; the apply is one of the two apply plans of 0xplemonade's entry `ff21bd28` (read as text, re-implemented and charged in this cost model). With `h = 2^j - 1`, `(c, d) = adj(M)(a, b)` has `lc = la - h` and `lc - 1` coefficients (the high coefficients cancel); `c` is written over `a` and `d` over `b`. The apply uses one transform size `N = 3 * 2^e` (`2 <= e <= 30`: `N <= 3 * 2^30`, the cap of the apply) and one of two forms; both forms are priced at every `e` from 2 up to the first with `N >= lc` or to the cap (8 control operations and the plan set-up per size) and the cheaper is run; 80 operations of entry, 448 for the scale `1/N` and 22 for the two length checks. A transform of an array of `l <= N` coefficients is `6` plus the radix-3 input stage over the `l` coefficients plus three rows of block-form passes (4.2); an inverse is `3` plus three rows of inverse passes plus the radix-3 output stage over the coefficients formed; the scaling of `t` outputs into their array is `8t + 5` (a load, a multiplication, a store and the loop step per coefficient). Both forms first transform the four entries (`h + 1`, `h`, `h`, `h - 1` coefficients) into four spectra of `N` points and free the coefficient matrix. (i) Direct whole-pair (`N >= lc`): `a` and `b` are folded in place modulo `X^N - 1` (10 per coefficient beyond `N`) and transformed into the operand spectra `A` and `B`; one pass over the `N` points forms `C = r22 A - r12 B` over `A` and `D = r11 B - r21 A` over `B` (20 per point: six loads with their addresses, four multiplications, a subtraction, an addition and the two stores; `2 + for8(N)` for the loop); the two inverses form the first `lc` and `lc - 1` coefficients, scaled into `a` and `b`; since `deg c, deg d < lc <= N` the cyclic results are exact. (ii) Fixed-slot (`B = N - h > 0`): the outputs are cut into `nb = ceil(lc / B)` blocks of `B` coefficients, handled from the highest to the lowest (`3 nb + 6` of control); block `i` transforms the windows `[max(0, iB - h), min((i + 1) B, lc))` of `a` and `b` (at most `N` coefficients) into `A` and `B`, forms `C` and `D` in one pass over the `N` points (24 per point, two lanes of 12; `2 + for8(N)`), inverse transforms both (all `N` outputs; block 0 only its outputs) and writes the scaled outputs of the block over the same positions of `a` and `b`; 20 of control per block. A window of `w <= N` coefficients times an entry of at most `h + 1` coefficients gives at most `w + h`, so the cyclic wrap reaches only positions below `w + h - N <= h`: block `i > 0` keeps positions `h .. N - 1`, which are exact, and block 0 (`w <= B`) has no wrap; block `i` writes positions `[iB, (i + 1) B)` and the blocks after it read only positions below `iB`. Memory of an apply: the four matrix spectra and the two operand/output spectra, six arrays of `N` words, besides the pair; the bump arena of the node is released before the apply. The 49 outer steps run 11 fixed-slot and 38 direct applies. The last outer step (degree below `255`) is the lean cofactor-free half-gcd of bradcush `e6dcb600`/`1aa56884` as in `43f8d8b8`, and below degree `192` classical division steps finish. The working arrays of a node live in one bump arena (an allocation or release is 10 operations) of `17,179,868,928` words at `j = 30`, the peak of its recursion; the cap `j <= 30` keeps the arena and the pair below the stage-C peak (section 7). The caps are constants of the algorithm; on the normal sequence every length, budget and allocation is a function of `m` alone.
+
+The row is charged for the normal remainder sequence (every quotient of degree 1), the case of the premise `H-NORMAL` (9.5): every division and pseudo-division tests that its quotient has degree 1 and every call tests on return that it removed exactly its budget (2 operations each), and a zero remainder also ends the trial; on any other case the trial ABORTs (the allocator is reset and the run ends without output, section 6.3). By the prefix lemma of 6.3 every trial executes a prefix of the operations and of the allocation sequence charged for the normal case, so the time bound of section 6 and the memory bound of section 7 hold for every remainder sequence; only the success probability depends on the sequence (9.2). The total is **row D = 423,693,056,091,947** (section 6.3, 6; Appendix E.2).
+
+### 4.5 Products longer than `3 * 2^32` points (block mode)
+
+The field has no transform of more than `3 * 2^32` points (`p - 1 = 2^32 * 3 * q`, `q` odd). A product whose transform would be longer is computed by block products (scheme (a), Grok job 140): each operand is cut into blocks of `A_HB = 2^30` coefficients, each block is zero-padded to `A_NB = 2^31` points and transformed once (a block transform of `3*2^a` points, at any other block length, is charged as the radix-3 layer and three rows of `2^a` points, as every `3*2^a`-point transform of this model), the block spectra of a slot (the block pairs `i + j = s`) are multiplied pointwise and summed in the transform domain, and each slot that meets the wanted output window is inverse transformed once and overlap-added, scaled by `1/A_NB`, into the output; a product of two blocks has fewer than `A_NB` coefficients, so a block product does not wrap. Every transform, pointwise product, placement and allocation is charged by the rules of 4.2; Appendix E expands them.
+
+## 5. Why the output is a collision
+
+By 2.4 any `W1 != W2` with `F(W1) = F(W2)` maps back to two distinct canonical pairs with equal digests. Stage D returns `G | g_c`, whose roots `S` are nonzero squares with `g_c(S) = 0` and `S^((p-1)/2) = 1` (section 3); `s = sqrt(S) != 0`, so `W1 = c + s != c - s = W2`. Stage G verifies both inputs with the reference hash before the algorithm outputs, so a returned pair is a verified collision.
+
+## 6. Ledger: operation count (primitive operations; `C(9) = 405`)
+
+| row | what is charged | operations |
+| --- | --- | --- |
+| init | twiddle table (`ntt_init`, once) | 17,179,887,292 |
+| setup | the line (`line_setup`, once) | 4,910 |
+| A (per trial) | stage bookkeeping, loop test and update, the coin draw (31), one allocation | 1,196 |
+| B (per trial) | (this entry: each evaluation by the program `L` of Appendix L, `243` operations, in place of `405`) `3` cosets of `6,442,450,944` points, each point with two evaluations of `F` (at `c + s` and `c - s`) at `C(9) = 405` operations each, the loop work around them, `3` inverse transforms of size `6,442,450,944`, the recombination of the cosets, the normalisation | 16,853,410,719,321 |
+| C (per trial) | `S^((p-1)/2) mod g` in the value domain, `K_cos = 15` cosets of size `h = 2^30`, the direct between-coset product, VSHIFT = 2, passes in block form (sections 4.2, 4.3V), the init twiddle table released after step 1 and rebuilt after step 8; expanded in Appendix E | 1,221,329,706,044,169 |
+| D (per trial) | inversion-free half-gcd of `(g, R - 1)` (node products on two rows, 4.4) on three rows with the apply plans of `ff21bd28`, charged for every remainder sequence (section 4.4): the normal-sequence trace with the quotient and return tests (6.3), passes in block form (4.2); expanded in Appendix E | 423,693,056,091,947 |
+| E (per trial, cap) | `Z = 64` rounds at degree `DMAX = 16`, register-resident, each at most `R(16) = 196,915` with its draw (Appendix S), the stage bookkeeping 1,000 and the load of `G` into registers 200 | 12,603,760 |
+| F (per trial) | square root, back-map | 47,012 |
+| G (per trial) | two reference hashes: `1000 + 10 * 2 * 405 + 32` | 9,132 |
+| trial-loop (per trial) | trial-loop bookkeeping and the allocator reset after an ABORT, charged in every trial | 1,012 |
+| plan_invN misses | one per distinct plan size (and the block size `2^31` of 4.5; and the convolution of length `32` of 4.3V) | 166,806 |
+| output rows | the fixed output rows | 3,390,080 |
+| offline | section 6.2 | 1,000,000 |
+| **N_max** | `T_fixed + T_trial + T_off` | **1,661,893,369,966,637** |
+
+`T_off = 1,000,000` (the declared cap; the exact count is `136,785`, 6.2); `T_trial = A + B + C + D + E + F + G + trial-loop = 1,668,138,401,311,130` (the trial-loop row is the trial-loop bookkeeping and the allocator reset after an ABORT, charged in every trial); `T_fixed = init + setup + plan_invN misses + output rows = 17,183,449,088`; `K = 1`, so `N_max = 17,183,449,088 + 1,668,138,401,311,130 + 1,000,000 = 1,661,893,369,966,637`. `log2(N_max / 405) = 41.8999711447`, rounded up at five decimals to `41.89998`. Rows C and D are expanded part by part in Appendix E (E.1, E.2) from the dimensions of 4.3V and the half-gcd levels with the kernel charges of 4.2; the parts add up exactly to `1,221,329,706,044,169` and `423,693,056,091,947`.
+
+### 6.1 Validation
+The worst-case counts are derived by formula and compared with the instrumented totals of our executed runs at `r = 3, 4, 5`; the arena rule (the heap peak of the allocation walk) is within 64 bytes of the measured heap peaks there. Rows C and D are the finite recurrences of Appendix E (E.1, E.2), summed term by term; no coefficient is fitted or extrapolated.
+
+### 6.2 Offline derivation
+The literals of the sources are computed once, offline, from `p` and the organizer's 192 round constants and 9 MDS entries, one literal at a time (working set: at most 16 words of 32 bytes and a 64-byte digit buffer); each is the value of one closed formula, with no search and no choice. Count in the primitives of 4.2 (orchard-field-ram-v2: every field operation, load, store and control operation is 1): a field operation is charged 4 (the operation, two operand loads, one store), a 64-bit word operation 3 (the operation, one load, one store), a hexadecimal digit 5 (its load, the table load, a shift, an or, the loop control). (a) Input: 202 values of 64 hexadecimal digits (`p`, the 192 round constants, the 9 MDS entries), 324 each with the 4 word stores: `65,448`. (b) Field literals, 489 field operations: `2 = 1 + 1` (1); `R = 2^256 mod p`, `2` squared 8 times (8); `R^2 mod p` (1); the Montgomery forms `x R mod p` of the 201 organizer constants (201); `2^65 R mod p` (`2` squared 6 times, times `2`, times `R`: 8); `5 = 2 + 2 + 1` (2); `5^t R mod p` with `t = (p-1)/2^32`, the odd exponent of the Tonelli-Shanks of stage F (223 bits, 46 of them 1: 222 squarings, 45 multiplications, times `R`: 268); charged `4 * 489 + 3 * 222` (the bit steps of the square-and-multiply) `= 2,622`. (c) Word literals, 90 word operations: `p - 1` (4), `t` (a shift by 32 over 4 words, 12), `(t+1)/2` (16), `(p-1)/2` (12), `p - 2` (4), `e = (4(p-1)+1)/5` (a shift by 2 into 5 words 15, plus 1, a division by 5 word by word 10: 26), `-p^-1 mod 2^64` (5 Newton steps `x <- x (2 - p_0 x)` from `x = p_0`, 3 each, and a negation: 16); charged `3 * 90 = 270`. (d) Output: 211 literals of 64 hexadecimal digits (the 201 Montgomery forms, `R`, `R^2`, `2^65 R`, `5^t R`, `t`, `(t+1)/2`, `(p-1)/2`, `p - 2`, `e`, `p`), 324 each, and `-p^-1 mod 2^64` (16 digits, 81): `68,445`. `T_off = 65,448 + 2,622 + 270 + 68,445 = 136,785` operations. The ledger charges the declared cap `1,000,000 >= T_off` (`preprocessing_log2 = 20`, `2^20 = 1,048,576`), inside `N_max`: a counted bound, not a premise.
+
+### 6.3 Stage D charged for the normal remainder sequence, with the ABORT (bradcush, entry `e6dcb600`)
+
+Row D of the ledger charges the half-gcd of section 4.4 for the normal remainder sequence of `(g_c, R_c - 1)`: every quotient of degree 1, the case of the premise `H-NORMAL` (9.5). Two tests make every other sequence end the trial: (a) the quotient test: every division (the re-centring division of a node, the division of each repetition of the outer loop, each step of the base case) tests that its quotient has degree 1 (2 operations), before the division runs; (b) the return test: every call `hgcd(a, b, k)` tests on return that it removed exactly its parameter, `h = k` (2 operations); a zero remainder inside `hgcd` or in the outer-loop division also ends the trial. On a failed test the trial ends (ABORT): the arrays of the trial are released by resetting the allocator to its state after the twiddle table (`1,000` operations, charged in the trial) and the run ends without output (`K = 1`). Lemma (prefix; `e6dcb600`, its 6.3(a)-(c)): while every quotient so far has degree 1, every length, recursion parameter and allocation of the program equals that of the normal case, because each node of budget `2^j - 1` splits into two calls of budget `2^(j-1) - 1` (each lean call at `k1 = ceil(k/2)`) and, with every quotient of degree 1, every degree in the tree is fixed by `m` and the number of quotients so far, and the budgets of the outer loop (`k = 2^j - 1 <= min(2^30 - 1, (n - 1)/2)`, then `ceil((n+1)/2)`, section 4.4) are fixed by `m` alone. At the first quotient of degree other than 1 either the quotient test of that division fails, or the call stops below its parameter with a nonzero remainder and the return test of its caller fails before the result is used. Every remainder that the outer loop's `hgcd` calls and divisions produce has degree at least the base-case bound, so every gcd of degree at most `DMAX = 16` first appears in the classical Euclid below the base-case degree, after a prefix of the degree-0 work; a zero remainder earlier ends the trial at that test. So every trial executes a prefix of the operations and of the allocation sequence charged for the normal case, and the time bound of section 6 and the memory bound of section 7 hold for every remainder sequence; only the success probability depends on the sequence (9.2). The quotient test runs before each division, so the Newton (fast) division is never reached on the charged path and row D carries no fast-division or zero-scan term. The node follows `4bcabff8`, the lean call `1aa56884` proof 4.4 and the apply plans of `ff21bd28`, all read as text only (no entry script was run, compiled or imported). Appendix E.2 expands, for `r = 9`, the charge of stage D for the normal sequence with the tests, `423,693,056,091,947`, repetition by repetition.
+
+The `r = 9` trial (`~2.13 TB`, `~1.68e15` operations) exceeds the organizer sandbox (128 MiB, 20 s), so the costs are the exact formula counts of sections 6 and 7; zero-fill clearing is charged (ruling `3476cad8`) and the register file of 4.2 (256 field registers of 256 bits and 135 integer registers) is the machine restriction of claim.json.
+
+## 7. Memory: the arena of one trial
+
+The arena is the capacity of the allocator of 4.2 on the allocation/free sequence of one trial (`K = 1`: the run is one trial). Appendix E.3 runs the allocator on every allocation and free of the trial in the order of the program and reports the two-ended-pool high-water mark (the largest sum of the extents of the two ends over the trial), the slab area and the peaks of the live set per stage. The two-ended pool takes the blocks of more than `2^24` bytes and is placed with depth-parity ends and in-place `R*Q` with two spare slots charged (the `POOL_PLACE = 20` discipline). Under the H-NORMAL ABORT stage D the stage-D live set holds the **normal-case division arrays**: on the normal sequence every quotient has degree 1, so each division forms only the quotient of two coefficients and the remainder, and a trial with any other sequence ends (ABORT) after a prefix of these allocations (6.3), so the normal-case walk bounds every trial. With the node arena of 4.4 (`j <= 30`) and the apply plans of 4.4 the stage-D live peak is `1,786,706,388,736` bytes (the pair, the twiddle table, the coefficient matrix and the arena of the first `j = 30` node), below the stage-C peak; the stage-D trace of Appendix E has no event that raises the pool's high-water mark. The high-water mark is `2,061,584,302,336` bytes, reached in stage C (steps 2-8): the high end holds `g`, `R` (coefficient form) and `R1`, the low end `G1`, four arrays of `515,396,075,584` bytes (`n1 = 16,106,127,360` words each); the stage table and the auxiliary array of step 5 are small blocks (slab classes); the init twiddle table is not live there (released after step 1, rebuilt after step 8, 4.3V). Plus 128 bytes so the unused middle is always at least 128 bytes. The slab classes take the smaller blocks: `224,069,376` bytes. Stages E and later hold at most 16 small arrays and the free-list heads: `16,896` bytes. The arena is `2,061,808,388,736` bytes (two-ended pool `2,061,584,302,336 + 128`, slab `224,069,376`, stages E and later `16,896`). Peaks of the live set per stage (bytes): A `584,115,552,384`; B `1,202,590,843,072`; C `2,061,590,091,072`; D `1,786,706,388,736`. With `5,441,152` bytes of code and static data (`172,212` of them for the block bodies of 4.2, `2,112` for the table of the pass splits, 4.2, and `16,384` for the routines of this entry, the two apply forms of 4.4, the chunked batch inversion and the two omega tables of 4.3V, at most 4,096 instructions of 4 bytes), the working set of the offline derivation (6.2: 16 words of 32 bytes and the 64-byte digit buffer, `576` bytes), the register file of 4.2 (`391` words of 32 bytes, `12,512` bytes) and a `65,536`-byte stack, the footprint is `2,061,813,908,512` bytes `= 2^40.907051`, claimed as `memory_log2_bytes = 40.90706` (rounded up at five decimals). No stored advice; the twiddle table is built at run time, charged in stage init, and rebuilt in stage C (row C). This entry adds `16,384` bytes of code and static data (Appendix L.4: `L` as one subroutine, its constants, the call site and the register-resident stage E of Appendix S): footprint `2,061,813,924,896` bytes `= 2^40.9070513`, claimed `memory_log2_bytes = 40.90706`; the arena and the allocation walk are unchanged.
+
+## 8. Review points, answered by location
+
+1. Row D charged for the normal remainder sequence with the quotient and return tests and the ABORT on any other case (6.3): by the prefix lemma every trial executes a prefix of the normal-case work, so the time and memory bounds hold for every sequence; `H-NORMAL` (9.5) enters only the success probability.
+2. The node budget cap and the memory cap (4.4) are constants of the algorithm (`k = 2^j - 1 <= 2^30 - 1`, apply transforms of at most `3 * 2^30` points); its extra transform work is charged in row D, and its effect on the memory is read from the allocation walk of Appendix E (stage-D peak `1,786,706,388,736` below the stage-C peak; no stage-D event raises the high-water mark). All 718 stage-D pool events of Appendix E.3 (the first 24 are listed) follow one rule: the allocator of 4.2 (first fit in address order) on the allocations and frees of the stage-D arrays of 4.4 in program order, their sizes fixed by `m` on the normal sequence; the largest sum of the two ends over all 718 events is `1,786,706,387,712` bytes (event 5).
+3. Row B reproducible from sections 3 and 6 (evaluations * ops/unit + the 3 inverse transforms + the recombination + normalisation). The register file of 256 field registers of 256 bits and 135 integer registers (the machine restriction of claim.json, 4.2), counted in the memory (7), is the only register assumption; every value beyond it is charged as a load or store.
+4. The offline derivation is counted literal class by literal class in 6.2 (`T_off = 136,785` operations) and charged at the declared cap `1,000,000` (`preprocessing_log2 = 20`); the cap over the count moves `time_log2` by less than `10^-6`.
+5. The mem penalty uses the rounded-up `mem_log2` - a self-penalizing over-charge, deliberate.
+6. Row D is the normal-sequence trace with the tests and nothing else: the quotient test runs before each division, so the Newton (fast) division is never reached on the charged path and no fast-division or zero-scan term is added (6.3; Appendix E.2 expands the row).
+7. `success = 1 - (1 - q + delta)^K - K (eps_coin + eps_iso) >= 0.39` from the premises `H-ONE` and `H-NORMAL` (9.2, 9.5) with `K = 1`, `q = 0.3931`, `delta = 0.001`, i.e. `q - delta - eps_coin - eps_iso`; the value the formula gives with the stated eps bounds is `0.392099999999996447`, margin above 0.39 is `0.002099999999996447`. The delta stated in H-NORMAL (9.5) is the delta used here.
+8. The stage-D memory peak holds the pair, the node arena and the normal-case division arrays (section 7, 6.3); an abnormal trial ABORTs after a prefix of these allocations.
+9. The organizer-checkable output is the returned witness-pair count. For euclid-gcdpos (10.5.2) a pair is returned only when `deg G >= 1`, so that count is the organizer-counted good-centre fraction at `N = 2, 3`; the step from there to `N = 15` is the premise H-ONE (9.1), not an organizer-verified proof.
+
+## 9. The premise and the success bound
+
+### 9.1 H-ONE
+The number of centres `c` with `1 <= k(c) <= 16` is at least `q p = 0.3931 p`, `k(c)` the number of nonzero squares `S` with `g_c(S) = 0` (`= deg G`). The premise states `q = 0.3931`, the Poisson(1/2) law value `0.39346933` less the extrapolation allowance stated exactly as `0.0003693` (`0.39346933 - 0.0003693 = 0.39310003`, rounded to `q = 0.3931`), also below the four-moment Bonferroni bound `151/384 = 0.3932292` (9.3); the same value as cryptogakusei's `4888e783`. The toy-field range at `p = 1,048,627` (down to `0.39214`) lies within the deviation scale `1.36/sqrt(p) = 0.00133` of the law; at the Pallas prime that scale is below `2^-126`, far inside the allowance `0.0003693`. The extrapolation, the monodromy theorem at N = 2, 3 and the toy-field and organizer-run evidence are in the claim.json heuristic `H-ONE` and sections 10.3, 10.5.1.
+
+### 9.2 The success bound
+The `K = 1` centre is a fresh draw. For a centre `c` let `E_c` be the event `1 <= k(c) <= DMAX` (H-ONE, `P(E_c) >= q = 0.3931`) and `N_c` the event that the remainder sequence of `(g_c, R_c - 1)` is normal down to its gcd (H-NORMAL, 9.5, `P(not N_c) <= delta = 0.001`). The value-domain stage C reproduces `R = S^((p-1)/2) mod g` exactly, in closed form from coset distinctness with no premise (4.3V), so it adds no allowance (`delta_C = 0`). If `E_c` and `N_c` hold, stages C and D run to their end and return `G = gcd(g_c, R_c - 1)`; a successful isolation then ends in a verified collision. For `c` uniform `P(E_c and N_c) >= q - delta`, so with the one centre
+
+`success = 1 - (1 - q + delta)^K - K (eps_coin + eps_iso) = q - delta - eps_coin - eps_iso`, `K = 1`.
+
+With `q = 0.3931`, `delta = 0.001`, `eps_iso < 2^-48`, `eps_coin < 2^-122` (4.1.1): `q - delta = 0.3921`, and the value the formula gives with the stated eps bounds is `0.392099999999996447 >= 0.39` (`0.3921` with `eps = 0`). The bound stays at or above `0.39` for every `delta <= 0.0030999` (`q - 0.39 - eps_coin - eps_iso`), above the stated `delta = 0.001`; the delta stated in H-NORMAL (9.5) is the delta used here.
+
+### 9.3 Monodromy (support for H-ONE)
+The roots of `G(c,t) = g_c(t^2)` come in pairs `+-t_i`, so the monodromy lies in the hyperoctahedral group `B_m` and `k(c)` counts positive Frobenius fixed points; for `B_m` this is Poisson(1/2) in the limit, `P(k >= 1) = 1 - e^(-1/2) = 0.3934693`, and Bonferroni at order 4 gives `P >= 151/384 = 0.3932292`. A theorem at two and three layers (Aubry-Perret, monodromy `B_12`, `B_62`); false for permutation polynomials, for decomposable `F` with imprimitive monodromy, and at one layer.
+
+### 9.4 Isolation lemma
+With `1 <= deg G <= 16`, a random-shift split isolates a linear factor within `Z = 64` rounds except with probability `eps_iso < 2^-48`. Finite derivation (ruling `d2f0cc3d`, F-ISOLATION-BOUND; the derivation accepted on our r = 4 entry after ruling `044e6b33`): `G` divides both `g_c` and `S^((p-1)/2) - 1`, so it is squarefree and splits into `d = deg G <= 16` distinct linear factors `X - t_i` over `F_p`. A round with shift `a` keeps a nontrivial part of the current factor `H` under `gcd(H, (X + a)^((p-1)/2) - 1)` (or `X + a` itself when `a = -t_i`), so two roots `t_i != t_j` stay together only if `chi(t_i + a) = chi(t_j + a)` or `a` is in `{-t_i, -t_j}`. Since `sum_a chi((a + t_i)(a + t_j)) = -1` for `t_i != t_j`, exactly `(p - 3)/2` shifts give equal nonzero characters, so for `a` uniform on `F_p` the pair stays together with probability at most `((p - 3)/2 + 2)/p = 1/2 + 1/(2p)`; each shift is a fresh random word reduced mod `p`, within statistical distance `2^-128.9` of uniform (4.1.1), so per round the bound is `1/2 + 1/(2p) + 2^-128.9 < 1/2 + 2^-127`, independently across rounds. The parts are nested, so the factor kept after 64 rounds holds two roots only if one of the at most `C(16,2) = 120` pairs was never separated in 64 rounds. By the union bound `eps_iso <= 120 (1/2 + 2^-127)^64 < 6.6e-18 < 2^-48 = 3.55e-15`; the looser stated value `2^-48` is kept, so every other number is unchanged.
+
+### 9.5 The premise `H-NORMAL` (bradcush's premise, entries `e6dcb600` and `1aa56884`, with the allowance and the organizer-run tests of gta6rp's entry `bef31fdd`)
+**Premise `H-NORMAL`.** For the centre `c` uniform on `F_p`, the Euclidean remainder sequence of `(g_c, R_c - 1)`, where `g_c` is the monic odd part of section 3 (degree `m = 15,258,789,062`) and `R_c = S^((p-1)/2) mod g_c`, is normal down to its gcd (`deg(R_c - 1) = m - 1` and every quotient has degree 1) except with probability at most `delta = 0.001` (`2^-9.966`). Stage D is charged for the normal sequence; every division tests its quotient degree and every call of the half-gcd its return, and on any other case the trial ends (ABORT, sections 4.4, 6.3). The premise enters only the success probability (9.2): the time and memory bounds hold for every remainder sequence, because an abnormal trial ends at its first failed test after executing a prefix of the charged work (6.3). For a uniformly random pair of degrees `m` and `m - 1` the sequence is abnormal exactly when one of the `m` principal subresultant coefficients vanishes, each a nonzero polynomial of degree at most `2m` in the coefficients, so by Schwartz-Zippel the probability is at most `2 m^2 / p < 2^-185`; the premise extrapolates a much weaker form of this random-pair behaviour (`delta = 0.001`) to the structured pair `(g_c, R_c - 1)`. Measured support is organizer-run (10.5.1): the experiments `euclid-normal-n2-t256-l2-a` to `-l2-f`, `euclid-normal-n3-t24` and `euclid-normal-n4-t2` compute the complete Euclidean sequence of `(g_c, R_c - 1)` for this construction on the truncations `F_2`, `F_3`, `F_4` (`m = 12, 62, 312`), the first six for 256 organizer-seeded trials of two centres each (3,072 sequences at `m = 12`), the others for 24 and 2 organizer-seeded centres, and return a witness pair exactly when the sequences are normal; the prediction is that every computed sequence is normal. Zero abnormal in the 3,072 sequences is a reproducible observation consistent with the premise; the organizer-seeded centres are not treated as independent unselected samples and no population bound is drawn from them (`delta = 0.001` is the declared premise). Not verified at `r = 9`, which would need the computation itself; the organizer-run tests are at `m = 12` to `312`, far below `m`.
+
+## 10. Experiments
+
+Program `experiments/exp_euclid.py` (euclid-normal) and `experiments/exp_line.py` / `experiments/exp_lowbits.py` (line-ladder and lowbits-birthday), with `experiments/manifest.json`.
+
+10.3 The truncations. `F_N(c + X)` is coordinate 0 after the first `N` S-box layers on the line `j = 0`; `F_2`, `F_3`, `F_4` have odd parts of degree `m = 12, 62, 312`. The arithmetic monodromy at `N = 2, 3` is `B_12`, `B_62` (Grok jobs 136, 137, re-run on the deployed constants).
+
+10.5.1 Organizer-run set. euclid-normal-n2-t256-l2-a to -l2-f / -n3-t24 / -n4-t2 compute the complete Euclidean sequence of `(g_c, R_c - 1)` for this construction at depth `N = 2, 3, 4` (`m = 12, 62, 312`); the first six run 256 organizer-seeded trials of two centres each (3,072 sequences at `m = 12`), the others 24 and 2 organizer-seeded centres, and return a witness pair exactly when the sequences are normal; the prediction (H-NORMAL, 9.5) is that every computed sequence is normal, so all 6 x 256, 24 and 2 trials return a pair and the abnormal count is zero in the 3,072 sequences, a reproducible observation consistent with the premise. We do not treat the organizer-seeded centres as independent unselected samples and draw no population bound from these runs: `delta = 0.001` is the declared premise (9.5), carried by its stated support, not by an interval computed from the experiments. line-ladder-w6/-w8/-w10/-w12 and lowbits-birthday corroborate the antipodal structure, not the score-critical basis. The organizer-checkable output is the returned witness-pair count (here the number of trials whose sequences are all normal). Our runs of these entries on local seeds (one CPU; 6.6 to 7.1 s per -l2 entry on our workstation): 3,072 + 24 + 2 sequences at `m = 12, 62, 312`, every quotient of degree 1.
+
+10.5.2 Organizer-counted good centres (H-ONE; ruling `710de924`, lane_experiments H-ONE). euclid-gcdpos-n2-t256-a, -b and euclid-gcdpos-n3-t24 take one organizer-seeded centre per trial at `N = 2, 3` (`m = 12, 62`), compute `G = gcd(g_c, R_c - 1)` (`deg G = k(c)`) and return a witness pair ONLY when `deg G >= 1`, so the organizer's returned-pair count is the good-centre count. Expected: the fraction of good centres is the law of 9.3, a theorem at these depths; the returned counts are reproducible observations consistent with it, and no probability, rate or population bound is drawn from them (public organizer seeds; nothing is assumed about the seeded trials being independent or identically distributed). Our runs of these three entries on local seeds (one CPU, our workstation): 106 and 100 of 256 (3.5 s, 3.5 s) and 12 of 24 (4.8 s).
+
+## Appendix E: rows C and D expanded, and the allocation walk of one trial
+
+Rows C and D and the arena of section 7 are exact counts of the algorithm of sections 4.2-4.5 at `r = 9`. E.1 and E.2 expand each row into its parts, each part a count from the dimensions of 4.3V and the half-gcd levels with the charges of 4.2; each table adds up exactly to its row. E.3 is the allocator of 4.2 run on every allocation and free of the trial in program order: the totals, the live-set peaks per stage, the two-ended-pool high-water mark, the slab classes, and the stage-D allocation/free trace against the high-water mark.
+
+### E.1 Row C = 1,221,329,706,044,169
+
+Row C is the sum of the steps of section 4.3V in the order the stage runs them:
+
+| part of stage C | operations |
+| --- | ---: |
+| plans of the passes, the exponent, the tables (`30 K` constants, the two tables of `2^15` powers of omega, the kernel spectra), the group buffer, the zero-fill of `g` above `m`, the allocations of `R` | 2,015,855,303 |
+| the Newton reciprocal of the reversed `g` to `ell` coefficients (doubling steps, transform products) | 4,322,237,028,709 |
+| the product `q` (one product of `2 ell - 1` points), the zero fill of `rev(X^v P1)`, the reversal of `q` | 1,280,652,388,294 |
+| `g` on `O1` and `O2` (chirp evaluation of the coefficient rows at the `2K` nodes, `2K` forward inner transforms) | 5,112,251,970,448 |
+| the start residue on `O2` (`q` evaluated at the `K` nodes, `K` forward inner transforms, pointwise pass at 8) | 2,955,411,456,479 |
+| the start residue to `O1` (one extension) | 2,515,065,533,091 |
+| `-1/g` on `O1` by batch inversion in chunks of `2^16` elements (auxiliary array of `2^16`, zero tests) | 238,219,346,714 |
+| the squaring steps (step 6; below) | 1,194,506,072,368,092 |
+| leaving the Montgomery form (pointwise passes at 7 and 11, one extension), the frees | 2,817,055,421,965 |
+| two interpolations (inverse inner transforms, interpolation at the `K` nodes): `R` and `g` in coefficient form, the frees, the closing control | 7,563,544,786,465 |
+| the init twiddle table: released after step 1 (one free, `105`), rebuilt after step 8 (one allocation, `212`; `ntt_init`, `17,179,887,292`) | 17,179,887,609 |
+| stage bookkeeping (entry, exit) | 1,000 |
+| **row C** | **1,221,329,706,044,169** |
+
+The squaring steps: `177` steps with exponent bit 0 and `45` with bit 1, `177 * 5,364,333,209,586 + 45 * 5,444,868,761,586 = 1,194,506,072,368,092`. One step is (i) the pointwise pass at 8 on `O1`, (ii) one extension, (iii) the pointwise pass at 12 on `O2` (17 for bit 1, and 10 per block of `2^15` points), (iv) one extension, and 20 for the step:
+
+| part of one step | operations |
+| --- | ---: |
+| pointwise pass at 8 (`K h` points) | 134,888,816,972 |
+| two extensions, 2,515,065,533,091 each | 5,030,131,066,182 |
+| pointwise pass at 12 (bit 0) / 17 (bit 1, 10 per block of `2^15`) | 199,313,326,412 / 279,848,878,412 |
+| step control | 20 |
+| **one step, bit 0 / bit 1** | **5,364,333,209,586 / 5,444,868,761,586** |
+
+One extension (`K = 15` cosets of `h = 2^30` points): `K` inverse inner transforms `892,418,078,987`, the direct between-coset products (the `K x K` Toeplitz extension per position, 4.3V) over the `h` positions `730,229,375,192`, `K` forward inner transforms `892,418,078,912`; the inner transforms of `2^30` points run the passes `5, 6, 6, 6, 7` (top-down) in the block form of 4.2.
+
+### E.2 Row D = 423,693,056,091,947
+
+The Euclid driver of 4.4 makes 50 repetitions. Repetitions 1-49: the inversion-free node of budget `k = 2^j - 1` (the largest with `k <= min(2^30 - 1, (n - 1)/2)`) on the top window, the apply of `adj(M)` to the whole pair in place, then one division with the quotient and return tests; `node` is the charge of the node (`pd_node(j) + 10`), `apply` that of the apply, the last column the repetition with the call, the matrix allocations, the arena, the division and the tests. Repetition 50 (`(n - 1)/2 < 127`) is the lean half-gcd of `43f8d8b8`; below degree `192` the classical Euclid runs 98 steps.
+
+| repetition | operand lengths | j | k | node | apply | repetition total |
+|---:|---:|---:|---:|---:|---:|---:|
+| 1 | 15,258,789,063, 15,258,789,062 | 30 | 1,073,741,823 | 25,661,902,064,043 | 7,341,286,443,649 | 33,215,964,220,902 |
+| 2 | 14,185,047,239, 14,185,047,238 | 30 | 1,073,741,823 | 25,661,902,064,043 | 7,307,496,063,873 | 33,166,067,713,766 |
+| 3 | 13,111,305,415, 13,111,305,414 | 30 | 1,073,741,823 | 25,661,902,064,043 | 6,399,401,191,977 | 32,241,866,714,510 |
+| 4 | 12,037,563,591, 12,037,563,590 | 30 | 1,073,741,823 | 25,661,902,064,043 | 6,365,610,812,225 | 32,191,970,207,398 |
+| 5 | 10,963,821,767, 10,963,821,766 | 30 | 1,073,741,823 | 25,661,902,064,043 | 5,457,515,940,321 | 31,267,769,208,134 |
+| 6 | 9,890,079,943, 9,890,079,942 | 30 | 1,073,741,823 | 25,661,902,064,043 | 5,423,725,560,569 | 31,217,872,701,022 |
+| 7 | 8,816,338,119, 8,816,338,118 | 30 | 1,073,741,823 | 25,661,902,064,043 | 4,515,630,688,675 | 30,293,671,701,768 |
+| 8 | 7,742,596,295, 7,742,596,294 | 30 | 1,073,741,823 | 25,661,902,064,043 | 4,481,840,308,935 | 30,243,775,194,668 |
+| 9 | 6,668,854,471, 6,668,854,470 | 30 | 1,073,741,823 | 25,661,902,064,043 | 3,573,745,437,003 | 29,319,574,195,376 |
+| 10 | 5,595,112,647, 5,595,112,646 | 30 | 1,073,741,823 | 25,661,902,064,043 | 3,539,955,057,287 | 29,269,677,688,300 |
+| 11 | 4,521,370,823, 4,521,370,822 | 30 | 1,073,741,823 | 25,661,902,064,043 | 2,631,860,185,339 | 28,345,476,688,992 |
+| 12 | 3,447,628,999, 3,447,628,998 | 30 | 1,073,741,823 | 25,661,902,064,043 | 1,711,230,065,867 | 27,408,740,442,160 |
+| 13 | 2,373,887,175, 2,373,887,174 | 30 | 1,073,741,823 | 25,661,902,064,043 | 871,182,974,938 | 26,552,587,223,871 |
+| 14 | 1,300,145,351, 1,300,145,350 | 29 | 536,870,911 | 12,152,202,382,653 | 430,635,650,441 | 12,594,287,154,304 |
+| 15 | 763,274,439, 763,274,438 | 28 | 268,435,455 | 5,752,667,629,277 | 404,949,912,296 | 6,165,040,130,943 |
+| 16 | 494,838,983, 494,838,982 | 27 | 134,217,727 | 2,717,787,921,469 | 202,280,163,330 | 2,925,477,408,249 |
+| 17 | 360,621,255, 360,621,254 | 27 | 134,217,727 | 2,717,787,921,469 | 196,995,519,822 | 2,918,179,498,821 |
+| 18 | 226,403,527, 226,403,526 | 26 | 67,108,863 | 1,281,206,451,069 | 97,959,034,027 | 1,381,554,909,666 |
+| 19 | 159,294,663, 159,294,662 | 26 | 67,108,863 | 1,281,206,451,069 | 48,368,054,957 | 1,330,957,297,636 |
+| 20 | 92,185,799, 92,185,798 | 25 | 33,554,431 | 602,551,889,837 | 45,163,786,098 | 648,595,151,065 |
+| 21 | 58,631,367, 58,631,366 | 24 | 16,777,215 | 282,640,342,677 | 22,480,423,507 | 305,748,583,074 |
+| 22 | 41,854,151, 41,854,150 | 24 | 16,777,215 | 282,640,342,677 | 11,578,715,298 | 294,595,216,625 |
+| 23 | 25,076,935, 25,076,934 | 23 | 8,388,607 | 132,197,400,729 | 10,773,588,086 | 143,221,318,345 |
+| 24 | 16,688,327, 16,688,326 | 22 | 4,194,303 | 61,634,819,115 | 5,404,523,112 | 67,226,757,197 |
+| 25 | 12,494,023, 12,494,022 | 22 | 4,194,303 | 61,634,819,115 | 5,236,930,078 | 66,996,249,603 |
+| 26 | 8,299,719, 8,299,718 | 21 | 2,097,151 | 28,710,791,115 | 2,627,355,892 | 31,431,190,137 |
+| 27 | 6,202,567, 6,202,566 | 21 | 2,097,151 | 28,710,791,115 | 2,543,648,916 | 31,316,025,881 |
+| 28 | 4,105,415, 4,105,414 | 20 | 1,048,575 | 13,326,854,699 | 1,275,341,250 | 14,648,053,159 |
+| 29 | 3,056,839, 3,056,838 | 20 | 1,048,575 | 13,326,854,699 | 1,233,577,276 | 14,590,560,545 |
+| 30 | 2,008,263, 2,008,262 | 19 | 524,287 | 6,161,534,955 | 617,631,662 | 6,801,430,867 |
+| 31 | 1,483,975, 1,483,974 | 19 | 524,287 | 6,161,534,955 | 596,839,186 | 6,772,774,071 |
+| 32 | 959,687, 959,686 | 18 | 262,143 | 2,835,912,603 | 283,520,399 | 3,129,900,772 |
+| 33 | 697,543, 697,542 | 18 | 262,143 | 2,835,912,603 | 273,213,645 | 3,115,661,858 |
+| 34 | 435,399, 435,398 | 17 | 131,071 | 1,298,572,803 | 135,346,755 | 1,438,489,088 |
+| 35 | 304,327, 304,326 | 17 | 131,071 | 1,298,572,803 | 69,879,842 | 1,371,056,095 |
+| 36 | 173,255, 173,254 | 16 | 65,535 | 591,065,991 | 63,636,188 | 656,322,589 |
+| 37 | 107,719, 107,718 | 15 | 32,767 | 267,172,633 | 31,502,910 | 299,804,433 |
+| 38 | 74,951, 74,950 | 15 | 32,767 | 267,172,633 | 16,293,645 | 284,103,648 |
+| 39 | 42,183, 42,182 | 14 | 16,383 | 120,404,153 | 14,735,664 | 135,531,427 |
+| 40 | 25,799, 25,798 | 13 | 8,191 | 53,802,009 | 7,279,326 | 61,350,065 |
+| 41 | 17,607, 17,606 | 13 | 8,191 | 53,802,009 | 3,764,589 | 57,712,448 |
+| 42 | 9,415, 9,414 | 12 | 4,095 | 23,793,817 | 1,724,147 | 25,602,374 |
+| 43 | 5,319, 5,318 | 11 | 2,047 | 10,387,817 | 1,529,975 | 11,971,482 |
+| 44 | 3,271, 3,270 | 10 | 1,023 | 4,461,409 | 757,708 | 5,257,447 |
+| 45 | 2,247, 2,246 | 10 | 1,023 | 4,461,409 | 399,159 | 4,883,538 |
+| 46 | 1,223, 1,222 | 9 | 511 | 1,874,477 | 200,362 | 2,090,129 |
+| 47 | 711, 710 | 8 | 255 | 763,107 | 176,469 | 951,026 |
+| 48 | 455, 454 | 7 | 127 | 300,485 | 92,987 | 403,002 |
+| 49 | 327, 326 | 7 | 127 | 300,485 | 88,539 | 396,634 |
+
+| part of row D | operations |
+| --- | ---: |
+| the 49 repetitions above (outer step: node, apply, call; then the division with the quotient and return tests) | 423,693,055,099,110 |
+| repetition 50: operands 199, 198, the lean half-gcd of `1aa56884` with `k = 99` (charge 615,304), the division and tests | 619,815 |
+| the classical Euclid below degree 192 (98 steps, quotient test each) | 368,647 |
+| driver entry (the table of the 29 scales `1/2^a`: one allocation, 28 multiplications, 29 stores, the loop) | 393 |
+| driver exit (the frees, inversion of the leading coefficient, normalisation) | 2,863 |
+| stage bookkeeping (entry, exit, the free of `g`) | 1,119 |
+| **row D** | **423,693,056,091,947** |
+
+### E.3 Totals and the allocation walk of one trial
+
+```
+m = 15,258,789,062 | transform sizes 32 1073741824 | squaring steps 222 of which with S: 45
+S_C = 1,221,329,706,044,169
+S_D normal local charges of the tree = 423,693,056,091,947
+S_D of the lean stage D on the normal remainder sequence, with the quotient and return tests = 423,693,056,091,947
+S_D = 423,693,056,091,947
+peak of the live set, stage A = 584,115,552,384 bytes
+peak of the live set, stage B = 1,202,590,843,072 bytes
+peak of the live set, stage C = 2,061,590,091,072 bytes
+peak of the live set, stage D = 1,786,706,388,736 bytes
+two-ended pool: blocks of more than 2^24 bytes; largest sum of the two ends after each stage (bytes): init 68,719,476,800, A 584,115,552,384, B 1,202,590,843,072, C 2,061,584,302,336, D 2,061,584,302,336; at most 15 blocks; 1,932 blocks examined in all
+slab classes (class: peak number of live blocks): 7: 2, 8: 2, 10: 1, 11: 4, 12: 2, 13: 10, 14: 6, 15: 8, 16: 8, 17: 6, 18: 8, 19: 8, 20: 6, 21: 8, 22: 6, 23: 8, 24: 6; slab area = 224,069,376 bytes
+register file counted from the code: field 256, integer 135 (largest pass 7 layers: 2^k values + 2^k - 1 twiddles + 1 product; 2^k element offsets + 7: block base of the loads, block base of the stores, twiddle base, block counter, group counter, pass counter, stride), 391 words, 12,512 bytes
+arena = 2,061,808,388,736 bytes (two-ended pool 2,061,584,302,336 + 128, slab classes 224,069,376, stages E and later 16,896), memory = 2,061,813,892,128 bytes, log2 = 40.90706
+stage D on the two-ended pool (blocks of more than 2^24 bytes): after init, A, B, C: low end 68,719,476,800, high end 1,030,792,151,168, live 1,099,511,627,968, largest sum so far 2,061,584,302,336
+  stage D: 718 pool events (358 allocations, 360 frees) on 361 distinct blocks; the first 24:
+  alloc #4           34,359,738,496 bytes pool L | live  1,133,871,366,464 | pool low    103,079,215,296 high  1,030,792,151,168 sum  1,133,871,366,464
+  alloc #5           34,359,738,496 bytes pool L | live  1,168,231,104,960 | pool low    137,438,953,792 high  1,030,792,151,168 sum  1,168,231,104,960
+  alloc #6           34,359,738,496 bytes pool L | live  1,202,590,843,456 | pool low    171,798,692,288 high  1,030,792,151,168 sum  1,202,590,843,456
+  alloc #7           34,359,738,496 bytes pool L | live  1,236,950,581,952 | pool low    206,158,430,784 high  1,030,792,151,168 sum  1,236,950,581,952
+  alloc #8          549,755,805,760 bytes pool L | live  1,786,706,387,712 | pool low    755,914,236,544 high  1,030,792,151,168 sum  1,786,706,387,712
+  free  #8          549,755,805,760 bytes pool   | live  1,236,950,581,952 | pool low    206,158,430,784 high  1,030,792,151,168 sum  1,236,950,581,952
+  alloc #9          103,079,215,168 bytes pool L | live  1,340,029,797,120 | pool low    309,237,645,952 high  1,030,792,151,168 sum  1,340,029,797,120
+  alloc #10         103,079,215,168 bytes pool L | live  1,443,109,012,288 | pool low    412,316,861,120 high  1,030,792,151,168 sum  1,443,109,012,288
+  alloc #11         103,079,215,168 bytes pool L | live  1,546,188,227,456 | pool low    515,396,076,288 high  1,030,792,151,168 sum  1,546,188,227,456
+  alloc #12         103,079,215,168 bytes pool L | live  1,649,267,442,624 | pool low    618,475,291,456 high  1,030,792,151,168 sum  1,649,267,442,624
+  free  #4           34,359,738,496 bytes pool   | live  1,614,907,704,128 | pool low    618,475,291,456 high  1,030,792,151,168 sum  1,649,267,442,624
+  free  #5           34,359,738,496 bytes pool   | live  1,580,547,965,632 | pool low    618,475,291,456 high  1,030,792,151,168 sum  1,649,267,442,624
+  free  #6           34,359,738,496 bytes pool   | live  1,546,188,227,136 | pool low    618,475,291,456 high  1,030,792,151,168 sum  1,649,267,442,624
+  free  #7           34,359,738,496 bytes pool   | live  1,511,828,488,640 | pool low    618,475,291,456 high  1,030,792,151,168 sum  1,649,267,442,624
+  alloc #13         103,079,215,168 bytes pool L | live  1,614,907,703,808 | pool low    618,475,291,456 high  1,030,792,151,168 sum  1,649,267,442,624
+  alloc #14         103,079,215,168 bytes pool L | live  1,717,986,918,976 | pool low    721,554,506,624 high  1,030,792,151,168 sum  1,752,346,657,792
+  free  #13         103,079,215,168 bytes pool   | live  1,614,907,703,808 | pool low    721,554,506,624 high  1,030,792,151,168 sum  1,752,346,657,792
+  free  #14         103,079,215,168 bytes pool   | live  1,511,828,488,640 | pool low    618,475,291,456 high  1,030,792,151,168 sum  1,649,267,442,624
+  free  #9          103,079,215,168 bytes pool   | live  1,408,749,273,472 | pool low    618,475,291,456 high  1,030,792,151,168 sum  1,649,267,442,624
+  free  #10         103,079,215,168 bytes pool   | live  1,305,670,058,304 | pool low    618,475,291,456 high  1,030,792,151,168 sum  1,649,267,442,624
+  free  #11         103,079,215,168 bytes pool   | live  1,202,590,843,136 | pool low    618,475,291,456 high  1,030,792,151,168 sum  1,649,267,442,624
+  free  #12         103,079,215,168 bytes pool   | live  1,099,511,627,968 | pool low     68,719,476,800 high  1,030,792,151,168 sum  1,099,511,627,968
+  alloc #15          34,359,738,496 bytes pool L | live  1,133,871,366,464 | pool low    103,079,215,296 high  1,030,792,151,168 sum  1,133,871,366,464
+  alloc #16          34,359,738,496 bytes pool L | live  1,168,231,104,960 | pool low    137,438,953,792 high  1,030,792,151,168 sum  1,168,231,104,960
+  the 0 events that raise the high-water mark (the last 0 shown; event number first):
+  after stage D: low end 68,719,476,800, high end 0; high-water mark of the pool over the trial 2,061,584,302,336 bytes
+```
+
+## Appendix L: the line program `L` (this entry)
+
+### L.1 Construction
+
+`L(x) = F(x - E0_0) / OUTSCALE`, `F` the digest on the line of 2.2 (`W = tau^5`). The state after round 1 is `A + W B` (2.2: `alpha = A + c_2`, `beta = B`); the round-2 S-box input of lane `i` is `A_i + c_{2,i} + W B_i = B_i (W + E0_i)`, `E0_i = (A_i + c_{2,i}) / B_i` (every `B_i != 0` on the deployed constants). With `x = W + E0_0` lane 0 is `B_0 x` and lane `i` is `B_i (x + e_i)`, `e_i = E0_i - E0_0`: the program starts with `y1 = x + e1`, `y2 = x + e2` (2 additions) and holds lane `i` as `y_i` with the scale `B_i`. Every lane is held as its true value divided by a known nonzero scale: an S-box of a held lane is the true S-box output divided by the fifth power of the scale (3 multiplications), and the fifth powers are folded into the next linear layer, each output lane being held divided by its coefficient on `z0`: a dense layer with the next round's constants is `y_i = z0 + a_i z1 + b_i z2 + k_i` (2 multiplications, 3 additions per lane). Partial rounds use the sparse form of Grassi, Khovratovich, Rechberger, Roy and Schofnegger (USENIX Security 2021) with the same scaling, as in the r = 56 entries `3a1b25b6`, `9fb982e8` and `69e14209`: lane 0 is held as `lambda h0 + gamma`, lanes 1, 2 as `P (h1, h2) + q` with `P = Mww^j P0` after `j` partial rounds (`Mww` the lower-right 2x2 block of `M`) and `P0 = Mww^-r D`, `D` diagonal, so `P` is diagonal at the exit; one partial round is `u = h0 + k`, `x5 = u^5` (3 multiplications), `h0 = x5 + n1 h1 + n2 h2`, `h1 = h1 + v1 x5`, `h2 = h2 + v2 x5` (`h0` from the old `h1`, `h2`): 12 operations. Counts: entry 2; round 2 (S-boxes 9, dense layer with the round-3 constants 15); round 3 (S-boxes 9, into the partial form 6 multiplications and 6 additions, `D` normalising the `z0` coefficients); `r` partial rounds, 12 each; exit 3 (the round-60 constants); rounds 60-62 (24 each); round 63 (S-boxes 9, row 0 held divided by its `z0` coefficient `OUTSCALE`, 2 multiplications and 2 additions): `2 + 24 + 21 + 12 r + 3 + 72 + 13 = 135 + 12 r = 243`. Every constant is a closed formula of the deployed constants (the offline derivation of 6.2 prices the derivation of a literal; the 64 constants are derived once, offline, by the same rules, at most `64 * (2 * 330 + 40) = 44,800` field operations for the at most two inversions and the products of each, inside the declared cap of 6.2 together with its `137,169`).
+
+### L.2 Check
+
+`E0_0 = 0x3a4bd2e80f62c6cde67f816c4a67f17bbd43a70c4d2fca9784cc22ba736569ff`, `OUTSCALE = 0x3838355e64cb4e697a5493249b35dc11e86bfc5e7b51c990094fde6d1cf3bd87`. Our program (standard library only) builds `L` from the organizer constants file, executes it, and asserts `OUTSCALE * L(W + E0_0) = digest(message(W))` with the reference rounds of `verifier/poseidon.py` at 100 random `W` (r = 9; also r = 0, 1, 3, 9 with `135 + 12 r` operations); `message(W)` is the canonical pair of 2.2 (`tau = W^e`, `(U, V) = Q + tau (a, b)`, `nk = U^e - c_{0,0}`, `rho = V^e - c_{0,1}`). An independent construction of the same form for r = 56 (the 807-operation step of `69e14209`) gives the same `OUTSCALE` at r = 3 when its round count is set to 3 (checked at r = 3 only).
+
+### L.3 Stage B
+
+The loop of stage B and its charges are those of the base entry except that each evaluation is one execution of `L` (`243` operations) at `c' + s` and `c' - s` (`c' = c + E0_0`, one addition per trial); the values become `g_c / OUTSCALE`, which the normalisation to monic absorbs.
+
+### L.4 Code and static data added to the footprint
+
+`L` once, as a subroutine used by stage B: 243 instructions, and its 94 constants at 32 bytes; the call site in the stage-B loop (at most 20 instructions); stage E of Appendix S (at most 1,100 instructions, 4,400 bytes). At most `4 * 243 + 32 * 94 + 80 + 4,400 < 16,384` bytes at r <= 22; `16,384` are added to the footprint (section 7).
+
+### L.5 Constants of `L` at r = 9
+
+```
+k0 = 0x3be50976ed9a36ed2193914455ff9b57110fbf67a5b17ed704b45f293ea16e52
+k1 = 0x3f30a282c5b89b63ebabd204830a688ed50a9b6efae93b0434327bc6ee6794ba
+k2 = 0x3c6619d59a8bff38f5e82d878afa1572b0de568df0f44727f5eebde8a520bb09
+k3 = 0x182d2a33a05d2cf29f1f85fe18c296f96b485a4642bc47e0c096ed309334539d
+k4 = 0x2ee7536394e8e06338e11ac0050022dbb3b058a98b297c7058173227f0c5f0b5
+k5 = 0x2840fd97d3b51c865aebbadaaf03e4d7bb8a06a0ed729dcfdcb232668cc21036
+k6 = 0x24d83320489d9f6acf96dd55a02381c22b9ae568c345217a4d3a3ebc6c68733e
+k7 = 0x2ccbdb9536e63c46650cd03d3d3591a809a0e4a07b7c585b6e3b8c06db9ef42e
+k8 = 0x37d59d01327c0e9ea9ea53e1bb643c6d9e2dd42b1be96d0ae502e5ad6685ef91
+k9 = 0x3890183d51fa8d8e79f20615fc8cdc01a44e932c575a7833d6118362f946104a
+k10 = 0x007ee07c6df20f7997f9b145f92b2e13ed55421ba5fd692e198160cbd4b2086e
+k11 = 0x0fbb8b592b77aa848174f415093060af73f839caad04d8c465b339a1118ec8d6
+k12 = 0x2536ae3b5b386405f6e260e9f8a0277eba85b8731f11967d0497ce2eea709acf
+k13 = 0x31eaf9b0f34db88bef902406cf601d902053b1dbee01c7c7b60b0bad844dc479
+k14 = 0x073c4380a52bbed4423d14aa005f66a6a53cc0caf7d958330141dd63262b1957
+k15 = 0x0c967791252e5273f8207ff653f4b41d6f849d41773773a7f93863aa2110b3f8
+k16 = 0x1b2dec37767ac9549af361cf5ce332b35ea63f6ba8f061c1f8f51a1dc1723dfd
+k17 = 0x34058bb8920441623716adeb0155288a2cca42fa34af13309820b9953e4336cf
+k18 = 0x3bfb404354d678627329adb6c253414080a1f04573a9df82450da022317078ed
+k19 = 0x0f10e3aacadbc85a8f8ec4d425ba62727554115f237cfc2fadf0f7d75b76e21b
+k20 = 0x1216c539196a66ba5e567893b7f29d0a5643fe66cdeadcfe15eaffef536b3595
+k21 = 0x3953d3ab9e0af2bebe865156bce9ff511b63a22d5d4085d65fc7f991d9e7cb7f
+k22 = 0x266144e217c50738f29b2b098b54686e360c94c1f64cc0b43c6b0a0cc37fc9eb
+k23 = 0x15b6509c935a381e29da9a47f1dff131846a07b950a213ea73dabe1137b5c982
+k24 = 0x2f965b13e33d9fd3920f08281d2c2a2ff0e3b425707342d7cde51d4343ce4cf6
+k25 = 0x37e431e7c96c9ece255f7e97478433e7cd9682f7c356b50eec424a5b9a04f15c
+k26 = 0x1a292104fbad6449d2e210940fd804424338b330b5909cf9b3c5777ce299c9c1
+k27 = 0x1565f5ef914944ad12c16e36ec616abd4dd0f8c94d990dc4ff415ad5a506d732
+k28 = 0x3ace5d431382d2b0a1d86416ef9697493d342b2cef69456aa520725d0fde2634
+k29 = 0x11a7befdc32e4944eb2df0c3dfc6fa8c26a8bdbbd71c2572b14e1522eecddac6
+k30 = 0x2f2e45e077d1a87e514efe7d95b04605cf3840aca882cf287f0e0d3e7a79c39c
+k31 = 0x3c116ba13d2be37c42ba75fe7c828b929e316b02b2048b67a6c6e42423373866
+k32 = 0x31f134c3cb80372eff4d98f34741c78bf04e38ca64691c338f55660789f29b61
+k33 = 0x248d68106c567e73814d9ba55b1ae012b41055354901c901448b7540886a5891
+k34 = 0x3c0ff04c2ab37b18a927afd957eec1f5468970c7f81a088d9d86dbddb6d1b3a9
+k35 = 0x18a9421f5f8ff4baabd31539b811d54e4763f1600051a54e529039a04564d203
+k36 = 0x2067f7bcba11f4ac122980673067b172155c3bd88691470166b65f9d24f8203b
+k37 = 0x2ca8302ed55720cd2a1b9478af5a5f4a223bd4fe9f778963e71519b2113aecb6
+k38 = 0x2db5e115d4fabe75996a89ba1ed7ed53b84fa92c2757a37b100939149f81e7dd
+k39 = 0x2e4cd12cb63f47281baf6f51751b29eab06efe39284e20a12cd5aef66ba70b10
+k40 = 0x166216d0a8a5f9d0bdc251d37614902181dd6680a26f3e563724e5cbe733678f
+k41 = 0x1ab57c8f6693c7c2c59baf470c812c474ed61afee149e7a0089ac109a839ac14
+k42 = 0x0fb74a39edbf99a426252d65ab2f5b558bfc999d3ec24ddad0ab5d3c66a49cba
+k43 = 0x1a060b962e9215e9fd98083061ff6f358b57440844ed9012a4eaad557328abea
+k44 = 0x02d90a0d99c91cc38c5ce376b50a34d825689c08ece131b07ec4eb325c7c0875
+k45 = 0x10add1f3de21cea2d5ea8db6b69cb58e65c41a805d68ed2347695ebdba9d0c4a
+k46 = 0x0692e071e67cab68e01cb32f8b05a3a1bebdb23d9281996b85ea2c7032bd2641
+k47 = 0x0111ad1e97070de2c1edeeacffc3a8f1f81c885c649e20b3955b4a2fac77be23
+k48 = 0x133acd789c0fd92fb78e911b2ae96a5b3a0131cd13a9e52704f18d0c25e8d3f1
+k49 = 0x174aaeb3317d17b6bc00c52c3f5b4214ca40c0f6774975cf67355bc47ccdf769
+k50 = 0x3a1c165dc0f20aa23cb43ac2f2e4e9e3bff666256ebed032f1f1793afd3846bb
+k51 = 0x2aa97d37e867276f71c5bf7452219d9d3a68baba5f71b4068a23edb9355fd81f
+k52 = 0x193745c8d553088262dcb58e17e3468dd24422f6a3987ac69306c8d2935e7ff2
+k53 = 0x29f4808bc622e511871ffca8c26b093d745c8332f36a2e104e19a105410b6d49
+k54 = 0x36e2bd9f349cf43829a2267b66206cb9807b55604d86bc3cc384ea082dc9a345
+k55 = 0x11473dd5fabf22cb5150e84712f8899fa22eef7067178db7658da10d6a940aab
+k56 = 0x31b952e9e05023ed07afc3bfa9345cc10672550092b7927cde653118abf7d3cc
+k57 = 0x35f659b85ed4e1f3c1c3e1f1fdde5ed7f9eb3b2b83d43f106d2416dba5965f7b
+k58 = 0x274da7f0c11398d566672a930cab1383cf5da8c1e54917ad542305182ceab090
+k59 = 0x2b9531d0e9c168c2e1699361a886a72331b34ca872ce103611d9ebaf74022c0e
+k60 = 0x3e395788294c1e85ce676669b31850aa7c2312613c9a4933c17e849d1f94f310
+k61 = 0x381f05557b4901897192da17753499cbaf1ff2fab031452f1e1d801714b63989
+k62 = 0x1dc8d51b4337b9d5ba46e7fb05eb99a4926c19a3c626e0cc00fb6deeb7fb9354
+k63 = 0x001968c1dfa8e0067d996e4b0b3a3da410e43d86466235503af81d9f509cf9ae
+k64 = 0x07898b34b8e658151ba5420019822e0822272c85bfd3d4896db1a01327c76d93
+k65 = 0x0093c427c34a420a26026a00fb5ea922d44bbc4410c18c3fdcab41ddb7739c76
+k66 = 0x31da01c534ef96adccaf3fdb6f710d0cd93a0562ed8702067e7edc94da2a9e22
+k67 = 0x15c71934b78a807c5cf0438726969b7da2e8c87bd554e2befbcf0641c6ae8fad
+k68 = 0x2b1b80a231195c8cb042f0ce3ec6d2f9d8b8bf6b91680377b5530a67e7ae03da
+k69 = 0x24dea455fa112cf04de0bb3286e2a39c3ae4e21e853ef09c456477380bd8cf3d
+k70 = 0x363751af26ff12279226e44e702bd5eef3ff9059ffd83a96aa04c6dd04dabe4d
+k71 = 0x0d135d2b7785fbb685be1a1f5ebc7d9e09e50171ce1bdbf161afeddcf99e8b65
+k72 = 0x0abf9d4eae9494f14007dda3938c5e6bd679dc1d84447ac4fdb37d8d4e4e782e
+k73 = 0x1c954804eb16bb9c7bb96519eab4b7c5de041a5c03f7cddf9721465be51c3748
+k74 = 0x0fbb8b592b77aa848174f415093060af73f839caad04d8c465b339a1118ec8d6
+k75 = 0x2536ae3b5b386405f6e260e9f8a0277eba85b8731f11967d0497ce2eea709acf
+k76 = 0x13f64ba043ab46a73b9fd1c36cb0dc6bb194124c4da39a0f37e8a9365ed77e9e
+k77 = 0x057c2f49737c67ec746d4403d5adf0c807c741cf322cf343150d77a7d90864bf
+k78 = 0x0d4e7cc2d8113cc35027f4563b51c2c728b70b85ef34cea5fa2fad48f05ae387
+k79 = 0x09f062e2a4a85e58b189e5f635284249d706f884469ca57aa9e64cb108f40b8f
+k80 = 0x11307fe5c772371bb9531de615997afdc2830b355d06c6657d06c01f0c76e7fa
+k81 = 0x283e17ae8f7dd3f06a31f3d99d6c2fe63341d0118a37f5cfc81c869b79bda6f7
+k82 = 0x3d3ca3808cfd6f0307c9540a7c811c453eaf58f4d142fd3d6dbce97bf7a107f3
+k83 = 0x0fbb8b592b77aa848174f415093060af73f839caad04d8c465b339a1118ec8d6
+k84 = 0x2536ae3b5b386405f6e260e9f8a0277eba85b8731f11967d0497ce2eea709acf
+k85 = 0x0cc9d56e92159ccb8d31282f01ecdd1127b36ffbf84ac848a51f90ab061dbf99
+k86 = 0x057c2f49737c67ec746d4403d5adf0c807c741cf322cf343150d77a7d90864bf
+k87 = 0x0d4e7cc2d8113cc35027f4563b51c2c728b70b85ef34cea5fa2fad48f05ae387
+k88 = 0x2f03c74e56cecaf483c955c11bdc4b86d72aaa60cd3375341b387ebe160a374a
+k89 = 0x11307fe5c772371bb9531de615997afdc2830b355d06c6657d06c01f0c76e7fa
+k90 = 0x283e17ae8f7dd3f06a31f3d99d6c2fe63341d0118a37f5cfc81c869b79bda6f7
+k91 = 0x15b875cce95e7f3fcda0fb3f9e13705846e82c7caf7aa0d5c47da045ec42dd78
+k92 = 0x0fbb8b592b77aa848174f415093060af73f839caad04d8c465b339a1118ec8d6
+k93 = 0x2536ae3b5b386405f6e260e9f8a0277eba85b8731f11967d0497ce2eea709acf
+```
+
+### L.6 Listing of `L` at r = 9 (243 operations; `x` is input and output; `e1 = k0`, `e2 = k1`)
+
+```
+ADD y1, x, k0
+ADD y2, x, k1
+MUL s_z0, x, x
+MUL s_z0, s_z0, s_z0
+MUL z0, s_z0, x
+MUL s_z1, y1, y1
+MUL s_z1, s_z1, s_z1
+MUL z1, s_z1, y1
+MUL s_z2, y2, y2
+MUL s_z2, s_z2, s_z2
+MUL z2, s_z2, y2
+MUL t1, z1, k2
+MUL t2, z2, k3
+ADD y0, z0, t1
+ADD y0, y0, t2
+ADD y0, y0, k4
+MUL t1, z1, k5
+MUL t2, z2, k6
+ADD y1, z0, t1
+ADD y1, y1, t2
+ADD y1, y1, k7
+MUL t1, z1, k8
+MUL t2, z2, k9
+ADD y2, z0, t1
+ADD y2, y2, t2
+ADD y2, y2, k10
+MUL s_z0, y0, y0
+MUL s_z0, s_z0, s_z0
+MUL z0, s_z0, y0
+MUL s_z1, y1, y1
+MUL s_z1, s_z1, s_z1
+MUL z1, s_z1, y1
+MUL s_z2, y2, y2
+MUL s_z2, s_z2, s_z2
+MUL z2, s_z2, y2
+MUL t1, z1, k11
+MUL t2, z2, k12
+ADD h0, z0, t1
+ADD h0, h0, t2
+MUL t1, z1, k13
+MUL t2, z2, k14
+ADD h1, z0, t1
+ADD h1, h1, t2
+MUL t1, z1, k15
+MUL t2, z2, k16
+ADD h2, z0, t1
+ADD h2, h2, t2
+ADD u, h0, k17
+MUL s_x5, u, u
+MUL s_x5, s_x5, s_x5
+MUL x5, s_x5, u
+MUL t1, h1, k18
+MUL t2, h2, k19
+ADD h0, x5, t1
+ADD h0, h0, t2
+MUL t1, x5, k20
+ADD h1, h1, t1
+MUL t2, x5, k21
+ADD h2, h2, t2
+ADD u, h0, k22
+MUL s_x5, u, u
+MUL s_x5, s_x5, s_x5
+MUL x5, s_x5, u
+MUL t1, h1, k23
+MUL t2, h2, k24
+ADD h0, x5, t1
+ADD h0, h0, t2
+MUL t1, x5, k25
+ADD h1, h1, t1
+MUL t2, x5, k26
+ADD h2, h2, t2
+ADD u, h0, k27
+MUL s_x5, u, u
+MUL s_x5, s_x5, s_x5
+MUL x5, s_x5, u
+MUL t1, h1, k28
+MUL t2, h2, k29
+ADD h0, x5, t1
+ADD h0, h0, t2
+MUL t1, x5, k30
+ADD h1, h1, t1
+MUL t2, x5, k31
+ADD h2, h2, t2
+ADD u, h0, k32
+MUL s_x5, u, u
+MUL s_x5, s_x5, s_x5
+MUL x5, s_x5, u
+MUL t1, h1, k33
+MUL t2, h2, k34
+ADD h0, x5, t1
+ADD h0, h0, t2
+MUL t1, x5, k35
+ADD h1, h1, t1
+MUL t2, x5, k36
+ADD h2, h2, t2
+ADD u, h0, k37
+MUL s_x5, u, u
+MUL s_x5, s_x5, s_x5
+MUL x5, s_x5, u
+MUL t1, h1, k38
+MUL t2, h2, k39
+ADD h0, x5, t1
+ADD h0, h0, t2
+MUL t1, x5, k40
+ADD h1, h1, t1
+MUL t2, x5, k41
+ADD h2, h2, t2
+ADD u, h0, k42
+MUL s_x5, u, u
+MUL s_x5, s_x5, s_x5
+MUL x5, s_x5, u
+MUL t1, h1, k43
+MUL t2, h2, k44
+ADD h0, x5, t1
+ADD h0, h0, t2
+MUL t1, x5, k45
+ADD h1, h1, t1
+MUL t2, x5, k46
+ADD h2, h2, t2
+ADD u, h0, k47
+MUL s_x5, u, u
+MUL s_x5, s_x5, s_x5
+MUL x5, s_x5, u
+MUL t1, h1, k48
+MUL t2, h2, k49
+ADD h0, x5, t1
+ADD h0, h0, t2
+MUL t1, x5, k50
+ADD h1, h1, t1
+MUL t2, x5, k51
+ADD h2, h2, t2
+ADD u, h0, k52
+MUL s_x5, u, u
+MUL s_x5, s_x5, s_x5
+MUL x5, s_x5, u
+MUL t1, h1, k53
+MUL t2, h2, k54
+ADD h0, x5, t1
+ADD h0, h0, t2
+MUL t1, x5, k55
+ADD h1, h1, t1
+MUL t2, x5, k56
+ADD h2, h2, t2
+ADD u, h0, k57
+MUL s_x5, u, u
+MUL s_x5, s_x5, s_x5
+MUL x5, s_x5, u
+MUL t1, h1, k58
+MUL t2, h2, k59
+ADD h0, x5, t1
+ADD h0, h0, t2
+MUL t1, x5, k60
+ADD h1, h1, t1
+MUL t2, x5, k61
+ADD h2, h2, t2
+ADD y0, h0, k62
+ADD y1, h1, k63
+ADD y2, h2, k64
+MUL s_z0, y0, y0
+MUL s_z0, s_z0, s_z0
+MUL z0, s_z0, y0
+MUL s_z1, y1, y1
+MUL s_z1, s_z1, s_z1
+MUL z1, s_z1, y1
+MUL s_z2, y2, y2
+MUL s_z2, s_z2, s_z2
+MUL z2, s_z2, y2
+MUL t1, z1, k65
+MUL t2, z2, k66
+ADD y0, z0, t1
+ADD y0, y0, t2
+ADD y0, y0, k67
+MUL t1, z1, k68
+MUL t2, z2, k69
+ADD y1, z0, t1
+ADD y1, y1, t2
+ADD y1, y1, k70
+MUL t1, z1, k71
+MUL t2, z2, k72
+ADD y2, z0, t1
+ADD y2, y2, t2
+ADD y2, y2, k73
+MUL s_z0, y0, y0
+MUL s_z0, s_z0, s_z0
+MUL z0, s_z0, y0
+MUL s_z1, y1, y1
+MUL s_z1, s_z1, s_z1
+MUL z1, s_z1, y1
+MUL s_z2, y2, y2
+MUL s_z2, s_z2, s_z2
+MUL z2, s_z2, y2
+MUL t1, z1, k74
+MUL t2, z2, k75
+ADD y0, z0, t1
+ADD y0, y0, t2
+ADD y0, y0, k76
+MUL t1, z1, k77
+MUL t2, z2, k78
+ADD y1, z0, t1
+ADD y1, y1, t2
+ADD y1, y1, k79
+MUL t1, z1, k80
+MUL t2, z2, k81
+ADD y2, z0, t1
+ADD y2, y2, t2
+ADD y2, y2, k82
+MUL s_z0, y0, y0
+MUL s_z0, s_z0, s_z0
+MUL z0, s_z0, y0
+MUL s_z1, y1, y1
+MUL s_z1, s_z1, s_z1
+MUL z1, s_z1, y1
+MUL s_z2, y2, y2
+MUL s_z2, s_z2, s_z2
+MUL z2, s_z2, y2
+MUL t1, z1, k83
+MUL t2, z2, k84
+ADD y0, z0, t1
+ADD y0, y0, t2
+ADD y0, y0, k85
+MUL t1, z1, k86
+MUL t2, z2, k87
+ADD y1, z0, t1
+ADD y1, y1, t2
+ADD y1, y1, k88
+MUL t1, z1, k89
+MUL t2, z2, k90
+ADD y2, z0, t1
+ADD y2, y2, t2
+ADD y2, y2, k91
+MUL s_z0, y0, y0
+MUL s_z0, s_z0, s_z0
+MUL z0, s_z0, y0
+MUL s_z1, y1, y1
+MUL s_z1, s_z1, s_z1
+MUL z1, s_z1, y1
+MUL s_z2, y2, y2
+MUL s_z2, s_z2, s_z2
+MUL z2, s_z2, y2
+MUL t1, z1, k92
+MUL t2, z2, k93
+ADD x, z0, t1
+ADD x, x, t2
+```
+
+## Appendix S: stage E, register-resident (this entry)
+
+Input `G` monic, `1 <= d = deg G <= 16`, a product of distinct linear factors over `F_p` (4.3G). If `d = 1` the root is `-G_0`. Otherwise `H := G` (loaded into field registers) and at most `Z = 64` rounds:
+
+1. draw `a` (63, two words, 4.1.1) and test it (5);
+2. `B := (X + a)^((p-1)/2) mod H`: start `B = X + a` (3), then for each of the 253 bits below the top bit of `(p-1)/2` one squaring modulo `H` and, on the 45 one-bits, one multiplication by `X + a` modulo `H`;
+3. `B := B - 1` (1);
+4. `T := gcd(H, B)` monic, by inversion-free elimination: while the second row is nonzero, order the rows by degree and replace the higher row `A` by `lc(B) A - lc(A) X^(deg A - deg B) B` (its top coefficient cancels; at most `3 d` field operations, 6 control, 3 for the ordering), strip zero top coefficients (2 each); then one inversion of the leading coefficient by square-and-multiply on the 254 bits below the top bit of `p - 2` (76 one-bits: 254 squarings and 76 multiplications, 4 control per bit) and `d` multiplications;
+5. keep `T` if `1 <= deg T < deg H`, else keep `H` (6); stop with the root `-H_0` when `deg H = 1`.
+
+Charges at degree `d` (field operations 1 each; every operand is a register: `H` (`d` words), `B` (`d`), the square (`2d - 1`) and the two gcd rows (`2d + 1`), at most 100 field registers with the shift and the loop registers; no load or store inside a round):
+
+* squaring modulo `H`: the `d (d - 1)/2` cross products, accumulated per slot (`d (d - 1)/2 - (2 d - 3)` additions), doubled (`2 d - 3`), the `d` squares and their `d - 2` additions to the cross sums of even slots, and the reduction of the `d - 1` top coefficients (`2 d` each): `S(d) = d (d+1)/2 + d (d-1)/2 - (2d - 3) + (2d - 3) + (d - 2) + 2 d (d - 1)`, `S(16) = 750`, plus 4 of bit control;
+* multiplication by `X + a` modulo `H`: `4 d` (per coefficient one product with the top coefficient, one subtraction, one product by `a`, one addition);
+* gcd: at most `2 d - 1` eliminations (each lowers the sum of the two degrees), `(2 d - 1)(3 d + 9) + 2 (2 d + 1)` with the strips, the inversion `254 * 5 + 76 = 1,346` and `d`: `3,195` at `d = 16`.
+
+`R(d) = 68 + 3 + 253 (S(d) + 4) + 45 * 4 d + 1 + gcd(d) + 6`, non-decreasing in `d`; `R(16) = 68 + 3 + 190,762 + 2,880 + 1 + 3,195 + 6 = 196,915`. Row E charges every one of the 64 rounds at `d = 16`: `64 * 196,915 + 1,000 + 200 = 12,603,760`. The procedure was executed with this counter on random products of distinct linear factors of degree 2 to 16 over `F_p` (175 rounds): every run isolated a true root, and the largest charge of a round at degree 16 was `195,817 <= R(16)`. The isolation bound of 9.4 applies to this procedure (the rule of step 5 separates a pair whenever its two characters are nonzero and different).
