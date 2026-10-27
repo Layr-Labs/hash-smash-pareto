@@ -1,20 +1,39 @@
 {
-  "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "poseidon-orchard-r0-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 0,
-  "claim": {
-    "time_log2": 128.0,
-    "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
-    "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
-  },
-  "restrictions": [],
-  "baseline_improved": "poseidon-orchard-r0-nominal-v2",
+  "baseline_improved": "poseidon-orchard-r56-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
+  "claim": {
+    "memory_log2_bytes": 20,
+    "nonuniform_advice_log2_bytes": 0,
+    "preprocessing_log2": 10,
+    "success_probability": 0.39,
+    "time_log2": 127.12014,
+    "time_unit": "target-compressions"
+  },
+  "heuristics": [
+    {
+      "id": "H1-fixed-map-birthday",
+      "statement": "Over fresh masked rho and independent masked trail starts, the fixed Orchard r56 map x -> H(x,rho) has sufficiently random-looking birthday and distinguished-point behavior for the finite search to succeed with probability at least 0.39.",
+      "role": "score-critical",
+      "scope": "The exact selected 56-round Orchard hash, canonical Pallas inputs, one random rho, at most Q+L hash calls and at most 10000 stored trails.",
+      "extrapolation": "The proof gives a >0.4092754 lower bound for an ideal random map. The declared experiments evaluate only a 7-bit closed projection and 20-step full-width trails with an 8-bit output event on 256 organizer seeds; extrapolating to 254-bit collision statistics is heuristic.",
+      "evidence_ids": [
+        "proof:51-86",
+        "proof:139-180",
+        "experiment:truncated-brent7",
+        "experiment:fullwidth-trail8"
+      ],
+      "limitations": "No full-width birthday search or concrete full collision has been executed. Small projected maps and short low-byte trail events may conceal algebraic correlations; a about 7 percent reduction in birthday hazard makes the conservative 0.39 bound fail. These experiments cannot establish full-scale probability."
+    }
+  ],
   "lane": "exploratory",
-  "heuristics": []
+  "restrictions": [
+    "The fixed-function success probability relies on score-critical H1; the ideal-map calculation is conditional, and no full 254-bit collision was executed.",
+    "The r56 resource score is not asserted to improve the existing review-pending r56 public claims."
+  ],
+  "rounds": 56,
+  "schema_version": 3,
+  "submission_state": "ready",
+  "target_profile": "poseidon-orchard-r56-prefix-v1",
+  "experiment_manifest": "experiments/manifest.json"
 }
