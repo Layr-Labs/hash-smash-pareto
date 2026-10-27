@@ -1,20 +1,69 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha3-256-r5-prefix-v1",
+  "submission_state": "ready",
+  "target_profile": "sha3-256-r7-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 5,
+  "rounds": 7,
+  "lane": "exploratory",
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 124.06701,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 20,
+    "preprocessing_log2": 39,
     "success_probability": 0.39,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "sha3-256-r5-nominal-v2",
-  "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  "restrictions": [
+    "Two distinct 128-byte one-block messages m(a), m(b) of sha3-256-r7-prefix-v1 (zero state, rate 136, suffix 0x06 with pad10*1, rounds 0 to 6, full 256-bit digest). Design X (proof.md Section 2): v_x = u_x (x < 4), v_4 = rotr(u0,36) ^ rotr(u1,29) ^ rotr(u2,60) ^ rotr(u3,14); lane x = v_x ^ K_x and lane 10+x = v_x ^ K_(10+x) (x = 0..4), lanes 5..9 all-ones, lane 15 zero, K_(10+x) = K_x ^ 0x5555555555555555 ^ (lane 16 for x = 1), K_0..K_4 of trial 1462; F(u) = SHA3-256-r7(m(u)) xor PD; m is injective (lanes 0..3 are u0..u3 xor constants), so F(a) = F(b) with a != b is a collision of two distinct messages. Round 0 is affine and every chi row of round 1 has a constant input (the column x = 3).",
+    "Distinguished-point parallel collision search (van Oorschot-Wiener) on F with 256 walks per step, the search of a767dfcf: DP = image x < 1022 x 2^135 (planes 145..255 zero and the 10 planes below them < 1022; theta = 1022 x 2^-121), no trail cut, replay cap 28613409348351594050583584751747072 steps, at most 132720 trails, a table of 26544 words with five 51-bit slots each (the place of the slot gives the trail number), Tb = 535009008 x 2^91 steps, a prefilter-hit counter that aborts at hit HMAX + 1, and one checkpoint replay of the colliding pair (proof.md Section 4).",
+    "One step of 256 walks is a generated bit-sliced straight line of 31798 register operations (23458 XOR, 4258 AND, 3355 OR, 727 NOT; no loads or stores), built by gen4.c (gen3.c of a767dfcf with the design-X embedding, a cost table for chi rows with one constant input and their planning in round 1; proof.md Section 3); rounds 0 and 1 cost 3192 operations.",
+    "Cost model collision-frontier-v5, unit 1897: N = Tb x 31818 + (3891 LRC + 5831 G + 17 nck + 2052) + R + PRE = 42262670107112855090967578644962167405947 word operations, every operation of the assembled other code counted (1959 instructions, proof.md Section 4.3 and Appendix D), at most HMAX + 1 prefilter hits, PRE = the generator run gen4 512 1000 5 i, the parameter scan and the assembly of the other code, each counted (proof.md Section 3.7; preprocessing_log2 39); time_log2 = 124.06701 by the integer certificate of Appendix A.",
+    "Machine conventions H_reg and H_code (role supporting; the cost model fixes neither; proof.md Section 3.6), as in a767dfcf: H_reg, a declared file of 2035 registers of 256 bits, its 65120 bytes counted as memory, an operation on registers costing one word operation, every load and store of the other code charged; H_code, a two-address encoding of the straight line (109115 bytes measured with the prefilter) and 8-byte words plus a literal pool for the other code (16024 bytes, measured), PERM one unit.",
+    "Memory at most 1048371 bytes <= 2^20 (search phase: registers, straight line, other code, table, walk words, data image; proof.md Section 6); the generator run gen4 512 1000 5 i precedes the search and is charged with its image 530354 bytes, a 16,384-byte stack and the whole program file (655804); memory_log2_bytes = 20, so normalizedTimeMemoryLog2 = time_log2.",
+    "Success at least 0.39 for one attempt over the fresh word rho, under the score-critical premise H_rand (proof.md Section 5), with failure terms for a colliding pair with a trail of more than LRC evaluations, the trail limit, self-coincidence, starts and 50-bit key matches, and the hit-counter abort (below 2^-1000, proved)."
+  ],
+  "baseline_improved": "sha3-256-r7-nominal-v2",
+  "heuristics": [
+    {
+      "id": "H_rand",
+      "role": "score-critical",
+      "statement": "Premise H_rand (our theory): over the algorithm's coins, the program run on the fixed SHA3-256-r7 target (F(u) = SHA3-256-r7(m(u)) xor PD, with the design-X message embedding m of proof.md Section 2) succeeds with probability at least the probability computed in proof.md Section 5 for a uniformly random function F from 256-bit values to 256-bit values. The only coin of the algorithm is the uniform word rho; the target is fixed, and given rho the run is deterministic. The computation of Section 5 is made in the random-function model, where F is realised by lazy sampling, and there one attempt succeeds with probability at least 0.39 after the failure terms. The premise is that the fixed target carries this probability over. No probability, interval or independence statement is inferred from the frequencies of the organizer runs.",
+      "scope": "The fixed function F of proof.md Section 2 on the points of one attempt: about 0.996532 x 2^128 evaluations in 256 lockstep walks from starts rho + t(i), i < 132720. Only the pair-coincidence rate among evaluated images and the distinguished-point rate enter the bound. The step program, the cost, the memory and the failure terms are derived, not assumed.",
+      "extrapolation": "Not an estimate of the success probability for the fixed target, and not a statistical support of it. Organizer-executed program runs are witnesses of what they execute: rho-w22 runs the whole search with the claimed straight line at width 22; proj-w256 runs eight chained full-width steps and tests 22-bit agreement among 2,048 iterates. Our own runs on the program file of this package (proof.md Section 7.2): pair-coincidence rates on three 32-bit windows among 2^24 images of uniform inputs, of consecutive starts and of chained iterates, and single-bit difference statistics.",
+      "evidence_ids": [
+        "proof:276-309",
+        "proof:340-346",
+        "proof:347-359"
+      ],
+      "limitations": "Our theory; no proof. No run reaches 2^128 and no full collision is claimed. The embedding makes round 0 affine and gives every chi row of round 1 a constant input, so F has fewer full nonlinear rounds than the plain digest map (its algebraic degree is at most 2^6, as for the embedding of a767dfcf); the checks work at 22 and 32 bits. The success bound at Tb has no slack: a pair-coincidence deficit eps lowers the success at Tb by about 0.3 eps, and restoring 0.39 costs about 0.5 log2(1/(1 - eps)) bits of time. The success bound assumes nothing about the organizer-seeded trials."
+    },
+    {
+      "id": "H_reg",
+      "role": "supporting",
+      "statement": "Machine convention (that of a767dfcf): the 256-bit word RAM of collision-frontier-v5 with a declared file of 2035 registers of 256 bits (registers 0 to 2023 for the straight line, registers 2024 to 2033 for the search state; the handlers use the dead straight-line registers above 255 as temporaries). An operation on register operands costs one word operation, with no load or store; every load and store of the other code is a charged word operation. The 65120 bytes of the file are counted as memory. The cost model fixes no register count.",
+      "scope": "The register file of the machine that runs the step program and the search; it affects the time and memory ledgers only, not the success bound.",
+      "extrapolation": "None statistical: a declared convention. Executed checks validate the functional output of the program with this allocation, not the cost of register access.",
+      "evidence_ids": [
+        "proof:134-146",
+        "proof:310-337"
+      ],
+      "limitations": "A reviewer who requires a smaller register file would charge loads and stores that this ledger does not contain; the success argument is unaffected."
+    },
+    {
+      "id": "H_code",
+      "role": "supporting",
+      "statement": "Code-memory charging convention (that of a767dfcf): the straight line is stored in a two-address encoding (2-bit opcode, a flag for destination = first operand, two or three 11-bit register numbers; 14, 25 or 36 bits per instruction, packed; 109115 bytes with the prefilter, measured); the other code in 8-byte instruction words with a literal pool of 32-byte words (1959 instructions and 11 literals, 16024 bytes, measured; PERM costs one unit).",
+      "scope": "The code rows of the memory table; it does not affect the success bound.",
+      "extrapolation": "None statistical: a declared convention. The executed checks decode both encodings in software to validate the function of the program.",
+      "evidence_ids": [
+        "proof:134-146",
+        "proof:246-261",
+        "proof:310-337",
+        "proof:2539-2540"
+      ],
+      "limitations": "A reviewer who requires 32 bytes per straight-line instruction would charge more code memory than this ledger; the success argument is unaffected."
+    }
+  ],
+  "experiment_manifest": "experiments/manifest.json",
+  "certificate_manifest": "certificates/manifest.json"
 }
