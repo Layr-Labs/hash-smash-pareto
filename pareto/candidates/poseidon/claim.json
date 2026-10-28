@@ -1,20 +1,43 @@
 {
-  "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "poseidon-orchard-r0-prefix-v1",
-  "attack_class": "ordinary-collision",
-  "rounds": 0,
-  "claim": {
-    "time_log2": 128.0,
-    "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
-    "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
-  },
-  "restrictions": [],
-  "baseline_improved": "poseidon-orchard-r0-nominal-v2",
-  "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+ "schema_version": 3,
+ "target_profile": "poseidon-orchard-r56-prefix-v1",
+ "attack_class": "ordinary-collision",
+ "rounds": 56,
+ "claim": {
+  "time_log2": 126.20802,
+  "time_unit": "target-compressions",
+  "memory_log2_bytes": 20,
+  "preprocessing_log2": 48,
+  "success_probability": 0.39,
+  "nonuniform_advice_log2_bytes": 0
+ },
+ "restrictions": [
+  "Two distinct 64-byte messages with equal digests for the Orchard hash with 56 partial rounds (poseidon-orchard-r56-prefix-v1), found as a collision F(x) = F(y), x != y, of the walk F(x) = digest(message(kappa x - E0_0)) / OUTSCALE_kappa: message() is the injective parametrisation of the input line on which rounds 0 and 1 are affine, kappa a random nonzero coin. Birthday search, one trail with distinguished points (x < (2^126 + 1) T, T = 51075) tested once per group of four outputs on their bitwise AND (AND <= each value, so no DP is missed; false hits capped and charged), one bit-packed table (142-bit value, 119-bit index gap per entry, MCAP = 26276), single-gap recovery (credit 43caeb6a), one evaluation budget B shared by the trail and the recovery (recovery at most RCAP = 2^119 of it); no detection window, lockstep cap or positioning cap. Base packages 69e14209 and 2710fcc6 (ours).",
+  "Cost model orchard-field-ram-v2, C = 1392. Field ADD and MUL 1/C each; every other primitive 256-bit word operation (AND, OR, shift, comparison, conditional branch, move, load, store, random word) 1/C; a comparison and a conditional branch are two operations. Every evaluation executes the 807-operation step program (329 ADD, 478 MUL; proof.md Section 2, Appendix C), unchanged from 69e14209. The 327 step constants are kappa-monomials set per attempt (1,237 operations, charged) in a declared file of 392 registers counted in memory.",
+  "Ledger (proof.md Section 6): at most B = 169218966381152594613869050637269860384 evaluations in all (one counter for trail and recovery); 807 operations per evaluation, 5 per group of 4 trail steps, 2 per block of 48, 11 per hit (at most MCAP + 1 + FPCAP + 1 hits), 9 per recovery evaluation (at most RCAP = 2^119); fixed part 13,122,526,928 (incl. a 2^20 setup-loop charge); offline derivation (at most 2^42.86 word operations) charged at 2^58. Total 136785056542086893101658885779605092954217, log2(total / 1392) = 126.2080190, claimed 126.20802. One attempt; no restart, amplification or advice.",
+  "Memory (proof.md Section 7, allocation list): table 26,791 words (26,276 packed entries of 261 bits and one pad word) 857,312, start word 32, 40,676 instructions at 4 bytes 162,704, constants and literal words 10,912, register file of 392 registers 12,544, kappa setup 5,056: 1,048,560 bytes, below 2^20. Output in registers. The offline derivation runs first in the table's address range (code at most 65,536 bytes, data at most 262,144 bytes; live peak 518,928 bytes with the resident items), which the setup zeroes before the attempt (Section 7).",
+  "Success probability at least 0.39 under the declared premise H1: Lemma 4 (proof.md Section 5) proves 0.39000000258955871056 for a uniformly random function at the filed budget (including the false-hit cap, Lemma 4 (g)), by coupling the three recovery gaps to independent geometric variables independent of the collision time (Lemma 3) and bounding the trail law convolved with them through their moment generating function; H1 carries it to the real map (Section 8: deviation model and the price of a margin). The program is printed in proof.md Appendix B (standard library only). Two organizer-run experiments (search-w14-raw-bits, trail-w14-exact-walk; Section 9), observations only. No full collision is produced or claimed; the claim is the cost of the search."
+ ],
+ "baseline_improved": "poseidon-orchard-r56-nominal-v2",
+ "certificate_manifest": "certificates/manifest.json",
+ "experiment_manifest": "experiments/manifest.json",
+ "heuristics": [
+  {
+   "id": "H1-random-function-model",
+   "role": "score-critical",
+   "statement": "At the filed budget B = 169218966381152594613869050637269860384 evaluations, where Lemma 4 gives 0.39000000259 for a uniformly random function, the search of proof.md Section 3 on the real map F(x) = digest(message(kappa x - E0_0)) / OUTSCALE_kappa, with the coins of the attempt (proof.md Section 1: kappa and x_0 the low 254 bits of two uniform 256-bit words), succeeds with probability at least 0.39.",
+   "scope": "Target poseidon-orchard-r56-prefix-v1, inputs on the line of proof.md Section 1, one trail with the parameters of Section 3 (B = 1.6922e38 evaluations for the trail and the recovery together). Only the success probability rests on it; the step program, recovery, evaluation count, ledger and memory are proved or checked exactly (Sections 2, 4, 6, 7).",
+   "extrapolation": "Organizer-run experiments (Section 9) on the claim's input line, with the coin law of the attempt: search-w14-raw-bits runs this search (grouped DP test, table, shared budget, recovery allowance, single-gap recovery) at width 14 on the map x -> the 14 low digest bits of digest(message(kappa x - E0_0)), which is F without the division by OUTSCALE_kappa (random-map reference 0.4873, our measurement); trail-w14-exact-walk runs the walk F itself at full width for 128 outputs and tests the first repeat of the 14 low bits of its raw digests against the independent-uniform value 0.3919. Their counts are reproducible observations consistent with the premise; no probability is inferred from them. H1 carries the random-map behaviour of F to the full-width search over 2^127 steps. Deviation model (Section 8): a random map on N / c points with the same DP fraction gives 0.3900, 0.3591, 0.3098, 0.2566 at c = 1, 0.9, 0.75, 0.6; restoring 0.39 with a margin epsilon costs log2(1 + epsilon) bits (0.0144 at 1 %).",
+   "evidence_ids": [
+    "proof:37-61",
+    "proof:129-134",
+    "proof:136-146",
+    "experiment:search-w14-raw-bits",
+    "experiment:trail-w14-exact-walk"
+   ],
+   "limitations": "H1 is not proved; it concerns the average over the coin kappa, which is what Lemma 4 bounds. No experiment runs the full-width search of about 2^127 steps. search-w14-raw-bits omits the division by OUTSCALE_kappa of F, a bijection of the field that does not in general preserve trajectories, and at width 14 the gaps are not small beside the trail; trail-w14-exact-walk runs F at full width but only its trail, not the table or the recovery. The deviation table holds under its stated random-map model only. The success bound assumes nothing about the organizer-seeded trials (no independence or identical distribution of the trials is used)."
+  }
+ ],
+ "submission_state": "ready",
+ "lane": "exploratory"
 }
