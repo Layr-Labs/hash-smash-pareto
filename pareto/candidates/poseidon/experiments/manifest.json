@@ -1,0 +1,17 @@
+{
+ "schema_version": 1,
+ "experiments": [
+  {
+   "id": "r25-search-w14",
+   "kind": "python-message-pairs-v1",
+   "scope": "poseidon-orchard-r25-prefix-v1 at its own round count; per organizer trial the search of proof.md Section 3 (`search`, unchanged) on the real step program F_kappa: kappa from the coin set of Section 2, walk v -> low 14 bits of OUTSCALE_kappa F_kappa(v) (the low 14 bits of the digest of the line message), parameters fixed in advance (DELTA 6144, n 176, d 16, G 16, S 192, MCAP 96); a returned pair is the two line messages. Mask events on 14 digest bits, not collisions.",
+   "hypothesis": "Premise H1 at reduced width: on these 4 real maps the search succeeds at least as often as Lemma 2 evaluated at N = 2^14 for a uniformly random function (bound 0.43049, rounded down from the exact rational, exp_search.py rf_bound). Observation t_first per trial: the first-repeat index of the walk, the trail event t <= n of Lemma 2 (a).",
+   "program": "experiments/exp_search.py",
+   "event": {
+    "kind": "digest-xor-mask",
+    "mask_hex": "ff3f000000000000000000000000000000000000000000000000000000000000",
+    "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  }
+ ]
+}
