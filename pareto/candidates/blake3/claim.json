@@ -1,20 +1,62 @@
 {
-  "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "blake3-r1-prefix-v1",
-  "attack_class": "ordinary-collision",
-  "rounds": 1,
-  "claim": {
-    "time_log2": 128.0,
-    "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
-    "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
+ "schema_version": 3,
+ "target_profile": "blake3-r4-prefix-v1",
+ "attack_class": "ordinary-collision",
+ "rounds": 4,
+ "claim": {
+  "time_log2": 124.78462,
+  "time_unit": "target-compressions",
+  "memory_log2_bytes": 20,
+  "preprocessing_log2": 46.91,
+  "success_probability": 0.39,
+  "nonuniform_advice_log2_bytes": 6.59
+ },
+ "restrictions": [
+  "Two distinct 128-byte messages P || K || x, P || K || y (x != y, 256-bit LE integers), one chunk of two blocks. Block 1 is the fixed 64-byte block P = words (2726988516, 89, 15068, 0, ..., 0), hex e48a8aa259000000dc3a000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000, compressed with chaining value IV, counter 0, length 64, flags CHUNK_START = 1, 4 rounds; block 2 is K || x with K the 32-byte prefix (words m0..m7 = (0x80000000, 0, 0x80000000, 0, 0, 0, 0x80000000, 0)), compressed with chaining value CV = chain value of P, counter 0, length 64, flags CHUNK_END | ROOT = 10, 4 rounds; the digest is the complete 256-bit root output (blake3-r4-prefix-v1, verifier/blake3.py:blake3(P || K || x, 4)). Found as a collision g(x) = g(y) of the walk g(x) = f(x) XOR q, f(x) = digest(P || K || x), q the fixed mask of the polarities of the generated digest planes. Plain birthday search; no differential or structural property of the rounds is used.",
+  "Program, search, success proof and experiments are those of 94b7c2b8-5a7f-4922-ad09-62e1735ac864 (the program of 4ea93391-bf85-4892-8244-ab531b900101, derivatives of 7f3e749d-2c1e-4555-8c34-5e4ac9011927) run at 4 rounds, as in this author's 468ad717-e3ba-4258-8ef8-87044ce153cc. Two-block message; every evaluation is one compression of block 2. The only part of the network that depends on CV and K is round 0's eight constant additions, each 61 - 2 ctz(k) gates (0 if k mod 2^31 = 0); P and K come from the charged scan of 4ea93391 at 4 rounds (seed 15068, 68719476736 = 2^36 candidates, extending 468ad717's 3 * 2^32): least total 350 (468ad717: 368). Step 23366 gates = 23016 fixed + 350; proof.md 3.2, checked by --scan-check. Row reference: fd51dc9a-0212-4240-9ab8-3edc52a7ff5b (124.79129, one-block).",
+  "Machine, a declared convention (H3, supporting, as in 7f3e749d-2c1e-4555-8c34-5e4ac9011927, 4ea93391-bf85-4892-8244-ab531b900101 and 94b7c2b8-5a7f-4922-ad09-62e1735ac864): load/store machine with 256-bit words, 256-bit immediates and 775 registers (addressable, counted as memory) under collision-frontier-v5; 846 operations (C of blake3-r4) to the unit. Charged: every add, AND, OR, XOR, shift, compare, branch, register move, load, store and the random word; a conditional branch tests one register for zero. One batch of 256 trails is 23380 operations (23366 gates, 12 for the stage-1 test, 2 for the loop control), no load, store or move. Code: 4 bytes per register-only gate of the step and of the stage-1 test (5 per packed-recovery word), 9 bytes per other instruction, 37 for at most 64 with a 256-bit immediate, 36 bytes per wasm instruction of the generator and scan images (proof.md 3.1).",
+  "time_log2 is an upper bound: every row of proof.md 3.4 is enforced by a halt and charged at its limit (B + 3000 batches with a hard stop, pmax passing batches, e2max stage-1 hits, 136866 table keys, 1 cut trail, the recovery caps). Single attempt: one fresh uniform word r, no restart, no amplification, no stored collision. Distinguished points: low 32 bits all ones and the next 90 bits below 2103. The generator run at setup (143346800 operations) and the setup's compression of P and the offline scan for P and K ((68719476736 + 2^36 + 2^30) candidates at 25000 operations = 3462817382400000) are charged; preprocessing_log2 = 46.91",
+  "Memory: 136867 table slots of 53 bits (906,744 bytes) + 111629 bytes of code + 5,248 bytes of counters + 24800 bytes of registers + 96 bytes of advice (P and K) = 1048517 bytes = 2^19.99992; claimed as 20 (the scalar policy adds 0). The generator (2221 wasm instructions, clang 18 -Os) and the scan (1102 wasm instructions) run at setup in the same region: setup phase 271590 bytes; the generator's C port, compiled natively for this entry, emits the identical program (record by record); the 2,221-instruction wasm size is the measurement of 4ea93391 / 94b7c2b8 on the same source with other constants (proof.md 3.6), and the setup phase is far below the binding search phase.",
+  "Success probability at least 0.39: Lemma 2 of proof.md Section 4 proves it for a uniformly random function from the lazy-sampling hazard (exact evaluation in Appendix A); H1 (score-critical, declared, not proved) says the real attempt succeeds at least as often. Nothing else in the bound is heuristic. A hazard (1 - eps) / N needs extra time: 0.00725 bit for eps = 0.01 (Tp 2092), 0.03700 bit for eps = 0.05 (Tp 2050), 0.07597 bit for eps = 0.10 (Tp 1995), 0.20749 bit for eps = 0.25 (Tp 1821).",
+  "The declared experiments run this program in the organizer sandbox: bsrho-n18 (one attempt of the 256-lane search per trial at width 18) and proj-k0-w256 (1024 points of the target at width 256 per trial, a pair when two digests agree in the low 20 bits). Each returns two 128-byte messages P || K || x, P || K || y whose complete 4-round digests (organizer reference) agree in the stated low bits. They are program checks: no number of the claim is estimated from their counts.",
+  "Advice: the 64-byte block P and the 32-byte prefix K (96 bytes, nonuniform_advice_log2_bytes = 6.59 >= log2(96) = 6.5850; CV is computed from P by the setup), the output of the stated scan (proof.md Section 3.7 and Appendix B, re-evaluated by python3 bsrho.py --scan-check; candidate i = 384979077860 of 2^42 candidates (eight seeds) at 4 rounds, least total 350, the first index reaching it), charged in time_log2. Credited derivative of mpjunior92's 94b7c2b8-5a7f-4922-ad09-62e1735ac864 (the same program at 7 rounds) and 4ea93391-bf85-4892-8244-ab531b900101 (at 3 rounds: the two-block form with the scanned first block, the round-0 constant analysis, the scan procedure) and of Jbenisek's 7f3e749d-2c1e-4555-8c34-5e4ac9011927 (the program); the two-block form with a fixed first block as advice is from Jbenisek's 3356413f and fc39027a; the row reference at 4 rounds is Jbenisek's fd51dc9a-0212-4240-9ab8-3edc52a7ff5b; the further credits carry over (proof.md Section 8)."
+ ],
+ "baseline_improved": "blake3-r4-nominal-v2",
+ "certificate_manifest": "certificates/manifest.json",
+ "experiment_manifest": "experiments/manifest.json",
+ "heuristics": [
+  {
+   "id": "H1-random-function-model",
+   "role": "score-critical",
+   "statement": "Model premise, four clauses. Let F be a uniformly random function from 256-bit values to 256-bit values. For the fixed target, the probability that the single attempt of the search succeeds, with the walk g(x) = f(x) XOR q (f(x) = the complete 4-round digest of the 128-byte message P || K || x, P the fixed first block, K the fixed prefix, q the fixed digest-plane mask of the generated circuit), is at least the probability P_F, over the fresh word r and a uniformly random F, that the same search succeeds when every evaluation of g is replaced by F (lazy sampling). Clauses: (a) distinct evaluated inputs collide with probability 2^-256, uniform and independent outputs; (b) the iterates from r + t have the first-collision law of a random mapping; (c) a point is a distinguished point (low 32 bits all ones and the next 90 bits below 2103) with probability 2103 / 2^122, independently of the collision events; (d) adaptivity: the program chooses its points, and which trails finish, are cut or abort, from earlier outputs of g; given the whole history of the run and which later outputs are distinguished points, a fresh evaluation equals a given earlier non-distinguished output with probability at least 2^-256 (the lazy-sampling hazard of F). Proof.md Section 4 (Lemma 2) proves P_F >= 0.39 for F from the hazard alone; (d) is the premise that g has that hazard. This is a comparison of two success events, not a statement about the entropy of r. Nothing else in the success bound is heuristic.",
+   "scope": "The fixed target blake3-r4-prefix-v1 restricted to 128-byte messages P || K || x, the fixed block P, prefix K and mask q, the 2^128-scale evaluation of g along about 134104 trails started from r + t, 256 trails at a time. Not claimed for other messages, other round counts, or evaluations beyond this scale.",
+   "extrapolation": "Declared and not proved: an assumption, no proof is known. The full 256-bit functional graph, trails longer than 2^40 and 2^128 evaluations cannot be observed. The organizer experiments bsrho-n18 and proj-k0-w256 run this program on the real target at reduced width (the search at width 18) and at full width for 1024 points with 20-bit projections; they are program checks, reproducible observations consistent with the premise; no number of the claim is estimated from their counts. P and K were selected only by the gate count of eight round-0 constants, not by any output of g. If the collision hazard is (1 - eps) / N instead of 1 / N, the plan needs, to restore 0.39: 0.00725 bit for eps = 0.01 (Tp 2092), 0.03700 bit for eps = 0.05 (Tp 2050), 0.07597 bit for eps = 0.10 (Tp 1995), 0.20749 bit for eps = 0.25 (Tp 1821).",
+   "evidence_ids": [
+    "experiment:bsrho-n18",
+    "experiment:proj-k0-w256",
+    "proof:116-190",
+    "proof:191-197",
+    "proof:107-112"
+   ],
+   "limitations": "A model premise about one fixed function, not a theorem: on the target the run is a deterministic function of r. It cannot be tested at width 256; the experiments reach width 18 and 20-bit projections of 1024 points per trial. The bound has no margin above 0.39 (B is the least multiple of 10^24 that reaches it), so any hazard deficit is repaired by extra time, priced above."
   },
-  "restrictions": [],
-  "baseline_improved": "blake3-r1-nominal-v2",
-  "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  {
+   "id": "H3-machine-convention",
+   "role": "supporting",
+   "statement": "Declared machine convention (supporting; the register-file convention of 7f3e749d-2c1e-4555-8c34-5e4ac9011927, a convention, not a claim about the benchmark). The cost model prices a 256-bit word RAM with loads and stores and fixes no register count or instruction set; this entry declares R = 775 registers of 256 bits, counted as 24800 bytes of memory and addressable by loads and stores, and charges every operation, load, store and register move; a conditional branch tests one register for zero, and a comparison is charged separately wherever a branch needs one. The main loop (one batch of 256 lanes, 23380 operations) has no load, store or move because the generated line needs 773 registers (output plane j in the register of input plane j). The organizer's reference count C(r4) = 846 is used only as the unit. Code is memory and its format is not fixed by the cost model: a register-only gate is a 4-byte record, a packed-recovery instruction 5 bytes, every other instruction 9 bytes (at most 64 with a 256-bit immediate at 37 bytes), and the images of the circuit generator and of the scan 36 bytes per wasm instruction.",
+   "scope": "The loop body of one batch of 256 lanes, its stage-1 test and the handlers; table walks, recovery, events, setup and the scan are charged at the stated bounds including loads and stores of their words.",
+   "extrapolation": "A machine with fewer than 775 registers would add loads and stores to every batch; a machine whose branches need a comparison would add 2 operations per batch; the claim assumes the declared convention.",
+   "evidence_ids": [
+    "proof:40-45",
+    "proof:46-68",
+    "proof:69-80",
+    "proof:97-99",
+    "proof:100-106",
+    "proof:205-211"
+   ],
+   "limitations": "The benchmark profile does not fix a register count or an instruction set; the declaration is this entry's own (inherited from 7f3e749d-2c1e-4555-8c34-5e4ac9011927). The count 23366 is produced by the generator in the program (its C port, compiled natively, emits the identical program, proof 3.6) and the register allocation by `allocate`."
+  }
+ ],
+ "submission_state": "ready",
+ "lane": "exploratory"
 }
