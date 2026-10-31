@@ -1,20 +1,77 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "blake3-r1-prefix-v1",
+  "submission_state": "ready",
+  "target_profile": "blake3-r3-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 1,
+  "rounds": 3,
+  "lane": "exploratory",
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 128.34,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
+    "memory_log2_bytes": 20.25,
     "preprocessing_log2": 0,
-    "success_probability": 0.39,
+    "success_probability": 0.4,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "blake3-r1-nominal-v2",
+  "restrictions": [
+    "Both colliding messages are exactly 64 bytes: 32 zero bytes followed by a 32-byte little-endian value. They differ in the last 32 bytes.",
+    "Full 256-bit digest collision of the three-round target; one compression per message with counter 0, block length 64, flags CHUNK_START|CHUNK_END|ROOT.",
+    "Single sequential run with a hard step budget B = 2^128.31 + 3 * 2^119 (below 2^128.3169) compressions, a table of 16,384 slots and a stop at the 16,384th discarded trail; no restart, no parallelism, no preprocessing, no advice.",
+    "Generic birthday-bound search. This entry does not improve the nominal reference blake3-r3-nominal-v2; that identifier is named because the schema requires one."
+  ],
+  "baseline_improved": "blake3-r3-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  "experiment_manifest": "experiments/manifest.json",
+  "heuristics": [
+    {
+      "id": "H1-random-mapping-r3-prefix",
+      "statement": "Let A(M, theta, L_max) be the algorithm of Section 3 with fresh-evaluation budget M, distinguished-point density theta and trail cap L_max, run on a function G from n-bit words to n-bit words, and let p_G be its success probability over the uniformly random start words. H1 states: for F : x -> three-round digest of (0^32 || x) at n = 256 with the parameters of Section 3, p_F >= 0.75 p_rand, where p_rand is the same probability for a uniformly random function; in words, the search on F succeeds at least three quarters as often as on a random function. Section 6 computes p_rand >= 0.5349 for a lazily sampled random function: the answer at an input not queried before is a uniform 256-bit word independent of every earlier answer, and every term of the ledger (birthday term, trail lengths, abandonment, detection lag) is derived from that property by union bounds over index pairs; nothing else about a random function is used. Under H1, p_F >= 0.75 * 0.5349 = 0.4011, and the claim states 0.40. H1 compares the success probability of this algorithm on F with that of the same algorithm on a random function, with a stated factor; it is not a conditional-independence or 'F behaves randomly' property of F and does not assert that F matches a random function. No other heuristic enters the claimed time, memory or success probability; H2 to H4 below concern only how the organizer-executed experiments relate to H1. The time ledger (Section 7) and the memory ledger (Section 4) are hard budgets and do not depend on H1.",
+      "role": "score-critical",
+      "scope": "Used only for the success probability (Section 6: coupling 6.0, birthday bound 6.1, loss ledger 6.2 and the 0.75 factor in 6.3). Not used for the time ledger (hard budget) or the memory ledger (fixed allocation). Sensitivity (6.4): on collision density alone the claimed 0.40 is reached at 0.668 of random and the 0.39 floor is crossed at 0.646.",
+      "extrapolation": "The organizer-executed experiments are program checks, not evidence for H1. They run the same algorithm with the fresh budget M_w = ceil(sqrt(0.76844 * 2^(w+1))) (M_w^2/2^(w+1) = 0.7812, 0.7715, 0.7690 against 0.7684 at full width) on F restricted to a per-trial keyed coset of 2^w inputs and truncated to its first w bits for w = 12, 16, 17, with theta = 2^-2 and trail cap 64. The author compares the host-verified success count out of 256 with the author-measured random-function value q_w (0.4581, 0.5150, 0.5238; 10,000 trials each) and with the author's 10,000-trial measurement of the keyed F_w (0.4574, 0.5163, 0.5302; ratios 0.999, 1.003, 1.012). The floors 69, 79, 81 are the 0.5% quantiles of Binomial(256, 0.75 q_w), the H1 boundary at each width, stated in advance. A count below a floor would mean the search on F at that width succeeds less than three quarters as often as on a random function and would send the author back to the program and to F_w; a count at or above it says nothing about w = 256, 239 bits beyond the tested widths. The deficits 0.5363 - q_w at small widths stay within the Section 6.2 loss ledger evaluated at the tested theta; theta and the trail count are not scaled across the experiments (H4). Structure giving more collisions than random makes the search faster, not slower; the guarded failure mode is fewer collisions or non-random cycle structure. No claimed number depends on the experiments. The step from the tested widths to the claim rests on H2, H3 and H4, declared below.",
+      "evidence_ids": [
+        "proof:147-288",
+        "proof:317-496",
+        "experiment:dp-budget-r3-w12",
+        "experiment:dp-budget-r3-w16",
+        "experiment:dp-budget-r3-w17",
+        "experiment:dp-open-r3-w16"
+      ],
+      "limitations": "A width-17 check cannot exclude full-width structure, and three-round BLAKE3 has weak diffusion in its last round. 256 trials have a frequency standard deviation of about 0.031; they separate the H1 boundary 0.75 q_w from q_w by about four standard deviations at the tested widths but cannot resolve a deficit of a few percent. The author-run reference values q_w and the 10,000-trial F_w frequencies are not organizer-verified. The experiments do not establish p_F >= 0.4011 at any width (they are program checks, not support); no full-width evidence is producible, and this is the obligation every birthday-bound entry on this lane carries. This entry states the tolerance it needs, a factor 0.75 on the random-function success probability, and prices it by the larger budget M = 2^128.31."
+    },
+    {
+      "id": "H2-seeded-starts",
+      "statement": "In the organizer-executed experiments, start words derived as SHA-256(seed || counter) (32-byte big-endian counter, truncated to w bits), a derivation independent of the target function, behave, for the success frequency over 256 trials, as independent uniformly random start words, which is what the probability space of proof.md Section 6 assumes.",
+      "role": "supporting",
+      "scope": "Used only to read the experiment counts as measurements of the Section 3 success probability on F_w. Not used in any claimed number.",
+      "extrapolation": "None. The full-width claim draws its start words uniformly at random (Section 3, step 2); H2 is about the experiments only.",
+      "evidence_ids": [
+        "proof:358-369",
+        "experiment:dp-open-r3-w16"
+      ],
+      "limitations": "The author's reference values q_w use the same derivation from hashed labels, so a bias in the derivation would be shared by test and reference and not detected. The open run shows the starts reach collisions at the step count predicted for uniform starts (mean 335.8 against about 340), which is weak evidence."
+    },
+    {
+      "id": "H3-truncated-restricted-function",
+      "statement": "F_(w,R), the three-round digest restricted to the coset {R | v : v < 2^w} of a per-trial 256-bit offset R (SHA-256(seed || 'coset') with its low w bits cleared) and truncated to its first w bits, is a representative stand-in for F at n = 256 in the program checks: a collision-density deficit at full width would be expected to show as a deficit at the tested widths, which is the direction the floors watch.",
+      "role": "supporting",
+      "scope": "Used only to relate the experiments to H1. Not used in any claimed number.",
+      "extrapolation": "From widths 12, 16, 17 to width 256, 239 bits beyond the largest tested width; from a message family in which all eight words of x are random per trial but only the low w bits of the first word walk within a trial, to the full 256-bit family; from the first digest word to the full digest.",
+      "evidence_ids": [
+        "proof:370-378"
+      ],
+      "limitations": "No evidence beyond the three widths. Three-round BLAKE3 has weak diffusion in its last round, so a prefix of the digest may be less or more random-like than the full digest. The per-trial coset averages over 10,000 restrictions in the author's measurement and 256 in the organizer's, which removes the dependence on one fixed block but not the width gap. This is the gap every reduced-width test on this lane carries."
+    },
+    {
+      "id": "H4-unscaled-parameters",
+      "statement": "Running the Section 3 algorithm with theta = 2^-2 and about 2 to 140 trails per run tests the same collision-density property that H1 guards at theta = 2^-115 and about 10,200 trails; the trail-structure part of H1 is tested only at theta = 2^-2.",
+      "role": "supporting",
+      "scope": "Used only to relate the experiments to H1. Not used in any claimed number.",
+      "extrapolation": "From theta = 2^-2 to theta = 2^-115 and from trails of mean length 4 to trails of mean length 2^115. The loss terms of Section 6.2 that depend on theta are bounded at full width by the geometric trail-length model, not by the experiments.",
+      "evidence_ids": [
+        "proof:379-385"
+      ],
+      "limitations": "The experiments say nothing about the cycle structure of F on trails of length 2^115. The deficits 0.5363 - q_w staying within the theta-dependent loss bounds at the tested widths is consistency, not evidence about full-width trail structure."
+    }
+  ]
 }
