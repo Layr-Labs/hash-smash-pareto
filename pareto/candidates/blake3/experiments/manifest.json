@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "dp-search-r3-w16",
+      "kind": "python-message-pairs-v1",
+      "scope": "Three-round BLAKE3 on 64-byte messages of the family 0^32 || x (32 zero bytes, then the 32-byte little-endian encoding of x), one compression with counter 0, block length 64, flags CHUNK_START|CHUNK_END|ROOT. The digest is truncated to its first two bytes (16 bits). The program runs the sequential distinguished-point collision search of proof.md Section 3 on this truncated map with theta = 2^-4, trail cap 256 steps and a hard stop at 2^20 evaluations, seeded only by the per-trial seed.",
+      "hypothesis": "Under heuristic H1 the truncated map behaves like a random function on 16-bit words: every trial returns two distinct 64-byte messages whose three-round digests agree on the first two bytes, and the number of evaluations per trial is within a small constant factor of the birthday prediction sqrt(pi * 2^16 / 2) = 321 plus distinguished-point overhead (author's run on 256 fresh seeds: mean 348, median 340, max 918). A success rate far below 256 of 256 under the hard stop, or a mean far above the prediction, refutes H1 at width 16.",
+      "program": "experiments/dp_search_r3_w16.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "ffff000000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    }
+  ]
+}
