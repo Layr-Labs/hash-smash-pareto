@@ -1,20 +1,43 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "blake3-r1-prefix-v1",
+  "submission_state": "ready",
+  "target_profile": "blake3-r3-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 1,
+  "rounds": 3,
+  "lane": "exploratory",
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 128.06,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
+    "memory_log2_bytes": 19.5,
     "preprocessing_log2": 0,
-    "success_probability": 0.39,
+    "success_probability": 0.4,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "blake3-r1-nominal-v2",
+  "restrictions": [
+    "Both colliding messages are exactly 64 bytes: 32 zero bytes followed by a 32-byte little-endian value. They differ in the last 32 bytes.",
+    "Full 256-bit digest collision of the three-round target; one compression per message with counter 0, block length 64, flags CHUNK_START|CHUNK_END|ROOT.",
+    "Single sequential run with a hard step budget of 2^128.03826 compressions; no restart, no parallelism, no preprocessing, no advice.",
+    "Generic birthday-bound search. This entry does not improve the nominal reference blake3-r3-nominal-v2; that identifier is named because the schema requires one."
+  ],
+  "baseline_improved": "blake3-r3-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  "experiment_manifest": "experiments/manifest.json",
+  "heuristics": [
+    {
+      "id": "H1-random-mapping-r3-prefix",
+      "statement": "For F(x) = three-round BLAKE3 digest of the 64-byte message 0^32 || x, the distinguished-point collision search of proof.md Section 3, with fresh-evaluation budget M = 2^128.03 (M^2/2^257 = 0.5213), theta = 2^-115 and trail cap 2^119, has success probability p_F at least p_rand, the success probability of the same algorithm on a uniformly random function from 256-bit words to 256-bit words. p_rand >= 0.4047 is computed in Section 6 from the birthday bound and geometric trail lengths; no other property of F is used anywhere in the entry.",
+      "role": "score-critical",
+      "scope": "Used only for the success probability (Section 6: birthday bound 6.1 and loss ledger 6.2) and the table occupancy bound (Section 4). Not used for the time ledger (hard budget) or the memory ledger (fixed allocation). Sensitivity (6.4): the claim survives a collision density down to about 0.95 of random; the 0.39 floor is crossed at 0.9.",
+      "extrapolation": "The organizer-executed experiments run the same algorithm with the same parameter rule (M_w^2/2^(w+1) = 0.5213) on F truncated to its first w bits for w = 12, 16, 18, and compare the host-verified success count out of 256 with the author-measured random-function value q_w (0.3357, 0.3863, 0.3924); fewer than 67, 79, 81 successes respectively refutes H1 at that width. The claim applies the same statistics at w = 256, 238 bits beyond the tested widths; the loss terms that keep q_w below 0.4062 at small widths scale as 2^(-w/2) and are negligible at full width (Section 6.2). Structure giving more collisions than random makes the search faster, not slower; the guarded failure mode is fewer collisions or non-random cycle structure.",
+      "evidence_ids": [
+        "proof:117-180",
+        "proof:205-310",
+        "experiment:dp-budget-r3-w12",
+        "experiment:dp-budget-r3-w16",
+        "experiment:dp-budget-r3-w18",
+        "experiment:dp-open-r3-w16"
+      ],
+      "limitations": "A width-18 check cannot exclude full-width structure, and three-round BLAKE3 has weak diffusion in its last round. 256 trials have a frequency standard deviation of about 0.03 and cannot resolve a 5 percent density deficit even at the tested width. The author-run reference values q_w and the instance spreads are not organizer-verified. The intervals do not establish p_F >= 0.4047 at any width; no full-width evidence is producible, and this is the obligation every birthday-bound entry on this lane carries."
+    }
+  ]
 }
