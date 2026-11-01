@@ -1,20 +1,58 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha256-r37-prefix-v1",
+  "target_profile": "sha256-r40-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 37,
+  "rounds": 40,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 123.90702,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 20,
+    "preprocessing_log2": 47.50016,
     "success_probability": 0.39,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "sha256-r37-nominal-v2",
+  "restrictions": [
+    "Two distinct 64-byte messages M(x), M(y). W0..W7 are the fixed prefix in proof Section 1. W8=y0, W9=y1, and W10..W15 are y2..y7 minus K10..K15 modulo 2^32. This is a bijection from the 256-bit chain value x. FIPS padding adds one fixed second block. The target uses the standard IV, steps 0..39 on each block, and feed-forward. The walk g is an explicitly invertible encoding of the block-1 working state XOR the fixed polarity mask e7309a100cc5bf67eea64df025e3b2545785e20fdeb3df8208948c9c227bb195. A collision of g gives equal complete digests.",
+    "Under H2-inherited-native-accounting, use the native 256-bit word RAM interpretation of collision-frontier-v5, C=2896. The unchanged 43541-gate body uses 884 data registers and three pointers. Added native 40-bit table records total 2340 bytes. JZ is charged as a comparison plus branch; other new records charge one primitive each. H2 asserts that the charges cover conversion, addressing, scan, insertion, call/return and initialization work.",
+    "One attempt with B=1324410828041367000000000000000000000, Tp=2135, tmax=138177, KAPPA_256=48 and KR=1273/100. Five legal key/sentinel digits occupy 236 bits. Slots remain trail-indexed and first matches are selected in increasing order. Recovery uses kchk=15520 and D=2042538711859837740369340368183.",
+    "The live ledger is N=57746540188414149168689811531111805080261 word operations. Its upward time bound is 123.90702. Preprocessing is 576460752483865385 operations. No saved ledger is read by the program.",
+    "Subject to H2, the layout uses exactly 1048576 bytes: code 184919, table 816832, registers 28384, counter/copy 16384, arrays 2048, padding 9. The recovery pool is 993344 bytes after the matched-key handoff. Seed and trail indices survive the handoff; every recovery exit is terminal. Setup with a temporary emitter output peaks below one MiB.",
+    "The normative C emitter and its inherited fuel charge are unchanged, source SHA-256 0838d00e6b24114617a61f90592b5f0b7232bc986d8106e345f5270e620672fa. The body stream remains cff4d5fb7f9293ddec010dc88c4923fe4b136040aa6a342692035210318be3ce. Seven recovery constants move to spare registers; four state clears and two limb masks make recovery persistent. The 1393 inner operations plus the 39-operation outer implementation equal the charged 1432.",
+    "H2-inherited-native-accounting is a score-critical premise covering native pricing, the 1279-record controller allowance, handler/setup and storage envelopes, preprocessing bounds and emitter fuel/accounting. Reserved legacy controller capacity contains canaries, not a complete emitted native listing. Underestimated recurring work or controller storage invalidates the bound. Acceptance, mutation, persistent recovery, ledger, certificate and native-image checks are participant-run; only the two declared experiments are organizer-executed.",
+    "The original outward-rounded random-function proof, recomputed for this plan, certifies P_F >= 0.390000001000082853534934631642142850501745205189605206393696. H1 remains the only fixed-target random-function comparison. Organizer experiments are scoped consistency checks and provide no full-width probability estimate.",
+    "Credited derivative of de42b4cc-7d45-4f4d-85bd-65fd00fad5aa with its materially reused published dependencies retained. The exact new program and all compressed helper plaintext are included in this proof."
+  ],
+  "baseline_improved": "sha256-r40-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  "experiment_manifest": "experiments/manifest.json",
+  "heuristics": [
+    {
+      "id": "H1-random-function-model",
+      "role": "score-critical",
+      "statement": "Model premise with four explicit clauses. Let F be a uniformly random function from 256-bit values to 256-bit values and let A_F be this exact bounded attempt with every call to the fixed walk g replaced by lazy sampling from F. H1 states that the real attempt succeeds at least as often as A_F. (a) Distinct fresh evaluated inputs have independent uniform outputs and pair-collision hazard 2^-256. (b) Iterates from the starts r+t have the first-collision law of a random mapping. (c) A fresh output is distinguished with probability 2135/2^122 independently of collision events. (d) Under the program's adaptive choices, given the complete earlier history and the later DP flags, a fresh output equals any fixed earlier non-DP output with probability at least 2^-256. Proof Section 4 proves P_F >= 0.390000001000 for F, and Section 5 states the support and sensitivity of the fixed-target comparison.",
+      "scope": "The fixed sha256-r40-prefix-v1 target restricted to the 64-byte family, one attempt of B=1324410828041367000000000000000000000 batches and Q=339049171978589952000000000000000000000 evaluations, with 256 lanes and L=5316911983139663491615228241121378304/2135. The claim does not cover other messages, rounds, or scales.",
+      "extrapolation": "The original generic parallel-collision-search premise of van Oorschot and Wiener is inherited, with the same four clauses and no chosen input difference. Section 5 states the fixed-target comparison and its scope. The random-function theorem is recomputed at the new parameters. The two organizer experiments check returned complete-digest low-16 events only; they do not estimate the full-width collision hazard or justify H1 statistically. No predecessor sensitivity number is reused for the new plan.",
+      "evidence_ids": [
+        "experiment:bssha-n16",
+        "experiment:proj-k0-w256",
+        "proof:260-396"
+      ],
+      "limitations": "H1 remains a heuristic comparison for this fixed target and attempt. The experiments cover width 16 and 16-bit projections of 256 full-width points. They do not measure the full-width collision hazard or success probability near the birthday scale. No numerical hazard-deficit sensitivity is claimed for this plan. The random-function certificate, circuit equivalences and deterministic resource checks do not establish H1."
+    },
+    {
+      "id": "H2-inherited-native-accounting",
+      "role": "score-critical",
+      "statement": "Assume that this native implementation realizes all work and storage within the charged envelopes: primitive word-operation and structured-immediate SET pricing; instruction fetch/execute; the 1279-record controller allowance; per-hit/event/slice/cut handler bounds; fixed and radix setup charges; the emitter conversion of at most 89747938 fuel units into 2*fuel+1 word operations; preprocessing search envelopes; and code, register, table, checkpoint and temporary-storage bounds. This score-critical accounting premise supports the stated total time and one-MiB memory bound.",
+      "scope": "The exact sha256-r40-prefix-v1 attempt and native phase layout in this package, including initialization, every recurring handler and recovery path, preprocessing and retained storage. The conditional ledger is N=57746540188414149168689811531111805080261 word operations, C=2896, time_log2=123.90702, memory_log2_bytes=20 and setup peak 832964 bytes. Python interpreter objects and test instrumentation are outside the proposed native implementation.",
+      "extrapolation": "Support is the self-contained body/table/recovery records, layouts, integer ledger and retained source-level envelope derivations in proof Sections 3 and 7. Participant-run selftests, mutants, persistent recovery and arithmetic/image/ledger/certificate checks cover bounded instances. A separately reproduced clang 18.1.3 -Os / LLD 22.1.2 / Wasmtime 50.0.1 emitter measurement uses 88683456 fuel units. These checks do not establish a complete native controller or every inherited envelope. The organizer executes only the two declared low-16 experiments; those experiments do not authenticate the participant checks or validate native costs.",
+      "evidence_ids": [
+        "proof:79-259",
+        "proof:421-448",
+        "proof:491-518"
+      ],
+      "limitations": "The 1279-record legacy controller reserve contains canaries rather than a complete emitted native instruction listing. No full-width attempt at the claimed scale or independent end-to-end native cost audit is provided. Emitter evidence applies only to the selected compiler/runtime build. Underestimated recurring work or controller storage, or any omitted native control, literal data or simultaneous live storage exceeding an envelope, invalidates the time or memory bound and requires a corrected ledger. H1 and the low-16 experiments do not repair such an accounting failure."
+    }
+  ],
+  "submission_state": "ready",
+  "lane": "exploratory"
 }
