@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "h40-head-01",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/head40_c80d.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "Head program of proof Sections 2.2 and 3: per organizer trial, a first block from the standard IV and its chaining value; the CaDiCaL call itself is not available in the executor, so no pair is returned.",
+      "hypothesis": "The embedded witness satisfies every condition of rows -4 to 22 (asserted before any trial); each trial reports its chaining value and the hard stop of 10 s per call."
+    },
+    {
+      "id": "t40-tail-01",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/tail40_c80d_J23.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "Tail replica of proof Section 8, rows 23 to 39 of the 40-step characteristic (run 1 of 1). Program experiments/tail40_c80d.py (stdlib only): trial 0 hard-asserts the known answers (the lane-parallel step equals the scalar SHA-256 step on three lanes for steps 23 to 39; the embedded schedule differences equal the expansion of the pair's M and M'); trials 1 to 32 each draw 32 x 4,096 uniform junction states S (after step 22) from their organizer seed, set S' = S xor D (D = row 3 of table T_c80d_J23.tsv), run both through steps 23 to 39 with the pair's own schedule words and count S == S' after step 39 (4,194,304 samples in all).",
+      "hypothesis": "Hard-asserted: kat == 1, and the premise p_tail >= 2^-24.79100 is not refuted (the one-sided 99% upper bound of the pooled hit rate is at least 2^-24.79100). Declared limitation: the junction difference D of table T_c80d_J23.tsv is 129 bits from this pair's own junction and its nearest row's tail logarithm is -25.206, so this run does not refute and is not a direct measurement of this pair's tail. Local run (test seeds 0..32): 0 hits in 4,194,304 samples (upper bound near 2^-20.3)."
+    }
+  ]
+}
