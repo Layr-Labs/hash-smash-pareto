@@ -1,20 +1,74 @@
 {
-  "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha256-r37-prefix-v1",
-  "attack_class": "ordinary-collision",
-  "rounds": 37,
-  "claim": {
-    "time_log2": 128.0,
-    "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
-    "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
+ "schema_version": 3,
+ "target_profile": "sha256-r40-prefix-v1",
+ "attack_class": "ordinary-collision",
+ "rounds": 40,
+ "claim": {
+  "time_log2": 255.45258,
+  "time_unit": "target-compressions",
+  "memory_log2_bytes": 18.98,
+  "preprocessing_log2": 28.21,
+  "success_probability": 0.39,
+  "nonuniform_advice_log2_bytes": 18.45
+ },
+ "restrictions": [
+  "Fixed-IV SHA-256, first 40 steps, standard padding and feed-forward, equality of all 256 output bits; one 64-byte data block per message from the standard IV, followed by the common SHA-256 padding block (equal inputs give the equal padding block, so a first-data-block collision is a full-message collision).",
+  "Prices: one 40-step target compression is one unit; every other primitive word operation is 1/C with C = 2896. Verifying a found pair is 4 reduced compressions (the data block and the padding block of each of the two messages), charged as one unit each (4 units per found pair), separately from the word operations.",
+  "Head (proof Section 2): the shipped program (bit-sliced, 256 lanes; one gate on 256 lanes = one word operation, as in our round-40 entry df1f1cd1; per-lane accounting would add exactly 8 bits), 4,008.9 charged operations per kept pair = (1002.216 word operations = 220.216 generation + 782 junction recognition) x 4 for their loads and stores, x 1.000000000356 for discarded low-yield batches; generation = the per-batch budget 38,758 (max of 20,000 measured batches, enforced by the program) / kept floor 176 of 256; a batch under 176 kept lanes is discarded and still charged (probability 6.44e-11 at the measured per-lane rate 0.846; premise H-kept-pair-yield) (the program rebuilds each kept lane's schedule and runs steps 23..26 of both members to confirm the landing; counted inside ops_used, 2^0.46913 units), hard budget; pair output with 4 reduced verification compressions; full 40-word schedule control on every kept pair.",
+  "Landing and tail (proof Section 3): the J26 difference lands on the target with probability 2^-256 per pair (premise P1, a declared heuristic: the exact full-width rate is the premise, measured jointly to 32 bits and consistent, not a measured fact); from the target the pair collides after step 40 with probability 1 (premise P2, by construction: the schedule difference is silent on the words after the junction and the target cancels the step-26 word difference, so the two computations coincide from the junction on; 5000/5000 forced-target implementation check, negative control 0/2000).",
+  "Ledger: N = ln(1/0.61) x 2^256 pairs; T = N x 2^0.46913 + 4 + 2^28.21, where 2^0.46913 = 4,008.9 / 2896, N kept pairs come from N/176 batches times 1/(1 - 6.44e-11) for discarded batches, the run stops at the first found pair (one verification of 4 reduced compressions), and 2^28.21 is the preprocessing; log2 T = 255.45258 (the two small terms change the exponent by less than 1e-9); log2 T = 255.45258 (exact 255.45257982, rounded up).",
+  "Memory by construction (complete under the model): list subsets 357,408 + program code 45,512 + 256-lane sliced working state 112,640 (110 sliced words of 1,024 bytes) + word-level working state 928 + current messages 128 = 516,616 bytes (2^18.98, rounded up; term max(0, log2-20) = 0). Preprocessing: 7 list enumerations of 2^32 candidates at <= 24 word operations each = 7 x 2^25.09 compressions, plus 422 subset-selection compressions = 2^27.89; declared 2^28.21 (rounded up; proof Section 5 table) + 422 compressions of subset selection; the per-pair random word draws are charged as word operations.",
+  "Premises P1, P2, P3 (independence across pairs) are declared heuristics of the exploratory lane (proof Section 6)."
+ ],
+ "baseline_improved": "sha256-r40-nominal-v2",
+ "certificate_manifest": "certificates/manifest.json",
+ "experiment_manifest": "experiments/manifest.json",
+ "heuristics": [
+  {
+   "id": "P1-uniform-junction",
+   "role": "score-critical",
+   "statement": "For pairs output by the shipped program, the 256-bit J26 XOR difference equals the J26 target with probability 2^-256 per pair.",
+   "scope": "the shipped program's pairs, standard IV, 40 steps. Tested regime: organizer seeds, 256 lanes per trial, landing checked jointly to 32 bits and per bit (the program asserts per-bit uniformity of the junction difference within 6 sigma on every trial and fails the trial otherwise). Extrapolated regime: the exact 256-bit event over ~2^255 pairs. Score sensitivity: a per-bit landing rate 2^-(1+e) instead of 2^-1 changes log2 T by 256e.",
+   "extrapolation": "Measured k-bit landing on 2^36 head-induced states: 2^-8.00, 2^-16.00, 2^-23.98, 2^-31.83 for k = 8, 16, 24, 32; per-bit |p-0.5| <= 0.00001; extended to 256 bits under independence of bits. The shipped program over 20,000 organizer-format trials (4,331,098 pairs): k=8 landing 16,883 (expected 16,918.4), k=16 landing 82 (expected 66.1); per-trial k=8 dispersion chi-square 20,067 vs 19,999 +- 200. Organizer-run evidence: every trial of experiment v40-headtail-01 reports landing_k8, landing_k16, landing_k24, landing_k32 and best_lead_bits for its kept pairs; the expected counts are kept x 2^-k, and the per-trial landing_k8 counts give the dispersion test for P3.",
+   "evidence_ids": [
+    "experiment:v40-headtail-01"
+   ],
+   "limitations": "Joint landing measured to 32 bits; the step to all 256 bits is the declared premise itself, not a derived bound. The v5 word-level generator is a cross-check only; the shipped program is v7/v7e."
   },
-  "restrictions": [],
-  "baseline_improved": "sha256-r37-nominal-v2",
-  "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  {
+   "id": "P2-tail-induced",
+   "role": "score-critical",
+   "statement": "A pair from the shipped program whose J26 difference equals the target collides after step 40 with probability 1.",
+   "scope": "the shipped program's pairs at the J26 target. Tested regime: organizer seeds, 256 lanes per trial, landing checked jointly to 32 bits and per bit (the program asserts per-bit uniformity of the junction difference within 6 sigma on every trial and fails the trial otherwise). Extrapolated regime: the exact 256-bit event over ~2^255 pairs. Score sensitivity: a per-bit landing rate 2^-(1+e) instead of 2^-1 changes log2 T by 256e.",
+   "extrapolation": "By construction: the schedule difference is silent on the words after the junction and the J26 target cancels the step-26 word difference, so from the junction on the two computations coincide and the pair collides. Implementation check: 5000/5000 with the target forced on real program states; negative control 0/2000.",
+   "evidence_ids": [
+    "experiment:v40-headtail-01"
+   ],
+   "limitations": "The implementation check uses forced-target states; the probability-1 claim rests on the structural argument."
+  },
+  {
+   "id": "P3-independence",
+   "role": "score-critical",
+   "statement": "Landing events of distinct pairs are independent.",
+   "scope": "pairs within and across shared batches. Tested regime: organizer seeds, 256 lanes per trial, landing checked jointly to 32 bits and per bit (the program asserts per-bit uniformity of the junction difference within 6 sigma on every trial and fails the trial otherwise). Extrapolated regime: the exact 256-bit event over ~2^255 pairs. Score sensitivity: a per-bit landing rate 2^-(1+e) instead of 2^-1 changes log2 T by 256e.",
+   "extrapolation": "k=4 landing correlation within batches -0.0009, across -0.0010, noise 0.0022 (8,192 pairs; 64-batch table in evidence). v7c (batch shares steps 0..12): chi-square independence test 259.3 vs 256 +- 22.6 (control 252.4), research junc7c.py. Over-dispersion test (research junc7c.py --k8): 64 batches x 512 pairs, per-batch k=8 J26 landing counts mean 2.094 (expected 2.000), variance 2.055 (Poisson 2.000), dispersion chi-square 65.0 on 64 batches (expected 64 +- 11.3): landings are Poisson across batches, no within-batch clustering. v7e (W13 = r + k x 6A09E667 per lane): GPU dispersion test vp7gpu.cu on 2^24-2^25 pairs per run, k=8 dispersion -0.52 sigma; all modes and seeds within +-2.2 sigma (research). Organizer-run evidence: the per-trial landing_k8 counts in the trusted report (each trial = one batch of 256 lanes) are the dispersion sample; under P3 their variance equals their mean.",
+   "evidence_ids": [
+    "experiment:v40-headtail-01"
+   ],
+   "limitations": "Tested on the landing indicators the program reports (to 32 bits); independence of the exact 256-bit event over the full run is the declared premise."
+  },
+  {
+   "id": "H-kept-pair-yield",
+   "role": "score-critical",
+   "statement": "A batch of 256 lanes of the shipped program keeps each lane with probability 0.846 (measured); a batch with fewer than 176 kept lanes is discarded and its full cost charged; the generation cost of a batch is at most 38,758 word operations (the maximum of 20,000 measured batches, enforced as the program budget). Lane-keeping indicators within a batch are modelled as independent Bernoulli(0.846) (declared; measured: kept-per-batch variance 33.27 vs binomial 33.37 over 20,000 batches, ratio 0.997).",
+   "scope": "the shipped program, standard IV, 40 steps, every batch of the run",
+   "extrapolation": "Measured over 20,000 organizer-format batches (5,120,000 lanes, 4,331,098 kept = 0.846): kept per batch mean 216.5, minimum 193; generation operations per batch minimum 38,064, maximum 38,758. Under independent per-lane keeping at 0.846 the probability of a batch below 176 is 6.44e-11 (binomial tail); the ledger multiplies the total by 1.000000000356 for those batches and their recognition work. The organizer report lists kept and ops_used for every trial.",
+   "evidence_ids": [
+    "experiment:v40-headtail-01"
+   ],
+   "limitations": "The per-lane rate, its independence model and the per-batch maximum are measured over 20,000 batches and declared as the charges; the budget and the floor are enforced by the program (a batch under the floor fails its trial), the keep rate is not proved for every seed."
+  }
+ ],
+ "submission_state": "ready",
+ "lane": "exploratory"
 }
