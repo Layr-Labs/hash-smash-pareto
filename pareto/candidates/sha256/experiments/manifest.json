@@ -1,0 +1,15 @@
+{
+ "schema_version": 1,
+ "experiments": [
+  {
+   "id": "v40-headtail-01",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/tail40_v7.py",
+   "event": {
+    "kind": "full-collision"
+   },
+   "scope": "The claimed program (proof Sections 2-3) per organizer trial: one batch of 256 lanes of pairs from the standard IV under a hard operation budget that halts generation before it is passed; per kept lane the junction recognition (schedule rebuild and steps 23..26 of both members) is performed and counted in ops_used; per lane the full 40-word schedule control and the sliced-vs-word control; J26 landing hits at 8, 16, 24 and 32 bits and the best match; then each kept pair with its J26 difference set to the target on its real state is run to step 40 (tail), with the bit-30 negative control.",
+   "hypothesis": "All kept lanes pass both controls; kept lanes per batch are at least 176 of 256 (the ledger floor; measured mean 0.846 per lane); landing at k bits occurs at rate 2^-k for k = 8, 16, 24, 32 and the per-trial landing_k8 counts are Poisson-dispersed across trials (premises P1, P3); ops_used / kept is at most the per-kept-pair word-operation count in the ledger; every pair at the target collides after step 40 (premise P2) and the negative control never does; no full collision is expected at organizer scale. The program hard-asserts on every trial: both controls = kept, forced-target tail = kept and negative control 0, kept >= 176, generation within its budget, every junction-difference bit matching the target for kept/2 +- 6 sqrt(kept)/2 lanes, landing_k4 <= kept/16 + 6 sqrt(kept/16); a trial with a failed check returns null messages; observations.checks_failed counts them and observations.checks_mask encodes which (1 schedule control, 2 sliced control, 4 tail/negative control, 8 kept floor, 16 budget, 32 bit uniformity, 64 k4 band)."
+  }
+ ]
+}
