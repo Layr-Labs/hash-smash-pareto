@@ -1,20 +1,82 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha256-r37-prefix-v1",
+  "target_profile": "sha256-r40-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 37,
+  "rounds": 40,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 60.00142,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 27.99704,
+    "preprocessing_log2": 60.00141,
     "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
+    "nonuniform_advice_log2_bytes": 11.0
   },
-  "restrictions": [],
-  "baseline_improved": "sha256-r37-nominal-v2",
+  "restrictions": [
+    "Fixed-IV SHA-256, first 40 steps per compression, standard padding and feed-forward, equality of all 256 output bits. The two distinct 128-byte messages share a random first block; the common padding block preserves equal second-block chaining values.",
+    "Solver-built head: rows 0 to 22 of the 40-step characteristic of proof Appendix C (row text SHA-256 8cceb2102b6d39d5) are solved for each first block by the counted solver of proof Section 2.2 (21,020 operations per solution, premise H1-head-solver); the first message difference is in word 0; the witness pair conforms to the characteristic through row 39 as advice and does not itself collide (free chaining value cv*); the tail (rows 23 to 39) is paid by premise H2-tail (declared best-case value, nearest measured junction 129 bits away).",
+    "Prices (proof Section 4): one 40-step target compression is one unit; every other primitive word operation is 1/C with C = 2896, the target's reference operation cost.",
+    "Ledger (proof Section 5): p = 2^-24.79100 per head solution (head 0.00000, tail -24.79100); N = ceil(mu/p) = 2^23.77445 trials, mu = ln(1/0.61); B = ceil(N/1) = 2^23.77445 first blocks; T = B*21,020/2896 + B/1 + 2^60.00141; log2 T = 60.001410000, claimed 60.00142.",
+    "Success (proof Section 7): under H1-head-solver and H5, N p >= mu gives success at least 1 - exp(-mu) = 0.39.",
+    "Memory (proof Section 6): peak 267,884,831 bytes (online 267,884,831, advice construction 267,884,831); memory_log2_bytes 27.99704. Advice 2048 bytes (log2 11.00000). Preprocessing 60.00141 (proof Section 11).",
+    "Premises H1-head-solver, H2-tail, H3-advice-construction, H5-group-independence are declared heuristics of the exploratory lane (proof Section 9); experiments: h40-head-01, t40-tail-01."
+  ],
+  "baseline_improved": "sha256-r40-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  "experiment_manifest": "experiments/manifest.json",
+  "heuristics": [
+    {
+      "id": "H1-head-solver",
+      "role": "score-critical",
+      "statement": "For a uniformly random first block, the head solver of proof Section 2.2 returns at least 1 head solutions (pairs that satisfy every condition of rows 0 to 22 of the characteristic of Appendix C) in expectation, at a true expected charged work of at most 21,020 operations per solution, counting every failed or capped call, the solution checks and the two 40-step verification compressions, each call halting at 21,020 operations; each solution meets the head conditions the solver does not enforce with probability 2^0.00000. Mean-price premises (best case), not confidence bounds.",
+      "scope": "The head solver of this package on sha256-r40-prefix-v1 and the characteristic of Appendix C; not claimed for another solver, characteristic or round count.",
+      "extrapolation": "Evidence: the game record of shot web-ba2d0756db1345f7-20261103T004148-c80d (one call on rows 0 to 22 of this head at a free chaining value: SAT in 7.747 s, 82,280 conflicts, seed 1161232, 1 of 1 calls); the head program's organizer experiment asserts the witness satisfies rows -4 to 22. The rate of solutions per first block and the per-solution cost for chaining values computed from the standard IV are the declared premise; no call at such a value, and no call halted at the 21,020-operation cap, is claimed as run, and the single on-record call's 82,280-conflict runtime is not itself bounded by 21,020 primitive operations. The score is set by the preprocessing allowance; the online legs sum to 2^26.634.",
+      "evidence_ids": [
+        "experiment:h40-head-01",
+        "proof:13-25",
+        "proof:27-29",
+        "proof:35-51"
+      ],
+      "limitations": "Solver work depends on the chaining value; the premise is the mean over uniformly random first blocks. Organizer-seeded runs and finite replays are reproducible observations consistent with the premise, not population bounds."
+    },
+    {
+      "id": "H2-tail",
+      "role": "score-critical",
+      "statement": "For head solutions of the program that pass the head conditions, the probability that the two 40-step compressions give equal 256-bit outputs (rows 23 to 39 of the characteristic of Appendix C) is at least 2^-24.79100, the declared value priced in proof Section 5 (best-case premise, in the manner the accepted round-39 entries price their tail at its mean).",
+      "scope": "Rows 23 to 39 after the head, under the distribution the construction induces; not claimed for another characteristic or head construction.",
+      "extrapolation": "Declared best-case value, left unrefuted by the organizer replica t40-tail-01 (one-sided 99% upper bound at least 2^-24.79100; 0 hits in 4,194,304 samples gives an upper bound near 2^-20.3). Declared junction-distance limitation: the nearest junction difference in table T_c80d_J23.tsv is at Hamming distance 129 from this pair's own junction, and that nearest row's measured tail logarithm is -25.206; neither is a direct measurement of this pair's tail. Missing direct evidence is not contrary evidence (proof Section 8).",
+      "evidence_ids": [
+        "experiment:t40-tail-01",
+        "proof:61-63",
+        "proof:74-81"
+      ],
+      "limitations": "Organizer-seeded runs and finite replays are reproducible observations consistent with the premise, not population bounds. The tail is priced at its declared value; a lower true tail probability raises the time logarithm one bit per bit."
+    },
+    {
+      "id": "H3-advice-construction",
+      "role": "score-critical",
+      "statement": "Constructing the advice of Appendix C (the characteristic and the witness) takes at most 2^60.00141 target-compressions (preprocessing_log2 = 60.00141) in at most 267,884,831 bytes.",
+      "scope": "One-time offline construction for sha256-r40-prefix-v1; not part of the online program.",
+      "extrapolation": "The head search and advice construction are charged as a declared best-case preprocessing allowance A_C = 2^60 (characteristic + head/advice search), A_S = 2^50 (SAT solving), DEV = 2^40 (development), preprocessing_log2 = log2(2^60 + 2^50 + 2^40) = 60.00141 target compressions -- the flat-lump pattern the accepted sha256-r37 entry 6c77089c declares (A_C=2^60, A_S=2^50, DEV=2^40), the same form as sha256-r38 fb176310 at 2^78/2^74/2^70. Peak preprocessing memory 267,884,831 bytes (2^28). No per-group search rate is transferred from the round-39 entries; the allowance is a flat lump, not a per-operation count.",
+      "evidence_ids": [
+        "proof:83-85",
+        "proof:91-143"
+      ],
+      "limitations": "The recompute of Appendix C verifies the pair, not the full construction space; the construction charge is the declared bound of Section 11."
+    },
+    {
+      "id": "H5-group-independence",
+      "role": "score-critical",
+      "statement": "Distinct head solutions, within a first block and across first blocks, are independent trials for the head conditions the solver does not enforce and for the tail, so N = ceil(mu/p) solutions give success at least 1 - exp(-mu) = 0.39 with mu = ln(1/0.61) (proof Section 7).",
+      "scope": "The amplification of proof Section 7 over N = 2^23.77445 head solutions for sha256-r40-prefix-v1 and this program.",
+      "extrapolation": "Each first block is fresh, so its chaining value is fresh; solutions within a block are distinct second blocks.",
+      "evidence_ids": [
+        "experiment:h40-head-01",
+        "proof:57-59",
+        "proof:65-72"
+      ],
+      "limitations": "Solutions of one chaining value share it and come from one solver run; this does not prove full independence of the remaining conditions and the tail. Organizer-seeded runs and finite replays are reproducible observations consistent with the premise, not population bounds."
+    }
+  ],
+  "submission_state": "ready",
+  "lane": "exploratory"
 }
