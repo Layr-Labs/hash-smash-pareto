@@ -1,20 +1,109 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha256-r37-prefix-v1",
+  "target_profile": "sha256-r39-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 37,
+  "rounds": 39,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 116.55637,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 20,
+    "preprocessing_log2": 43,
     "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
+    "nonuniform_advice_log2_bytes": 7.322
   },
-  "restrictions": [],
-  "baseline_improved": "sha256-r37-nominal-v2",
+  "restrictions": [
+    "Fixed-IV SHA-256 first 39 steps per compression, standard padding/feed-forward and equality of all 256 output bits. The two distinct 128-byte messages share a first block; the common padding block preserves equal second-block chaining values.",
+    "Direct base 9993eaa8-2c36-48da-a477-de7e318deb7d (116.58624), its published package unchanged except one pre-generation decision in window_setup (proof Section 3.5): a drawn first block is generated only if S = 3 pop(R&0x00F27618) + 2 pop(R&0x7F0D89E6) + 2 eb1 + eb2 + P31 - pop(P&0x1FFFFFFE) <= 5, and the exact gate accepts at most 679 records (was 710). KTRY=32, register and fuel limits, the walk, advice, map, kernels, layouts and tail source are retained. Complete direct dependencies are 9993eaa8-2c36-48da-a477-de7e318deb7d, adef2aaf-efdd-4de0-bf13-62e21d150eb9, 2ae904e3-edb6-4484-a68b-26c897e06f03, 5f8e6192-60b3-4ba1-bded-d3b73cfbc889, fce2f19e-04eb-405f-b7d5-e24260d85d13 and 0b2616e3-b9f7-4a9a-aefc-5a926f6e2197 (origin of the v2 tail replica r39tail.py).",
+    "Unchanged word-RAM prices (proof Section 4). Each drawn block is charged 3157 operations (2830 draw/storage/compression, 140 constant setup, 4 packing, 183 screen: fifteen operations build one 128-bit word whose popcount is S+28, then a fixed 33-pass clear-lowest-bit loop and one branch); a discarded block 3 more; every generation keeps all base charges. At most 8192 discarded draws and 32 rejected generations per window; reaching either is a zero-yield window with all charges counted. Setting the draw counter to zero is one uncharged operation per window, like the base's tries=0 (under 3.2e-09 bit).",
+    "Actual counters of the 124 declared windows (published-protocol seeds 1000..24000 and fresh seeds 25000..124000, check mode): 55,837,162,096 operations, upper mean 450,299,695, 7,322,621 claws and 7,311,677 groups. Shipped B=762911287482054727600421276984 (least B with B*g*(1-2^-20)>=G at g=58965.13, zero-yield factor 1-1e-7; at the priced g-=58965.07 it covers (1-1.02e-6)G); W=343539047689280579094799530274594304595=floor(B*450299695*(1+2^-20))+1. The total bound (W+2^51+6B)/2812+2^43 has log2 116.556360835324, rounded upward to 116.55637; B and W re-derived at g- give log2 116.556362303, also 116.55637.",
+    "On 100 fresh seeds the unchanged 9993eaa8 program averages 460,784,079 operations and 58950.80 groups per window; this entry averages 450,409,147 and 58969.40. log2(mean work/mean groups) changes by -0.0333 (95% bootstrap [-0.0366, -0.0300]). H1 is restated for the screened selection, not inherited. Priced at one-sided 95% limits the bound would be 116.55878 (116.55879 with the 1e-6 zero-yield factor); pricing selection at its expected draw count gives 116.55688 to 116.55718.",
+    "Production storage is 1,045,194 bytes; reserving two images at the advice diagnostic's cap of 730 records (the asserted CV_PUB image; 1024 in the base, identical diagnostic output) gives 1,045,704<2^20. The 730 cap was set after the measured program was frozen; under the base's 1024-record reservation the envelope would be 1,048,644 bytes (+0.0000936 bits, score 116.55646). Generator scratch, including rejected candidate kernels above 679 records, stays in the existing table arena; no 93-pair history is retained online. Census 1272 in 76 blocks; scalar peak at most 47 of the reserved 48 (46 for adef2aaf, 47 for 9993eaa8; the screen's setup values are dead before the walk). Source texts total 63,993 bytes.",
+    "The work slack includes all six driver operations: d=W/B-450299695-6. The work exponent has log2 15.719452472744; conservatively use exp(-2^15.7) for work and group failures. With the shipped B at the priced g-, conditional success is at least 0.3900096 and success at least 0.3900096-2 exp(-2^15.7)>0.390009>0.39 under H1/H2/H5. Success>=0.39 also needs true mean work within about 417 operations (9.3e-7 relative) of mu+; one standard error of the 124-window mean is 261,523, and one standard error above mu+ success would be about 0.3898. The time bound is a hard cap.",
+    "Preprocessing remains 43, covering 93 constructions at 2^36 each plus 93 full fourteen-run screens charged below 2^24 compressions per run. The source tail, its fourteen replicas and r39tail.py are byte-identical to 9993eaa8's; the screened claws' W8/W9 membership and W17..W23 low bytes show no detectable departure from baseline claws (smallest of ten p-values 0.13; detectable relative F8/F9 rate shifts 0.66% and 1.43%), conditional evidence that the measured tail transfers, not a proof.",
+    "The organizer manifest retains both joint experiments and all fourteen unchanged tail replicas. r39-transplant-claw output is byte-identical to 9993eaa8's; r39-window-small expectations, its pooled statistics and the ID-stop offset (2^20-2131) are refreshed for the screened selection. Local window replays and mechanical intake are not official qualification."
+  ],
+  "baseline_improved": "sha256-r39-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  "experiment_manifest": "experiments/manifest.json",
+  "heuristics": [
+    {
+      "id": "H1-claw-model",
+      "role": "score-critical",
+      "statement": "For the screened selected-window distribution (frozen screen S<=5 before generation, KCAP=679, KTRY=32, DTRY=8192), including zero-yield windows, true expected charged work is at most 450299695, claws at least 59053.33, groups at least 58965.07, with priced ratio 0.998505. These are mean-price premises, not confidence bounds. Claw free words, W17 and the inherited tail must have the stated uniformity/independence properties after conditioning on this selection.",
+      "scope": "The exact screened first-block selection and r39 walk in experiments/r39joint.py, with 2^26 walk evaluations per accepted window, at most 8192 discarded draws and at most 32 charged generations.",
+      "extrapolation": "The 124 actual windows (24 published-protocol and 100 fresh seeds, check mode) total 55,837,162,096 operations with exact mean 13959290524/31 and SD 2912194.595821; there are 7,322,621 claws, 7,311,677 groups, 49,998 discarded draws, 181 rejected generations and no zero-yield window. On the same 100 fresh seeds the unchanged 9993eaa8 program averages 59038.68 claws and 58950.80 groups against 59058.23 and 58969.40; the claw difference is 19.6 [-55.4, 94.5]. The screen and caps were frozen before every one of these windows. No full-scale mean theorem is supplied.",
+      "evidence_ids": [
+        "experiment:r39-transplant-claw",
+        "experiment:r39-window-small",
+        "proof:71-137",
+        "proof:15-26",
+        "proof:27-137",
+        "proof:150-184",
+        "proof:291-323",
+        "proof:345-356",
+        "proof:357-390",
+        "proof:425-555"
+      ],
+      "limitations": "The screen and the 679-record gate condition the maps more strongly than the 710-record gate; the matched fresh comparison measures the effect on claws and groups at its stated precision, not its absence. The screen is a proxy for the record count, not an exact predictor. The sample has no zero-yield window, but the premise includes them. H1 remains an extrapolation from finite seeded replays, and forced configurations can cost more. Success>=0.39 needs true mean work within about 417 operations of mu+ (standard error 261,523); the time bound does not depend on H1."
+    },
+    {
+      "id": "H2-tail",
+      "role": "score-critical",
+      "statement": "For the claws of the program (a0 even, u odd, W16 = g, W8 in F8, W9 in F9, W17 = 0x71e9ba98) the probability that the two 39-step compressions of the pair give equal 256-bit outputs (the four parity classes of (a0, u) fall with exact probability 1/4 each; pooling them presumes their exchangeability for the collision event, declared here, and the class-specific estimator 4 * hits_(even, odd) / n, exactly unbiased with no premise, is hard-asserted at 99% as -74.4053 > -74.45) is 2^-74.3238, its measured linear mean over the 14 organizer runs (best-case premise; the hard-asserted linear 99.9% bound is -74.4326), for the quantity of proof Section 8 (rows 18 to 38, W18..W23 uniform), a lower bound on the tail probability because the carrier K_P is a subset of all routes to a collision.",
+      "scope": "The tail rows 18 to 38 of the Table 23 trail after the claw, W8 uniform on F8, W9 uniform on F9, E18..E23 of the first member uniform on 2^32, a0 even and u odd, estimated by the v2 work allocation (800 particles, balanced stage lanes, 3,276,800 proposals per run). Not claimed for another trail or allocation.",
+      "extrapolation": "Our theory (best case): p_tail = 2^-74.3238, the linear mean of the 14 runs; the replica hard-asserts the conservative check value QDECL = -74.45. The organizer replica experiments/r39tail.py v2 (r39-tail-01..14, 800 particles, variance-balanced stage lanes 8x512/8x2048/8x2048/4x128/6x256/1x4, 20 trials x 80 batches x 2048 proposals = 3,276,800 proposals per run, every particle driving exactly two batches) hard-asserts EXP and verify_smc_stats() on every run: 6,398 verified collisions in 45,875,200 proposals across the 14 public-seed runs, parity classes [1592, 1626, 1624, 1556] (chi-square 2.03 < 7.81). By Del Moral's Feynman-Kac theorem, the unnormalized product estimator Q'_r = 2^(l2_r) * (hits_r / 3276800) is exactly unbiased on the linear scale (E[Q'_r] = Q', zero log-scale Jensen bias): verify_smc_stats() hard-asserts linear-scale mean log2(mean(Q')) = -74.3238, one-sided 99% Student-t lower bound log2(lcb_lin) = -74.3978 > QDECL = -74.45, log-scale 99% bound -74.3987 > -74.45, and the linear one-sided 99.9% bound (t = 3.852, 13 df) -74.4326 > -74.45. QDECL = -74.45 was fixed before the organizer runs by the pre-registered rule (at least 0.01 below the 99.9% bound of the frozen design, rounded down to two decimals); as a one-sided test of the declared value the 14 runs give t = 4.4397 (13 df, p < 1e-3). The v2 program of 0b2616e3 (this replica's code, with the published advice) reproduces 19034ce byte-identically at 19034ce's parameters (three private seed sets: carrier, stage counts, per-trial hits and parity classes identical), so the estimator is unchanged in semantics; only the work allocation changed. Relevance after the screen: the replica never reads a window's chaining value; the screened claws' W8-in-F8 and W9-in-F9 rates, W17 low byte and W17..W23 low-byte histograms show no detectable departure from fresh-baseline claws at the preregistered Bonferroni 1% level (smallest p 0.13; detectable relative F8/F9 rate shifts 0.66% and 1.43%; the screened rates differ from 9/128 and 65/4096 by -0.044% and +0.093%). This is conditional evidence that the measured tail transfers, not a proof: no test reaches the joint law of W18..W23.",
+      "evidence_ids": [
+        "experiment:r39-tail-01",
+        "experiment:r39-tail-02",
+        "experiment:r39-tail-03",
+        "experiment:r39-tail-04",
+        "experiment:r39-tail-05",
+        "experiment:r39-tail-06",
+        "experiment:r39-tail-07",
+        "experiment:r39-tail-08",
+        "experiment:r39-tail-09",
+        "experiment:r39-tail-10",
+        "experiment:r39-tail-11",
+        "experiment:r39-tail-12",
+        "experiment:r39-tail-13",
+        "experiment:r39-tail-14",
+        "proof:324-344",
+        "proof:345-356",
+        "proof:357-390"
+      ],
+      "limitations": "A one-sided 99% confidence lower bound (-74.3978 linear-scale unbiased, -74.3987 log-scale) over 14 organizer-executed replica runs of the Feynman-Kac unbiased estimator, 0.0522 bits above the replica's check value -74.45 (linear 99%; the claim prices the tail at the measured mean -74.3238, best-case premise), and the linear 99.9% bound -74.4326 is 0.0174 above it; the declared value was fixed by a pre-registered rule frozen with the design on private seeds (ten sizing runs, mean -75.4069 sd 0.1235) before any organizer-seed result of this design was seen. Stage 18 is calibrated against direct uniform Monte Carlo (c18 = 206/65536, asserted within 0.0003 of the 14-run SMC stage-18 rate); K_P is a subset of all collision routes so Q <= p_tail. The 14 runs are public-seed replays without a holdout, as in the accepted 4487063; the t-test (t = 4.4397, p < 1e-3) and the pre-registration rule address the coverage finding F-EXP-TAIL-COVERAGE of c30c0d70."
+    },
+    {
+      "id": "H3-advice-construction",
+      "role": "score-critical",
+      "statement": "Constructing the 160-byte advice pair (same state rows as the Table 23 pair) (ePrint 2026/1120, Section 4.3; sraiw 38912d66 Section 4.2) takes at most 2^36 target-compressions per pair in at most 2^16 bytes of resident memory, and selecting it among 93 such pairs by tail screens (93 constructions plus 93 x 14 tail runs, sequential) takes at most 2^42.545 target-compressions (preprocessing_log2 = 43) with the same 2^16-byte peak (proof Section 11): on steps 10 to 15, the 384 state bits under the 350 differential and carry conditions of the characteristic's state rows (identical to Table 23's) leave a 2^34-candidate space (steps 9 down to 0 and CV_PUB are uniquely determined downward by step inversion with zero search), and each candidate is tested for non-empty row-16 fibre G16 and row-17 fibre G17(g) by exact 32-bit bit-by-bit DFS (solve_row_exact) in under 2^2 = 4 target-compressions (11,248 word operations) per candidate.",
+      "scope": "One-time offline construction of the 160-byte advice (CV_PUB, M_PUB, MP_PUB) for sha256-r39-prefix-v1; not part of the online walk.",
+      "extrapolation": "Trials 0 and 1 of experiment:r39-transplant-claw execute verify_advice_construction() in experiments/r39joint.py: it runs the exact 32-bit bit-by-bit DFS fibre solver solve_row_exact on rows 16 and 17 of the advice pair (verifying g16_fibre_size = 2 with G16 = 0xbca1c321, g17_fibre_size = 1 with W17 = 0x71e9ba98, and fibre_dfs_ops = 1944 < 2812 word operations < 1 target-compression), verifies that steps 9 down to 0 and CV_PUB are uniquely recovered from steps 10 to 15 and W[0..15] by exact downward step inversion with zero search (downward_inv_ok = 1), and enumerates a 256-candidate local slice of the step-15 free bits (advice_slice_cands = 256, advice_slice_hits = 1, ops_per_cand = 411 < 4 * 2812 word operations < 2^2 target-compressions). Extrapolated from the 256-candidate slice and the ePrint 2026/1120 Section 4.3 Step 1 measurement (about 2^34.2 SHA-256 calls, Step 2 probability 1) to the 2^34-candidate space on steps 10 to 15.",
+      "evidence_ids": [
+        "experiment:r39-transplant-claw",
+        "proof:15-26",
+        "proof:357-390",
+        "proof:391-414",
+        "proof:560-588"
+      ],
+      "limitations": "The fibre, inversion and 256-candidate slice checks do not execute the full 2^34 construction space or the 93-pair campaign. The inherited sequential construction/selection allowance remains 2^43; this revision adds it conservatively to the online bound and does not claim to have verified its full scale or tail-selection premise."
+    },
+    {
+      "id": "H5-group-independence",
+      "role": "score-critical",
+      "statement": "Distinct shared-endpoint claw groups are assumed independent for F8/F9, W17 and the tail within and across selected windows. With G*p=-ln(0.60999) and the shipped B, which covers (1-1.02e-6)G groups at the priced g-, conditional success is at least 0.3900096, and the work/group union bound gives at least 0.3900096-2 exp(-2^15.7)>0.390009>0.39.",
+      "scope": "The amplification of proof Section 7 over the G = 2^115.1150 groups of the fixed target sha256-r39-prefix-v1 and the program experiments/r39joint.py; not claimed for another walk or round count.",
+      "extrapolation": "The 124 declared windows of the screened selection have 7,311,677 groups in 7,322,621 claws; the four small windows retain 3295 groups. No disjoint-input argument is treated as a proof of full-word or tail independence.",
+      "evidence_ids": [
+        "experiment:r39-window-small",
+        "proof:291-323",
+        "proof:345-356",
+        "proof:357-390",
+        "proof:425-555"
+      ],
+      "limitations": "Finite tuple, chi-square and lag-1 checks do not prove the full independence premise, especially after the retained kernel-size conditioning. The success union bound uses work and group-count events and includes the driver charge in the work slack. The screened selection is a stronger conditioning; 1 of its 372 within-window lag-1 statistics reach 3 (about 1.0 expected under independence; largest 3.01), against 1 of 372 for the unchanged 9993eaa8 on the same seeds (largest 4.24, W9 in F9 at seed 51000), and the four small windows hard-assert the pooled tests."
+    }
+  ],
+  "submission_state": "ready",
+  "lane": "exploratory"
 }
