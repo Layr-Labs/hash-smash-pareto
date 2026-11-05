@@ -1,0 +1,35 @@
+{
+ "schema_version": 1,
+ "experiments": [
+  {
+   "id": "r40shift-block2-transplant",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/shift40.py",
+   "event": {
+    "kind": "full-collision"
+   },
+   "scope": "Block 2 of the R40 SHIFT39-40 construction (submission-note.md sections 2 and 3), the r39 experiment program (research/pkg_r39_pf013_fix/sha256/experiments/r39joint.py) run on the shifted round constants K1..K39 (KOFF = 1). Trial 0 takes the advice pair (CV_PUB, MP_PUB, M_PUB), builds the block-2 messages N = (W_-1, W0..W14) by the back recurrence, and checks: the shifted schedule identity over 63 words, the one-bit new word difference dN0 = 0x40000000, the step-0 cancellation giving block-2 chaining values that differ only in register h by 0xc0000000, and the lit sets {8-12,16,17,24,26} -> {0,9-13,17,18,25,27}. Trials 1 to 255 draw a chaining value, an even a0 and an odd u from the trial seed, build a transplant message and its partner on K1..K39, reproduce the advice tail trajectory (transplant_ok), apply the schedule shift and step-0 cancellation, and emit the same per-trial observations. Every trial output is hard-asserted in shift40.py.",
+   "hypothesis": "Every trial reproduces the two exact block-2 steps on fresh chaining values: the shifted schedule identity holds for all steps and the chaining-value difference entering block 2 lies in register h only, with the per-trial observations equal to the advice pair's."
+  },
+  {
+   "id": "r40shift-shift-identity",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/shift40.py",
+   "event": {
+    "kind": "full-collision"
+   },
+   "scope": "The pure algebraic content of submission-note.md section 2 on K1..K39: for each trial seed, a random 16-word message with the characteristic word-8 difference dW8 = 0xc0000000 and a random block-2 post-step-0 state, checking that the shifted schedule equals the old schedule shifted by one over 63 words, that dN0 = -dW8 = 0x40000000 is value-independent, and that the recovered block-2 chaining values differ only in register h by dh = -dN0 = 0xc0000000 for all states. Every trial output is hard-asserted in shift40.py.",
+   "hypothesis": "Hard-asserted in shift40.py.shiftid: on every trial shift_identity_ok = 1, dN0 = 1073741824 (0x40000000), dh = 3221225472 (0xc0000000), cv_diff_h_only = 1, cv_diff_count = 1 and koff = 1; i.e. the schedule shift and the step-0 h-only cancellation of block 2 hold for all states under the shifted constants."
+  },
+  {
+   "id": "claw40-window-01",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/claw40.py",
+   "event": {
+    "kind": "full-collision"
+   },
+   "scope": "The r39joint window/claw/tail measurement (research/pkg_r39_pf013_fix/sha256/experiments/r39joint.py, proof Section 10) moved to block 2 of the R40 shift construction (research/runs_1105/pkg_r40_shift/submission-note.md, sec 2-3): round constants K1..K39 (KOFF=1, K[0]=428a2f98 shifted out, step constants K1=71374491..K39=92722c85), the shifted advice words, and a block-2 incoming chaining value whose two members differ only in h by 0xc0000000. Each of the 256 trials runs 2 independent windows of the claw search (fresh block-2 chaining value per window) of 1536 evaluations each (3072 folded-step evaluations per trial, 786,432 over the batch) over the folded step function F on the shifted constants, collecting every even/odd claw (a0 even, u odd, F(a0)=F(u)) in a shared distinguished-point table, counting distinct claws and distinct claw groups, and passing each raw claw through the F9, F8 and W17 tail filters of r39joint.Attack.claw rebuilt on the shifted BA/BE/BW advice trajectory and K1..K39; any W17 pass is rebuilt by build()/second() and verified by two 39-step compressions. Each trial also draws a transplant pair and reports the block-2 shift facts dN0, dh, cv_diff_h_only (the shift schedule maps dW8=0xc0000000 to dN0=0x40000000 and a step-0 cancellation leaving the incoming chaining value differing only in h by 0xc0000000). Trial 0 additionally runs the advice-pair known-answer check (a0=A[4], u=W1 under the shifted constants) through every tail filter and the full schedule-shift identity on W=(W-1,W0..W14). Deterministic from the trial seed; stdlib only; two null messages per trial unless a full collision is found; exactly one JSON document out. Experiment id claw40-window-01; any other requested id falls back to it.",
+   "hypothesis": "The claw rate and F9/F8/W17 tail-event rate measured on the shifted constants K1..K39 match the r39 rate (the construction transfers to block 2 unchanged). Per trial the program reports windows 2, window_steps 1536, walk_evals 3072, raw_claws, distinct_claws, distinct_groups (expected ~2.3e-4 claw groups per trial, ~0.06 over the 256-trial batch, since distinct even/odd claws ~ 0.83*steps^2/2^34 per window), passed_f9, passed_f8, passed_w17, and the value-independent block-2 facts dN0 = 0x40000000, dh = 0xc0000000, cv_diff_h_only 1, cv_diff_count 1, koff 1, k_first 0x71374491, k_last 0x92722c85. Trial 0 reports kat_advice_claw_ok 1, kat_passed_f9 1, kat_passed_f8 1, kat_passed_w17 1, kat_full_collision 1 and kat_shift_identity_ok 1 (the advice pair still claws and clears every tail filter, and the schedule shift reproduces block 2, on K1..K39). The host credits none of these internal counts as an attack cost; it only verifies any emitted message pair as an ordinary full collision."
+  }
+ ]
+}

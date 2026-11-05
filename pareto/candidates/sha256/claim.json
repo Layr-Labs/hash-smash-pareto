@@ -1,20 +1,79 @@
 {
-  "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha256-r37-prefix-v1",
-  "attack_class": "ordinary-collision",
-  "rounds": 37,
-  "claim": {
-    "time_log2": 128.0,
-    "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
-    "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
+ "schema_version": 3,
+ "target_profile": "sha256-r40-prefix-v1",
+ "attack_class": "ordinary-collision",
+ "rounds": 40,
+ "claim": {
+  "time_log2": 123.633,
+  "time_unit": "target-compressions",
+  "memory_log2_bytes": 20,
+  "preprocessing_log2": 43,
+  "success_probability": 0.39,
+  "nonuniform_advice_log2_bytes": 7.322
+ },
+ "restrictions": [
+  "Target: complete fixed-IV SHA-256 hash, standard padding, first 40 steps; all 256 output bits equal; two 64-byte blocks per message, both differ, plus a common third padding block.",
+  "Block 2: ePrint 2026/1120 (Tables 21/23) 39-step characteristic shifted up one step; N=(W_-1,W0..W14), W_-1=W15-s1(W13)-W8-s0(W0); round constants K1..K39; N0 carries +0x40000000; step-0 cancels Dh=0xc0000000.",
+  "Block 1: df1f1cd1 distinguished-point walk on the 254-bit map psi=(a..g, h mod 2^30); collision dh uniform on {0,2^30,2^31,3*2^30}; three usable (0 direct, +-2^30 via block 2), 2^31 discarded.",
+  "Prices: block-1 walk anchored to the board R40 best 123.90702 (0xplemonade; ours df1f1cd1 123.90711); block-2 census carried from 9993eaa8/5f8e6192 at 8,318.3 ops/claw = 2.872 compressions (2,896 ops/compression, r=0.998473); one driver, one shared budget W.",
+  "Advice-pair factory (2^72.8 pairs, <=2^27.1 compressions each = 2^99.9) is charged online inside b0; preprocessing 2^43 is only the carried r39 advice selection; the 2^20-byte memory is shared across the two parts."
+ ],
+ "baseline_improved": "sha256-r40-nominal-v2",
+ "certificate_manifest": "certificates/manifest.json",
+ "experiment_manifest": "experiments/manifest.json",
+ "heuristics": [
+  {
+   "id": "P1-walk-mixture",
+   "role": "score-critical",
+   "statement": "The 254-bit map psi (the 40-step output with h's top two bits masked by AND 0x3FFFFFFF) behaves as a random function whose collision image has dh uniform on {0, 2^30, 2^31, 3*2^30}, of which three outcomes (0, +2^30, -2^30) are usable and dh = 2^31 is discarded.",
+   "scope": "block 1: collision yield and the three-of-four usable-outcome law",
+   "extrapolation": "the df1f1cd1 random-function premise applied to psi; the four-value outcome set follows from the definition of psi",
+   "evidence_ids": [
+    "proof:37",
+    "proof:106",
+    "proof:46"
+   ],
+   "limitations": "block 1 is a generic walk and sets the total"
   },
-  "restrictions": [],
-  "baseline_improved": "sha256-r37-nominal-v2",
-  "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  {
+   "id": "H-K1-full-transfer",
+   "role": "score-critical",
+   "statement": "The full r39 rates p8p9 = 2^-9.807707, the W17 pin 2^-32, the tail -log2 p_tail <= 74.3238, and the per-window census (491,193,804 ops over 59,049.58 distinct claws and 58,959.42 groups, r = 0.998473) transfer unchanged from K0..K38 to the step-shifted constants K1..K39 because the constants change value conditions only and never the signed differences.",
+   "scope": "block 2: per-window yield, cost and tail on constants K1..K39",
+   "extrapolation": "value conditions change, signed differences do not",
+   "evidence_ids": [
+    "proof:32",
+    "proof:48",
+    "proof:107",
+    "proof:131"
+   ],
+   "limitations": "rows <= 16 measured SAT on 3/3 seeds with 0 violations; the tail junction histogram is measured equal to the K0 tail; the claw rates are declared"
+  },
+  {
+   "id": "H6-many-advice-windows",
+   "role": "score-critical",
+   "statement": "Every verified factory R39 pair is a distinct block-2 advice pair with its own row-8 state, and block 2 run on it yields claw groups at r39's measured rate of 2^15.85 groups per 2^32 window of N0, from 541 verified pairs and 60-of-60 screened transplants up to the 2^72.8 pairs the run uses.",
+   "scope": "block 2: window supply on constants K1..K39",
+   "extrapolation": "from 541 verified factory pairs and 60 of 60 screened transplants to the 2^72.8 pairs the construction uses",
+   "evidence_ids": [
+    "proof:57",
+    "proof:108",
+    "proof:132"
+   ],
+   "limitations": "the per-pair construction cost is charged online at the <= 2^27.1-compression factory-log bound (proof section 6)"
+  },
+  {
+   "id": "H7-cross-advice-independence",
+   "role": "score-critical",
+   "statement": "The claw groups aggregated across the 2^72.8 distinct advice pairs are independent Bernoulli trials for the full 40-step success, so the run succeeds with probability 1 - prod(1 - p) over all groups of all pairs.",
+   "scope": "block 2: the cross-advice amplification supplying the 2^120.68 groups",
+   "extrapolation": "within-pair group independence extended across advice families that share the fixed W8-W12 differences but carry disjoint row-8 states",
+   "evidence_ids": [
+    "proof:109"
+   ],
+   "limitations": "within-pair independence is measured (chi-square 267.72 and 274.55, groups/claws = 0.998473); cross-pair independence is declared"
+  }
+ ],
+ "lane": "exploratory",
+ "submission_state": "ready"
 }
