@@ -1,0 +1,13 @@
+{
+ "schema_version": 1,
+ "experiments": [
+  {
+   "id": "r41-shift-01",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r41_shift.py",
+   "scope": "The SHIFT39-41 construction (k = 2): one verified 39-step factory pair moved up two steps, organizer seeds, 256 trials. Per trial the program emits the two shifted block-2 messages and the recomputed numeric observations of the schedule identity, the two-step cancellation over 2,000 seed-drawn block-1 chaining values, the free-word set S, and the shared-budget price.",
+   "hypothesis": "The schedule identity N_t = W_{t-2} holds (observations.schedule_identity_ok = 1), the two-step cancellation equalises the state after steps 0-1 for every drawn chaining value (observations.cancel_ok = observations.cancel_total), the free word N1 yields observations.S_size = 64 distinct dN0 all equal mod 2^13, and the shared-budget total is observations.total_log2 = 121.504737 against the board R41 bar 123.92331.",
+   "event": {"kind": "full-collision"}
+  }
+ ]
+}

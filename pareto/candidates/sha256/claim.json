@@ -1,20 +1,57 @@
 {
-  "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha256-r37-prefix-v1",
-  "attack_class": "ordinary-collision",
-  "rounds": 37,
-  "claim": {
-    "time_log2": 128.0,
-    "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
-    "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
+ "schema_version": 3,
+ "target_profile": "sha256-r41-prefix-v1",
+ "attack_class": "ordinary-collision",
+ "rounds": 41,
+ "claim": {
+  "time_log2": 121.505,
+  "time_unit": "target-compressions",
+  "memory_log2_bytes": 20,
+  "preprocessing_log2": 36,
+  "success_probability": 0.39,
+  "nonuniform_advice_log2_bytes": 7.322
+ },
+ "restrictions": [
+  "Two-block ordinary collision under the standard IV: SHA-256 compression, first 41 steps, standard padding and feed-forward, all 256 output bits equal; block 1 differs (M0 != M0') and block 2 differs (N != N'), the common padding block preserving the collision. v5 primitives only, no ctz/clz/popcount; one 41-step target compression = 1 unit, every other primitive word operation = 1/C.",
+  "Block 2 is the 39-step characteristic of 9993eaa8 (ePrint 2026/1120 Tables 21/23) moved up two steps: messages N = (W_-2, W_-1, W0..W13), the back-recurrence words W_-i = W15 - sigma1(W13) - W8 - sigma0(W0) iterated; round constants K2..K40 on the last 39 steps. The new words carry dN1 = +2^30 and dN0 = -(sigma1(W12')-sigma1(W12)) - (sigma0(N1+2^30)-sigma0(N1)). Lit words over 0..40 are {0,1,10-14,18,19,26,28}; N29..N40 carry no difference.",
+  "Step-0/1 cancellation (identity): with the two block-1 chaining values equal in a..f and differing by dg = -dN1 = 0xc0000000 in g and dh = -dN0 - dCh in h, dCh = Ch(e,f,g+dg) - Ch(e,f,g), the state after steps 0 and 1 is equal for all values. Measured: 100,000 of 100,000 random chaining values equal after steps 0-1 (experiments/r41_shift.py, shift2chk.py).",
+  "Block-1 anchor: the board-best R41 generic distinguished-point walk cda94445 (123.92331), lambda0 = -ln 0.61. Block 2's free word N1 selects which single-bit sigma0 sign pattern it carries, giving the set S of |S| = 64 distinct dN0, all equal mod 2^13 (experiments/r41_shift.py). The walk map drops g's top 2 bits and h's top 19 bits (a 235-bit map, one AND per evaluation); with the half-useful offset map the usable-outcome count is U = 0.5*|S| + 0.5 = 32.5, so the reduced walk base is a0 = 123.92331 - 0.5*log2(32.5) = 121.412126. Premise P1 (df1f1cd1 random-function premise on the reduced map).",
+  "Block-2 cost carries the best accepted r39 base (9993eaa8, 116.58624) with the 5f8e6192 term decomposition (claw +9.8077, W17 pin +32.0000, tail +74.3238, ops/claw +1.5647, leader tightening -0.0609); the free words N0, N1 add no condition (N1 only selects dN0 in S). Converted to 41-step compressions, b0 = 116.58624 - log2(2968/2812) = 116.508346. Premise H1 (claw rates and W17 pin) transfers to K2..K40 because the constants change value conditions only, never the signed differences; rows <= 16 executed on K2..K40 (r39_K16, 3/3 SAT, 0 violations).",
+  "Premise H2 (tail, -log2 p >= 74.3238) transfer to K2..K40 is supported by the shifted-constant junction-weight histogram comparison over 2^30 samples per junction (tailshift.sh, J22 443,739,873 vs 443,737,969 kept, 4,187 vs 4,251 at weight 6).",
+  "Shared work budget: one driver runs the 235-bit walk until the first usable collision, then block 2 in the remaining budget W, halting at success or when the accumulated work reaches W (the r39 record driver rule). Walk P(T1<=t) = 1 - exp(-lambda0 (t/2^a0)^2), a0 = 121.412126; block 2 1 - exp(-lambda0 (W-T1)/2^b0), b0 = 116.508346. Success(W) = E[1{T1<=W}(pexact + (1-pexact) P2(W-T1))] = 0.39, pexact = 0.5/U = 0.0153846; log2 W = 121.50474 (experiments/r41_shift.py).",
+  "Memory: both blocks run sequentially on one shared 2^20-byte distinguished-point arena (peak 1,047,428 B < 1,048,576), so memory_log2_bytes = 20 and the memory term max(0, 19.998 - 20) = 0; block-2 advice preprocessing (2^36) adds nothing to the time ledger."
+ ],
+ "baseline_improved": "sha256-r41-nominal-v2",
+ "certificate_manifest": "certificates/manifest.json",
+ "experiment_manifest": "experiments/manifest.json",
+ "heuristics": [
+  {
+   "id": "P1-walk-235",
+   "role": "score-critical",
+   "statement": "df1f1cd1's random-function premise holds for the 235-bit map (the 41-step output with g's top 2 bits and h's top 19 bits dropped); the half-useful offset map gives U = 32.5 usable outcomes per collision.",
+   "scope": "block 1",
+   "extrapolation": "carried from df1f1cd1; the outcome law and U follow from the reduced map and the set S",
+   "evidence_ids": [
+    "experiment:r41-shift-01",
+    "proof:20",
+    "proof:21"
+   ],
+   "limitations": "carried from the accepted df1f1cd1 premise; the reduced map drops 21 output bits selected by the set S"
   },
-  "restrictions": [],
-  "baseline_improved": "sha256-r37-nominal-v2",
-  "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  {
+   "id": "H-r39-on-K2",
+   "role": "score-critical",
+   "statement": "Premises H1 (claw model), H2 (tail p >= 2^-74.3238), H3 (advice construction) and H5 (group independence) of 9993eaa8 hold with round constants K2..K40 in place of K0..K38, with the free words N0, N1 carrying the cancellation.",
+   "scope": "block 2",
+   "extrapolation": "constants change value conditions only, never the signed differences",
+   "evidence_ids": [
+    "experiment:r41-shift-01",
+    "proof:26",
+    "proof:28"
+   ],
+   "limitations": "rows <= 16 executed on K2..K40 (3/3 SAT, 0 violations); tail junction histograms on K2..K40 equal to the K0..K38 tail within sampling noise (2^30 samples each); claw rates transfer by the constant-invariance of the signed differences"
+  }
+ ],
+ "submission_state": "ready",
+ "lane": "exploratory"
 }
