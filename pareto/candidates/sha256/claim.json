@@ -1,19 +1,22 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha256-r37-prefix-v1",
+  "submission_state": "ready",
+  "target_profile": "sha256-r64-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 37,
+  "rounds": 64,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 135,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
-    "success_probability": 0.39,
+    "memory_log2_bytes": 138,
+    "preprocessing_log2": 135,
+    "success_probability": 0.5,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "sha256-r37-nominal-v2",
+  "restrictions": [
+    "Uniform 64-byte messages are an internal sampling domain within the unchanged complete hash target.",
+    "Generic analytic collision control; no actual collision, practical execution, historical novelty or best-known improvement claimed."
+  ],
+  "baseline_improved": "sha256-r64-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
   "lane": "exploratory",
   "heuristics": []
