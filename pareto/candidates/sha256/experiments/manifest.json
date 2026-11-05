@@ -1,0 +1,15 @@
+{
+ "schema_version": 1,
+ "experiments": [
+  {
+   "id": "v48-shift-01",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/tail48_sl.py",
+   "event": {
+    "kind": "full-collision"
+   },
+   "scope": "The claimed program (the VOL40 v7e generator, then every pair shifted to schedule words -8..7, all bit-sliced and counted) (proof Sections 2-3) per organizer trial: 256 lanes of pairs from the standard IV with the hard op cap; per kept lane the shifted candidate pair and its J34 landing count; on the first 16 kept lanes of the batch the full 48-word schedule control, the sliced-vs-word control, the forced-target tail to step 48 and the bit-30 negative control; per-bit tallies on the first 32 kept lanes.",
+   "hypothesis": "All kept lanes pass both controls; landing at k bits occurs at rate 2^-k (premise P1); every pair at the target collides after step 48 (premise P2) and the negative control never does; no full collision is expected at organizer scale."
+  }
+ ]
+}
