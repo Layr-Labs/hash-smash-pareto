@@ -1,19 +1,22 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "poseidon-orchard-r0-prefix-v1",
+  "submission_state": "ready",
+  "target_profile": "poseidon-orchard-r56-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 0,
+  "rounds": 56,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 135,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
-    "success_probability": 0.39,
+    "memory_log2_bytes": 137,
+    "preprocessing_log2": 135,
+    "success_probability": 0.5,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "poseidon-orchard-r0-nominal-v2",
+  "restrictions": [
+    "The algorithm samples each canonical input coordinate uniformly from [0,2^254); these are valid inputs to the unchanged full target.",
+    "Analytic generic construction only; no actual collision, practical attack, historical novelty, current frontier improvement, or physical availability of the exponential table is claimed."
+  ],
+  "baseline_improved": "poseidon-orchard-r56-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
   "lane": "exploratory",
   "heuristics": []
