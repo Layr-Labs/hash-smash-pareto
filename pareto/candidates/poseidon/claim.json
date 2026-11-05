@@ -1,20 +1,30 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "poseidon-orchard-r0-prefix-v1",
+  "submission_state": "ready",
+  "target_profile": "poseidon-orchard-r56-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 0,
+  "rounds": 56,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 127.45,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
+    "memory_log2_bytes": 19.1,
     "preprocessing_log2": 0,
-    "success_probability": 0.39,
+    "success_probability": 0.6,
     "nonuniform_advice_log2_bytes": 0
   },
   "restrictions": [],
-  "baseline_improved": "poseidon-orchard-r0-nominal-v2",
+  "baseline_improved": "poseidon-orchard-r56-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
   "lane": "exploratory",
-  "heuristics": []
+  "heuristics": [
+    {
+      "id": "random-function-walk",
+      "statement": "The rho walk treats the 56-partial-round Orchard compression F(nk,rho) = z0 as a random function from a 2^510-point input space onto the 2^254-point Pallas field, so the walk mixes and collides as the birthday model predicts.",
+      "role": "score-critical",
+      "scope": "Only the expected step count and success probability of the collision search depend on this. The existence of a collision does not: the map is 2-to-1 by pigeonhole over 2^510 inputs and 2^254 outputs, so a collision exists unconditionally.",
+      "extrapolation": "Applied at r=56 with the deployed constants and MDS unchanged. No claim is made that the walk is statistically indistinguishable from random at this round count; that would require a distinguisher this candidate does not supply.",
+      "evidence_ids": ["proof:2", "proof:4", "proof:5"],
+      "limitations": "Unverified at r=56. If the reduced-round permutation retains structure that shortens cycles, the step count would be lower, not higher, so the declared bound stays an upper bound. A structure that lengthens cycles would invalidate the constant, and the candidate would need restating."
+    }
+  ]
 }
