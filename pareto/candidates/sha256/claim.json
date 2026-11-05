@@ -1,20 +1,81 @@
 {
-  "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha256-r37-prefix-v1",
-  "attack_class": "ordinary-collision",
-  "rounds": 37,
-  "claim": {
-    "time_log2": 128.0,
-    "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
-    "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
+ "schema_version": 3,
+ "target_profile": "sha256-r40-prefix-v1",
+ "attack_class": "ordinary-collision",
+ "rounds": 40,
+ "claim": {
+  "time_log2": 123.613,
+  "time_unit": "target-compressions",
+  "memory_log2_bytes": 20,
+  "preprocessing_log2": 43,
+  "success_probability": 0.39,
+  "nonuniform_advice_log2_bytes": 7.322
+ },
+ "restrictions": [
+  "Fixed-IV SHA-256, first 40 steps, standard feed-forward, equality of all 256 output bits; two 64-byte blocks per message, both blocks differ.",
+  "Block 2 is the 39-step characteristic of ePrint 2026/1120 (Tables 21/23) moved up one step: messages N = (W_-1, W0..W14) with W_-1 = W15 - s1(W13) - W8 - s0(W0); round constants K1..K39 on its last 39 steps; N0 carries the single-bit difference +0x40000000.",
+  "Block 1 is found by the distinguished-point walk of entry df1f1cd1 on the 254-bit map psi(x) = (a..g, h mod 2^30) of the 40-step output; a collision has h difference uniform on {0, 2^30, 2^31, 3*2^30}: 0 is a full 40-step collision, +-2^30 (= 0xc0000000 after ordering the pair) feeds block 2, 2^31 is discarded.",
+  "Prices as in the board's best R40 walk (0xplemonade 123.90702, credited; our df1f1cd1 123.90711) for block 1 and 9993eaa8 (116.58624, in 40-step units 116.5437) for block 2; one driver with one shared work budget W halts at success or when work reaches W (as 9993eaa8 section 7); the two parts share the 2^20-byte walk memory."
+ ],
+ "baseline_improved": "sha256-r40-nominal-v2",
+ "certificate_manifest": "certificates/manifest.json",
+ "experiment_manifest": "experiments/manifest.json",
+ "heuristics": [
+  {
+   "id": "P1-walk-mixture",
+   "role": "score-critical",
+   "statement": "df1f1cd1's random-function premise holds for the 254-bit map psi (the 40-step output with h's top two bits dropped); 3/4 of its collisions are usable.",
+   "scope": "block 1",
+   "extrapolation": "carried from df1f1cd1",
+   "evidence_ids": [
+    "proof:66",
+    "proof:100",
+    "proof:162"
+   ],
+   "limitations": "declared"
   },
-  "restrictions": [],
-  "baseline_improved": "sha256-r37-nominal-v2",
-  "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  {
+   "id": "H-r39-on-K1",
+   "role": "score-critical",
+   "statement": "Premises H1 (claw model), H2 (tail p >= 2^-74.3238), H3 (advice construction) and H5 (group independence) of 9993eaa8 hold with round constants K1..K39 in place of K0..K38.",
+   "scope": "block 2",
+   "extrapolation": "constants change value conditions only, never the signed differences",
+   "evidence_ids": [
+    "proof:53",
+    "proof:147",
+    "proof:101",
+    "proof:163",
+    "proof:164",
+    "proof:180"
+   ],
+   "limitations": "rows <= 16 measured (3/3 SAT, 0 violations); tail junction histograms J20-J26 measured equal to the K0 tail (2^30 samples each); claw rates declared"
+  },
+  {
+   "id": "H6-many-advice-windows",
+   "role": "score-critical",
+   "statement": "Every verified factory R39 pair is a distinct block-2 advice pair with its own row-8 state, and block 2 run on it yields claw groups at r39's measured rate of 2^15.85 groups per 2^32 window of N0.",
+   "scope": "block 2 of this construction on constants K1..K39",
+   "extrapolation": "from 541 verified factory pairs and 60 of 60 screened transplants to the 2^72.8 pairs the construction uses",
+   "evidence_ids": [
+    "proof:5",
+    "proof:170",
+    "proof:169",
+    "proof:180"
+   ],
+   "limitations": "the per-pair construction cost is charged at the factory rate stated in Section 4c"
+  },
+  {
+   "id": "H7-cross-advice-independence",
+   "role": "score-critical",
+   "statement": "Claw groups obtained from distinct advice pairs are independent for the success count of the shared-budget model.",
+   "scope": "the success model of Section 4c",
+   "extrapolation": "declared",
+   "evidence_ids": [
+    "proof:180"
+   ],
+   "limitations": "declared premise; each advice pair has its own row-8 state"
+  }
+ ],
+ "lane": "exploratory",
+ "submission_state": "ready"
 }
