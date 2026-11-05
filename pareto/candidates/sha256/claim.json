@@ -1,20 +1,56 @@
 {
-  "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha256-r37-prefix-v1",
-  "attack_class": "ordinary-collision",
-  "rounds": 37,
-  "claim": {
-    "time_log2": 128.0,
-    "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
-    "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
+ "schema_version": 3,
+ "target_profile": "sha256-r40-prefix-v1",
+ "attack_class": "ordinary-collision",
+ "rounds": 40,
+ "claim": {
+  "time_log2": 123.135,
+  "time_unit": "target-compressions",
+  "memory_log2_bytes": 20,
+  "preprocessing_log2": 43,
+  "success_probability": 0.39,
+  "nonuniform_advice_log2_bytes": 7.322
+ },
+ "restrictions": [
+  "Two-block ordinary collision under the standard IV: SHA-256 compression, first 40 steps, standard padding and feed-forward, all 256 output bits equal; block 1 differs (M0 != M0') and block 2 differs (N != N'), the common padding block preserving the collision. v5 primitives only, no ctz/clz/popcount; one 40-step target compression = 1 unit, every other primitive word operation = 1/C.",
+  "Block-1 cost carries the accepted board-best R40 walk df1f1cd1 (123.90702 at the 0.61 success floor, lambda0 = -ln 0.61) as its per-eval anchor; the 254-bit map psi = (a..g, h mod 2^30) reduction (-1/2 log2 3 = -0.79248) rests on premise P1, the df1f1cd1 random-function premise applied to psi. Usable-outcome law: dh uniform on {0, 2^30, 2^31, 3*2^30}, three of four usable.",
+  "Block-2 cost carries the best accepted r39 base (9993eaa8 / 9993eaa8, 116.58624) and the 5f8e6192 term decomposition (claw +9.8077, W17 pin +32.0000, tail +74.3238, ops/claw +1.5647, leader tightening -0.0609); premise H1 (claw rates and W17 pin) is declared to transfer to constants K1..K39 since the constants change value conditions only, never differences. Rows <= 16 executed: r39_K16, 3/3 SAT, 0 violations.",
+  "Premise H2 (tail, -log2 p >= 74.3238) transfer to K1..K39 is supported by the shifted-constant histogram comparison over 2^30 samples per junction (tailshift.sh, J22 443,739,873 vs 443,737,969 kept, 4,187 vs 4,251 at weight 6).",
+  "Shared work budget: one driver (price40d.py) runs the 254-bit walk until the first usable collision, then block 2 in the remaining budget W. Walk P(T1<=t)=1-exp(-lambda0 (t/2^a0)^2), a0=123.11454; block 2 1-exp(-lambda0 (W-T1)/2^b0), b0=116.5437. Success(W)=E[1{T1<=W}(1/3+2/3 P2(W-T1))]=0.39, giving log2 W = 123.13485.",
+  "Memory: both blocks run sequentially on one shared 2^20-byte distinguished-point arena (peak 1,047,428 B < 1,048,576), so memory_log2_bytes = 20 and the memory term max(0, 19.998-20) = 0; block-2 advice preprocessing (2^36) adds nothing to the time ledger."
+ ],
+ "baseline_improved": "sha256-r40-nominal-v2",
+ "certificate_manifest": "certificates/manifest.json",
+ "experiment_manifest": "experiments/manifest.json",
+ "heuristics": [
+  {
+   "id": "P1-walk-254",
+   "role": "score-critical",
+   "statement": "df1f1cd1's random-function premise holds for the 254-bit map psi (the 40-step output with h's top two bits dropped); 3/4 of its collisions are usable.",
+   "scope": "block 1",
+   "extrapolation": "carried from df1f1cd1",
+   "evidence_ids": [
+    "proof:18",
+    "proof:41"
+   ],
+   "limitations": "carried from the accepted df1f1cd1 premise; the 254-bit map drops two output bits of h"
   },
-  "restrictions": [],
-  "baseline_improved": "sha256-r37-nominal-v2",
-  "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  {
+   "id": "H-r39-on-K1",
+   "role": "score-critical",
+   "statement": "Premises H1 (claw model), H2 (tail p >= 2^-74.3238), H3 (advice construction) and H5 (group independence) of 9993eaa8 hold with round constants K1..K39 in place of K0..K38.",
+   "scope": "block 2",
+   "extrapolation": "constants change value conditions only, never the signed differences",
+   "evidence_ids": [
+    "proof:24",
+    "proof:26",
+    "proof:28",
+    "proof:42",
+    "proof:43"
+   ],
+   "limitations": "rows <= 16 executed on K1..K39 (3/3 SAT, 0 violations); tail junction histograms J20-J26 on K1..K39 equal to the K0..K38 tail within sampling noise (2^30 samples each); claw rates declared to transfer"
+  }
+ ],
+ "submission_state": "ready",
+ "lane": "exploratory"
 }
