@@ -1,0 +1,15 @@
+{
+ "schema_version": 1,
+ "experiments": [
+  {
+   "id": "v40d-advice-01",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/dari40_exp.py",
+   "event": {
+    "kind": "full-collision"
+   },
+   "scope": "The advice pair of the package (Dariia's HEAD30 witness: chaining value CV*, blocks M1, M1') and a seeded random first block M0 per trial (proof Sections 2 and 5). Per trial: the message-schedule difference support of (M1, M1') over 40 words, the rows with zero state difference when both members run from CV*, the same count from the trial's own chaining value (control: no transplant is applied by this program), and the candidate two-block messages M0 || M1 and M0 || M1'. The claw walk and the tail sampler (tools in the research package) are not run here.",
+   "hypothesis": "The advice pair's schedule difference is supported on words 8..12 with expansions at 16, 17, 24, 26, 31, 33, 35, 37, 38, 39 (the characteristic, proof Section 1); from CV* the state difference is zero on rows 27..30 (the local collision closes, proof Section 2); from a random chaining value without the transplant it is not; no full collision is expected at organizer scale."
+  }
+ ]
+}
