@@ -1,0 +1,15 @@
+{
+ "schema_version": 1,
+ "experiments": [
+  {
+   "id": "v40d-advice-01",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/dari40_exp.py",
+   "event": {
+    "kind": "full-collision"
+   },
+   "scope": "The claimed construction's first stages, executed per trial from the seed (experiments/dari40_exp.py with r39joint.py, the accepted r39 entry's walk and claw code with the head constants re-derived): (a) a random first block M0 and its 40-step chaining value CV from the standard IV; (b) the r39 transplant (exact bijection) of Dariia's HEAD30 advice onto CV for a random (a0, W1), reporting the first violated row of the 40-step characteristic on both members; (c) ONE claw window of the r39 walk at 2^8 scale on CV (distinct claws, deepest row followed, walk ops by the walk's own counter; a CV whose kernels exceed r39's caps is reported as window_skipped); (d) the returned pair M0 || M1, M0 || M1' of the deepest claw (else of the random transplant). The tail stages (rows 18-39) are measured offline (proof Sections 3 and 5) and are not executed here.",
+   "hypothesis": "Measured on seeds 1..256 before filing: advice_row 31 on 256/256 (the advice follows the characteristic through row 30); the transplant without a claw inherits rows 0..7 (first violated row 8 in 133 trials, 9 in 110, 16 in 13: the W8/W9 class conditions and W16, which the claw pays in r39); window_skipped 200/256; claws through row 17 at 2^8 scale 0 (expected about 0.05: 46 of 677,878 claws at 2^22 windows); block2_collision 0. No full collision is expected at organizer scale."
+  }
+ ]
+}
