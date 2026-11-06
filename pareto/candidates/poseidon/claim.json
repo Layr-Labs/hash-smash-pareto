@@ -1,20 +1,39 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "poseidon-orchard-r0-prefix-v1",
+  "submission_state": "ready",
+  "target_profile": "poseidon-orchard-r5-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 0,
+  "rounds": 5,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 46,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 33,
+    "preprocessing_log2": 20,
     "success_probability": 0.39,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "poseidon-orchard-r0-nominal-v2",
+  "restrictions": [
+    "The r=5 predecessor construction is reproduced in proof.md and modified only by inserting the specified random modular multiplier before its guarded half-GCD. The old H-NORMAL assumption and old score are superseded by the opening specification.",
+    "Randomizer: m=24414062 iterations of z <- X*z + u*b mod h, each fresh u from two uniform words. Total new work bounded by 20*m^2+200*m+10000; full work 11922568807067370 < 321*2^46. No retries.",
+    "Memory bounded by 3916752524 bytes < 2^33, including additional m-word array, code and scratch. Normalized time-memory cost is 59, deliberately dominated by faster r=5 results.",
+    "The only score-critical heuristic is H-ONE for the same fixed line polynomial. Conditional on every h,b, randomized GCD preservation and normality fail with probability at most m*(m+1)/(2*p)+m*p/2^512, proved in proof.md.",
+    "No full collision is claimed. Final canonical-input and reference-hash verification remains mandatory. Existing experiments are historical support for inherited components, not tests of the new randomizer."
+  ],
+  "baseline_improved": "poseidon-orchard-r5-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
+  "experiment_manifest": "experiments/manifest.json",
   "lane": "exploratory",
-  "heuristics": []
+  "heuristics": [
+    {
+      "id": "H-ONE",
+      "statement": "For the fixed r=5 line polynomial F defined in the incorporated predecessor specification, at least 0.3931 of uniformly chosen centres c have between 1 and 16 nonzero-square roots of the odd-part polynomial g_c. This is H-ONE only; no H-NORMAL premise is used.",
+      "role": "score-critical",
+      "scope": "The fixed Orchard/Pallas r=5 target and line j=0, degree F=48828125 and degree g_c=24414062. Applies to the centre chosen before the unchanged Graeffe and modular-power stages. The opening proof subtracts only explicitly bounded stage, isolation, coin and randomized-preconditioning failures.",
+      "extrapolation": "From the law of k(c) at reduced depth to the polynomial F of depth 11. The roots of G(c,t) in t are +-t_1, ..., +-t_m, so the monodromy group of the cover lies in the hyperoctahedral group B_m and k(c) counts the positive fixed points of the Frobenius element; for the full group B_m this number is Poisson(1/2) in the limit, P(k >= 1) = 1 - e^(-1/2) = 0.3934693 (exactly 1 - sum_{j<=m} (-1/2)^j/j!), and Bonferroni at order 4 gives P >= 151/384 = 0.3932292 from four moments (proof.md 9.3). At N = 2 and 3 S-box layers on the deployed constants and the line of this construction the arithmetic monodromy is B_12 and B_62 (Grok jobs 136 and 137, re-run on the deployed constants, proof.md 10.3); the geometric monodromy then contains the commutator subgroup of B_m, the j-fold fibre powers are absolutely irreducible, and the Aubry-Perret bound with Bonferroni gives 0.39346933 <= P(1 <= k <= 16) <= 0.39346944 there: the premise is a theorem at those depths. Measured: toy fields at p = 1,048,627, exact over all centres, 27 cases with 3 to 8 layers, P(k >= 1) between 0.39214 and 0.39436; organizer-counted: euclid-gcdpos-n2-t256-a, -b and euclid-gcdpos-n3-t24 compute G = gcd(g_c, R_c - 1), R_c = S^((p-1)/2) mod g_c (deg G = k(c)), for one organizer-seeded centre per trial at N = 2, 3 (m = 12, 62) and return a witness pair ONLY when deg G >= 1, so the organizer's returned-pair count is the good-centre count; the count is a reproducible observation consistent with the law of H-ONE, with no interval inferred (proof.md 10.5.2). The deviations from the law shrink like p^(-1/2) and do not grow with the degree (toy fields 1.36/sqrt(p); the counts of Grok job 139, eps ~ 3.1/sqrt(p) over degrees 5 to 1,953,125); the premise extrapolates the law to N = 11 with an allowance stated exactly as 0.0003693.",
+      "evidence_ids": [
+        "proof:94-112"
+      ],
+      "limitations": "H-ONE remains unproved at the actual r=5 degree. Small-depth observations and monodromy extrapolation are inherited and reproduced in proof.md. Randomized preconditioning removes H-NORMAL only; it does not establish the good-centre fraction. Local organizer execution was unavailable."
+    }
+  ]
 }
