@@ -1,0 +1,49 @@
+{
+ "schema_version": 1,
+ "experiments": [
+  {
+   "id": "v44-shift-01",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/tail44_sl.py",
+   "event": {
+    "kind": "full-collision"
+   },
+   "scope": "The claimed program (the VOL40 v7e generator, then every pair shifted to schedule words -4..11, all bit-sliced and counted) (proof Sections 2-3) per organizer trial: 256 lanes of pairs from the standard IV with the hard op cap; per kept lane the shifted candidate pair and its J30 landing count; on the first kept lane of the batch the full 44-word schedule control, the sliced-vs-word control, the forced-target tail to step 44 and the bit-30 negative control; per-bit tally on the first kept lane.",
+   "hypothesis": "The control lane passes both controls; landing at k bits occurs at rate 2^-k (premise P1); every pair at the target collides after step 44 (premise P2) and the negative control never does; no full collision is expected at organizer scale."
+  },
+  {
+   "id": "v44-controls-01",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/tail44_sl.py",
+   "event": {
+    "kind": "full-collision"
+   },
+   "scope": "Evidence mode of the same program (not the charged algorithm; same generator and search as v44-shift-01, 16 control lanes and 32 tally lanes): The claimed program (the VOL40 v7e generator, then every pair shifted to schedule words -4..11, all bit-sliced and counted) (proof Sections 2-3) per organizer trial: 256 lanes of pairs from the standard IV with the hard op cap; per kept lane the shifted candidate pair and its J30 landing count; on the first 16 kept lanes of the batch the full 44-word schedule control, the sliced-vs-word control, the forced-target tail to step 44 and the bit-30 negative control; per-bit tallies on the first 32 kept lanes.",
+   "hypothesis": "All kept lanes pass both controls; landing at k bits occurs at rate 2^-k (premise P1); every pair at the target collides after step 44 (premise P2) and the negative control never does; no full collision is expected at organizer scale."
+  },
+  {
+   "id": "v44-mask-k8",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/tail44_sl.py",
+   "event": {
+    "kind": "digest-xor-mask",
+    "mask_hex": "00000000000000000000000000000000000000000000000000000000000000ff",
+    "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   "scope": "The claimed program per organizer trial (as v44-shift-01); under this event the returned pair is the one with the most zero digest-XOR bits inside the mask among the first 32 kept lanes.",
+   "hypothesis": "The low 8 bits of the sha256-r44 digest XOR of a kept-lane pair are zero at rate 2^-8, so a trial meets the event with probability 1-(1-2^-8)^min(32,kept)."
+  },
+  {
+   "id": "v44-mask-k6",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/tail44_sl.py",
+   "event": {
+    "kind": "digest-xor-mask",
+    "mask_hex": "000000000000000000000000000000000000000000000000000000000000003f",
+    "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   "scope": "The claimed program per organizer trial (as v44-shift-01); under this event the returned pair is the one with the most zero digest-XOR bits inside the mask among the first 32 kept lanes.",
+   "hypothesis": "The low 6 bits of the sha256-r44 digest XOR of a kept-lane pair are zero at rate 2^-6, so a trial meets the event with probability 1-(1-2^-6)^min(32,kept)."
+  }
+ ]
+}
