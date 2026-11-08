@@ -1,20 +1,96 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha256-r37-prefix-v1",
+  "target_profile": "sha256-r39-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 37,
+  "rounds": 39,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 101.4693,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 20.5471,
+    "preprocessing_log2": 43,
     "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
+    "nonuniform_advice_log2_bytes": 11.53965
   },
-  "restrictions": [],
-  "baseline_improved": "sha256-r37-nominal-v2",
+  "restrictions": [
+    "Ordinary collision of SHA-256 reduced to 39 steps from the standard IV, two 64-byte blocks plus the common padding block: the same random first block M0, then M1 vs M1' = M1 + DL with differences in words W8..W12. The second block is the transplanted 2026/1120 Table 23 pair with the two state words A[6] and A[7] released over a listed set of 115,010 variants (proof.md Sections 2.2-2.5), shipped in the program and sha256-asserted. No chaining-value difference. Advice: 2,977 bytes, the 160-byte published pair plus the 2,445-byte encoded list and 372 bytes of class literals.",
+    "Credited derivative of our r39 entry 5f8e6192: the 160-byte published pair, claw search, tail p >= 2^-74.3238 and preprocessing 43 are inherited; the list is built once offline at about 2^24 operations (proof.md Sections 2.5, 8). Peak memory 1,532,021 bytes = 2^20.5471 with every list representation counted (Section 6); success 0.39 (Section 7)."
+  ],
+  "baseline_improved": "sha256-r39-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  "experiment_manifest": "experiments/manifest.json",
+  "heuristics": [
+    {
+      "id": "H1-claw-model",
+      "role": "score-critical",
+      "statement": "For the retained KCAP=710/KTRY=32 selected-window distribution, including all-rejected zero-yield windows, true expected charged work is at most 460104889, claws at least 59104.62, groups at least 59014.37, with priced ratio 0.998473. These are mean-price premises, not confidence bounds. Claw free words, W17 and the inherited tail must have the stated uniformity/independence properties after conditioning on selection.",
+      "scope": "The exact retained first-block filter and r39 walk in experiments/r39joint.py, with 2^26 walk evaluations per accepted window and at most 32 charged attempts.",
+      "extrapolation": "The 24 actual windows total 11042517328 operations with exact mean 1380314666/3 and SD 3418060.593925; there are 1418511 claws, 1416345 groups and 82 rejected blocks. Per-window claws, groups, kernel records, registers and rejections equal adef2aaf's on every seed. The reductions of adef2aaf and of this entry are exact rewrites tested in check mode. No new holdout or full-scale mean theorem is supplied.",
+      "evidence_ids": [
+        "experiment:r39-transplant-claw",
+        "experiment:r39k4-window-small",
+        "proof:27-30",
+        "proof:56-72",
+        "proof:76-95",
+        "proof:117-122"
+      ],
+      "limitations": "Kernel-size conditioning can bias maps and later events; parity shows that the composition preserves that distribution, not that it is uniform. The sample has no all-rejected window, but the true-expectation premise includes them. H1 remains an extrapolation from finite public-seed replays, and forced configurations can cost more."
+    },
+    {
+      "id": "H2-tail",
+      "role": "score-critical",
+      "statement": "For the claws of the program (a0 even, u odd, W16 = g, W8 in F8, W9 in F9, W17 = 0x71e9ba98) the probability that the two 39-step compressions of the pair give equal 256-bit outputs (the four parity classes of (a0, u) fall with exact probability 1/4 each; pooling them presumes their exchangeability for the collision event, declared here, and the class-specific estimator 4 * hits_(even, odd) / n, exactly unbiased with no premise, is hard-asserted at 99% as -74.4053 > -74.45) is 2^-74.3238, its measured linear mean over the 14 organizer runs (best-case premise; the hard-asserted linear 99.9% bound is -74.4326), for the quantity of proof Section 8 (rows 18 to 38, W18..W23 uniform), a lower bound on the tail probability because the carrier K_P is a subset of all routes to a collision.",
+      "scope": "The tail rows 18 to 38 of the Table 23 trail after the claw, W8 uniform on F8, W9 uniform on F9, E18..E23 of the first member uniform on 2^32, a0 even and u odd, estimated by the v2 work allocation (800 particles, balanced stage lanes, 3,276,800 proposals per run). Not claimed for another trail or allocation.",
+      "extrapolation": "Our theory (best case): p_tail = 2^-74.3238, the linear mean of the 14 runs; the replica hard-asserts the conservative check value QDECL = -74.45. The organizer replica experiments/r39tail.py v2 (r39-tail-01..14, 800 particles, variance-balanced stage lanes 8x512/8x2048/8x2048/4x128/6x256/1x4, 20 trials x 80 batches x 2048 proposals = 3,276,800 proposals per run, every particle driving exactly two batches) hard-asserts EXP and verify_smc_stats() on every run: 6,398 verified collisions in 45,875,200 proposals across the 14 public-seed runs, parity classes [1592, 1626, 1624, 1556] (chi-square 2.03 < 7.81). By Del Moral's Feynman-Kac theorem, the unnormalized product estimator Q'_r = 2^(l2_r) * (hits_r / 3276800) is exactly unbiased on the linear scale (E[Q'_r] = Q', zero log-scale Jensen bias): verify_smc_stats() hard-asserts linear-scale mean log2(mean(Q')) = -74.3238, one-sided 99% Student-t lower bound log2(lcb_lin) = -74.3978 > QDECL = -74.45, log-scale 99% bound -74.3987 > -74.45, and the linear one-sided 99.9% bound (t = 3.852, 13 df) -74.4326 > -74.45. QDECL = -74.45 was fixed before the organizer runs by the pre-registered rule (at least 0.01 below the 99.9% bound of the frozen design, rounded down to two decimals); as a one-sided test of the declared value the 14 runs give t = 4.4397 (13 df, p < 1e-3). The v2 program of 0b2616e3 (this replica's code, with the published advice) reproduces 19034ce byte-identically at 19034ce's parameters (three private seed sets: carrier, stage counts, per-trial hits and parity classes identical), so the estimator is unchanged in semantics; only the work allocation changed.",
+      "evidence_ids": [
+        "experiment:r39-tail-01",
+        "experiment:r39-tail-02",
+        "experiment:r39-tail-03",
+        "experiment:r39-tail-04",
+        "experiment:r39-tail-05",
+        "experiment:r39-tail-06",
+        "experiment:r39-tail-07",
+        "experiment:r39-tail-08",
+        "experiment:r39-tail-09",
+        "experiment:r39-tail-10",
+        "experiment:r39-tail-11",
+        "experiment:r39-tail-12",
+        "experiment:r39-tail-13",
+        "experiment:r39-tail-14",
+        "proof:112-116",
+        "proof:117-122"
+      ],
+      "limitations": "A one-sided 99% confidence lower bound (-74.3978 linear-scale unbiased, -74.3987 log-scale) over 14 organizer-executed replica runs of the Feynman-Kac unbiased estimator, 0.0522 bits above the replica's check value -74.45 (linear 99%; the claim prices the tail at the measured mean -74.3238, best-case premise), and the linear 99.9% bound -74.4326 is 0.0174 above it; the declared value was fixed by a pre-registered rule frozen with the design on private seeds (ten sizing runs, mean -75.4069 sd 0.1235) before any organizer-seed result of this design was seen. Stage 18 is calibrated against direct uniform Monte Carlo (c18 = 206/65536, asserted within 0.0003 of the 14-run SMC stage-18 rate); K_P is a subset of all collision routes so Q <= p_tail. The 14 runs are public-seed replays without a holdout, as in the accepted 4487063; the t-test (t = 4.4397, p < 1e-3) and the pre-registration rule address the coverage finding F-EXP-TAIL-COVERAGE of c30c0d70."
+    },
+    {
+      "id": "H3-advice-construction",
+      "role": "score-critical",
+      "statement": "H3 (changed from r39): A[8..11], E[12..15], W12..W15 fixed to the published values; A[6] and A[7] range over the 115,010 listed variants; for every listed variant both messages follow the published state-difference trail through step 15 (step-function identity, checked by --k4selftest: base == build, pass == k4_words); at the published point the construction is r39's build exactly.",
+      "scope": "One-time offline construction of the 160-byte advice (CV_PUB, M_PUB, MP_PUB) for sha256-r39-prefix-v1; not part of the online walk.",
+      "extrapolation": "Trials 0 and 1 of experiment:r39-transplant-claw execute verify_advice_construction() in experiments/r39joint.py: it runs the exact 32-bit bit-by-bit DFS fibre solver solve_row_exact on rows 16 and 17 of the advice pair (verifying g16_fibre_size = 2 with G16 = 0xbca1c321, g17_fibre_size = 1 with W17 = 0x71e9ba98, and fibre_dfs_ops = 1944 < 2812 word operations < 1 target-compression), verifies that steps 9 down to 0 and CV_PUB are uniquely recovered from steps 10 to 15 and W[0..15] by exact downward step inversion with zero search (downward_inv_ok = 1), and enumerates a 256-candidate local slice of the step-15 free bits (advice_slice_cands = 256, advice_slice_hits = 1, ops_per_cand = 411 < 4 * 2812 word operations < 2^2 target-compressions). Extrapolated from the 256-candidate slice and the ePrint 2026/1120 Section 4.3 Step 1 measurement (about 2^34.2 SHA-256 calls, Step 2 probability 1) to the 2^34-candidate space on steps 10 to 15.",
+      "evidence_ids": [
+        "experiment:r39-transplant-claw",
+        "experiment:r39k4-window-small",
+        "proof:14-26",
+        "proof:41-55",
+        "proof:117-122"
+      ],
+      "limitations": "The fibre, inversion and 256-candidate slice checks do not execute the full 2^34 construction space or the 93-pair campaign. The inherited sequential construction/selection allowance remains 2^43; this revision adds it conservatively to the online bound and does not claim to have verified its full scale or tail-selection premise."
+    },
+    {
+      "id": "H5-group-independence",
+      "role": "score-critical",
+      "statement": "Distinct claws are independent trials for the events \"W9 in F9\", \"some listed variant has W8 in F8 and W17 equal to the published value\", and the tail rows 18-38, as in r39 5f8e6192, whose H5 is accepted on the same basis. Every W17 hit is a distinct message pair with its own tail trial. Within a claw hits cluster: entries that share (a2, W10) and pass F8 give the same W17 (measured per F9 claw: 8,072 entries pass F8, 7,621 distinct keys, size-biased mean cluster 1.115, max 4). Cluster mates differ in a3, hence in W11, W3..W7 and every tail word from W18 on, so their tails are separate trials (H5 extended, proof.md Section 7). E[H] = G x E[N] x 2^-32 and P(success) = 1 - E[(1 - p_tail)^H], which the program holds at 0.39 with lambda = -ln(0.61) + 2^-40 (Var(H) <= 4 E[H]); if cluster mates' tails were fully dependent the cost would rise by at most 0.083 bit. Evidence (participant runs with k4pair.c and k4verify.py; proof.md Sections 5, 7, 8): chunk 0 (28 classes) and chunk 1 (13 classes) at 4 CVs each, 134M claws per run, gave 5 W17 hits against about 5.7 expected and 3 against 4.0, all verified and all from distinct claws; the tail joint arm (W8, W10, W11 drawn from 60,000 real k = 4 variant triples, 14 runs) gives a ratio of 2^+0.023, s.d. 0.026.",
+      "scope": "the k4 program experiments/r39joint_k4.py at 2^82.463 windows (proof.md Section 7); not claimed for another walk.",
+      "extrapolation": "from the measured first stage (W17 hits, cluster sizes) to the unmeasurable tail stage; tail independence across claws is inherited from r39's H5 unchanged.",
+      "evidence_ids": [
+        "experiment:r39k4-window-small",
+        "proof:116-123",
+        "proof:124-128",
+        "proof:129-136"
+      ],
+      "limitations": "The tail event (2^-74.3) is priced from the accepted r39 terms, and its cross-claw and within-cluster independence is declared (the fully dependent within-cluster case is bounded at +0.083 bit). W17 hit independence is tested only at the 2^-32 stage and only up to the power of 8 events. Claws sharing listed W10 and W11 values share those words; the joint arm tests the marginal tail rate, not joint dependence."
+    }
+  ],
+  "submission_state": "ready",
+  "lane": "exploratory"
 }
