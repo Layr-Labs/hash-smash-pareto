@@ -1,20 +1,20 @@
 {
-  "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "poseidon-orchard-r0-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 0,
-  "claim": {
-    "time_log2": 128.0,
-    "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
-    "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
-  },
-  "restrictions": [],
-  "baseline_improved": "poseidon-orchard-r0-nominal-v2",
+  "baseline_improved": "poseidon-orchard-r56-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
+  "claim": {
+    "memory_log2_bytes": 20,
+    "nonuniform_advice_log2_bytes": 0,
+    "preprocessing_log2": 6,
+    "success_probability": 0.5,
+    "time_log2": 251,
+    "time_unit": "target-compressions"
+  },
+  "heuristics": [],
   "lane": "exploratory",
-  "heuristics": []
+  "restrictions": [],
+  "rounds": 56,
+  "schema_version": 3,
+  "submission_state": "ready",
+  "target_profile": "poseidon-orchard-r56-prefix-v1"
 }
