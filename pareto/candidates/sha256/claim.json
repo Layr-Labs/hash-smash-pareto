@@ -1,20 +1,21 @@
-{
+﻿{
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha256-r37-prefix-v1",
+  "submission_state": "ready",
+  "target_profile": "sha256-r64-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 37,
+  "rounds": 64,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 129.7,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
+    "memory_log2_bytes": 10,
     "preprocessing_log2": 0,
-    "success_probability": 0.39,
+    "success_probability": 0.44,
     "nonuniform_advice_log2_bytes": 0
   },
   "restrictions": [],
-  "baseline_improved": "sha256-r37-nominal-v2",
+  "baseline_improved": "sha256-r64-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
   "lane": "exploratory",
   "heuristics": []
 }
+
