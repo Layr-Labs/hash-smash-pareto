@@ -1,0 +1,165 @@
+{
+ "experiments": [
+  {
+   "event": {
+    "kind": "full-collision"
+   },
+   "hypothesis": "Hard-asserted trial 0 values: {\"advice_slice_hits\": 1, \"advice_w16_is_g\": 1, \"advice_w17\": 1, \"classes\": 728, \"fibre\": 1019866814, \"fibre_dfs_ops\": 1944, \"fibre_shift\": 97451488, \"g16_fibre_size\": 2, \"g17_fibre_size\": 1, \"groups\": 200, \"ops_per_cand\": 411, \"sample_trail\": 200, \"sample_valid\": 200, \"sample_w16_one_value\": 1, \"sample_w9_shifted\": 200, \"sfs_collision\": 1}. Trials 1 to 255 require transplant_ok = w1_is_u = w16_identity = 1 with a listed entry of the fibre 0x3cc9eebe in place of the advice (a2, a3); trial 1 also emits the advice-construction values.",
+   "id": "r39-transplant-claw",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39joint_k4.py",
+   "scope": "Advice collision and construction checks (fibres, inversion, 256-candidate slice); for one entry of each of the 200 groups at the advice point: the rule, W9 = advice W9 + 0x05cefde0, one W16 value, the two-message trail through step 16. No claw of the advice itself (it is not on the fibre). Not an ordinary fixed-IV certificate."
+  },
+  {
+   "event": {
+    "kind": "full-collision"
+   },
+   "hypothesis": "Hard-asserted in r39joint_k4.py._k4e on the organizer seeds of trials 0-3: (claws, F9, 0, pass lanes, survivors, key hits, k4 ops, total ops) = (233,7,0,436800,2,0,1019221,11504962), (222,11,0,624000,5,0,1454268,13875066), (256,4,0,249600,2,0,584630,13031225), (232,1,0,62400,0,0,144113,11245985) (K4_WIN_EXP); k4 ops = evaluated F9 claws (pass lanes / 62,400) x (143,633 + 480) + 12 per repeated F9 claw + the counted cost of real survivors (711 + 563 per class tested); every F9 claw asserts W9 = C9 + 0x05cefde0 - a1 = W9 of a listed entry and W16 = g; pass-off identity on trials 0 and 1; for the first F9 claw of each trial and each of the 200 groups a planted key is found and its cost asserted ('k4 plant'); k4_setup = 1,107,473,556. Key dispersion over all entries of groups 0, 50, 100, 150: per F9 claw D = keys with an entry in F8, K = those with W17 x 2654435761 mod 2^32 top 7 bits zero; K ~ Binomial(D, 2^-7) under independence. Accept if sum D >= 96,821, |sum K - sum D/128| within 2.576 s.d., Pearson < 40.29 (22 dof). Asserted per trial (sum D, sum K, Pearson, claws): (59,256, 437, 6.5188, 7); (67,492, 518, 7.9839, 10); (17,882, 142, 0.7772, 4); (1,872, 7, 4.0067, 1).",
+   "id": "r39k4-window-small",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39joint_k4.py",
+   "scope": "Trials 0 to 3 run 4 windows of 2^21 walk evaluations of the shipped program, k4 and check mode on. On every F9 claw the counted W17 pass runs over all 62,400 prefix lanes of the 200 groups; planted checks and the diagnostic then run with the counter restored; the list is generated at import by rule and asserted by its counts; trials 0 and 1 are re-run with k4 off."
+  },
+  {
+   "event": {
+    "kind": "full-collision"
+   },
+   "hypothesis": "Hard-asserted in r39tail.py (EXP and verify_smc_stats()): kat == 1, mask_viol == 0, calib_c18 == 206, lin_lcb_ok == 1, stage counts k18..k23, log2_carrier, and the run's total verified collision hits and parity classes match EXP['r39-tail-01']. Across all 14 runs in EXP: 6,398 verified collisions in 45,875,200 proposals, parity classes [1592, 1626, 1624, 1556] (chi-square 2.03 < 7.81), linear-scale unbiased mean log2(mean(Q')) = -74.3238, one-sided 99% Student-t lower bound log2(lcb_lin) = -74.3978 > QDECL = -74.54 (and log-scale 99% bound -74.3987 > -74.54); the one-sided 99.9% Student-t bound (t = 3.852, 13 df) is -74.4326 > -74.54, and QDECL = -74.54 is declared from 42 further runs of this replica (proof Section 8); the 14 organizer runs asserted here lie above it (one-sided t of the declared value: 7.38, 13 df).",
+   "id": "r39-tail-01",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39tail.py",
+   "scope": "Tail replica of proof Section 8 (run 01 of 14): trial 0 runs verify_smc_stats() (hard-asserting stage-18 direct Monte Carlo calibration c18 = 206/65536 and the packed 14-run table EXP with the one-sided 99% and 99.9% Student-t lower bounds above QDECL = -74.54) and the SMC over E18..E23 of the carrier K_P (800 particles; variance-balanced stage lanes 8x512, 8x2048, 8x2048, 4x128, 6x256, 1x4; lazy pool entries) with a known-answer check on the advice pair; trials 1 to 20 draw W8 in F8 and W9 in F9 for every proposal (80 x 2048 each; every particle drives exactly two batches), rebuild rows 24 to 38 and verify every hit by the two 39-step compressions, asserting exact match with EXP['r39-tail-01']."
+  },
+  {
+   "event": {
+    "kind": "full-collision"
+   },
+   "hypothesis": "Hard-asserted in r39tail.py (EXP and verify_smc_stats()): kat == 1, mask_viol == 0, calib_c18 == 206, lin_lcb_ok == 1, stage counts k18..k23, log2_carrier, and the run's total verified collision hits and parity classes match EXP['r39-tail-02']. Across all 14 runs in EXP: 6,398 verified collisions in 45,875,200 proposals, parity classes [1592, 1626, 1624, 1556] (chi-square 2.03 < 7.81), linear-scale unbiased mean log2(mean(Q')) = -74.3238, one-sided 99% Student-t lower bound log2(lcb_lin) = -74.3978 > QDECL = -74.54 (and log-scale 99% bound -74.3987 > -74.54); the one-sided 99.9% Student-t bound (t = 3.852, 13 df) is -74.4326 > -74.54, and QDECL = -74.54 is declared from 42 further runs of this replica (proof Section 8); the 14 organizer runs asserted here lie above it (one-sided t of the declared value: 7.38, 13 df).",
+   "id": "r39-tail-02",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39tail.py",
+   "scope": "Tail replica of proof Section 8 (run 02 of 14): trial 0 runs verify_smc_stats() (hard-asserting stage-18 direct Monte Carlo calibration c18 = 206/65536 and the packed 14-run table EXP with the one-sided 99% and 99.9% Student-t lower bounds above QDECL = -74.54) and the SMC over E18..E23 of the carrier K_P (800 particles; variance-balanced stage lanes 8x512, 8x2048, 8x2048, 4x128, 6x256, 1x4; lazy pool entries) with a known-answer check on the advice pair; trials 1 to 20 draw W8 in F8 and W9 in F9 for every proposal (80 x 2048 each; every particle drives exactly two batches), rebuild rows 24 to 38 and verify every hit by the two 39-step compressions, asserting exact match with EXP['r39-tail-02']."
+  },
+  {
+   "event": {
+    "kind": "full-collision"
+   },
+   "hypothesis": "Hard-asserted in r39tail.py (EXP and verify_smc_stats()): kat == 1, mask_viol == 0, calib_c18 == 206, lin_lcb_ok == 1, stage counts k18..k23, log2_carrier, and the run's total verified collision hits and parity classes match EXP['r39-tail-03']. Across all 14 runs in EXP: 6,398 verified collisions in 45,875,200 proposals, parity classes [1592, 1626, 1624, 1556] (chi-square 2.03 < 7.81), linear-scale unbiased mean log2(mean(Q')) = -74.3238, one-sided 99% Student-t lower bound log2(lcb_lin) = -74.3978 > QDECL = -74.54 (and log-scale 99% bound -74.3987 > -74.54); the one-sided 99.9% Student-t bound (t = 3.852, 13 df) is -74.4326 > -74.54, and QDECL = -74.54 is declared from 42 further runs of this replica (proof Section 8); the 14 organizer runs asserted here lie above it (one-sided t of the declared value: 7.38, 13 df).",
+   "id": "r39-tail-03",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39tail.py",
+   "scope": "Tail replica of proof Section 8 (run 03 of 14): trial 0 runs verify_smc_stats() (hard-asserting stage-18 direct Monte Carlo calibration c18 = 206/65536 and the packed 14-run table EXP with the one-sided 99% and 99.9% Student-t lower bounds above QDECL = -74.54) and the SMC over E18..E23 of the carrier K_P (800 particles; variance-balanced stage lanes 8x512, 8x2048, 8x2048, 4x128, 6x256, 1x4; lazy pool entries) with a known-answer check on the advice pair; trials 1 to 20 draw W8 in F8 and W9 in F9 for every proposal (80 x 2048 each; every particle drives exactly two batches), rebuild rows 24 to 38 and verify every hit by the two 39-step compressions, asserting exact match with EXP['r39-tail-03']."
+  },
+  {
+   "event": {
+    "kind": "full-collision"
+   },
+   "hypothesis": "Hard-asserted in r39tail.py (EXP and verify_smc_stats()): kat == 1, mask_viol == 0, calib_c18 == 206, lin_lcb_ok == 1, stage counts k18..k23, log2_carrier, and the run's total verified collision hits and parity classes match EXP['r39-tail-04']. Across all 14 runs in EXP: 6,398 verified collisions in 45,875,200 proposals, parity classes [1592, 1626, 1624, 1556] (chi-square 2.03 < 7.81), linear-scale unbiased mean log2(mean(Q')) = -74.3238, one-sided 99% Student-t lower bound log2(lcb_lin) = -74.3978 > QDECL = -74.54 (and log-scale 99% bound -74.3987 > -74.54); the one-sided 99.9% Student-t bound (t = 3.852, 13 df) is -74.4326 > -74.54, and QDECL = -74.54 is declared from 42 further runs of this replica (proof Section 8); the 14 organizer runs asserted here lie above it (one-sided t of the declared value: 7.38, 13 df).",
+   "id": "r39-tail-04",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39tail.py",
+   "scope": "Tail replica of proof Section 8 (run 04 of 14): trial 0 runs verify_smc_stats() (hard-asserting stage-18 direct Monte Carlo calibration c18 = 206/65536 and the packed 14-run table EXP with the one-sided 99% and 99.9% Student-t lower bounds above QDECL = -74.54) and the SMC over E18..E23 of the carrier K_P (800 particles; variance-balanced stage lanes 8x512, 8x2048, 8x2048, 4x128, 6x256, 1x4; lazy pool entries) with a known-answer check on the advice pair; trials 1 to 20 draw W8 in F8 and W9 in F9 for every proposal (80 x 2048 each; every particle drives exactly two batches), rebuild rows 24 to 38 and verify every hit by the two 39-step compressions, asserting exact match with EXP['r39-tail-04']."
+  },
+  {
+   "event": {
+    "kind": "full-collision"
+   },
+   "hypothesis": "Hard-asserted in r39tail.py (EXP and verify_smc_stats()): kat == 1, mask_viol == 0, calib_c18 == 206, lin_lcb_ok == 1, stage counts k18..k23, log2_carrier, and the run's total verified collision hits and parity classes match EXP['r39-tail-05']. Across all 14 runs in EXP: 6,398 verified collisions in 45,875,200 proposals, parity classes [1592, 1626, 1624, 1556] (chi-square 2.03 < 7.81), linear-scale unbiased mean log2(mean(Q')) = -74.3238, one-sided 99% Student-t lower bound log2(lcb_lin) = -74.3978 > QDECL = -74.54 (and log-scale 99% bound -74.3987 > -74.54); the one-sided 99.9% Student-t bound (t = 3.852, 13 df) is -74.4326 > -74.54, and QDECL = -74.54 is declared from 42 further runs of this replica (proof Section 8); the 14 organizer runs asserted here lie above it (one-sided t of the declared value: 7.38, 13 df).",
+   "id": "r39-tail-05",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39tail.py",
+   "scope": "Tail replica of proof Section 8 (run 05 of 14): trial 0 runs verify_smc_stats() (hard-asserting stage-18 direct Monte Carlo calibration c18 = 206/65536 and the packed 14-run table EXP with the one-sided 99% and 99.9% Student-t lower bounds above QDECL = -74.54) and the SMC over E18..E23 of the carrier K_P (800 particles; variance-balanced stage lanes 8x512, 8x2048, 8x2048, 4x128, 6x256, 1x4; lazy pool entries) with a known-answer check on the advice pair; trials 1 to 20 draw W8 in F8 and W9 in F9 for every proposal (80 x 2048 each; every particle drives exactly two batches), rebuild rows 24 to 38 and verify every hit by the two 39-step compressions, asserting exact match with EXP['r39-tail-05']."
+  },
+  {
+   "event": {
+    "kind": "full-collision"
+   },
+   "hypothesis": "Hard-asserted in r39tail.py (EXP and verify_smc_stats()): kat == 1, mask_viol == 0, calib_c18 == 206, lin_lcb_ok == 1, stage counts k18..k23, log2_carrier, and the run's total verified collision hits and parity classes match EXP['r39-tail-06']. Across all 14 runs in EXP: 6,398 verified collisions in 45,875,200 proposals, parity classes [1592, 1626, 1624, 1556] (chi-square 2.03 < 7.81), linear-scale unbiased mean log2(mean(Q')) = -74.3238, one-sided 99% Student-t lower bound log2(lcb_lin) = -74.3978 > QDECL = -74.54 (and log-scale 99% bound -74.3987 > -74.54); the one-sided 99.9% Student-t bound (t = 3.852, 13 df) is -74.4326 > -74.54, and QDECL = -74.54 is declared from 42 further runs of this replica (proof Section 8); the 14 organizer runs asserted here lie above it (one-sided t of the declared value: 7.38, 13 df).",
+   "id": "r39-tail-06",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39tail.py",
+   "scope": "Tail replica of proof Section 8 (run 06 of 14): trial 0 runs verify_smc_stats() (hard-asserting stage-18 direct Monte Carlo calibration c18 = 206/65536 and the packed 14-run table EXP with the one-sided 99% and 99.9% Student-t lower bounds above QDECL = -74.54) and the SMC over E18..E23 of the carrier K_P (800 particles; variance-balanced stage lanes 8x512, 8x2048, 8x2048, 4x128, 6x256, 1x4; lazy pool entries) with a known-answer check on the advice pair; trials 1 to 20 draw W8 in F8 and W9 in F9 for every proposal (80 x 2048 each; every particle drives exactly two batches), rebuild rows 24 to 38 and verify every hit by the two 39-step compressions, asserting exact match with EXP['r39-tail-06']."
+  },
+  {
+   "event": {
+    "kind": "full-collision"
+   },
+   "hypothesis": "Hard-asserted in r39tail.py (EXP and verify_smc_stats()): kat == 1, mask_viol == 0, calib_c18 == 206, lin_lcb_ok == 1, stage counts k18..k23, log2_carrier, and the run's total verified collision hits and parity classes match EXP['r39-tail-07']. Across all 14 runs in EXP: 6,398 verified collisions in 45,875,200 proposals, parity classes [1592, 1626, 1624, 1556] (chi-square 2.03 < 7.81), linear-scale unbiased mean log2(mean(Q')) = -74.3238, one-sided 99% Student-t lower bound log2(lcb_lin) = -74.3978 > QDECL = -74.54 (and log-scale 99% bound -74.3987 > -74.54); the one-sided 99.9% Student-t bound (t = 3.852, 13 df) is -74.4326 > -74.54, and QDECL = -74.54 is declared from 42 further runs of this replica (proof Section 8); the 14 organizer runs asserted here lie above it (one-sided t of the declared value: 7.38, 13 df).",
+   "id": "r39-tail-07",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39tail.py",
+   "scope": "Tail replica of proof Section 8 (run 07 of 14): trial 0 runs verify_smc_stats() (hard-asserting stage-18 direct Monte Carlo calibration c18 = 206/65536 and the packed 14-run table EXP with the one-sided 99% and 99.9% Student-t lower bounds above QDECL = -74.54) and the SMC over E18..E23 of the carrier K_P (800 particles; variance-balanced stage lanes 8x512, 8x2048, 8x2048, 4x128, 6x256, 1x4; lazy pool entries) with a known-answer check on the advice pair; trials 1 to 20 draw W8 in F8 and W9 in F9 for every proposal (80 x 2048 each; every particle drives exactly two batches), rebuild rows 24 to 38 and verify every hit by the two 39-step compressions, asserting exact match with EXP['r39-tail-07']."
+  },
+  {
+   "event": {
+    "kind": "full-collision"
+   },
+   "hypothesis": "Hard-asserted in r39tail.py (EXP and verify_smc_stats()): kat == 1, mask_viol == 0, calib_c18 == 206, lin_lcb_ok == 1, stage counts k18..k23, log2_carrier, and the run's total verified collision hits and parity classes match EXP['r39-tail-08']. Across all 14 runs in EXP: 6,398 verified collisions in 45,875,200 proposals, parity classes [1592, 1626, 1624, 1556] (chi-square 2.03 < 7.81), linear-scale unbiased mean log2(mean(Q')) = -74.3238, one-sided 99% Student-t lower bound log2(lcb_lin) = -74.3978 > QDECL = -74.54 (and log-scale 99% bound -74.3987 > -74.54); the one-sided 99.9% Student-t bound (t = 3.852, 13 df) is -74.4326 > -74.54, and QDECL = -74.54 is declared from 42 further runs of this replica (proof Section 8); the 14 organizer runs asserted here lie above it (one-sided t of the declared value: 7.38, 13 df).",
+   "id": "r39-tail-08",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39tail.py",
+   "scope": "Tail replica of proof Section 8 (run 08 of 14): trial 0 runs verify_smc_stats() (hard-asserting stage-18 direct Monte Carlo calibration c18 = 206/65536 and the packed 14-run table EXP with the one-sided 99% and 99.9% Student-t lower bounds above QDECL = -74.54) and the SMC over E18..E23 of the carrier K_P (800 particles; variance-balanced stage lanes 8x512, 8x2048, 8x2048, 4x128, 6x256, 1x4; lazy pool entries) with a known-answer check on the advice pair; trials 1 to 20 draw W8 in F8 and W9 in F9 for every proposal (80 x 2048 each; every particle drives exactly two batches), rebuild rows 24 to 38 and verify every hit by the two 39-step compressions, asserting exact match with EXP['r39-tail-08']."
+  },
+  {
+   "event": {
+    "kind": "full-collision"
+   },
+   "hypothesis": "Hard-asserted in r39tail.py (EXP and verify_smc_stats()): kat == 1, mask_viol == 0, calib_c18 == 206, lin_lcb_ok == 1, stage counts k18..k23, log2_carrier, and the run's total verified collision hits and parity classes match EXP['r39-tail-09']. Across all 14 runs in EXP: 6,398 verified collisions in 45,875,200 proposals, parity classes [1592, 1626, 1624, 1556] (chi-square 2.03 < 7.81), linear-scale unbiased mean log2(mean(Q')) = -74.3238, one-sided 99% Student-t lower bound log2(lcb_lin) = -74.3978 > QDECL = -74.54 (and log-scale 99% bound -74.3987 > -74.54); the one-sided 99.9% Student-t bound (t = 3.852, 13 df) is -74.4326 > -74.54, and QDECL = -74.54 is declared from 42 further runs of this replica (proof Section 8); the 14 organizer runs asserted here lie above it (one-sided t of the declared value: 7.38, 13 df).",
+   "id": "r39-tail-09",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39tail.py",
+   "scope": "Tail replica of proof Section 8 (run 09 of 14): trial 0 runs verify_smc_stats() (hard-asserting stage-18 direct Monte Carlo calibration c18 = 206/65536 and the packed 14-run table EXP with the one-sided 99% and 99.9% Student-t lower bounds above QDECL = -74.54) and the SMC over E18..E23 of the carrier K_P (800 particles; variance-balanced stage lanes 8x512, 8x2048, 8x2048, 4x128, 6x256, 1x4; lazy pool entries) with a known-answer check on the advice pair; trials 1 to 20 draw W8 in F8 and W9 in F9 for every proposal (80 x 2048 each; every particle drives exactly two batches), rebuild rows 24 to 38 and verify every hit by the two 39-step compressions, asserting exact match with EXP['r39-tail-09']."
+  },
+  {
+   "event": {
+    "kind": "full-collision"
+   },
+   "hypothesis": "Hard-asserted in r39tail.py (EXP and verify_smc_stats()): kat == 1, mask_viol == 0, calib_c18 == 206, lin_lcb_ok == 1, stage counts k18..k23, log2_carrier, and the run's total verified collision hits and parity classes match EXP['r39-tail-10']. Across all 14 runs in EXP: 6,398 verified collisions in 45,875,200 proposals, parity classes [1592, 1626, 1624, 1556] (chi-square 2.03 < 7.81), linear-scale unbiased mean log2(mean(Q')) = -74.3238, one-sided 99% Student-t lower bound log2(lcb_lin) = -74.3978 > QDECL = -74.54 (and log-scale 99% bound -74.3987 > -74.54); the one-sided 99.9% Student-t bound (t = 3.852, 13 df) is -74.4326 > -74.54, and QDECL = -74.54 is declared from 42 further runs of this replica (proof Section 8); the 14 organizer runs asserted here lie above it (one-sided t of the declared value: 7.38, 13 df).",
+   "id": "r39-tail-10",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39tail.py",
+   "scope": "Tail replica of proof Section 8 (run 10 of 14): trial 0 runs verify_smc_stats() (hard-asserting stage-18 direct Monte Carlo calibration c18 = 206/65536 and the packed 14-run table EXP with the one-sided 99% and 99.9% Student-t lower bounds above QDECL = -74.54) and the SMC over E18..E23 of the carrier K_P (800 particles; variance-balanced stage lanes 8x512, 8x2048, 8x2048, 4x128, 6x256, 1x4; lazy pool entries) with a known-answer check on the advice pair; trials 1 to 20 draw W8 in F8 and W9 in F9 for every proposal (80 x 2048 each; every particle drives exactly two batches), rebuild rows 24 to 38 and verify every hit by the two 39-step compressions, asserting exact match with EXP['r39-tail-10']."
+  },
+  {
+   "event": {
+    "kind": "full-collision"
+   },
+   "hypothesis": "Hard-asserted in r39tail.py (EXP and verify_smc_stats()): kat == 1, mask_viol == 0, calib_c18 == 206, lin_lcb_ok == 1, stage counts k18..k23, log2_carrier, and the run's total verified collision hits and parity classes match EXP['r39-tail-11']. Across all 14 runs in EXP: 6,398 verified collisions in 45,875,200 proposals, parity classes [1592, 1626, 1624, 1556] (chi-square 2.03 < 7.81), linear-scale unbiased mean log2(mean(Q')) = -74.3238, one-sided 99% Student-t lower bound log2(lcb_lin) = -74.3978 > QDECL = -74.54 (and log-scale 99% bound -74.3987 > -74.54); the one-sided 99.9% Student-t bound (t = 3.852, 13 df) is -74.4326 > -74.54, and QDECL = -74.54 is declared from 42 further runs of this replica (proof Section 8); the 14 organizer runs asserted here lie above it (one-sided t of the declared value: 7.38, 13 df).",
+   "id": "r39-tail-11",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39tail.py",
+   "scope": "Tail replica of proof Section 8 (run 11 of 14): trial 0 runs verify_smc_stats() (hard-asserting stage-18 direct Monte Carlo calibration c18 = 206/65536 and the packed 14-run table EXP with the one-sided 99% and 99.9% Student-t lower bounds above QDECL = -74.54) and the SMC over E18..E23 of the carrier K_P (800 particles; variance-balanced stage lanes 8x512, 8x2048, 8x2048, 4x128, 6x256, 1x4; lazy pool entries) with a known-answer check on the advice pair; trials 1 to 20 draw W8 in F8 and W9 in F9 for every proposal (80 x 2048 each; every particle drives exactly two batches), rebuild rows 24 to 38 and verify every hit by the two 39-step compressions, asserting exact match with EXP['r39-tail-11']."
+  },
+  {
+   "event": {
+    "kind": "full-collision"
+   },
+   "hypothesis": "Hard-asserted in r39tail.py (EXP and verify_smc_stats()): kat == 1, mask_viol == 0, calib_c18 == 206, lin_lcb_ok == 1, stage counts k18..k23, log2_carrier, and the run's total verified collision hits and parity classes match EXP['r39-tail-12']. Across all 14 runs in EXP: 6,398 verified collisions in 45,875,200 proposals, parity classes [1592, 1626, 1624, 1556] (chi-square 2.03 < 7.81), linear-scale unbiased mean log2(mean(Q')) = -74.3238, one-sided 99% Student-t lower bound log2(lcb_lin) = -74.3978 > QDECL = -74.54 (and log-scale 99% bound -74.3987 > -74.54); the one-sided 99.9% Student-t bound (t = 3.852, 13 df) is -74.4326 > -74.54, and QDECL = -74.54 is declared from 42 further runs of this replica (proof Section 8); the 14 organizer runs asserted here lie above it (one-sided t of the declared value: 7.38, 13 df).",
+   "id": "r39-tail-12",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39tail.py",
+   "scope": "Tail replica of proof Section 8 (run 12 of 14): trial 0 runs verify_smc_stats() (hard-asserting stage-18 direct Monte Carlo calibration c18 = 206/65536 and the packed 14-run table EXP with the one-sided 99% and 99.9% Student-t lower bounds above QDECL = -74.54) and the SMC over E18..E23 of the carrier K_P (800 particles; variance-balanced stage lanes 8x512, 8x2048, 8x2048, 4x128, 6x256, 1x4; lazy pool entries) with a known-answer check on the advice pair; trials 1 to 20 draw W8 in F8 and W9 in F9 for every proposal (80 x 2048 each; every particle drives exactly two batches), rebuild rows 24 to 38 and verify every hit by the two 39-step compressions, asserting exact match with EXP['r39-tail-12']."
+  },
+  {
+   "event": {
+    "kind": "full-collision"
+   },
+   "hypothesis": "Hard-asserted in r39tail.py (EXP and verify_smc_stats()): kat == 1, mask_viol == 0, calib_c18 == 206, lin_lcb_ok == 1, stage counts k18..k23, log2_carrier, and the run's total verified collision hits and parity classes match EXP['r39-tail-13']. Across all 14 runs in EXP: 6,398 verified collisions in 45,875,200 proposals, parity classes [1592, 1626, 1624, 1556] (chi-square 2.03 < 7.81), linear-scale unbiased mean log2(mean(Q')) = -74.3238, one-sided 99% Student-t lower bound log2(lcb_lin) = -74.3978 > QDECL = -74.54 (and log-scale 99% bound -74.3987 > -74.54); the one-sided 99.9% Student-t bound (t = 3.852, 13 df) is -74.4326 > -74.54, and QDECL = -74.54 is declared from 42 further runs of this replica (proof Section 8); the 14 organizer runs asserted here lie above it (one-sided t of the declared value: 7.38, 13 df).",
+   "id": "r39-tail-13",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39tail.py",
+   "scope": "Tail replica of proof Section 8 (run 13 of 14): trial 0 runs verify_smc_stats() (hard-asserting stage-18 direct Monte Carlo calibration c18 = 206/65536 and the packed 14-run table EXP with the one-sided 99% and 99.9% Student-t lower bounds above QDECL = -74.54) and the SMC over E18..E23 of the carrier K_P (800 particles; variance-balanced stage lanes 8x512, 8x2048, 8x2048, 4x128, 6x256, 1x4; lazy pool entries) with a known-answer check on the advice pair; trials 1 to 20 draw W8 in F8 and W9 in F9 for every proposal (80 x 2048 each; every particle drives exactly two batches), rebuild rows 24 to 38 and verify every hit by the two 39-step compressions, asserting exact match with EXP['r39-tail-13']."
+  },
+  {
+   "event": {
+    "kind": "full-collision"
+   },
+   "hypothesis": "Hard-asserted in r39tail.py (EXP and verify_smc_stats()): kat == 1, mask_viol == 0, calib_c18 == 206, lin_lcb_ok == 1, stage counts k18..k23, log2_carrier, and the run's total verified collision hits and parity classes match EXP['r39-tail-14']. Across all 14 runs in EXP: 6,398 verified collisions in 45,875,200 proposals, parity classes [1592, 1626, 1624, 1556] (chi-square 2.03 < 7.81), linear-scale unbiased mean log2(mean(Q')) = -74.3238, one-sided 99% Student-t lower bound log2(lcb_lin) = -74.3978 > QDECL = -74.54 (and log-scale 99% bound -74.3987 > -74.54); the one-sided 99.9% Student-t bound (t = 3.852, 13 df) is -74.4326 > -74.54, and QDECL = -74.54 is declared from 42 further runs of this replica (proof Section 8); the 14 organizer runs asserted here lie above it (one-sided t of the declared value: 7.38, 13 df).",
+   "id": "r39-tail-14",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39tail.py",
+   "scope": "Tail replica of proof Section 8 (run 14 of 14): trial 0 runs verify_smc_stats() (hard-asserting stage-18 direct Monte Carlo calibration c18 = 206/65536 and the packed 14-run table EXP with the one-sided 99% and 99.9% Student-t lower bounds above QDECL = -74.54) and the SMC over E18..E23 of the carrier K_P (800 particles; variance-balanced stage lanes 8x512, 8x2048, 8x2048, 4x128, 6x256, 1x4; lazy pool entries) with a known-answer check on the advice pair; trials 1 to 20 draw W8 in F8 and W9 in F9 for every proposal (80 x 2048 each; every particle drives exactly two batches), rebuild rows 24 to 38 and verify every hit by the two 39-step compressions, asserting exact match with EXP['r39-tail-14']."
+  }
+ ],
+ "schema_version": 1
+}
