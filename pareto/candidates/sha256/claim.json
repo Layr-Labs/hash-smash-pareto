@@ -1,20 +1,113 @@
 {
-  "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha256-r37-prefix-v1",
-  "attack_class": "ordinary-collision",
-  "rounds": 37,
-  "claim": {
-    "time_log2": 128.0,
-    "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
-    "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
+ "schema_version": 3,
+ "target_profile": "sha256-r39-prefix-v1",
+ "attack_class": "ordinary-collision",
+ "rounds": 39,
+ "claim": {
+  "time_log2": 94.2249,
+  "time_unit": "target-compressions",
+  "memory_log2_bytes": 20.0,
+  "preprocessing_log2": 43,
+  "success_probability": 0.39,
+  "nonuniform_advice_log2_bytes": 7.32193
+ },
+ "restrictions": [
+  "Ordinary collision of SHA-256 reduced to 39 steps from the standard IV: two 128-byte messages with the same random first block M0 and second blocks M1, M1' = M1 + DL (differences in words 8..12), then the common padding block. The second block is the transplanted advice pair with A[6], A[7] released over a list generated at import by rule on the fibre h4 = 0x3cc9eebe: 9,701,592 entries in 728 classes, 3,462,264 (a2, W10) keys; the walk constants c9, C9 are shifted by 0x05cefde0. The W17 condition is solved per F9 claw by a generic bit-sliced pass over the 62,400 distinct 18-bit prefixes; a passing prefix is completed, tested on scalar words and, at a key hit, expanded to the classes of its group.",
+  "Credited derivative of mitchuski's accepted 0b62ed88 (time 94.4431): its program, list, advice and experiments unchanged except two pricing steps in k4_budget: tail at 2^-74.3238 under the new declared MODEL premise H2-transfer (the 14-run organizer replica mean carried to the new fibre; new-fibre arms K -74.3734, R -74.3781) instead of QDECL -74.54, divisor 1 - 0.077129 kept; time ceiled at 4 decimals; K = 10,719 unchanged. Trials are distinct (a2, kappa) keys with an entry in F8: 8956.4 per distinct claw; every key hit is tested; success by second-order Bonferroni over all hits on designated-mate events. Walk table 99,328 slots of 40 bits. Time 94.2249: work cap (K = 10,719, 1% above its formula; pass 143,633), setup 1,107,473,556 operations, 2^43 preprocessing; B = 2^76.495402 windows. Memory 2^20.0000: peak over phases 1,013,513 bytes plus 32,768. Advice 160 bytes. Success 0.39."
+ ],
+ "baseline_improved": "sha256-r39-nominal-v2",
+ "certificate_manifest": "certificates/manifest.json",
+ "experiment_manifest": "experiments/manifest.json",
+ "heuristics": [
+  {
+   "id": "H1-claw-model",
+   "statement": "For the selected-window distribution of the shipped program (KCAP=710, KTRY=32), the expected charged base-walk work per window is at most 472,362,354 operations and the distinct evaluated F9 claws per window are at most 910.38 on average, 0.015969 per distinct claw at the unit of 57,010.58 groups per window. Chaining values of random first blocks behave as independent uniform values for the walk map and the later events; the (a0, a1) of the distinct F9 claws of a window are i.i.d., independent of the chaining value and of the number of claws, and a claw's trial-key count is a function of its (a0, a1) only (W8..W11 do not depend on the chaining value; one-way ANOVA of 2,000 claws over 16 windows: F = 0.564 on 15 and 1,984 df); at most 1,024 distinct F9 claws are evaluated per window (program cap, never reached in the 48 windows); W17 is uniform over claws and listed keys; survivors of the pass per evaluated claw are at most 0.23995 in expectation, the one-sided 99% bound of this entry's count on 48 full windows (10,114 survivors in 43,134 evaluated claws). The uniform model gives 62,400 x 2^-18 = 0.23804, shown for comparison.",
+   "role": "score-critical",
+   "scope": "The fixed target sha256-r39-prefix-v1 and experiments/r39joint_k4.py with the shipped advice pair and the list generated at import.",
+   "extrapolation": "One-sided 99% bounds from this entry's own full windows of the shipped program: 24 for the base walk (mean 469,984,814, s.d. 4,659,006), 48 for the F9 claws (mean 898.62, s.d. 33.81) and G. Extended to 2^76.495402 windows by independence of first blocks.",
+   "evidence_ids": [
+    "experiment:r39-transplant-claw",
+    "experiment:r39k4-window-small",
+    "proof:55-78",
+    "proof:186-236"
+   ],
+   "limitations": "Samples of 24 and 48 windows on public seeds run by this entry; the organizer runs four windows of 2^21 evaluations of the same walk. Each premise at its own 99% bound."
   },
-  "restrictions": [],
-  "baseline_improved": "sha256-r37-nominal-v2",
-  "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  {
+   "id": "H1-ops",
+   "statement": "The W17 pass costs exactly 143,633 operations per evaluated F9 claw: 733 + sum over the 200 groups of (110 + 403 x blocks), a formula of the table evaluated and asserted by the program, with no folded or claw-specialised code. A survivor costs 711 + 563 per class tested, at most 5,215; a key hit at most 49,472 (the at most 8 classes of its group as mates); the one-time setup, the rule generator included, is charged 1,107,473,556 operations. K = 10,719 is at least 1 percent above its formula.",
+   "role": "score-critical",
+   "scope": "The counted pass, survivor and key-hit paths and setup of experiments/r39joint_k4.py.",
+   "extrapolation": "Exact counts of the program; the organizer run asserts the pass cost per claw and planted survivor costs.",
+   "evidence_ids": [
+    "experiment:r39k4-window-small",
+    "proof:31-41",
+    "proof:55-78"
+   ],
+   "limitations": "The 2^30 part of the setup is an allowance for the import's other statements."
+  },
+  {
+   "id": "H2-transfer",
+   "statement": "MODEL (declared, favorable; a new premise of this entry, not inherited from 5f8e6192's acceptance). For the designated (lowest-a3) F8-passing mate of a trial key drawn uniformly over all trial (window, claw, key) triples of the attack (windows weighted by their trial count) of the fibre 0x3cc9eebe, in a claw passing F9 with W17 equal to the advice value (an entry the program compresses at every hit of that key), the two 39-step compressions give equal outputs with probability at least 2^-74.3238, the linear mean of the 14 organizer-executed runs r39-tail-01..14 of the shipped replica (hard-asserted), which sample the advice draws, carried to the new fibre. The new-fibre arms lie below it: measured directly by the key-weighted arm K weighted by window size (participant-run, 28 organizer-protocol runs on F9 claws of the shipped program's windows): mean 2^-74.3747, one-sided 99.9% bound 2^-74.5058. Model, stated plainly: the SMC carrier sees a window only through its claws' (a0, a1). For a valid listed entry of the fibre 0x3cc9eebe passing F8 in a claw passing F9 with W17 equal to the advice value, the two 39-step compressions give equal outputs with probability at least 2^-74.3238, the 14-run organizer mean of the shipped replica (its check value QDECL = -74.54 lies below its hard-asserted one-sided 99.9% bound 2^-74.4326; 42 further runs: mean 2^-74.4434, 99.9% bound 2^-74.5296). Real variants of the new fibre do not lower it: paired joint arm against h0 variants, 28 organizer-protocol runs with identical SMC carrier, log2 ratio -0.014 (s.e. 0.023), one-sided 99% bound on the loss 0.071 bit; class-01-only -0.021. Priced directly on the new fibre, the R 3cc9eebe arm alone (28 runs) has the one-sided 99.9% bound 2^-74.4804, above QDECL; its claws are real F9 claws of the shifted walk from windows of an earlier build (seed 1000: 908 F9 claws there, 871 in the shipped program).",
+   "role": "score-critical",
+   "scope": "Rows 18 to 38 of the advice trail after rows 0 to 17 hold; parity classes pooled as in 5f8e6192.",
+   "extrapolation": "The R arms draw (claw, entry) uniformly over F8-passing pairs, a support arm weighting entries uniformly; every hit verified by recompressing both blocks. These arms are participant-run; the organizer's replica samples the advice distribution.",
+   "evidence_ids": [
+    "experiment:r39-tail-01",
+    "proof:138-162"
+   ],
+   "limitations": "The transfer is a 28-run paired arm, not a proof of equality; the attack's trials are all of class 01 (a0 even, W1 odd), whose paired figure is -0.021. The priced value 2^-74.3238 lies above the new-fibre arm means (K -74.3734 and -74.3747 weighted by window size; R 3cc9eebe -74.3781) by about 0.05 bit: it is a declared model value; the measured new-fibre lower bounds are those of the arms (K, weighted by window size, one-sided 99.9% 2^-74.5058; R 3cc9eebe 2^-74.4804); pricing at QDECL = -74.54 would add 0.2162 bit."
+  },
+  {
+   "id": "H3-advice-construction",
+   "statement": "A[8..11], E[12..15] and W12..W15 are fixed to the advice values; (A[6], A[7]) range over the listed entries of the fibre 0x3cc9eebe; for every listed entry both messages follow the advice state-difference trail through step 15, W9 is C9 + 0x05cefde0 - a1 and W16 is one value per claw. Constructing and selecting the advice pair costs at most 2^43 compressions (2^42.545 by the accounting of proof Section 9), added to the claimed time; the offline fibre search costs at most about 2^31.1 compressions (estimated from the tools' loop counts), inside the remaining 2^41.1.",
+   "role": "score-critical",
+   "scope": "The one-time construction of the 160-byte advice pair of 5f8e6192; the list is generated at import by the rule of proof Section 2.5.",
+   "extrapolation": "Exhaustive enumeration over all 2^32 a3 with the real two-message trail checked on every entry at four points (0 failures); the rule reproduces that list exactly; the organizer run checks one entry of every group at the advice point.",
+   "evidence_ids": [
+    "experiment:r39-transplant-claw",
+    "proof:14-30",
+    "proof:163-165"
+   ],
+   "limitations": "The 93-pair campaign was run by the pair's authors and is charged at its declared cost."
+  },
+  {
+   "id": "H5-group-independence",
+   "statement": "Windows are independent (fresh first blocks). Trials are distinct (a2, kappa) keys with at least one listed entry passing F8 in a claw passing F9: at least 8956.4 per distinct claw, the one-sided 99% lower bound of this entry's count on 2,000 real F9 claws of the shipped program. Each listed key's W17 event has probability 2^-32 in each claw (a uniform claw constant); events in different claws are independent. Within a claw, two keys hit together iff G(a2, kappa, w) = s0(a2 + w) - (a2 + w) + kappa coincide. Let N_k(w) be the number of other listed keys with G equal to key k's at the claw's w, and pi_k = E_w[N_k(w)]. Measured over all 3,462,264 listed keys on two independent sets of 16,384 random w: mean pi 1.07e-3, largest per-key estimate 4.6e-3; per-(key, w) counts on the second set: N = 1 in 60,723,478 cases, N = 2 in 37,173, N = 3 in 40, N >= 4 in none of 5.67e10. At the w of 2,000 real F9 claws of the shipped program: mean pi 1.0825e-3, largest per-(key, w) N = 3 (w15/critic_final/cohit_real.c, cohit_real_2000.txt; w and u at all 43,134 real claws in wreal.py, wreal.txt). The claw's w contains -cv5 additively, so it is uniform and independent of (a0, u) under H1. Hits whose equal-G cluster in the claw has more than 4 keys are left out of the second-order sum; for every kept key N_k <= 3, and family-wise over all keys (alpha = 0.001) E[min(N_k, 3)] <= 1.36e-2. Left-out hits cost at most P(N_k >= 4) <= ln(3,462,264 / 0.001) / 16,384 = 1.341e-3 per key in the first-order term (no N >= 4 for any key in 16,384 w; family-wise over all keys at alpha = 0.001). Both bounds hold for every key, so the within-claw term holds whatever the relation between a key's partner rate and its tail. The claw's W17 constants (w, c) are independent of the designated-mate tail events, as for the hit events themselves. Real 2^-32 hits: 37 key hits against 38.58 expected over the 48 windows; 3 compressed F8-passing mates against 6.85 expected (P = 0.09, disclosed). The program tests every key hit; success is priced by second-order Bonferroni over all hits on designated-mate events (proof Section 7), divisor 1 - 0.077129 with the cross-claw term bounded through the cap of 1,024 claws for any correlation; no premise between the tails of different hits is used.",
+   "role": "score-critical",
+   "scope": "The amplification over 2^76.495402 windows of the shipped program.",
+   "extrapolation": "Keys with an entry in F8 per F9 claw 576,745.3 (s.e. 970.3, 16 batches of 125 claws); per-claw s.d. 57,687; F9 claws per window from 48 windows.",
+   "evidence_ids": [
+    "experiment:r39k4-window-small",
+    "proof:130-137"
+   ],
+   "limitations": "Participant-run counts (2,000 claws, 48 windows). The organizer's dispersion test is a scaled spot test on four fixed groups; independence of the 2^-32 events over all groups and windows is the premise, not a measurement."
+  },
+  {
+   "id": "H6-cap-completion",
+   "statement": "Mean work per window is at most 605,977,191 operations against the cap 611,096,407 (margin 0.84%), and the per-window s.d. is at most 14,621,707, with each of the four sample moments at its one-sided 99.75% bound (99% jointly). For independent windows Chebyshev bounds the probability that the cap binds before B windows below 7.7e-23 (B = 2^76.495402).",
+   "role": "score-critical",
+   "scope": "The work cap of k4_budget.",
+   "extrapolation": "From 24 and 48 full windows of the shipped program.",
+   "evidence_ids": [
+    "proof:130-137",
+    "proof:186-236"
+   ],
+   "limitations": "Normal-theory bounds on the sample moments."
+  },
+  {
+   "id": "H-implicit-distinct-key-dispersion",
+   "statement": "Given the claws, the W17 events of distinct keys are dispersed as independent trials. Tested in the organizer run at a scaled event of probability 2^-7 on every key of four groups (every 50th) with an entry in F8, in every F9 claw of the four organizer windows: 146,502 key events, 1,104 hits against 1144.5 expected (z = -1.20), Pearson 19.29 on 22 claws; acceptance region fixed in the manifest and asserted.",
+   "role": "score-critical",
+   "scope": "Four of the 200 groups, all F9 claws of the four organizer windows of r39k4-window-small.",
+   "extrapolation": "The attack's event has probability 2^-32 on the same keys and words.",
+   "evidence_ids": [
+    "experiment:r39k4-window-small",
+    "proof:176-185"
+   ],
+   "limitations": "Four groups only, for run time; the groups are fixed by the program."
+  }
+ ],
+ "submission_state": "ready",
+ "lane": "exploratory"
 }
