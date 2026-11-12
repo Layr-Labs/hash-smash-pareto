@@ -1,20 +1,167 @@
 {
-  "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha256-r37-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 37,
-  "claim": {
-    "time_log2": 128.0,
-    "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
-    "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
-  },
-  "restrictions": [],
-  "baseline_improved": "sha256-r37-nominal-v2",
+  "baseline_improved": "sha256-r39-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
+  "claim": {
+    "memory_log2_bytes": 20.1238,
+    "nonuniform_advice_log2_bytes": 12.60548,
+    "preprocessing_log2": 43.0038,
+    "success_probability": 0.39,
+    "time_log2": 97.0659,
+    "time_unit": "target-compressions"
+  },
+  "experiment_manifest": "experiments/manifest.json",
+  "heuristics": [
+    {
+      "evidence_ids": [
+        "experiment:r39-transplant-claw",
+        "experiment:r39k4-window-small",
+        "proof:72-112",
+        "proof:116-135",
+        "proof:272-279",
+        "proof:281-293"
+      ],
+      "extrapolation": "From the pre-declared 2^27 cap batch of 60 attack-mode windows of this program (seeds 832000-832059; per-window total and base ops, C and D, proof.md Appendices D and E; all 60 present) and the 3 organizer-run reduced windows (r39k4-window-small) to the attack's 2^78.5314 windows; 67d6065c's unscreened 2^27 yield batch of 48 windows (seeds 830000-830047, proof.md Appendix D) supplies the key factor and, under the declared premise H1-screen, the E[N] value.",
+      "id": "H1-claw-model",
+      "limitations": "Kernel-size conditioning can bias maps and later events; parity shows that the composition preserves that distribution, not that it is uniform. The sample has no all-rejected window, but the true-expectation premise includes them. H1 remains an extrapolation from finite public-seed replays, and forced configurations can cost more.",
+      "role": "score-critical",
+      "scope": "The exact retained first-block screen and filter and the r39 walk in experiments/r39joint_k4.py, with 2^27 walk evaluations per accepted window (P.WIN), at most 32 charged generation attempts and at most 8,192 discarded draws.",
+      "statement": "For the retained KCAP=679/KTRY=32 selected-window distribution of the shipped program (first blocks pre-screened by a3eb4a8a's S <= 5 screen, at most 8,192 discarded draws per window), the expected charged base-walk work per window is at most 951,621,679 operations (the nominal model-based 99% upper bound, Student t, over the pre-declared 2^27 cap batch of 60 full w12 windows of this program in attack mode, per window total ops - k4-category ops, t(59), all 60 present: mean 950,104,723.8, s.d. 4,913,907.9; Appendices D and E), the yield is 127,011.12 groups per window (MODEL: the mean over the same 60 windows of C, the window's count of distinct walk claws (cv_id, a0, u), counted at the claw call at 0 ops; Appendix D), and the distinct evaluated F9 claws per distinct claw are at most 0.016025 (99% upper bound of the per-window D / C over the same 60 windows, mean 0.015910; proof.md Appendix E). These are premises on true expectations, priced at their 99% bounds (C_W at its mean). Claw free words, W17 and the inherited tail must keep the stated uniformity/independence properties after conditioning on selection; the per-claw yield E[N] under the screen is the separate premise H1-screen."
+    },
+    {
+      "id": "H1-screen",
+      "role": "score-critical",
+      "statement": "MODEL (declared heuristic, new in this entry): under the screened chaining-value and window law of the shipped program (a3eb4a8a's pre-generation screen S <= 5, KCAP = 679) at the production window (2^27 walk evaluations, K4B = 1,023), E_screen,27[N] >= 904.644, where N is the number of W17 trials (F8-passing listed variants) per distinct claw; 904.644 is the program's K4_EN_LB. This is a new premise; its measured basis is 67d6065c's 48-window yield panel, which measured E[N] without the screen (one-sided 99% lower bound 904.6441, mean 910.798 per claw).",
+      "scope": "The shipped program experiments/r39joint_k4.py: per-claw W17 trial count N of distinct claws in screened 2^27 windows (proof.md Sections 3, 5 and 9).",
+      "extrapolation": "Support (participant-run, paired, the H1 observable N = F8-passing listed variants): 12 seeds 800400-800411 run on both builds with the same seeds at 2^22 walk evaluations per window and K4B = 64 (harness winmeasure_k4d.py): unscreened N / C = 8,654,960 / 9,865 = 877.34 per claw (per-window s.d. 171.75), screened 8,804,512 / 9,958 = 884.16 (s.d. 192.16); paired per-window difference mean +4.34, s.d. 290.11, s.e. 83.75. Extrapolated (1) from W = 2^22, K4B = 64 to W = 2^27, K4B = 1,023, and (2) from these point estimates (both below 904.644) to the declared value: the premise assumes the screen does not lower per-claw yield, so that the unscreened 2^27 panel's 99% lower bound also holds under the screened law.",
+      "limitations": "The paired probe detects no loss at its precision (s.e. about 84 per claw); it is a sanity check, not a lower bound and not a proof of proportionality. No screened 2^27 yield panel was run; a screened panel or a coupling bound would test the premise. The screen selects chaining values on a score correlated with kernel size, which can shift later events; the probe sees no shift in N at 2^22.",
+      "evidence_ids": [
+        "experiment:r39k4-window-small",
+        "proof:76-76",
+        "proof:122-122",
+        "proof:193-193"
+      ]
+    },
+    {
+      "evidence_ids": [
+        "experiment:r39-tail-01",
+        "experiment:r39-tail-02",
+        "experiment:r39-tail-03",
+        "experiment:r39-tail-04",
+        "experiment:r39-tail-05",
+        "experiment:r39-tail-06",
+        "experiment:r39-tail-07",
+        "experiment:r39-tail-08",
+        "experiment:r39-tail-09",
+        "experiment:r39-tail-10",
+        "experiment:r39-tail-11",
+        "experiment:r39-tail-12",
+        "experiment:r39-tail-13",
+        "experiment:r39-tail-14",
+        "proof:121-125",
+        "proof:126-131"
+      ],
+      "extrapolation": "Our theory (best case): p_tail = 2^-74.3238, the linear mean of the 14 runs; the replica hard-asserts the conservative check value QDECL = -74.45. The organizer replica experiments/r39tail.py v2 (r39-tail-01..14, 800 particles, variance-balanced stage lanes 8x512/8x2048/8x2048/4x128/6x256/1x4, 20 trials x 80 batches x 2048 proposals = 3,276,800 proposals per run, every particle driving exactly two batches) hard-asserts EXP and verify_smc_stats() on every run: 6,398 verified collisions in 45,875,200 proposals across the 14 public-seed runs, parity classes [1592, 1626, 1624, 1556] (chi-square 2.03 < 7.81). By Del Moral's Feynman-Kac theorem, the unnormalized product estimator Q'_r = 2^(l2_r) * (hits_r / 3276800) is exactly unbiased on the linear scale (E[Q'_r] = Q', zero log-scale Jensen bias): verify_smc_stats() hard-asserts linear-scale mean log2(mean(Q')) = -74.3238, one-sided 99% Student-t lower bound log2(lcb_lin) = -74.3978 > QDECL = -74.45, log-scale 99% bound -74.3987 > -74.45, and the linear one-sided 99.9% bound (t = 3.852, 13 df) -74.4326 > -74.45. QDECL = -74.45 was fixed before the organizer runs by the pre-registered rule (at least 0.01 below the 99.9% bound of the frozen design, rounded down to two decimals); as a one-sided test of the declared value the 14 runs give t = 4.4397 (13 df, p < 1e-3). The v2 program of 0b2616e3 (this replica's code, with the published advice) reproduces 19034ce byte-identically at 19034ce's parameters (three private seed sets: carrier, stage counts, per-trial hits and parity classes identical), so the estimator is unchanged in semantics; only the work allocation changed.",
+      "id": "H2-tail",
+      "limitations": "A one-sided 99% confidence lower bound (-74.3978 linear-scale unbiased, -74.3987 log-scale) over 14 organizer-executed replica runs of the Feynman-Kac unbiased estimator, 0.0522 bits above the replica's check value -74.45 (linear 99%; the claim prices the tail at the measured mean -74.3238, best-case premise), and the linear 99.9% bound -74.4326 is 0.0174 above it; the declared value was fixed by a pre-registered rule frozen with the design on private seeds (ten sizing runs, mean -75.4069 sd 0.1235) before any organizer-seed result of this design was seen. Stage 18 is calibrated against direct uniform Monte Carlo (c18 = 206/65536, asserted within 0.0003 of the 14-run SMC stage-18 rate); K_P is a subset of all collision routes so Q <= p_tail. The 14 runs are public-seed replays without a holdout, as in the accepted 4487063; the t-test (t = 4.4397, p < 1e-3) and the pre-registration rule address the coverage finding F-EXP-TAIL-COVERAGE of c30c0d70.",
+      "role": "score-critical",
+      "scope": "The tail rows 18 to 38 of the Table 23 trail after the claw, W8 uniform on F8, W9 uniform on F9, E18..E23 of the first member uniform on 2^32, a0 even and u odd, estimated by the v2 work allocation (800 particles, balanced stage lanes, 3,276,800 proposals per run). Not claimed for another trail or allocation.",
+      "statement": "For the claws of the program (a0 even, u odd, W16 = g, W8 in F8, W9 in F9, W17 = 0x71e9ba98) the probability that the two 39-step compressions of the pair give equal 256-bit outputs (the four parity classes of (a0, u) fall with exact probability 1/4 each; pooling them presumes their exchangeability for the collision event, declared here, and the class-specific estimator 4 * hits_(even, odd) / n, unbiased under that same declared exchangeability premise, is hard-asserted at 99% as -74.4053 > -74.45) is 2^-74.3238, its measured linear mean over the 14 organizer runs (best-case premise; the hard-asserted linear 99.9% bound is -74.4326), for the quantity of proof Section 8 (rows 18 to 38, W18..W23 uniform), a lower bound on the tail probability because the carrier K_P is a subset of all routes to a collision."
+    },
+    {
+      "evidence_ids": [
+        "experiment:r39-transplant-claw",
+        "experiment:r39k4-window-small",
+        "proof:20-32",
+        "proof:47-61",
+        "proof:126-131"
+      ],
+      "extrapolation": "Trials 0 and 1 of experiment:r39-transplant-claw execute verify_advice_construction() in experiments/r39joint.py: it runs the exact 32-bit bit-by-bit DFS fibre solver solve_row_exact on rows 16 and 17 of the advice pair (verifying g16_fibre_size = 2 with G16 = 0xbca1c321, g17_fibre_size = 1 with W17 = 0x71e9ba98, and fibre_dfs_ops = 1944 < 2812 word operations < 1 target-compression), verifies that steps 9 down to 0 and CV_PUB are uniquely recovered from steps 10 to 15 and W[0..15] by exact downward step inversion with zero search (downward_inv_ok = 1), and enumerates a 256-candidate local slice of the step-15 free bits (advice_slice_cands = 256, advice_slice_hits = 1, ops_per_cand = 411 < 4 * 2812 word operations < 2^2 target-compressions). Extrapolated from the 256-candidate slice and the ePrint 2026/1120 Section 4.3 Step 1 measurement (about 2^34.2 SHA-256 calls, Step 2 probability 1) to the 2^34-candidate space on steps 10 to 15.",
+      "id": "H3-advice-construction",
+      "limitations": "The fibre, inversion and 256-candidate slice checks do not execute the full 2^34 construction space or the 93-pair campaign. The inherited sequential construction/selection allowance remains 2^43; this revision adds it conservatively to the online bound and does not claim to have verified its full scale or tail-selection premise.",
+      "role": "score-critical",
+      "scope": "One-time offline construction of the 160-byte advice (CV_PUB, M_PUB, MP_PUB) for sha256-r39-prefix-v1; not part of the online walk.",
+      "statement": "H3 (changed from r39): A[8..11], E[12..15], W12..W15 fixed to the published values; A[6] and A[7] range over the 821,520 listed variants; for every listed variant both messages follow the published state-difference trail through step 15 (step-function identity, checked by --k4selftest: base == build, pass == k4_words); at the published point the construction is r39's build exactly."
+    },
+    {
+      "evidence_ids": [
+        "experiment:r39k4-window-small",
+        "proof:116-135",
+        "proof:164-182",
+        "proof:183-187",
+        "proof:188-197"
+      ],
+      "extrapolation": "from the measured first stage (W17 hits, cluster sizes) to the unmeasurable tail stage; tail independence across claws is inherited from r39's H5 unchanged.",
+      "id": "H5-group-independence",
+      "limitations": "The tail event (2^-74.3) is priced from the accepted r39 terms, and its cross-claw and within-cluster independence is declared, as in r39's H5; within-cluster tails are priced under H7 (shared survival through step 19, independence from step 20 on), a declared MODEL. W17 hit independence is tested only at the 2^-32 stage and only up to the power of 8 events. Claws sharing listed W10 and W11 values share those words; the joint arm tests the marginal tail rate, not joint dependence. This is a proxy, not a proof. Independence in the bulk at rows 19-22 does not imply independence of the 2^-74 tail event.",
+      "role": "score-critical",
+      "scope": "the k4 program experiments/r39joint_k4.py at 2^78.5314 windows of 2^27 walk evaluations (proof.md Section 7); not claimed for another walk.",
+      "statement": "Distinct claws are independent trials for the events \"W9 in F9\", \"some listed variant has W8 in F8 and W17 equal to the published value\", and the tail rows 18-38, as in r39 5f8e6192, whose H5 is accepted on the same basis. Every W17 hit is a distinct message pair with its own tail trial. Within a claw hits cluster: entries that share (a2, W10) and pass F8 give the same W17 (measured per F9 claw on the w12 list: 57,620.7 entries pass F8, 50,415.3 distinct keys, size-biased mean cluster 1.2812 on random claws and 1.3419 on real F9 claws, max 8). Cluster mates differ in a3, hence in W11, W3..W7 and every tail word from W18 on, so their tails are separate trials (H5 extended, proof.md Section 7). E[H] = G x E[N] x 2^-32 and, under independent entry tails, P(success) = 1 - E[(1 - p_tail)^H] (under H7, per-key F_m(t,q)), which the program holds at 0.39 with lambda = -ln(0.61) + 2^-40 (Var(H) <= 4 E[H]); the price weights entries by the declared within-key MODEL H7 (shared survival through step 19, independent trials from step 20 on; proof.md Sections 5 and 7). Evidence (participant runs with k4pair.c and k4verify.py; proof.md Sections 5, 7, 8): chunk 0 (28 classes) and chunk 1 (13 classes) at 4 CVs each, 134M claws per run, gave 5 W17 hits against about 5.7 expected and 3 against 4.0, all verified and all from distinct claws; the tail joint arm (W8, W10, W11 drawn from 60,000 real k = 4 variant triples, 14 runs) gives a ratio of 2^+0.023, s.d. 0.026. Organizer-run (r39k4-window-small): tail outcomes show no claw-level component. On the hit-conditioned tail (published step-17 state, the lane's own words from W18), the graded distance from the published trail at rows 19-22 has between-claw ANOVA F = 3.32, 0.60, 0.01 on 3 trials (133-209 lanes each; p about 0.27 combined). Participant-run on 10 claws and 50,812 lanes: between-claw F <= 1.41 at rows 19-22, ICC <= 0.0001 (k4tailicc.py). This is a graded PROXY for tail independence across claws: rows 19-22 are measured, rows 23-38 are assumed as in r39. Within one claw, cluster mates (same a2, W10) ARE correlated at row 19 (participant-run 0.227); the price therefore applies H7 (K4_EN_LB = 904.6441 x 1.000000 = 904.644); the distinct-key worst case (786.636, +0.2017 bit) is the fallback."
+    },
+    {
+      "evidence_ids": [
+        "experiment:r39k4-window-small",
+        "proof:72-100",
+        "proof:104-127",
+        "proof:281-293"
+      ],
+      "extrapolation": "from the 60 cap full participant-run 2^27 windows of this program and 67d6065c's 48 yield windows (proof.md Appendices D and E) to the 2^78.5314 windows of the attack; the per-window work and duplicate rate are properties of one window, measured at full window size.",
+      "id": "H1-ops",
+      "limitations": "Participant-run window measurements (dedupe_evidence); the organizer-run windows are reduced to 2^21 walk evaluations and check the counted ops exactly through K4_WIN_EXP. The per-claw pass is claw-dependent after this entry's literal-add rewrite and enters the price only through the measured whole-window totals (H6), not at a seed-independent exact count or a sampled per-claw constant. After cut 3 the broadcast prologue is built only in the index/check/measure arm of k4p, so no broadcast rebuild is charged on the counted attack path (MEASURED: the hoisted prologue is 197,271 v5 ops per claw over the 280 (class, chunk) groups, and a window's attack-path total falls by 197,271 x D; the arm runs in check and measure mode, so every r39k4-window-small observation other than the stored-key charge is unchanged, and the three K4_WIN_EXP tuples are re-measured for the screened program on the organizer seeds by the program's own experiment path; the screen changes each seed's drawn chaining value, so all fields differ from 67d6065c's).",
+      "role": "score-critical",
+      "scope": "the k4 program experiments/r39joint_k4.py with its k4d gate and per-window streamed list; windows of 2^27 walk evaluations (P.WIN).",
+      "statement": "Declared model constants, each at its own 99% bound (not 99% overall): 2,812 ops per compression (r39 accepted); base walk mu+ = 951,621,679 ops per window (nominal 99% upper bound, Student t, over the 60 attack-mode 2^27 cap-batch windows of this screened program, per window total ops - k4-category ops, t(59), Appendix D; all 60 present); distinct F9 rate 0.016025 per distinct claw (99% upper bound of the per-window D / C over the 60 screened 2^27 cap-batch windows, sum D 121,241, Appendix E; duplicate F9 claws within a window are skipped by the k4d gate); the recipe decode charged per counted op (54 per class unpack, 560 per keep-array clear, 6 per reject-literal byte, 3 per rejected slot; 179,876 per flush, asserted by the program); the list generator charged per counted event (33 per expanded search node, 41 per push, 17 per half-search, 56 per low half, 9 per pair, the hit extraction per 8-lane chunk, lane test and hit, 145 per class), the per-block literal derivation and folding decisions 590 per block per flush, the literal flags 96 per claw and 106 per (claw, group), the setup stores 2,400 per window (proof.md Sections 3 and 4); the pre-generation screen 4 + 183 per drawn block and 3 per discarded block (a3eb4a8a's counted v5 form, proof.md Section 3); E[N] 904.6441 under the declared premise H1-screen (the 99% lower bound of 67d6065c's 48 unscreened full 2^27 w12 windows, entries per window / 127,006.85, declared for the screened law); key factor 1.000000 under H7 (the measured keys/entries ratio 0.869554, the identical-mate worst case and the fallback, is a conservative factor below 0.86955488, the lower solution r of mean(K - r N) - t(47, 0.99) sd(K - r N) / sqrt(48) = 0 over the 48 pre-declared 2^27 yield windows with K keys and N entries each, window as sampling unit; no sequential coverage is claimed; proof.md Sections 5 and 7); tail 74.3238 (r39 accepted); lambda = -ln(0.61) + 2^-40. The run cap K4_OPS_PER_CLAW = 8,406 comes from the H6 window totals of the screened 2^27 cap batch (proof.md Appendix E), asserted at import; the base-walk decomposition (Appendix D) is not used for the cap; the stored-key charge is at most 27,648 per window (2,304 keys x 12); the claimed time is the ceiling of the run cap. Extra flushes: X = max(ceil(N / 1,023) - 1, 0) for the N distinct F9 claws of a window, each extra flush executed and charged in Mach. Extra flushes are inside the measured window totals of H6; no tail model of N is used. Raw F9 claws per window (at least N), on 67d6065c's unscreened batches: mean 2,555.88, s.d. 64.38, max 2,730 over its 48 2^27 yield windows and mean 2,562.97, s.d. 69.04, max 2,703 over its 60 2^27 cap-batch windows; distinct F9 claws per window in this entry's screened cap batch: mean 2,020.68, max 2,109."
+    },
+    {
+      "evidence_ids": [
+        "experiment:r39k4-window-small",
+        "proof:72-112",
+        "proof:165-165",
+        "proof:286-293"
+      ],
+      "extrapolation": "from the 60 pre-declared 2^27 cap-batch full participant-run w12 windows of the screened program (attack mode; seeds 832000-832059; no adjustment; proof.md Appendix E) and the 3 organizer-run reduced windows to B = 2^78.5314 windows; uses window independence and declared true-moment bounds on the window total supported by the measured mean and s.d..",
+      "id": "H6-cap-completion",
+      "limitations": "Window totals are participant-run full windows (the 60 pre-declared 2^27 cap-batch windows, attack mode, on the screened program's attack path; no window stored more than 2,109 keys, below the 2,304-slot table); the organizer-run windows are reduced to 2^21 walk evaluations and check the counted ops exactly. No window of the batch filled the 2,304-slot table, so the table-full path is not exercised in the sample; it is fail-open (the counted k4q path runs again at its entire Mach total, not capped at 57,013; never an extra trial) and its ops fall under the window-total premise; zero observed fills does not show P(fill) = 0. The true-moment premise (mean <= 1,067,621,538, s.d. <= 5,410,799) is declared for the entire window-total distribution of the 2,304-slot program, overflow windows included; the sample supports it and does not prove it, and nominal coverage is not a runtime probability.",
+      "role": "score-critical",
+      "scope": "the shipped program experiments/r39joint_k4.py at B = 2^78.5314 windows of 2^27 walk evaluations, with its own run cap.",
+      "statement": "MODEL with measured inputs. A window's total is every op the shipped counter charges in it (screen, base walk, k4d gate and insertion, every pass at its own count, any table-full path), so neither the k4q per-claw pass maximum (K4_PASS 57,013 + 711 per surviving 18-bit prefix + 563 per (survivor, a3) match; worst case all 22,176 prefixes surviving gives 57,013 + 711 x 22,176 + 563 x 98,560) nor a tail model of N enters it. The 60 pre-declared 2^27 cap-batch windows (seeds 832000-832059, fixed before the run; 2^27 walk evaluations each; attack mode; proof.md Appendix E) were measured on the screened program's attack path itself (it differs from the shipped file only in import-time constants not read inside a window), so each total is the shipped program's total on that seed and no adjustment is applied: mean 1,065,951,189.3, s.d. 5,410,798.9, min 1,052,097,729, max 1,074,693,118; nominal one-sided 99% bound on the mean (Student t, t(59, 0.99) = 2.3912) 1,067,621,538. Cap per window: 8,406 x 127,011.12 = 1,067,655,474.7, 33,936.7 above that bound; 28 of the 60 totals are above it (the cap is on the total, not per window). Premise (declared MODEL, true moments of the entire window-total distribution of the shipped 2,304-slot program, table-overflow windows included; supported not proven by the sample): independent windows with true mean <= 1,067,621,538 and true s.d. <= 5,410,799. Conditional on it, P(total over B = 2^78.5314 windows > B x 1,067,655,474.7) <= sigma^2 / [B (c - mu)^2] = 5.819184e-20 (variance inequality), below the success margin eps = 0.61 x 2^-40 - 2^-63.0 = 5.5479e-13 left after the clustering shortfall; K4_OPS_PER_CLAW = ceil((1,067,621,538 + ceil(5,410,799 / sqrt(B eps))) / 127,011.12) = 8,406 is the smallest cap with this bound <= eps. Table overflow (more than 2,304 distinct keys) keeps the fail-open control flow: an unstored key is still evaluated: the counted k4q path runs again, charged at its entire Mach total (K4_PASS 57,013 plus 711 per surviving prefix, 563 per (survivor, a3) match and 2 x 2,812 per W17 hit; not capped at 57,013), inside the totals the premise bounds, never an extra trial."
+    },
+    {
+      "evidence_ids": [
+        "experiment:r39k4-window-small",
+        "proof:164-182"
+      ],
+      "extrapolation": "from a scaled-down event of probability 2^-7 (the full W17 value falling in a hashed target set) to the real event of probability 2^-32 on the same keys.",
+      "id": "H-implicit-distinct-key-dispersion",
+      "limitations": "Organizer-run on 6 claws in 3 reduced windows at the scaled event; the real 2^-32 event is not observable in-window.",
+      "role": "score-critical",
+      "scope": "the shipped program experiments/r39joint_k4.py; W17 events per distinct (a2, W10) key within and across claws and windows.",
+      "statement": "Organizer-run (r39k4-window-small, trials 0, 1, 3): a scaled-down event of probability 2^-7, the full W17 value falling in a hashed target set of 2^25 values (the real event with its single target scaled up), counted per distinct (a2, W10) key over 6 claws in 3 windows: 110 hits against 132.2 expected, Pearson 7.05 on 6 dof (p about 0.32). Hits are independent across claws, windows and distinct keys at this scale. A top-bit slice of W17 is NOT used: it is correlated through the shared high bits of the listed a2 values (X² 177.7 on 6 dof on 67d6065c's organizer windows) and does not model a single-value target."
+    },
+    {
+      "evidence_ids": [
+        "experiment:r39-transplant-claw",
+        "experiment:r39k4-window-small",
+        "proof:131-131",
+        "proof:178-190",
+        "proof:206-206",
+        "proof:210-210"
+      ],
+      "extrapolation": "From the measured within-key co-survival at step 18 (P(both | same key) 0.4973 against 0.2501 for different keys, q = 0.4998; participant-run) and the measured within-key hd correlation 0.2269 / 0.0139 / -0.0003 / -0.0002 at steps 19-22 (s.e. 0.018; same-claw random pairs 0.004 / -0.009 / -0.003 / -0.010), reproduced by the organizer-runnable control in r39-transplant-claw (trials 2-255, 4,064 pairs: both exact at 18 in 2,035 = 0.5007 against 1,084 = 0.2667 for the control; correlation from the reported cross sums 0.2170 / 0.0035 / -0.0051 / -0.0044 against 0.0189 / -0.0182 / -0.0103 / -0.0289 at steps 19-22, s.e. 0.016), to the tail event itself: shared survival through step 19, independence from step 20 on. Inverse check: under any shared horizon s <= 20 the factor is 1.000000 to six decimals; the fully dependent reading (s = 38) gives the worst case 0.869554 (+0.2017 bit, time 97.2998 under the same cap), which is the fallback figure.",
+      "id": "H7-mate-partial-dependence",
+      "limitations": "No exact survivor beyond step 19 is observed in any record (0 of 25,462 step-18 survivors), so independence from step 20 on rests on the graded hd proxy, not on exact survival counts. The control's mates are the first 16 listed two-variant keys and are not conditioned on F8 (W8 and W9 first enter the message expansion at W23, so they do not enter steps 18-22 directly). Correlation in the bulk at rows 19-22 does not prove independence of the 2^-74 tail event.",
+      "role": "score-critical",
+      "scope": "Within one claw of the shipped program experiments/r39joint_k4.py: the tail trials of entries that share a passing (a2, W10) key (mates, differing in a3). tested_scope: steps 18-22 of the hit-conditioned tail on real list mates (participant-run 2,964 pairs over 10 claws and 349,184 step-18 pairs over 256 trials; organizer-runnable control 4,064 pairs over trials 2-255 of r39-transplant-claw). extrapolated_scope: the tail event through step 38 (p_tail = 2^-74.3238).",
+      "statement": "MODEL (declared heuristic): same-key mates share one survival trial through step 19 and are independent trials from step 20 on. Per same-key pair the effective trial count is 2 - p_{>19}, so the per-pair tail-success contribution is t(1 - c x t/q) with t = p_tail, q = p_{<=19}, c = 1 - 0.869554 = 0.130446 (0.869554 is the measured keys/entries ratio, the identical-mate worst case). Transfer premise (MODEL): real mates' q is at least the run-level lower bound q_min of the SMC proposal-law rate; the participant run's 0 of 25,462 step-18 survivors surviving step 19 is a 99% upper bound on that run only and is not used as support. q_min: the 14 per-run step-19 counts of the organizer EXP table (r39tail.py; sum 44,957, mean 3,211.2143, s.d. 45.557, 13,107,200 trials per run) give the one-sided 99% t(13) lower bound 3,178.945, so q_min,19 = 2^-12.0095 and q_min = 2^-1.00 x 2^-12.0095 = 2^-13.0095. The contribution is increasing in t (on 0 <= t <= q, since 1 - 2c > 0) and in q, so t >= 2^-74.3238 (H2) and q >= q_min give the key factor 1 - c x t_min/q_min = 1 - 0.130446 x 2^-61.3143 = 1 - 2^-64.25 = 1.000000 to six decimals; p_{>19} = t/q is not printed as a measured quantity; K4_EN_LB = 904.6441 x 1.000000 = 904.644. In the reference H7 model at the lower endpoints (t_min, q_min) the compound-Poisson shortfall of proof.md Section 7 (2^-78.6018 under within-key tail independence) is amplified by 1/q_min = 2^13.0095 to 2^-65.5923 <= 2^-65.59 (priced conservatively as 2^-63.0); this bounds the reference model's shortfall, and since per-key success F_m(t,q) = q[1 - (1 - t/q)^m] is nondecreasing in t and q, the actual success is at least the reference model's; the reference shortfall is below eps = 0.61 x 2^-40 - 2^-63.0 (asserted by the program); K4_OPS_PER_CLAW = 8,406 (the H6 cap) is unchanged by it."
+    }
+  ],
   "lane": "exploratory",
-  "heuristics": []
+  "restrictions": [
+    "Ordinary collision of SHA-256 reduced to 39 steps from the standard IV, two 64-byte blocks plus the common padding block: the same random first block M0, then M1 vs M1' = M1 + DL with differences in words W8..W12. The second block is the transplanted 2026/1120 Table 23 pair with the two state words A[6] and A[7] released over a listed set of 821,520 variants (proof.md Sections 2.2-2.5), shipped in the program as two window-free literals, sha256-asserted, and decoded once at import by _w3gen into the resident prefix table and checked against W3_SHA (proof.md Section 2.5); the attack path runs no per-window decode. No chaining-value difference. Advice: 6,232 bytes, the 160-byte published pair plus the 2,996 bytes of recipe literals and 3,076 bytes of class literals.",
+    "Credited derivative of our r39 entry 5f8e6192: the 160-byte published pair, claw search, tail p >= 2^-74.3238 are inherited; preprocessing = inherited 2^43 + the list build, counted once offline at 22,941,840,887 = 2^34.42 operations, total 2^43.0038 (proof.md Section 2.5). Peak memory 1,142,492 bytes = 2^20.1238 with every list representation, the decoder's live words and the r39 base itemized (Section 6); success 0.39 (Section 7)."
+  ],
+  "rounds": 39,
+  "schema_version": 3,
+  "submission_state": "ready",
+  "target_profile": "sha256-r39-prefix-v1"
 }
