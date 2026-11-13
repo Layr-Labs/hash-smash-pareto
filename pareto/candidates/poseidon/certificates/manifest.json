@@ -1,1 +1,13 @@
-{"schema_version":2,"certificates":[]}
+{
+  "schema_version": 2,
+  "certificates": [
+    {
+      "id": "orchard-r3-line-collision",
+      "type": "hash-collision-witness-v2",
+      "message_a": "certificates/message_a.bin",
+      "message_b": "certificates/message_b.bin",
+      "expected_digest": "46fc99ff4bac7ac6d59eddad56ba4b9ac902e2dbb145b5674f61e7594d724b2a",
+      "target_profile": "poseidon-orchard-r3-prefix-v1"
+    }
+  ]
+}

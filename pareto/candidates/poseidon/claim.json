@@ -1,20 +1,40 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "poseidon-orchard-r0-prefix-v1",
+  "submission_state": "ready",
+  "target_profile": "poseidon-orchard-r3-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 0,
+  "rounds": 3,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 30.8692,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
-    "success_probability": 0.39,
+    "memory_log2_bytes": 27.76509,
+    "preprocessing_log2": 20,
+    "success_probability": 0.39126,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "poseidon-orchard-r0-nominal-v2",
+  "restrictions": [
+    "Applies to the selected target poseidon-orchard-r3-prefix-v1 only (partial rounds 4, 5 and 6 plus the eight fixed full rounds 0-3 and 60-63); the construction uses the first two full rounds being affine on the line of proof.md section 3 and gives no claim for other round counts.",
+    "time_log2 is the worst-case operation count of the algorithm of proof.md section 5 (one centre, K = 1, one thread, every trial charged in full, stage D charged for the normal remainder sequence and any other sequence ending the trial after a prefix of that work, root isolation capped at 16 rounds at degree at most 16 with the 120-pair failure bound), plus the offline derivation of proof.md section 6.2, counted and charged at the declared cap 1,000,000 operations = preprocessing_log2 20, inside time_log2 (one quantity). Memory is the footprint of proof.md section 7.",
+    "Cost model orchard-field-ram-v2: every field operation, load, store, control operation and random word is priced 1/C with C = 216 + 21*3 = 279; the reference permutation cost is used only as the unit and no permutation call is charged as a unit.",
+    "success_probability 0.39126 is a lower bound over the algorithm\u2019s fresh independent uniform 256-bit random words for the fixed target, derived from the score-critical premise H-ONE (q = 0.3931, proof.md section 8) minus the isolation bound (120*(1/2+2^-127)^16 = 0.0018311) and the coin-distance bound (< 2^-128). The executed instance of proof.md section 9 is a good centre and supplies one direct observation at the target depth, not a probability estimate.",
+    "Machine: a word RAM with 256-bit words under orchard-field-ram-v2; every load and store is charged (9 operations per radix-2 butterfly), transforms are radix-2 in place with twiddles formed on the fly, and the memory of proof.md section 7 is the whole footprint (single thread, no stored advice).",
+    "The certificate was produced by an independent big-integer implementation of the same line, odd part and root criterion, and is verified by the organizer reference checker; the resource bound describes the algorithm of section 5, not that implementation."
+  ],
+  "baseline_improved": "poseidon-orchard-r3-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
+  "experiment_manifest": "experiments/manifest.json",
   "lane": "exploratory",
-  "heuristics": []
+  "heuristics": [
+    {
+      "id": "H-ONE",
+      "statement": "For c uniform on F_p, P(1 <= k(c) <= 16) >= 0.3931, where k(c) is the number of nonzero squares S with g_c(S) = 0 and g_c is the monic odd part of the fixed digest polynomial F of this target (degree 976,562). With one centre and the coin/isolation bounds this gives success probability at least 0.3931.",
+      "role": "score-critical",
+      "scope": "The fixed target poseidon-orchard-r3-prefix-v1, the line j = 0 of the first two rounds, the polynomial F of proof.md section 3, centres uniform on F_p. Nothing is claimed for other round counts.",
+      "extrapolation": "From the Poisson(1/2) fixed-point law of the hyperoctahedral monodromy group at two and three S-box layers (a theorem on the deployed constants in the lineage) and toy-field counts at 3 to 8 layers, to N = 9 layers at r = 3, with an allowance of 0.0003693 below 1 - e^(-1/2) = 0.3934693. The executed centre is a good centre at the target depth and is one direct observation, not a rate.",
+      "evidence_ids": [
+        "proof:205-233"
+      ],
+      "limitations": "A premise at the target depth, not a theorem; false for permutation polynomials and for decomposable F with imprimitive monodromy; one executed instance is not a probability estimate; the costs and the certificate do not depend on H-ONE (only the success probability does)."
+    }
+  ]
 }

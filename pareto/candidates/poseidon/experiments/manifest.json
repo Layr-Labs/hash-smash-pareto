@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "line-ladder-w10",
+      "kind": "python-message-pairs-v1",
+      "scope": "Selected target poseidon-orchard-r3-prefix-v1, on the line of proof.md section 3: the first 10 bits of the big-endian reading of the 32-byte digest agree for two distinct canonical messages that are the antipodal points W = c+s and W = c-s about a centre c of the line j = 0 of the first two rounds. One scan of s = 1..150 per organizer trial, the centre from the trial seed. No full collision is expected or claimed.",
+      "hypothesis": "Some scans find an antipodal pair whose complete digests agree on the first 10 bits; each returned pair is checked by the runner. The count of returned pairs is a reproducible observation of the line and digest at one reduced width; no probability, rate or population bound is drawn from it. It checks the digest of the selected target and the line map; it says nothing about the full-width collision, the cost or the success probability.",
+      "program": "experiments/exp_line.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "ffc0000000000000000000000000000000000000000000000000000000000000",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "certificate-replay",
+      "kind": "python-message-pairs-v1",
+      "scope": "The two canonical 64-byte messages of certificates/message_a.bin and message_b.bin on the selected target at its own round count (r = 3). Every organizer trial returns the same pair; the runner recomputes both complete digests.",
+      "hypothesis": "Every trial returns a pair whose complete 32-byte digests are equal and whose messages differ, so the runner counts 256 full collisions of the selected target. This is a witness replay of the executed certificate, not a search and not a cost or success-probability measurement.",
+      "program": "experiments/exp_replay.py",
+      "event": {
+        "kind": "full-collision"
+      }
+    }
+  ]
+}
