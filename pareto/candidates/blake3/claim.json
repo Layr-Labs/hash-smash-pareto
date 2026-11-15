@@ -1,20 +1,48 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "blake3-r1-prefix-v1",
+  "target_profile": "blake3-r3-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 1,
+  "rounds": 3,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 124.78037,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 19.38539,
+    "preprocessing_log2": 30.0,
     "success_probability": 0.39,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "blake3-r1-nominal-v2",
+  "restrictions": [
+    "Ordinary-collision claim on the complete digest; no witness pair is provided.",
+    "Score is an upper bound on total work in collision-frontier-v5 units, not a measured run.",
+    "Success probability 0.39 relies on premise H1 (random-mapping model) declared in proof.md section 8.",
+    "Generic birthday search only: no use of 3-round structure, no differential."
+  ],
+  "baseline_improved": "blake3-r3-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
+  "submission_state": "ready",
   "lane": "exploratory",
-  "heuristics": []
+  "heuristics": [
+    {
+      "id": "H1-random-mapping",
+      "statement": "The 3-round chain F behaves as a random mapping on 2^256 points for the quantities the search uses: no exploitable collision or cycle structure, trails merge as independent random paths, and distinguished points are independent events.",
+      "role": "score-critical",
+      "scope": "The fixed target blake3-r3-prefix-v1 with prefix K = 0^32; only the merge statistics of the walk are used.",
+      "extrapolation": "Success probability and Q are taken from the random-mapping law; no width-256 test is possible, and the program controls do not test this premise.",
+      "evidence_ids": [
+        "proof:231-237"
+      ],
+      "limitations": "Declared, not proved. A merge-rate deficit eps costs 0.5*log2(1/(1-eps)) extra bits; 0.0015 of success probability is kept as margin for the stated losses."
+    },
+    {
+      "id": "H3-machine-convention",
+      "statement": "The emitted straight-line program is executed on 256-bit plane registers with the prices of proof.md section 3: 1 per Boolean plane gate, 0 for rotations and moves, 154-gate two-addend adders, SSA with no spills, 4-byte gate records.",
+      "role": "supporting",
+      "scope": "The main loop of the search; the DP filter, loop control, handlers and recovery are charged as separate rows.",
+      "extrapolation": "Gate counts are read from the emitted instruction list, so the bound scales with the program that would run; no measurement of a real machine is claimed.",
+      "evidence_ids": [
+        "proof:239-247"
+      ],
+      "limitations": "A register file smaller than about 40 planes would force spills and raise the bound. The circuit is not claimed minimal."
+    }
+  ]
 }
