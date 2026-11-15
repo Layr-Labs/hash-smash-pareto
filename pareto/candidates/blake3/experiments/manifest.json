@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "b3r3-net-and-search-audit",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/b3r3_audit.py",
+      "scope": "Rounds 3, blake3-r3-prefix-v1. Re-executes the embedded generator and ledger of this package (gate count, program sha256, score) and advances one batch of the emitted net against its scalar reference; per trial it derives start points from the organizer seed and returns two distinct 64-byte messages whose complete digests agree on the low 8 bits.",
+      "hypothesis": "The package is self-reproducing: the shipped sources rebuild the emitted program and the ledger rows exactly, the emitted program evaluates the selected target, and a seeded batched search with a bucket table returns real agreeing pairs on that target.",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "00000000000000000000000000000000000000000000000000000000000000ff",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    }
+  ]
+}
