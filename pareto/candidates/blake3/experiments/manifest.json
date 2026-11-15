@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "b3r5-cut-trail-audit",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/b3r5_audit.py",
+      "scope": "Rounds 4, blake3-r4-prefix-v1. Re-executes the embedded generator, ledger and table of this package (gate count, program sha256, total N, score), compares all 256 lanes of the first round at full 256-bit width against the scalar reference, accounts the memory as implemented (allocated 4-byte gate records, the shipped open-addressing table filled with 35,000 real 48-bit keys and looked up by key with bounded probing, peak live planes, setup-phase peak). Per trial it derives start points from the organizer seed, evaluates them with the emitted bit-sliced net, and detects a shared low-8-bit digest key through the shipped table, returning two distinct 64-byte messages agreeing on the low 8 bits. Scope limit: the masked-agreement pairs and the table probe test the circuit, the table mechanics and the pair search; they do not measure the width-256 collision or distinguished-point statistics or the attack cost, and no iid, probability or cost inference is claimed from them.",
+      "hypothesis": "The package is self-reproducing: the shipped sources rebuild the emitted program, the recovery circuit and the ledger rows exactly; the emitted program evaluates the selected target at full width; its packed image, the key table and the lane state fit the memory row; and a seeded batched search driven by the emitted net returns real agreeing pairs through the shipped table.",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "00000000000000000000000000000000000000000000000000000000000000ff",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    }
+  ]
+}
