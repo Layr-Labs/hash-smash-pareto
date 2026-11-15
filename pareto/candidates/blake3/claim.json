@@ -1,20 +1,50 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "blake3-r1-prefix-v1",
+  "target_profile": "blake3-r4-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 1,
+  "rounds": 4,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 124.88307,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 19.44376,
+    "preprocessing_log2": 30.0,
     "success_probability": 0.39,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "blake3-r1-nominal-v2",
+  "restrictions": [
+    "Ordinary-collision claim on the complete digest; no witness pair is provided.",
+    "Score is an upper bound on total work in collision-frontier-v5 units, not a measured run.",
+    "Success probability 0.39 relies on premise H1 (random-mapping model) declared in proof.md section 10.",
+    "Generic birthday search only: no use of 4-round structure, no differential.",
+    "The charged point count includes the drain of all 256 lanes to distinguished points; every charged point lies on a stored trail."
+  ],
+  "baseline_improved": "blake3-r4-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
+  "experiment_manifest": "experiments/manifest.json",
+  "submission_state": "ready",
   "lane": "exploratory",
-  "heuristics": []
+  "heuristics": [
+    {
+      "id": "H1-random-mapping",
+      "statement": "For uniformly random seeds on the fixed 4-round chain F, trails merge like independent random paths and distinguished points are independent events on 2^256 points: no exploitable collision or cycle structure.",
+      "role": "score-critical",
+      "scope": "The fixed target blake3-r4-prefix-v1 with prefix K = 0^32 and the 256-bit seed of one attempt; only the merge statistics of the walk are used.",
+      "extrapolation": "Success probability and Q follow the random-mapping law at the charged point count. The circuit is tested at width 256 and the search mechanics at widths 18 and 20, but the width-256 collision probability is not measured; it is exactly what H1 assumes, and the organizer experiment is not used for any probability inference.",
+      "evidence_ids": [
+        "proof:710-717"
+      ],
+      "limitations": "Declared, not proved. A merge-rate deficit eps costs 0.5*log2(1/(1-eps)) extra bits (0.00725 at 1%, 0.03700 at 5%, 0.07601 at 10%); the hard caps of proof section 6.3 are charged separately, so the 0.0015 margin is not used to cover a merge-rate deficit."
+    },
+    {
+      "id": "H3-machine-convention",
+      "statement": "The emitted straight-line program is executed on 256-bit plane registers with the prices of proof.md section 3: 1 per Boolean plane gate, 0 for rotations and moves, 154-gate two-addend adders, SSA with no spills, 4-byte gate records.",
+      "role": "supporting",
+      "scope": "The main loop of the search; the drain, the DP handlers, recovery and start generation are charged as separate rows.",
+      "extrapolation": "Gate counts are read from the emitted instruction list, so the bound scales with the program that would run; no measurement of a real machine is claimed.",
+      "evidence_ids": [
+        "proof:724-731"
+      ],
+      "limitations": "A register file smaller than about 40 planes would force spills and raise the bound. The circuit is not claimed minimal."
+    }
+  ]
 }
