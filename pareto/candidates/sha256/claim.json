@@ -1,20 +1,95 @@
 {
-  "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha256-r37-prefix-v1",
-  "attack_class": "ordinary-collision",
-  "rounds": 37,
-  "claim": {
-    "time_log2": 128.0,
-    "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
-    "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
+ "schema_version": 3,
+ "target_profile": "sha256-r40-prefix-v1",
+ "attack_class": "ordinary-collision",
+ "rounds": 40,
+ "claim": {
+  "time_log2": 123.136,
+  "time_unit": "target-compressions",
+  "memory_log2_bytes": 20,
+  "preprocessing_log2": 43,
+  "success_probability": 0.39,
+  "nonuniform_advice_log2_bytes": 7.32193
+ },
+ "restrictions": [
+  "Target sha256-r40-prefix-v1: SHA-256 reduced to its first 40 steps in every compression, FIPS 180-4 padding, the standard IV used once at the start, feed-forward, equality of all eight 32-bit digest words. Output: two complete messages M = M0 || N || PAD and M' = M0' || N' || PAD of equal length, M0 != M0' and N != N'. One 40-step target compression = 1 unit = 2,896 counted v5 word operations; v5 primitives only (load/store, add/sub, AND/OR/XOR/NOT, shift/rotate, comparison, conditional branch), and no bit-position primitive is used or charged.",
+  "Block 1 carries the accepted board-best R40 walk df1f1cd1 (123.90702 at the 0.61 success floor, lambda0 = -ln 0.61) as its per-evaluation anchor. The map walked is psi = (a..g, h mod 2^30); for psi-collisions dh is uniform on {0, 2^30, 2^31, 3*2^30} and three of the four outcomes are usable, giving the walk floor a0 = 123.90702 - 1/2 log2 3 = 123.11454 (premise P1-walk-254). The psi mask is one extra word operation per evaluation and is charged in full.",
+  "Block 2 carries the accepted r39 base 9993eaa8 (116.58624 at 0.39) and 5f8e6192's term decomposition (claw +9.8077, W17 pin +32.0000, tail +74.3238, ops per claw +1.5647, leader tightening -0.0609) on the shifted round constants K1..K39, per-unit rate b0 = 116.5437 (premises H2-r39-on-K1, H3-advice-construction, H5-group-independence). Executed on K1..K39: rows <= 16 of the block-2 head, 3/3 SAT, 0 violations; tail junction histograms J20-J26 equal to the K0..K38 tail within sampling noise at 2^30 samples per junction.",
+  "time_log2 = 123.136 (exact 123.135348, rounded up at 3 decimals). One driver runs the walk until the first usable psi-collision, then block 2 in the remaining budget W on the same arena: P(T1 <= t) = 1 - exp(-lambda0 (t/2^a0)^2), P2(x) = 1 - exp(-lambda0 x/2^b0), success(W) = E[1{T1 <= W}(1/3 + 2/3 P2(W - T1))] = 0.39, log2 W = 123.13485. The psi mask adds the factor 1 + 1/2896, i.e. log2(1 + 1/2896) = 0.000497938, giving 123.135348. No score-quantum exemption is taken for any primitive of either engine.",
+  "Closure: block 1 leaves a chaining-value difference in register h only, dh = 0xc0000000; block 2 absorbs it at step 0 against dN0 = 0x40000000 and ends with terminal internal difference (0,...,0, -dh), -dh = 0x40000000, so Davies-Meyer gives dH = dh + (-dh) = 0 (proof Section 5: dA32 = -dh routed d35 -> e36 -> h39, W36 silent, corrections in W32..W35 and W37..W39). That characteristic is the declared premise H4-close-tail; its conditions contribute 0 to the time ledger, since a block-2 tail first enters the shared budget at 2^-119.",
+  "Memory 1,028,045 bytes = 2^19.9715, claimed as 2^20: one shared distinguished-point arena of 1,000,000 bytes including table control, engine code 27,277 bytes (23,538 bytes shipped as experiments/claw40.py and experiments/shift40.py, 3,739 bytes of budget solver and walk kernel counted but not shipped), advice pair 160 bytes, the two retained messages 256 bytes, working state 352 bytes; both blocks run sequentially on that arena and no result list is retained between them, so the memory term is max(0, 19.9715 - 20) = 0. Advice preprocessing is charged once at 2^43 compressions (preprocessing_log2 = 43); 2^43 is the only preprocessing figure of this entry."
+ ],
+ "baseline_improved": "sha256-r40-nominal-v2",
+ "certificate_manifest": "certificates/manifest.json",
+ "experiment_manifest": "experiments/manifest.json",
+ "heuristics": [
+  {
+   "id": "P1-walk-254",
+   "role": "score-critical",
+   "statement": "df1f1cd1's random-function premise holds for the 254-bit map psi, the 40-step output with the top two bits of h dropped, and three of four of its collisions are usable by block 2: dh = 0 closes block 1 on its own, dh = +-2^30 is closed by the block-2 characteristic of proof Section 5 with its sign chosen by swapping the pair, and dh = 2^31 is discarded. The walk floor is therefore a0 = 123.90702 - 1/2 log2 3 = 123.11454 on the per-evaluation basis of df1f1cd1.",
+   "scope": "Block 1 of this entry on sha256-r40-prefix-v1; the 254-bit map psi and no other reduction.",
+   "extrapolation": "Carried from the accepted df1f1cd1 entry; the usable-outcome law follows from dh being uniform on {0, 2^30, 2^31, 3*2^30} for psi-collisions.",
+   "evidence_ids": [
+    "proof:40",
+    "proof:176"
+   ],
+   "limitations": "Carried premise; psi drops two output bits of h."
   },
-  "restrictions": [],
-  "baseline_improved": "sha256-r37-nominal-v2",
-  "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  {
+   "id": "H2-r39-on-K1",
+   "role": "score-critical",
+   "statement": "Premises H1 (claw model, claw rates and the W17 pin) and H2 (tail, -log2 p >= 74.3238) of 9993eaa8 hold with the round constants K1..K39 in place of K0..K38, because the round constants change value conditions only and never the signed differences. Block 2 therefore carries the base 116.58624 at success 0.39 and 5f8e6192's term decomposition unchanged, at the per-unit rate b0 = 116.5437 used by the budget driver.",
+   "scope": "Block 2 of this entry on sha256-r40-prefix-v1 with constants K1..K39.",
+   "extrapolation": "Rows <= 16 of the block-2 head executed on K1..K39 (3/3 SAT, 0 violations) and tail junction histograms J20-J26 on K1..K39 equal to the K0..K38 tail within sampling noise at 2^30 samples per junction (J22: 443,739,873 vs 443,737,969 kept, 4,187 vs 4,251 at weight 6).",
+   "evidence_ids": [
+    "experiment:r40-claw-window",
+    "proof:55",
+    "proof:183"
+   ],
+   "limitations": "The claw rates are declared to transfer; the executed support on K1..K39 is rows <= 16 and the junction histograms."
+  },
+  {
+   "id": "H3-advice-construction",
+   "role": "score-critical",
+   "statement": "A[8..11], E[12..15] and W12..W15 are fixed to the advice values; (A[6], A[7]) range over the listed entries of the fibre 0x3cc9eebe; for every listed entry both messages follow the advice state-difference trail through step 15, W9 is C9 + 0x05cefde0 - a1 and W16 is one value per claw. Constructing and selecting the advice pair costs at most 2^43 compressions (2^42.545 by the accounting of proof Section 8), added to the claimed time as preprocessing_log2 = 43; the offline fibre search costs at most about 2^31.1 compressions, inside the remaining 2^41.1.",
+   "scope": "The one-time construction of the 160-byte advice pair of 5f8e6192, used by block 2 on the shifted constants K1..K39.",
+   "extrapolation": "Exhaustive enumeration over all 2^32 a3 with the real two-message trail checked on every entry at four points (0 failures); the rule reproduces that list exactly.",
+   "evidence_ids": [
+    "experiment:r40-block2-transplant",
+    "proof:143",
+    "proof:191"
+   ],
+   "limitations": "The pair-construction campaign was run by the pair's authors and is charged at its declared cost."
+  },
+  {
+   "id": "H5-group-independence",
+   "role": "score-critical",
+   "statement": "Windows of the screened law are independent (fresh first blocks, each drawn and screened independently). Trials are distinct (a2, kappa) keys with at least one listed entry passing F8 in a claw passing F9. Each listed key's W17 event has probability 2^-32 in each claw (a uniform claw constant), and events in different claws are independent. Within a claw, two keys hit together iff G(a2, kappa, w) = s0(a2 + w) - (a2 + w) + kappa coincide; with N_k(w) the number of other listed keys sharing key k's G at the claw's w, the priced quantity is E_w[min(N_k(w), 3)]. Measured over all 3,462,264 listed keys on two independent sets of 16,384 random w: mean 1.07e-3, largest per-key estimate 4.6e-3; per-(key, w) counts N = 1 in 60,723,478 cases, N = 2 in 37,173, N = 3 in 40, N >= 4 in none of 5.67e10. The claw's w contains -cv5 additively, so it is uniform and independent of the walk inputs. Equal-G clusters above four keys are left out of the second-order sum at a cost of at most 1.341e-3 per key in the first-order term; for every kept key N_k <= 3, and family-wise E[min(N_k, 3)] <= 1.36e-2 at alpha = 0.001. Success is priced by second-order Bonferroni over all hits on designated-mate events, with the cross-claw term on the claw-weighted claw count and the within-claw term on the key-mean co-hit rate; no premise between the tails of different hits is used.",
+   "scope": "The amplification over the windows of the screened, capped block-2 program of this entry on constants K1..K39.",
+   "extrapolation": "The measured co-hit statistics above, and the real-claw check at the w of 2,000 F9 claws (mean 1.0825e-3, largest per-(key, w) N = 3), transferred to the screened windows of this entry.",
+   "evidence_ids": [
+    "experiment:r40-claw-window",
+    "proof:204"
+   ],
+   "limitations": "Participant-run counts; independence of the 2^-32 events over all groups and windows is the premise, not a measurement."
+  },
+  {
+   "id": "H4-close-tail",
+   "role": "score-critical",
+   "statement": "There is a block-2 characteristic on constants K1..K39 that absorbs the incoming chaining-value difference (0,...,0, dh), dh = 0xc0000000, at step 0 against dN0 = 0x40000000, and whose terminal internal (pre-feed-forward) difference is (0,...,0, -dh) with -dh = 0x40000000: dA32 = -dh routed through d35 to e36 to h39, W36 silent, the a-branch (a33..a36) and the e-branch (E37, E38, E39) cancelled by corrections in the derived words W32..W35 and W37..W39 (proof Section 5). Davies-Meyer then gives dH = dh + (-dh) = 0 and the two chaining values after block 2 are equal. Its conditions hold with probability at least 2^-91, by the seven-row signed carry-free bit-30 density of proof Section 5; a block-2 tail first enters the shared budget at 2^-119, so the characteristic contributes 0 to the time ledger and the claimed time is set by the walk and claw legs alone.",
+   "scope": "Block 2 of this entry on sha256-r40-prefix-v1 with constants K1..K39: the terminal difference -dh in register h and the routing of proof Section 5. Not claimed for another terminal difference, routing or round count.",
+   "extrapolation": "The Davies-Meyer register algebra and the output map h39 = g38 = f37 = e36 fix the terminal constraint set exactly (dE36 = -dh, dE37 = dE38 = dE39 = 0, dA36..dA39 = 0) and exclude injection at step 36, since E36 = d35 + T1_36 and A36 = T1_36 + T2_36 share T1_36 with dT2_36 = 0; the step-0 absorption is executed per trial in experiments/shift40.py (dN0 = 0x40000000, incoming difference in register h only, hard-asserted); the bit-30 difference class has carries reaching only bit 31, so the row corrections are single-row linear relations in the derived words; the r39 per-row density report at L = 32 (k8_expected 30.14, k6_expected 101.34) bounds the per-row condition count at 6 to 13 for the seven active rows, i.e. 2^-42 to 2^-91 in all.",
+   "evidence_ids": [
+    "experiment:r40-shift-identity",
+    "experiment:r40-block2-transplant",
+    "proof:66",
+    "proof:76",
+    "proof:85",
+    "proof:224"
+   ],
+   "limitations": "The condition count of the closing tail is declared from the per-row density of proof Section 5 rather than counted by a condition-count tool. The premise is asserted for the Section 5 routing and terminal difference on constants K1..K39 only."
+  }
+ ],
+ "submission_state": "ready",
+ "lane": "exploratory"
 }
