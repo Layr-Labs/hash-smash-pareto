@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "r40-shift-identity",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/shift40.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "The algebraic content of proof Sections 2 and 5 on constants K1..K39. For each trial seed, a random 16-word message with the characteristic word-8 difference dW8 = 0xc0000000 and a random block-2 post-step-0 state, checking that the shifted schedule equals the old schedule shifted by one over 63 words, that dN0 = -dW8 = 0x40000000 is value-independent, and that the recovered block-2 chaining values differ only in register h by dh = -dN0 = 0xc0000000 for all states. Every trial output is hard-asserted in shift40.py. Deterministic from the trial seed, stdlib only.",
+      "hypothesis": "Hard-asserted in shift40.py.shiftid: on every trial shift_identity_ok = 1, dN0 = 1073741824 (0x40000000), dh = 3221225472 (0xc0000000), cv_diff_h_only = 1, cv_diff_count = 1 and koff = 1; the schedule shift and the step-0 h-only cancellation of block 2 hold for all states under the shifted constants."
+    },
+    {
+      "id": "r40-block2-transplant",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/shift40.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "Block 2 of this entry (proof Sections 4 and 5) with the round constants K1..K39 (KOFF = 1). Trial 0 takes the advice pair, builds the block-2 messages N = (W_-1, W0..W14) by the back recurrence, and checks the shifted schedule identity over 63 words, the one-bit new word difference dN0 = 0x40000000, the step-0 cancellation giving block-2 chaining values that differ only in register h by 0xc0000000, and the lit-set map {8-12, 16, 17, 24, 26} -> {0, 9-13, 17, 18, 25, 27}. Trials 1 to 255 draw a chaining value, an even a0 and an odd u from the trial seed, build a transplant message and its partner on K1..K39, reproduce the advice tail trajectory, apply the schedule shift and the step-0 cancellation, and emit the same per-trial observations. Every trial output is hard-asserted in shift40.py.",
+      "hypothesis": "Every trial reproduces the two exact block-2 steps on fresh chaining values: the shifted schedule identity holds for all steps and the chaining-value difference entering block 2 lies in register h only, with the per-trial observations equal to the advice pair's."
+    },
+    {
+      "id": "r40-claw-window",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/claw40.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "The block-2 window, claw and tail measurement of proof Section 4 on constants K1..K39 (KOFF = 1, step constants K1 = 71374491 .. K39 = 92722c85), the shifted advice words, and a block-2 incoming chaining value whose two members differ only in register h by 0xc0000000. Each of the 256 trials runs 2 independent windows of the claw search (fresh block-2 chaining value per window) of 1536 evaluations each over the folded step function F on the shifted constants, collecting every even/odd claw (a0 even, u odd, F(a0) = F(u)) in a shared distinguished-point table, counting distinct claws and distinct claw groups, and passing each raw claw through the F9, F8 and W17 tail filters rebuilt on the shifted advice trajectory; any W17 pass is rebuilt and verified by two 39-step compressions. Trial 0 additionally hard-asserts the full schedule-shift identity; it is not part of the observation set. Deterministic from the trial seed, stdlib only, exactly one JSON document out.",
+      "hypothesis": "The claw rate and the F9/F8/W17 tail-event rate measured on the shifted constants K1..K39 match the r39 rates carried in proof Section 4. The declared observation set is these 16 keys per trial, and no others: windows 2, window_steps 1536, walk_evals 3072, raw_claws, distinct_claws, distinct_groups (about 2.3e-4 claw groups per trial, about 0.06 over the 256-trial batch), passed_f9, passed_f8, passed_w17, and the value-independent block-2 facts dN0 = 0x40000000, dh = 0xc0000000, cv_diff_h_only 1, cv_diff_count 1, koff 1, k_first 0x71374491, k_last 0x92722c85. The trial-0 schedule-shift identity check is hard-asserted inside the program and is not part of the declared observation set."
+    },
+    {
+      "id": "r40-budget",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/budget40.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "The shared-budget time ledger of proof Section 6: block-1 walk law with a0 = 123.90702 - 1/2 log2 3, block-2 rate b0 - 74.3238 + 91 with the H4 closing event in the success integral, success 0.39, psi mask log2(1 + 1/2896). Deterministic; every trial reports the same values.",
+      "hypothesis": "Every trial reports p_success_x1e6 390000, h4_tail_bits 91, log2_work_x1e6 130752895, time_log2_x1e6 130753393 and time_log2_claim_x1e3 130754, the claimed time_log2 130.754."
+    }
+  ]
+}
