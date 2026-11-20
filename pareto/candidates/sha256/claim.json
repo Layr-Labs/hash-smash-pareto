@@ -1,20 +1,79 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha256-r37-prefix-v1",
+  "target_profile": "sha256-r64-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 37,
+  "rounds": 64,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 124.4622,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 20,
+    "preprocessing_log2": 24,
     "success_probability": 0.39,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "sha256-r37-nominal-v2",
+  "restrictions": [
+    "Messages are 64-byte strings M(x): the sixteen big-endian 32-bit words are W0..W7 = c0..c7 = 5a827999, 6ed9eba1, 8f1bbcdc, ca62c1d6, 9b05688c, 1f83d9ab, 5be0cd19, 3c6ef372, and W8..W15 = the eight big-endian words of a 256-bit value x. The map x -> M(x) is a bijection onto that family. FIPS padding appends 0x80, 55 zero bytes and the big-endian 64-bit length 512, so the padded message is two blocks and block 2 is identical for every x.",
+    "Reduction (proof Section 2): let sigma(x) be the block-1 working state after round 63, serialised big-endian. Then cv1(x) = IV + sigma(x) mod 2^32 word by word, so sigma(x) = sigma(y) with x != y gives two distinct messages with the same block-1 chaining value, the same block-2 input, and therefore equal complete 64-round digests. The reduction is exact; the search never evaluates block 2 and the delivered pair is checked on the complete two-block digest.",
+    "The search is ONE attempt: 256 bit-sliced lanes, B = 2^120 batches, Q = 256*B = 2^128 evaluated points, no restart and no success amplification. A point is distinguished when the low 116 bits of sigma(x) are zero (theta = 2^-116); expected 4096 finished trails; table capacity 8192 entries of the full 256-bit distinguished value, so table matches are exact and never filter false positives.",
+    "Exact ledger (proof Section 7): body 2^120*108,164 = 143774616936079640476767386868163190718464 word operations, table scans 536,870,912, recovery 140565860554254853559577596624646438912, setup 1,048,576, preprocessing 16,777,216, total N = 143915182796633895330326964464788391854080 word operations. With the organizer reference operation cost C = 4912 for sha256-r64, T = N/4912 and log2 T = 124.462175846..., claimed upward as 124.4622.",
+    "Body cost (proof Section 4): 44 gates per bit-plane per round (Sigma0 2, Sigma1 2, Ch 3, Maj 4, constant add 3, T1 four-number add 15, T2 5, e' 5, a' 5) and 19 gates per bit-plane per message-schedule step; rounds 0..7 fold to a constant because W0..W7 are constant, so the body executes rounds 8..63 (56 rounds) and schedule steps 16..63 (48 steps): 56*44 + 48*19 = 3376 gates per bit-plane, 108,032 word operations per 256-point batch, plus 116 for the distinguished-point test and 16 for loop control, total 108,164.",
+    "Success probability (proof Section 6): under H1, Pr[no collision among Q = 2^128 evaluated points] <= exp(-(1/2 - 2^-129)) < 233/384 * (1 + 2^-129 + 2^-258) < 0.606771, so Pr[collision] >= 0.393229166... > 0.39. Detection and table capacity are covered by Proposition 2 with failure below 2^-100.",
+    "Memory (proof Section 8) is 627,840 bytes peak: code image 27,008, constants 512, data registers 9,216, distinguished table 262,144, trail starts 262,144, bookkeeping 65,536, scratch 1,024, seed state 256. This is below 2^20 = 1,048,576, so the declared memory_log2_bytes = 20.0 is an upper bound and the memory term contributes zero.",
+    "No colliding pair is produced, verified or claimed: 2^124.4622 target compressions is not executable. This is a complexity claim under a stated cost model, an exhaustive integer ledger and declared heuristics. It is not an improvement on the published frontier; the round-64 row is 124.12385 and this construction is 0.338 bits worse.",
+    "Design-level attribution only: the structural design follows the publicly documented submissions a531b41b-1771-4cdb-99e0-f2d6ed1a725b (0xplemonade, round 40) and c31fe915-4f3a-4dd2-8247-54a554490279 (newjordan, round 64). No source file, kernel, gate stream, parameter triple, measured quantity or numeric result of any other submission is reused; the ledger, parameters, certificate and layout here are derived independently and differ in every instance."
+  ],
+  "baseline_improved": "sha256-r64-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  "heuristics": [
+    {
+      "id": "H1-random-function-model",
+      "role": "score-critical",
+      "statement": "On the set of evaluated points the walk function g = sigma behaves as a uniformly random function: distinct evaluated domain points have independent uniform images in {0,1}^256, so the pairwise collision hazard is exactly 2^-256 and the birthday computation of proof Section 6 applies. Because the walk is iterated rather than freshly sampled, the premise also asserts that iterates from trail starts behave as draws from a random mapping and that the distinguished-point filter is independent of collision events.",
+      "scope": "The fixed sha256-r64-prefix-v1 target restricted to the 64-byte family of proof Section 2, one attempt of Q = 2^128 evaluations over 256 lanes with theta = 2^-116. The claim does not cover other messages, other round counts or other scales.",
+      "extrapolation": "This is the classical van Oorschot-Wiener parallel-collision-search premise transported to a reduced-round iterated hash. The reduction of proof Section 2 is exact and does not depend on H1; H1 is used only for the 0.39 success statement and for the expected number of finished trails. The exact rational certificate of Proposition 1 is unconditional given H1.",
+      "evidence_ids": [
+        "proof:186-229",
+        "proof:302-317"
+      ],
+      "limitations": "No experiment here measures the full-width collision hazard, and none can, because it is a 2^128-scale event. Nothing here shows that the 64-round compression behaves randomly. A differential or structural property of the full 64 rounds would invalidate this model, and could only make the attack cheaper than claimed."
+    },
+    {
+      "id": "H2-straight-line-accounting",
+      "role": "score-critical",
+      "statement": "The ledger charges one word operation per body gate, one per constant-add gate, one per distinguished-point bit OR, and 16 per batch for loop control, and charges no instruction fetch, decode or interpreter step for the body. The claim is that a realisable implementation of proof Section 4 performs no other work: the body is a straight-line register program over 256-bit words and every charged item is executed.",
+      "scope": "The exact plan of proof Section 5, including initialisation, every recurring path, the table, recovery and preprocessing. The conditional ledger is N = 143915182796633895330326964464788391854080 word operations, C = 4912, time_log2 = 124.4622 and peak memory 627,840 bytes.",
+      "extrapolation": "The body count is exact because the body is straight-line and data independent, and the batch count is an exact declared parameter. Only recovery and preprocessing are bounded rather than counted exactly, and both carry large margins: recovery is charged at six mean trail lengths against a bound of three times the longer trail, and preprocessing at 2^24 operations against about 1.1e4 gate applications.",
+      "evidence_ids": [
+        "proof:108-166",
+        "proof:230-278",
+        "proof:319-333"
+      ],
+      "limitations": "If a realisable implementation needs a per-gate fetch and decode step, the body term grows by a constant factor; a factor of two would give log2 T about 125.46. If the code image does not fit the layout of proof Section 8, memory could exceed 2^20. Any undercounted recurring operation invalidates the time bound. H2 does not repair H1 and is not repaired by it."
+    },
+    {
+      "id": "H3-dp-halting",
+      "role": "supporting",
+      "statement": "Every trail terminates at its first distinguished point and no trail is truncated by the batch budget: B = 2^120 batches advance each lane up to 2^120 steps while the mean trail length is 2^116, and a geometric tail exceeds 2^119 steps with probability below exp(-8).",
+      "scope": "The single attempt of proof Section 5 with theta = 2^-116 and 2^120 batches.",
+      "extrapolation": "A truncation would lose one trail and would not invalidate the ledger, because all its evaluations are already charged in the body term.",
+      "evidence_ids": [
+        "proof:72-107",
+        "proof:335-340"
+      ],
+      "limitations": "The no-truncation statement is probabilistic and is not established for a single realised attempt; only the ledger's independence from it is claimed."
+    },
+    {
+      "id": "H4-exact-table-equality",
+      "role": "supporting",
+      "statement": "Storing the full 256-bit distinguished value in the table makes every table match a genuine equality, so recovery is attempted only on real merges and the linear-scan bound of proof Section 7 covers every lookup.",
+      "scope": "The table of proof Section 5: capacity 8192 entries of 256 bits, expected occupancy 4096.",
+      "extrapolation": "Because matches are exact, recovery cost is incurred once and only on success, so the recovery term of the ledger is an upper bound on the real recovery work.",
+      "evidence_ids": [
+        "proof:167-185"
+      ],
+      "limitations": "The capacity argument is a Chernoff bound with failure probability below 2^-1900; it is a probabilistic statement, though with a margin far beyond the 0.39 requirement."
+    }
+  ],
+  "submission_state": "ready",
+  "lane": "exploratory"
 }
