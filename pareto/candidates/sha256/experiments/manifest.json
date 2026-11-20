@@ -1,0 +1,165 @@
+{
+ "experiments": [
+  {
+   "event": {
+    "kind": "full-collision"
+   },
+   "hypothesis": "Trials 0-255 retain the advice/transplant construction assertions. Trials 2 and 3 additionally run exact public-seed 2^20-window KATs. Digit-83 hard-asserted tuples (C,F,N4,Y4,Q4,ops) are (51,0,0,0,0,5915114) and (55,1,46656,46656,2176782336,5741052); the pooled F9-rate and entries-per-F9 bands remain within |z|<=3. The small-window claw-count transfer band is deliberately not asserted; accepted parent 9835235a carries the original two 2^22-window H8 evidence.",
+   "id": "r39-transplant-claw",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39joint_k4.py",
+   "scope": "Advice collision, fibre, inversion and 200-group construction KATs, plus two 2^20 organizer-seeded checks of the same shipped window law. This timeout-only derivative uses the lite arm for executable consistency, not to replace the accepted parent's full H8 sample or any score premise."
+  },
+  {
+   "event": {
+    "kind": "full-collision"
+   },
+   "hypothesis": "Digit-83 hard-asserted lite KAT tuples (claws,F9,0,pass lanes,survivors,key hits,k4 ops,total ops): (64,1,0,84600,0,0,158480,5911906), (13,0,0,0,0,0,0,3188960), (22,0,0,0,0,0,0,7445556), (16,0,0,0,0,0,0,3717897). Trial 0 exercises one full 84,600-lane pass and 1,000-entry real/virtual claw-selection checks; a 2^16 pass-off pair and screened draw retain the control paths. Trial 1 executes the fail-closed cap/stamp path even when no F9 claw occurs. All exact source identities and planted checks on reached claws remain asserted.",
+   "id": "r39k4-window-small",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39joint_k4.py",
+   "scope": "Timeout KAT of the production walk/pass/control paths: trial 0 uses 2^20 walk evaluations, trials 1-3 use 2^19, pass-off and screened controls use 2^16, and the cap rerun is bounded. Accepted parent 9835235a carries the original four 2^21-window statistical evidence; nj77b changes no score number."
+  },
+  {
+   "event": {
+    "kind": "full-collision"
+   },
+   "hypothesis": "Exact lite replay for public-seed r39-mate-01: hits=7, mates=29, mates_f8=2, through19=0, carrier clusters=4, cluster_sum_sq=13, digest48=267080176007464 (0xf2e873047928), xc_n=224, xa18=113, xu18=123, xa20=0, xu20=0. The digest and cross-claw tuple are hard-asserted. Every hit is recompressed/recovered; every reached mate is traced.",
+   "id": "r39-mate-01",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39joint_k4.py",
+   "scope": "Timeout-only executable KAT of the same replica/mate/cross-claw construction: NP=100, one size-proportional kappa group, one chunk x 40 batches x 2,048 lanes. No new probability inference. Accepted parent 9835235a supplies the original 6x80x2,048, four-group records and aggregate 1,888-hit/60,416-trial evidence used by the unchanged claim."
+  },
+  {
+   "event": {
+    "kind": "full-collision"
+   },
+   "hypothesis": "Exact lite replay for public-seed r39-mate-02: hits=9, mates=6, mates_f8=1, through19=0, carrier clusters=5, cluster_sum_sq=19, digest48=150903266381239 (0x893ee7968db7), xc_n=288, xa18=157, xu18=147, xa20=0, xu20=0. The digest and cross-claw tuple are hard-asserted. Every hit is recompressed/recovered; every reached mate is traced.",
+   "id": "r39-mate-02",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39joint_k4.py",
+   "scope": "Timeout-only executable KAT of the same replica/mate/cross-claw construction: NP=100, one size-proportional kappa group, one chunk x 40 batches x 2,048 lanes. No new probability inference. Accepted parent 9835235a supplies the original 6x80x2,048, four-group records and aggregate 1,888-hit/60,416-trial evidence used by the unchanged claim."
+  },
+  {
+   "event": {
+    "kind": "full-collision"
+   },
+   "hypothesis": "Exact lite replay for public-seed r39-mate-03: hits=12, mates=47, mates_f8=8, through19=0, carrier clusters=5, cluster_sum_sq=34, digest48=178339787960436 (0xa232f7b5f074), xc_n=384, xa18=180, xu18=206, xa20=0, xu20=0. The digest and cross-claw tuple are hard-asserted. Every hit is recompressed/recovered; every reached mate is traced.",
+   "id": "r39-mate-03",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39joint_k4.py",
+   "scope": "Timeout-only executable KAT of the same replica/mate/cross-claw construction: NP=100, one size-proportional kappa group, one chunk x 40 batches x 2,048 lanes. No new probability inference. Accepted parent 9835235a supplies the original 6x80x2,048, four-group records and aggregate 1,888-hit/60,416-trial evidence used by the unchanged claim."
+  },
+  {
+   "event": {
+    "kind": "full-collision"
+   },
+   "hypothesis": "Exact lite replay for public-seed r39-mate-04: hits=11, mates=50, mates_f8=8, through19=0, carrier clusters=7, cluster_sum_sq=25, digest48=202688968478957 (0xb85833f750ed), xc_n=352, xa18=169, xu18=176, xa20=0, xu20=0. The digest and cross-claw tuple are hard-asserted. Every hit is recompressed/recovered; every reached mate is traced.",
+   "id": "r39-mate-04",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39joint_k4.py",
+   "scope": "Timeout-only executable KAT of the same replica/mate/cross-claw construction: NP=100, one size-proportional kappa group, one chunk x 40 batches x 2,048 lanes. No new probability inference. Accepted parent 9835235a supplies the original 6x80x2,048, four-group records and aggregate 1,888-hit/60,416-trial evidence used by the unchanged claim."
+  },
+  {
+   "event": {
+    "kind": "full-collision"
+   },
+   "hypothesis": "Exact lite replay for public-seed r39-mate-05: hits=13, mates=52, mates_f8=4, through19=0, carrier clusters=7, cluster_sum_sq=29, digest48=202427202383792 (0xb81b417dafb0), xc_n=416, xa18=208, xu18=212, xa20=0, xu20=0. The digest and cross-claw tuple are hard-asserted. Every hit is recompressed/recovered; every reached mate is traced.",
+   "id": "r39-mate-05",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39joint_k4.py",
+   "scope": "Timeout-only executable KAT of the same replica/mate/cross-claw construction: NP=100, one size-proportional kappa group, one chunk x 40 batches x 2,048 lanes. No new probability inference. Accepted parent 9835235a supplies the original 6x80x2,048, four-group records and aggregate 1,888-hit/60,416-trial evidence used by the unchanged claim."
+  },
+  {
+   "event": {
+    "kind": "full-collision"
+   },
+   "hypothesis": "Exact lite replay for public-seed r39-mate-06: hits=22, mates=16, mates_f8=4, through19=0, carrier clusters=12, cluster_sum_sq=56, digest48=87883655802899 (0x4fee0215f013), xc_n=704, xa18=372, xu18=330, xa20=0, xu20=0. The digest and cross-claw tuple are hard-asserted. Every hit is recompressed/recovered; every reached mate is traced.",
+   "id": "r39-mate-06",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39joint_k4.py",
+   "scope": "Timeout-only executable KAT of the same replica/mate/cross-claw construction: NP=100, one size-proportional kappa group, one chunk x 40 batches x 2,048 lanes. No new probability inference. Accepted parent 9835235a supplies the original 6x80x2,048, four-group records and aggregate 1,888-hit/60,416-trial evidence used by the unchanged claim."
+  },
+  {
+   "event": {
+    "kind": "full-collision"
+   },
+   "hypothesis": "Exact lite replay for public-seed r39-mate-07: hits=12, mates=7, mates_f8=0, through19=0, carrier clusters=7, cluster_sum_sq=26, digest48=277372157215317 (0xfc44bce6c255), xc_n=384, xa18=192, xu18=193, xa20=0, xu20=0. The digest and cross-claw tuple are hard-asserted. Every hit is recompressed/recovered; every reached mate is traced.",
+   "id": "r39-mate-07",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39joint_k4.py",
+   "scope": "Timeout-only executable KAT of the same replica/mate/cross-claw construction: NP=100, one size-proportional kappa group, one chunk x 40 batches x 2,048 lanes. No new probability inference. Accepted parent 9835235a supplies the original 6x80x2,048, four-group records and aggregate 1,888-hit/60,416-trial evidence used by the unchanged claim."
+  },
+  {
+   "event": {
+    "kind": "full-collision"
+   },
+   "hypothesis": "Exact lite replay for public-seed r39-mate-08: hits=11, mates=23, mates_f8=6, through19=0, carrier clusters=5, cluster_sum_sq=27, digest48=245936198639405 (0xdfad7bc1df2d), xc_n=352, xa18=183, xu18=180, xa20=0, xu20=0. The digest and cross-claw tuple are hard-asserted. Every hit is recompressed/recovered; every reached mate is traced.",
+   "id": "r39-mate-08",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39joint_k4.py",
+   "scope": "Timeout-only executable KAT of the same replica/mate/cross-claw construction: NP=100, one size-proportional kappa group, one chunk x 40 batches x 2,048 lanes. No new probability inference. Accepted parent 9835235a supplies the original 6x80x2,048, four-group records and aggregate 1,888-hit/60,416-trial evidence used by the unchanged claim."
+  },
+  {
+   "event": {
+    "kind": "full-collision"
+   },
+   "hypothesis": "Exact lite replay for public-seed r39-mate-09: hits=10, mates=18, mates_f8=1, through19=0, carrier clusters=4, cluster_sum_sq=30, digest48=62707659783746 (0x390843c93e42), xc_n=320, xa18=155, xu18=160, xa20=0, xu20=0. The digest and cross-claw tuple are hard-asserted. Every hit is recompressed/recovered; every reached mate is traced.",
+   "id": "r39-mate-09",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39joint_k4.py",
+   "scope": "Timeout-only executable KAT of the same replica/mate/cross-claw construction: NP=100, one size-proportional kappa group, one chunk x 40 batches x 2,048 lanes. No new probability inference. Accepted parent 9835235a supplies the original 6x80x2,048, four-group records and aggregate 1,888-hit/60,416-trial evidence used by the unchanged claim."
+  },
+  {
+   "event": {
+    "kind": "full-collision"
+   },
+   "hypothesis": "Exact lite replay for public-seed r39-mate-10: hits=10, mates=54, mates_f8=6, through19=0, carrier clusters=6, cluster_sum_sq=20, digest48=71449590884190 (0x40fba77be75e), xc_n=320, xa18=163, xu18=165, xa20=0, xu20=0. The digest and cross-claw tuple are hard-asserted. Every hit is recompressed/recovered; every reached mate is traced.",
+   "id": "r39-mate-10",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39joint_k4.py",
+   "scope": "Timeout-only executable KAT of the same replica/mate/cross-claw construction: NP=100, one size-proportional kappa group, one chunk x 40 batches x 2,048 lanes. No new probability inference. Accepted parent 9835235a supplies the original 6x80x2,048, four-group records and aggregate 1,888-hit/60,416-trial evidence used by the unchanged claim."
+  },
+  {
+   "event": {
+    "kind": "full-collision"
+   },
+   "hypothesis": "Exact lite replay for public-seed r39-mate-11: hits=10, mates=50, mates_f8=2, through19=0, carrier clusters=6, cluster_sum_sq=24, digest48=189066163942100 (0xabf4658a72d4), xc_n=320, xa18=154, xu18=172, xa20=0, xu20=0. The digest and cross-claw tuple are hard-asserted. Every hit is recompressed/recovered; every reached mate is traced.",
+   "id": "r39-mate-11",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39joint_k4.py",
+   "scope": "Timeout-only executable KAT of the same replica/mate/cross-claw construction: NP=100, one size-proportional kappa group, one chunk x 40 batches x 2,048 lanes. No new probability inference. Accepted parent 9835235a supplies the original 6x80x2,048, four-group records and aggregate 1,888-hit/60,416-trial evidence used by the unchanged claim."
+  },
+  {
+   "event": {
+    "kind": "full-collision"
+   },
+   "hypothesis": "Exact lite replay for public-seed r39-mate-12: hits=15, mates=27, mates_f8=1, through19=0, carrier clusters=6, cluster_sum_sq=55, digest48=214956962046656 (0xc380915d62c0), xc_n=480, xa18=232, xu18=245, xa20=0, xu20=0. The digest and cross-claw tuple are hard-asserted. Every hit is recompressed/recovered; every reached mate is traced.",
+   "id": "r39-mate-12",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39joint_k4.py",
+   "scope": "Timeout-only executable KAT of the same replica/mate/cross-claw construction: NP=100, one size-proportional kappa group, one chunk x 40 batches x 2,048 lanes. No new probability inference. Accepted parent 9835235a supplies the original 6x80x2,048, four-group records and aggregate 1,888-hit/60,416-trial evidence used by the unchanged claim."
+  },
+  {
+   "event": {
+    "kind": "full-collision"
+   },
+   "hypothesis": "Exact lite replay for public-seed r39-mate-13: hits=6, mates=8, mates_f8=1, through19=0, carrier clusters=4, cluster_sum_sq=10, digest48=18210396949097 (0x108ff03dca69), xc_n=192, xa18=115, xu18=97, xa20=0, xu20=0. The digest and cross-claw tuple are hard-asserted. Every hit is recompressed/recovered; every reached mate is traced.",
+   "id": "r39-mate-13",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39joint_k4.py",
+   "scope": "Timeout-only executable KAT of the same replica/mate/cross-claw construction: NP=100, one size-proportional kappa group, one chunk x 40 batches x 2,048 lanes. No new probability inference. Accepted parent 9835235a supplies the original 6x80x2,048, four-group records and aggregate 1,888-hit/60,416-trial evidence used by the unchanged claim."
+  },
+  {
+   "event": {
+    "kind": "full-collision"
+   },
+   "hypothesis": "Exact lite replay for public-seed r39-mate-14: hits=13, mates=31, mates_f8=3, through19=0, carrier clusters=6, cluster_sum_sq=49, digest48=123334766123474 (0x702c1cec59d2), xc_n=416, xa18=221, xu18=215, xa20=0, xu20=0. The digest and cross-claw tuple are hard-asserted. Every hit is recompressed/recovered; every reached mate is traced.",
+   "id": "r39-mate-14",
+   "kind": "python-message-pairs-v1",
+   "program": "experiments/r39joint_k4.py",
+   "scope": "Timeout-only executable KAT of the same replica/mate/cross-claw construction: NP=100, one size-proportional kappa group, one chunk x 40 batches x 2,048 lanes. No new probability inference. Accepted parent 9835235a supplies the original 6x80x2,048, four-group records and aggregate 1,888-hit/60,416-trial evidence used by the unchanged claim."
+  }
+ ],
+ "schema_version": 1
+}
