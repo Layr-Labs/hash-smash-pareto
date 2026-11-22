@@ -1,20 +1,238 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha256-r37-prefix-v1",
+  "target_profile": "sha256-r39-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 37,
+  "rounds": 39,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 93.61868,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 20.0,
+    "preprocessing_log2": 43,
     "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
+    "nonuniform_advice_log2_bytes": 7.392318
   },
-  "restrictions": [],
-  "baseline_improved": "sha256-r37-nominal-v2",
+  "restrictions": [
+    "CREDITED DERIVATIVE OF 04f61e00 (this entry; controlling row proof.md final section). The construction, list, walk, advice pair, law, divisor, EN, C_W, cap 584,000,000, setup and every premise are 04f61e00's. Programme change: EB21 (W17 block-death test from bit 21) and PACK2C (a second open lane group in the walk hit loop; every test charged, no charge removed; no op saving). Retention, paired on seeds 8,000,000..8,000,999 at the production cap, both programmes: kept 892,572 vs 892,210 of 944,000, delta r = +0.000383475 (se 0.000056). Reserves g13/g14/g15 = 172,693/172,547/178,991 (ruling 24a0c616). Claim row: 04f61e00's accepted r 0.947259606125 + delta less a worst-case 37-claw reserve loss = 0.947603886 -> 93.618680. This programme's own retention prices 93.621914. Memory 1,043,773 B with a conservative +128 B for four registers, <= 2^20.",
+    "Ordinary collision of SHA-256 reduced to 39 steps from the standard IV: two 128-byte messages with the same random first block M0 and second blocks M1, M1' = M1 + DL (differences in words 8..12), then the common padding block. The second block is the transplanted advice pair with A[6], A[7] released over a list generated at import by rule on the fibre h4 = 0x3cc9e0be: 12,025,320 entries in 936 classes; the walk constants c9, C9 are shifted by 0x05ceefe0. The W17 condition is solved per F9 claw by a generic bit-sliced pass over the 84,600 distinct 18-bit prefixes; a passing prefix is completed, tested on scalar words and, at a key hit, expanded to the classes of its group. Parent history: 9,701,592 entries in 728 classes; shift 0x05cefde0; 62,400 prefixes.",
+    "PARENT ROW 04f61e00, SCORE part A (exact, measured on 04f61e00's programme). Three counted-op savings, no construction change. (a)+(b) Lazy mask slicing in the W17 pass: the 32 r-masks of each of the 140 groups and 196 packed segments are built on demand, so a pass builds only the masks its 331 blocks reach (mean last-reached bit 24.08 of 32); measured on 37,207 identical passes: 152,615.9 -> 144,630.1 ops per evaluated claw, i.e. -7,985.9 +- 1.9 s.e. per pass (sd 371), and on the census KAT claw 8,562 (151,481 -> 142,919 k4 ops). (c) The degenerate m.sl(r,0) is removed from hit(): exactly 1 op per lane hit, 181.03 -> 180.03 ops per hit. Measured paired, on the same 32 fresh 2^26 windows run on both builds: the window work falls 9,940,532 counted ops = 1.2915% +- 0.0074%, i.e. 0.01875 bit of claim. The worst-case compact pass bound 171,870 and the 200,423 reservation are unchanged: a pass that never exits early still builds all 32 masks.",
+    "PARENT ROW 04f61e00, SCORE part B (this entry: 1,043,773 B, cushion 4,803 B). Parent memory, unchanged from r39/i: bill 32 x (15,520 + 161 + 18 x 331 + 512) + 334,813 = 1,043,645 B peak; declared 2^20 = 1,048,576 B, a 4,931 B cushion, zero excess over 2^20 and no penalty. Because the window's op mix moves the stamp distribution, the retention is re-measured with the pass-credited stamp method: r = 0.947259606125 at W_max = 584,000,000, the argmin of (W+6)/r_true on this build's 352 fresh 2^26 windows (seeds 6,000,000.., every window reported, gate lifted so every distinct F9 claw is stamped: 1162.3 per window, min 1044 > 944), s.e. 0.001281, one-sided 99% floor 0.943929 -> score 93.6243; charge W_max+6 = 584,000,006. EN = 13951.897494770211 = 842,481.487538 x 944 / 57,003.18 unchanged (the F9 gate saturates in every window; the savings move op counts, not claw draws). Divisor 0.0007650107109046086 unchanged.",
+    "EXACT CHARGE (this entry). bw = 73,220,598,158,692,543,807,797 executed windows at r = 0.947603886 (paired delta 362/944,000 less 37/944,000 worst-case ruled-reserve loss); N = bw x 584,000,006 + setup 1,120,815,490 + 2,812 x 2^43 = 42,760,829,764,000,059,270,523,410,111,168; log2(N/2812) = 93.61867991092893, claimed upward as 93.618680; score 93.618680 + 0. At delta - 2 se: 93.618851. Parent row (04f61e00): N 42,776,371,104,398,262,402,416,158,591,362, raw 93.61920416037222, claim 93.6193, r 0.947259606125 at 584,000,000. These are declared best-case MODEL substitutions, not confidence guarantees.",
+    "MEMORY BILL BY COMPONENT (parent 04f61e00, 1,043,645 B; this entry +128 B = 1,043,773 B, cushion 4,803 B; 32 B/word). Walk table s.tab = 15,520 words = 496,640 B (lines 363, 371, 385, 428; 99,328 slots of 40 bits). Pair-record queue s.qw = 161 words = 5,152 B (lines 361, 429; 64-bit records, drained by stage2). Prefix planes K4_Q + K4_P = 18 x 331 = 5,958 words = 190,656 B (lines 961-999; the 84,600 18-bit W17 prefixes bit-sliced 256 lanes per block, read once per evaluated claw). Register file s.R = 256 words and lane array s.LA = 256 words = 512 words = 16,384 B (lines 386, 391; the generated kernels address up to RCAP = 206 registers). Residual 334,813 B = the accepted Section 6 walk-phase rows other than those four: the 4,111-instruction walk census 147,996 B, the k4 and work-cap code 94,644 B, kernel images 10,240 B, the pass register save area 3,328 B, the hit/output transients and the prefix-table lane counts, segment boundaries, group constants, class words and sample keys.",
+    "VERIFICATION. Package import with every assertion on. The eight KAT seeds were regenerated on this build and pass: K4_WIN_EXP (63, 1, 0, 84600, 0, 0, 142385, 5896208), (14, 0, 0, 0, 0, 0, 0, 3192117), (22, 0, 0, 0, 0, 0, 0, 7448171), (16, 0, 0, 0, 0, 0, 0, 3716048); H8_EXP (51, 0, 0, 0, 0, 5911047), (54, 1, 46656, 46656, 2176782336, 5715502), inside the |z| <= 3 bands (z = -0.484, +0.300). The diagnostic tuples are unchanged ((57936, 438, 0.4763, 1) and three zeros), which is the check that the programme changes moved op counts only, not the drawn-claw structure. Package audit: the ledger is recomputed from the formula, the memory bill is recomputed, 0 stale numbers, programme constants and manifest KAT tuples match; intake validator state ready. Equivalence and the op table: proof Sections 2-3."
+  ],
+  "baseline_improved": "sha256-r39-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  "experiment_manifest": "experiments/manifest.json",
+  "heuristics": [
+    {
+      "id": "H-DB25-point-law",
+      "statement": "PARENT (04f61e00) SCORE-SETTING ROW B MODEL LAW, inherited unchanged by this entry; re-based on 04f61e00's list. Under the inherited screened-window attack law, replace each statistical confidence buffer by its measured point as ordered: point retention r = 0.947259606125 at W_max = 584,000,000 (the ledger currency: keys of the pass claws a capped window completes, over the keys of the same windows uncapped, EN x evaluated claws; the 944-claw k4d gate binds in 352/352 windows) (parent f738addb/d6b8be2e history: 0.9921709 at 556,000,000); the entries term MEASURED on this build, 681776.1985852573 x 1.235715605 (measured ratio; parent history: the retired list-ratio scaling 12,025,320/9,701,592 = 1.2395202766721174) times the F9 factor and divided by C_W 57003.18, gives EN = 13951.897494770211 trials per distinct claw: the F9 factor is the programme's own min(D_i, 944) at its measured point 944.0 (gate saturation on 352/352 windows of this build and 1,024/1,024 claws of the EN panel) in place of the inherited one-sided lower bound 903.7824 (parent history 10809.525521563191, bound 903.7824); the measured gain is -0.305347 +- 0.005713 bit against the scaled -0.309782; H-cross keeps the participant observation 2/551872 per entry with its exact eight-mate union, and the two key-level point terms (H-cross and the complete-list co-hit point) scale by the entries ratio 1.2395202766721174; m-1 is 896.439 and the cross term uses the measured mu_D point 576745.3; the left-out point is zero; the analytic mate term 7 x 120832 / 2^33 is exact and unchanged (the new list has the parent's 20 mate offsets and group sizes). The divisor loss is 332634742808497727891862043090867/434810569403877151706270838816768000 = 0.0007650107109046086 (parent history 3421676948137525266914850497/5378217134720286959578644480000 = 0.0006362102649311279). Memory is declared 2^20.0000 (1,048,576 B = 2^20 exactly) with a 4,931 B cushion above the parent 1,043,645 B peak (this entry: 1,043,773 B, cushion 4,803 B): the walk table is re-digited at multiplier 97 and the two non-table savings (prefix-plane repack -23,616 B, queue right-size -23,552 B) pay for 47,168 B of it; there is no excess over 2^20 and no penalty is charged. This is a deliberately aggressive best-case point model, not a theorem and not a confidence statement. The organizer observation 0/60416 is disclosed only as the more aggressive sensitivity row A.",
+      "role": "score-critical",
+      "scope": "Only the pricing of the passed f738addb construction re-based on this entry's generated list; all construction, target, path and executable KAT behavior are inherited from d6b8be2e.",
+      "extrapolation": "The point values are carried from their measured panels to the production law under the same inherited H1/H2/H5 transfer premises; the entries point and the two key-level divisor terms are additionally transferred across the list by the exact entries ratio. No confidence coverage is claimed for the point substitutions.",
+      "evidence_ids": [
+        "experiment:r39-mate-01",
+        "experiment:r39-mate-02",
+        "experiment:r39-mate-03",
+        "experiment:r39-mate-04",
+        "experiment:r39-mate-05",
+        "experiment:r39-mate-06",
+        "experiment:r39-mate-07",
+        "experiment:r39-mate-08",
+        "experiment:r39-mate-09",
+        "experiment:r39-mate-10",
+        "experiment:r39-mate-11",
+        "experiment:r39-mate-12",
+        "experiment:r39-mate-13",
+        "experiment:r39-mate-14",
+        "proof:256",
+        "proof:143",
+        "proof:171",
+        "proof:186"
+      ],
+      "limitations": "The staged H-cross rate is the nonzero participant point 2/551872, not a confidence bound; the organizer panel observed 0/60416. The S190, retention, claw-count, co-hit and left-out values are participant measurements or declared models, not organizer-proved population equalities. The cap retention is this entry's own 352-window panel of this build (s.e. 0.001281) and the cap is the selected argmin of (W+6)/r_true; the F9 factor is the programme's own cap min(D_i, 944) taken at its measured point 944.0, not at the inherited confidence bound 903.7824; the entries term is MEASURED on this build by the Section 4b panel (the list-ratio scaling is the MODEL substitution it replaces; measured ratio 1.235715605 +- 0.004893 against the scaling's 1.2395202766721174) and the list transfer of the two divisor points is a declared MODEL scaling. Rows A and C in the proof give immediate sensitivities."
+    },
+    {
+      "id": "H1-screen",
+      "statement": "MODEL (declared, new in this entry). Under the screened chaining-value and window law of the shipped program (a3eb4a8a screen S <= 5, KCAP = 679, DTRY = 8,192, KTRY = 32; windows of 2^26 walk evaluations): (i) distinct claws per window have mean 57,003.18, the unit C_W of B and the cap (60-window panel mean, s.d. 210.99); (ii) [this entry: trials are F8-passing entries, at least 10777.9 per distinct claw, fixed-N S190's rounded-down bound on the first 125 F9 claws of 2,280 windows 802000..804279; the original panel and extension 803140..804279 were predeclared with one calibration and estimator; transfer from the first 125 claws to all F9 claws remains declared by this clause]; (iii) kept chaining values are independent across windows; the (a0, a1) of the distinct F9 claws of a window are i.i.d., independent of the chaining value and of the number of claws, and a claw's trial-key count is a function of its (a0, a1) only (W8..W11 do not depend on the chaining value); the W17 claw constants (w, c) are uniform and independent of (a0, u), as H5 uses; at most 944 distinct F9 claws are evaluated per window (program cap, k4d; the cap binds in some windows, and the trial count takes min(D_i, 944)). 9,044.1 (a26bcf74's keys figure, not used by this entry; the accepted nj76s base used at least 10774.5 = 681,192.49 x 901.6269 / 57,003.18 rounded down on 1,140 windows; nj77 supersedes only that numerical bound with fixed-N S190's 10777.9 on 2,280 windows, proof Section 7) is the joint one-sided 99% lower bound (union bound, 99.5% per factor) (576,745.3 - 2.946713 x 970.3) x (907.1667 - 2.661759 x 25.6780 / sqrt(60)) / 57,003.18 = 9044.17, rounded down: keys per F9 claw on 2,000 F9 claws of 0b62ed88's unscreened windows (16 batches, t(15); one-way ANOVA over 16 windows: F = 0.564 on 15 and 1,984 df), distinct F9 claws per window on the 60 screened 2^26 windows (54,430 in total, t(59)), C_W as the declared model mean; the screen conditions the chaining value on S <= 5, and this premise carries the unscreened keys-per-F9-claw count to the screened law. (iv) Work cap (declared MODEL extension of the accepted H1-screen premise): Under the screened window law of the shipped program with the cap, (iv-a) windows are i.i.d. and the keys of the claws completed by capped windows retain the production-law point fraction r_LB = 0.947259606125 of all keys (parent history 0.9908989); (iv-b) the F8-passing entries of the completed claws retain the same fraction (by clause iii); (iv-c) H1-screen, H5 and H2-entries hold for completed claws as for all claws. This retention inequality is a declared MODEL premise, not a confidence guarantee inferred from a participant panel. Support: this build's stamp-exact cap panel (352 fresh windows, seeds 6,000,000.., gate lifted, every distinct F9 claw stamped), r = 0.947259606125, s.e. 0.001281, floor 0.943929 at W_max = 584,000,000 = argmin of (W+6)/r_true; parent history: S205 look 0.9921709 at 556,000,000. A capped window succeeds at least on the union over the key hits of its completed claws; the stop selection on the claw in progress is covered by (iii); the 0.0001 in the divisor is an extra conservative margin. (v) The cap-completed F9 claw count s_w of a window is independent of its keys' tail-event probabilities P_w (tails: rows 18-39 of each key's pair; s_w: the walk to row 17 and the cap), so E[(s_w - 1) P_w] / E[P_w] <= 898.120, the claw-weighted 99% bound of sum s_w(s_w - 1) / sum s_w over the cap-completed claws of 91463de0's 1,080 predeclared cap-panel windows. (vi) The p'_k-weighted means over completed-claw key occurrences (p'_k = union probability of key k's F8-passing mates) of E[min(N_k, 3)] and P(N_k >= 4) are at most their complete-list means at uniform w (a key's equal-G structure is set by the key list, not by its mates' rows 18-39 or by its claw's completion). Priced: pi_bar = 1.09e-3, covering both measured values (list mean 1.0718e-3; 1.0825e-3 at 2,000 real F9 claws), and left-out 0.000281038 (99%; no N >= 4 for any key in 16,384 independent w).",
+      "role": "score-critical",
+      "scope": "The fixed target sha256-r39-prefix-v1 and the --attack path of experiments/r39joint_k4.py (screen on) with the shipped advice pair and the list generated at import.",
+      "extrapolation": "Paired participant-run probe, same seeds on both builds, 16 pairs at 2^24 walk evaluations (N = F8-passing entries, K = distinct keys, over the four diagnostic groups, per distinct claw C): unscreened N/C 106.91, K/C 98.56; screened N/C 111.16, K/C 102.24; paired N/C change +0.0552 bit (s.e. 0.0459). Distinct F9 claws per window 907.17 in the 60 screened 2^26 windows against 898.62 in the 48 unscreened windows. The probe supports a nonnegative transfer; it is not a 2^26 panel of the key count: the transfer of the keys-per-F9-claw count is the declared premise. This entry's entries count: one-way ANOVA of the 2,000 claws' entry counts over their 16 panel windows F = 1.362 on 15 and 1,984 df; Taking the first claws of a window is not a selection on the count: on all F9 claws of windows 802000 and 802001 the first 125 average 677,197.7 and 676,356.3 entries against 681,901.6 and 683,853.0 for the rest (Welch z = -0.69, -1.17). Capped-window yield support for clause (iv), not proof of a production-law inequality: this entry re-measured the cap on its own build with the stamp method, 352 fresh participant windows seeds 6,000,000.. (2^26 walk evaluations, screen on, every window reported, 352/352 completed). The point retention is r = 0.947259606125 (s.e. 0.001281; one-sided 99% floor 0.943929) at W_max = 584,000,000, the argmin of (W+6)/r_true on this build's 352 fresh windows; the cap fires in all 352 uncapped windows at that level. The stamp identity was re-verified against real capped runs: the claws a capped run evaluates are exactly those with stamp <= W_max and m.o <= W_max. Parent f738addb/d6b8be2e history, superseded: the one-look S205 direct combined-program analysis ran all 256 fresh participant windows 2006000-2006255 at W_max = 556,000,000 and observed r = 0.9921709257705038, s.e. = 0.0005467854315618963, nominal one-sided 99% raw bound 0.9908989126442332 and floor7 support r_LB = 0.9908989 (the parent history numbers of this sentence); the cap fired in 248 of 256 and the minimum single-window ratio was 0.9631374351851997. Per-window capped yield is exact for each recorded run by the stamp method.",
+      "evidence_ids": [
+        "experiment:r39k4-window-small",
+        "proof:368",
+        "proof:457",
+        "proof:511",
+        "proof:587",
+        "proof:461",
+        "proof:783",
+        "proof:99"
+      ],
+      "limitations": "Participant-run: 2,000 unscreened claws for the key count, 16 paired 2^24 windows for the transfer, 60 screened 2^26 windows for C_W and the F9 claws per window. This entry: the first 125 F9 claws of each of the predeclared 1,140 windows 802000..803139 (PREDECLARE_NJ68_1115.txt) for the entries count (participant-run; calibrated to the 16-window control); their transfer to all F9 claws is the declared clause (ii). Clause (iv): the production-law point r = 0.947259606125 (parent history r_LB = 0.9908989) is a declared MODEL extension, not a panel-derived confidence guarantee. This entry's stamp-exact cap panel supplies participant-run support from 352 fresh windows on seeds 6,000,000.. of this build (all reported, gate lifted, every distinct F9 claw stamped); parent history: the S205 look on seeds 2006000..2006255 at W_max = 556,000,000. There is no organizer holdout nonce or family-wise guarantee. The organizer small-window arm does not test full-size cap retention."
+    },
+    {
+      "id": "H1-ops",
+      "statement": "The W17 pass costs at most 200,423 counted operations per evaluated F9 claw (the 430-block unfolded bound applied to the compact 331-block pass; exact early exit; fewer on most blocks). The compact layout of this list costs exactly at most 733 + 110 x 140 + 403 x 280 + 114 x 196 + 403 x 51 = 171,870 <= 200,423, asserted at import, while 200,423 remains the conservative reservation used by the work-cap guard. A survivor costs at most 5,215; a key hit at most 49,472. The unchanged screen predicate is evaluated by three exact 15-operation 32-bit SWAR bit counts (v5 shift/AND/add only) plus masks, extracts and arithmetic: 65 operations, hence 69 per kept draw including four caller operations and 72 per discarded draw. The one-time setup, including the rule generator and 1,000-operation hoist setup, is charged 1,120,815,490 operations. Each work-cap guard costs 2 operations, inside W_max. This entry keeps that worst-case bound and reservation but slices the pass masks lazily: the measured pass is 144,630 ops per evaluated claw (152,616 before, -7,986 per pass, s.e. 1.9), measured over 37,207 identical passes of the 32 paired production windows, which build 24.08 of the 32 mask planes on average; the measured hit path is 180.02 ops per lane hit (181.03 before). The program executes ceil(B / R_LB) windows, R_LB = 0.947259606125, and charges W_max+6 = 584,000,006 per executed window. Parent history (d6b8be2e): pass 143,633, compact 733 + 110 x 110 + 210 x 403 + 102 x 114 + 34 x 403 = 122,793, setup 1,107,474,556, R_LB = 0.9921709, W_max = 556,000,000.",
+      "role": "score-critical",
+      "scope": "The counted pass, survivor, key-hit and screen paths and setup and the work-cap guards of experiments/r39joint_k4.py for this build's generated list.",
+      "extrapolation": "Exact counts of the program; the organizer run checks the aggregate actual K4 and total-operation tuples of four seeded windows (K4_WIN_EXP, re-generated for this build), planted survivor costs, and on one screened window the screen charge of every draw (69 kept, 72 discarded).",
+      "evidence_ids": [
+        "experiment:r39k4-window-small",
+        "proof:357",
+        "proof:368",
+        "proof:384",
+        "proof:13"
+      ],
+      "limitations": "The 2^30 part of the setup is an allowance for the import's other statements; the pass bound is the unfolded block bound, the observed maximum single guarded pass over this build's production windows is far below the reservation; the lazy masks leave the worst-case bound unchanged (a pass with no early exit builds every mask)."
+    },
+    {
+      "id": "H2-entries",
+      "statement": "MODEL premise of this entry (screened scope). For an F8-passing listed entry of class 01 drawn uniformly over all trial (window, claw, entry) triples of the attack, windows drawn under the screened law and weighted by their trial count, in a claw passing F9 with W17 equal to the advice value, the two 39-step compressions collide along the advice differences with probability at least 2^-74.4594: the 14-run organizer pooled mean (2^-74.4594) of r39-mate-01..14 under the declared class transfer, the class-01 mean (2^-74.4783, the replica's 4 x c01 estimator) recorded as its test, by a rule written before the class counts existed. A mean of organizer-executed runs, not a lower confidence bound. a26bcf74's H2-transfer (2^-74.3238, keys and designated mate) is cited only as the keys value. Participant evidence (panel of 870 independent invocations x 256 trials, Luna_Server S191/S192, 2026-11-17): class-01 minus pooled -0.37% +- 0.84%. Model, stated plainly: the SMC carrier sees a window only through its claws' (a0, a1).",
+      "role": "score-critical",
+      "scope": "Rows 18 to 38 of the advice trail after rows 0 to 17 hold, for class-01 trial entries of windows of the screened law.",
+      "extrapolation": "From 14 organizer runs (one uniform listed entry per batch, (a0, a1) by the claw model) to class-01 entries of screened windows over the whole attack. Arm J (participant-run, real unscreened claws, an entry per lane) gives 2^-74.3828.",
+      "evidence_ids": [
+        "experiment:r39-mate-01",
+        "experiment:r39-mate-02",
+        "experiment:r39-mate-03",
+        "experiment:r39-mate-04",
+        "experiment:r39-mate-05",
+        "experiment:r39-mate-06",
+        "experiment:r39-mate-07",
+        "experiment:r39-mate-08",
+        "experiment:r39-mate-09",
+        "experiment:r39-mate-10",
+        "experiment:r39-mate-11",
+        "experiment:r39-mate-12",
+        "experiment:r39-mate-13",
+        "experiment:r39-mate-14",
+        "proof:470"
+      ],
+      "limitations": "A mean, not a bound: the one-sided 99.9% lower bound of the pooled runs is 2^-74.6588. The class-01 mean rests on 466 class-01 hits."
+    },
+    {
+      "id": "H3-advice-construction",
+      "statement": "A[8..11], E[12..15] and W12..W15 are fixed to the advice values; (A[6], A[7]) range over the listed entries of the fibre 0x3cc9e0be; for every listed entry both messages follow the advice state-difference trail through step 15, W9 is C9 + 0x05ceefe0 - a1 and W16 is one value per claw. Constructing and selecting the advice pair costs at most 2^43 compressions (2^42.545 by the accounting of proof Section 9), added to the claimed time; the offline fibre search costs at most about 2^31.1 compressions (estimated from the tools' loop counts), inside the remaining 2^41.1.",
+      "role": "score-critical",
+      "scope": "The one-time construction of the 160-byte advice pair of 5f8e6192 plus the stored selected 32-bit FIB and K4_CUBE words, 168 bytes total; the list is generated at import by the rule of proof Section 2.5.",
+      "extrapolation": "Exhaustive enumeration over all 2^32 a3 with the real two-message trail checked on every entry at four points (0 failures); the rule reproduces that list exactly; the organizer run checks one entry of every group at the advice point.",
+      "evidence_ids": [
+        "experiment:r39-transplant-claw",
+        "proof:340",
+        "proof:507",
+        "proof:43"
+      ],
+      "limitations": "The 93-pair campaign was run by the pair's authors and is charged at its declared cost."
+    },
+    {
+      "id": "H5-group-independence",
+      "statement": "Screened-window scope: for the windows of the screened law, windows are independent (fresh first blocks, each drawn and screened independently). Trials are distinct (a2, kappa) keys with at least one listed entry passing F8 in a claw passing F9: trials are F8-passing entries, at least 10777.9 per distinct claw (H1-screen (ii), proof Section 7: fixed-N S190's calibrated F8-passing-entry bound on 2,280 windows 802000..804279 times the unchanged F9 factor of the 1,080 windows 802060..803139). Each listed key's W17 event has probability 2^-32 in each claw (a uniform claw constant); events in different claws are independent. Within a claw, two keys hit together iff G(a2, kappa, w) = s0(a2 + w) - (a2 + w) + kappa coincide. Let N_k(w) be the number of other listed keys with G equal to key k's at the claw's w, and pi_k = E_w[N_k(w)] (the priced quantity is E_w[min(N_k(w), 3)] <= pi_k). Measured over all 3,462,264 listed keys on two independent sets of 16,384 random w: mean pi 1.07e-3, largest per-key estimate 4.6e-3; per-(key, w) counts on the second set: N = 1 in 60,723,478 cases, N = 2 in 37,173, N = 3 in 40, N >= 4 in none of 5.67e10. At the w of 2,000 real F9 claws of 0b62ed88's unscreened program: mean pi 1.0825e-3, largest per-(key, w) N = 3 (w15/critic_final/cohit_real.c, cohit_real_2000.txt; w and u at all 43,134 real claws in wreal.py, wreal.txt). The claw's w contains -cv5 additively, so it is uniform and independent of (a0, u) under H1-screen. Hits whose equal-G cluster in the claw has more than 4 keys are left out of the second-order sum; for every kept key N_k <= 3, and family-wise over all keys (alpha = 0.001) E[min(N_k, 3)] <= 1.36e-2. Left-out hits cost at most P(N_k >= 4) <= ln(3,462,264 / 0.001) / 16,384 = 1.341e-3 per key in the first-order term (no N >= 4 for any key in 16,384 w; family-wise over all keys at alpha = 0.001). The priced co-hit and left-out terms are the p'_k-weighted means over the keys of completed claws of E[min(N_k, 3)] and P(N_k >= 4), bounded by the complete-list means under H1-screen (vi); the per-key family-wise bounds (1.36e-2, 1.341e-3) hold for every key and are kept for reference. The claw's W17 constants (w, c) are independent of the designated-mate tail events, as for the hit events themselves. Real 2^-32 hits: 37 key hits against 38.58 expected over the 48 windows; 3 compressed F8-passing mates against 6.85 expected (P = 0.09, disclosed). The program tests every key hit; success is priced by second-order Bonferroni over all hits on designated-mate events (proof Section 7), divisor 1 - 0.0615907 (stop-selection margin 0.0001 included) with the cross-claw term on the claw-weighted claw count (H1-screen (v)) and the within-claw term on the key-mean co-hit rate (H1-screen (vi)); no premise between the tails of different hits is used. List transfer (this entry): the measured key list is the parent list's (3,462,264 keys, values recorded above as parent history); this entry's list has 12,025,320 entries in 936 classes and its key-level point terms are priced at the exact entries ratio 1.2395202766721174, i.e. the complete-list co-hit point is 1.0718e-3 x 1.2395202766721174 = 1.3286e-3 (priced at half in the divisor) and the left-out point stays zero. At the per-group completion multiplicities K_new/K_old = 2,399,604/2,015,376 = 1.1907, so that pricing overstates the two terms by about 4%. The premise itself is inherited unchanged.",
+      "role": "score-critical",
+      "scope": "The amplification over the B / r_LB windows of the screened, capped program.",
+      "extrapolation": "Keys with an entry in F8 per F9 claw 576,745.3 (s.e. 970.3, 16 batches of 125 claws); per-claw s.d. 57,687; F9 claws per window from the 60 screened windows (mean 907.1667, s.d. 25.6780).",
+      "evidence_ids": [
+        "experiment:r39k4-window-small",
+        "proof:459",
+        "proof:514",
+        "proof:171"
+      ],
+      "limitations": "Participant-run counts (2,000 claws, 60 screened windows). The organizer's dispersion test is a scaled spot test on four fixed groups; independence of the 2^-32 events over all groups and windows is the premise, not a measurement."
+    },
+    {
+      "id": "H7-mate-row19",
+      "role": "score-critical",
+      "statement": "Premise H-W3-uniform: given a hit (an F8-passing entry whose pair collides along the advice differences), the entry's message word W3 is uniform over 2^32. By the exhaustive enumeration of rows 18-19 (proof Section 7, Appendix D), mate j with offset d_j can follow the advice through row 19 only if W3 lies in B_{d_j} = {W3 : Delta(W3, d_j) in D = P - P, Delta != 0}, empty for 14 of the 20 offsets and of at most 120,832 elements for the others. Hence E[X_i | T_i] = sum_j P(S_j | T_i) <= 7 x 120,832 / 2^32 = eps = 1.9693e-04 (a key has at most 7 other mates), sum over keys of P(U_k) >= (1 - eps/2) sum over entries of P(T_i), and eps/2 = 0.000099 is in the divisor. No independence between mates is assumed.",
+      "scope": "Every key hit: the program compresses every F8-passing mate (k4q); the enumeration covers every W3 and every mate offset of the list.",
+      "extrapolation": "Organizer test of the premise (the r39-mate manifest prediction): r39-mate-01..14 pin the W3 of all 1,888 hits (867 carrier clusters) by their organizer-recorded digest48 (proof Appendix E); 0 lie in the union of the B_d (expected 0.24; falsified at 3 or more); per-bit chi-square 24.7 on 32 df (falsified at 62.49); 638 F8-passing mates traced, none past row 19. Price without the premise (disclosed, not priced): the strict hit-weighted 99% cluster bound 0.01716 gives eps 0.12015, divisor 1 - 0.137206, time 94.1835. Not used: per-cluster 4.605 / 867 and per-hit 4.605 / 1,888.",
+      "evidence_ids": [
+        "experiment:r39-mate-01",
+        "experiment:r39-mate-02",
+        "experiment:r39-mate-03",
+        "experiment:r39-mate-04",
+        "experiment:r39-mate-05",
+        "experiment:r39-mate-06",
+        "experiment:r39-mate-07",
+        "experiment:r39-mate-08",
+        "experiment:r39-mate-09",
+        "experiment:r39-mate-10",
+        "experiment:r39-mate-11",
+        "experiment:r39-mate-12",
+        "experiment:r39-mate-13",
+        "experiment:r39-mate-14",
+        "proof:461",
+        "proof:171"
+      ],
+      "limitations": "H-W3-uniform is a premise about one distribution (W3 given a hit); 1,888 hits test it only coarsely at the 2.8e-5 scale, and the B_d are structured sets (near 2^18 elements each). The r39-mate hits come from the replica's start-state law with the claw model for (a0, a1), one listed entry per batch, not from the attack's screened claws; the test is carried to screened claws as the entries tail is (H2-entries)."
+    },
+    {
+      "id": "H-implicit-distinct-key-dispersion",
+      "statement": "Given the claws, the W17 events of distinct keys are dispersed as independent trials. Tested in the organizer run at a scaled event of probability 2^-7 on every key of four groups (every 50th) with an entry in F8, in every F9 claw of the four organizer windows: 146,502 key events, 1,104 hits against 1144.5 expected (z = -1.20), Pearson 19.29 on 22 claws; acceptance region fixed in the manifest and asserted.",
+      "role": "score-critical",
+      "scope": "Five of the 240 groups (K4_IND = 50), all F9 claws of the four organizer windows of r39k4-window-small; the quoted event counts are the parent list's organizer run (parent history), the premise is inherited unchanged.",
+      "extrapolation": "The attack's event has probability 2^-32 on the same keys and words.",
+      "evidence_ids": [
+        "experiment:r39k4-window-small",
+        "proof:522"
+      ],
+      "limitations": "Four groups only, for run time; the groups are fixed by the program."
+    },
+    {
+      "id": "H-cross-claw",
+      "statement": "NAMED PREMISE (new in the inherited line; score-setting). For key hits k, l on different F9 claws of one window of the attack with different keys: averaged over the attack's hit pairs, P(U_l | T_i) <= eps_key = 2^-8, the mean taken over the F8-passing mates i of hit keys k weighted by P(T_i) (as hits occur) and over the trial keys l of the other F9 claws (uniformly; by H5 every trial key is hit with the same probability); U_l is the union of l's F8-passing mates' trail events. This is exactly the quantity the pair sum of Section 7 (vii) needs. Exact part: a hit's trail depends on W2..W17 only, so U_l is contained in the union over l's at most 8 F8-passing mates j of D19_j (the advice XOR differences at rows 18 and 19) and of {W18_j in P}, |P| = 65,536 (Appendix D): no extrapolation in depth. Measured part: the per-entry rate of D19 on another claw of a real hit's chaining value is at most 7.62e-5 at 99% (organizer, r39-mate-01..14: 0 of 60,416), and 8 x 7.62e-5 x 1.000099 = 2^-10.68. Same-key pairs keep the premise-free form. The inherited bound route prices eps_key=2^-8; current DB25 ROW B instead declares the participant point 2/551872 per entry with the exact eight-mate union and the measured m-1/mu_D cross coefficient, as stated in H-DB25-point-law. This entry keeps the same participant point 2/551872 per entry with the exact eight-mate union and prices the term at the exact entries ratio 1.2395202766721174 (the mate-offset set and group sizes are the parent list's, so the eight-mate union is exact).",
+      "role": "score-critical",
+      "scope": "The fixed target sha256-r39-prefix-v1, the --attack path of experiments/r39joint_k4.py, the second-order bound of proof Section 7 (iii)-(vii).",
+      "extrapolation": "From virtual trials on a hit's chaining value (W8 in F8, W9 in F9 drawn as the replica draws them, class 01, W16 and W17 set to the advice values, W0, W1 and the chaining value re-solved) to trials selected by W16 = g and a W17 hit on the claws of a screened window; from the replica's hits to the attack's. Primary evidence (organizer-run): r39-mate-01..14, 0 of 60,416 other-claw trials through row 19 (control on a random chaining value: 1 of 60,416); r39k4-window-small, 12 real F9 claws, row 18 1,830 real against 1,873 virtual of 3,714 (z = -1.00, asserted |z| <= 3). Supporting evidence for this premise only (participant-run): the cross-claw panel (PREDECLARE_XC_1117.txt; 64 runs, 551,872 trials per arm: through row 19 2 on another claw against 5 on a random chaining value; row-18 ratio 0.9984, s.e. 0.0019) and diagnostic R (172 real F9 claws of 8 screened windows: row-18 ratio real/virtual 0.9990, s.e. 0.0017; through row 19 2 against 5). With H5 (hits independent of tails). eps_key = 2^-8 is 2^2.68 above the organizer bound (class-01 hits alone: 2^-8.66).",
+      "evidence_ids": [
+        "experiment:r39-mate-01",
+        "experiment:r39-mate-02",
+        "experiment:r39-mate-03",
+        "experiment:r39-mate-04",
+        "experiment:r39-mate-05",
+        "experiment:r39-mate-06",
+        "experiment:r39-mate-07",
+        "experiment:r39-mate-08",
+        "experiment:r39-mate-09",
+        "experiment:r39-mate-10",
+        "experiment:r39-mate-11",
+        "experiment:r39-mate-12",
+        "experiment:r39-mate-13",
+        "experiment:r39-mate-14",
+        "experiment:r39k4-window-small",
+        "proof:459",
+        "proof:515",
+        "proof:652",
+        "proof:801-831",
+        "proof:171"
+      ],
+      "limitations": "Disclosures for this premise (Appendix H): its organizer tests run on public seeds after the digest48 assertion, so their outcomes were computed before filing and no holdout applies; its participant panel deviates from PREDECLARE_XC_1117.txt (primary event E19 at m = 64 there; the organizer counts D19, contained in E19, at m = 32). The trials are virtual claws; the organizer claw-selection arm reaches row 18 only, on unscreened windows; the row-19 comparison on real claws is participant-run. The hits come from the replica's start state and carrier (1,888 hits in 867 carrier clusters); the bound is on the mean over the sampled hits. Depth 19 is the deepest measured; deeper rows are covered by the inclusion, not by data."
+    },
+    {
+      "id": "H-PC-paired-delta",
+      "statement": "MODEL (declared, this entry). The retention change of this programme over 04f61e00's programme, measured on the same 1,000 fresh 2^26 windows (seeds 8,000,000..8,000,999, production cap 584,000,000, k4d gate 944): kept 892,572 vs 892,210 of 944,000, delta r = +0.000383475, window-level se 0.000056 (6.8 se), less a worst-case 37/944,000 for the ruled guard reserves, adds to 04f61e00's accepted point retention 0.947259606125 on its seed population, giving r = 0.947603886 and time_log2 93.618680. Same law, list, gate and downstream rates on both arms (k4s/f9 0.26590 vs 0.26587; k4q/f9 69,673.4 vs 69,674.8).",
+      "role": "score-critical",
+      "scope": "The --attack path of experiments/r39joint_k4.py at W_max 584,000,000 and 2^26 walk evaluations per window, with 04f61e00's list, screen and gate.",
+      "extrapolation": "Additive transfer of a same-seed paired delta from seeds 8,000,000.. to 04f61e00's panel seeds 6,000,000... On the 1,000 new seeds 04f61e00's own programme measures r 0.945137712 and this programme 0.945521186 (93.621854; with the worst-case reserve loss 0.945481992, 93.621914); the claim uses the accepted point plus the paired delta.",
+      "evidence_ids": [
+        "proof:1509",
+        "proof:1530",
+        "proof:1552"
+      ],
+      "limitations": "Participant-run panel; raw per-window records attached (proof.md Appendix P). The 2-se lower delta gives 93.618851."
+    },
+    {
+      "id": "H-PC-build-binding",
+      "statement": "Declared transfer (this entry). The panel ran build b907d6e8; the shipped programme 69c95dce differs from it in the KAT literal dictionaries (not read inside a window), the charged-test form of the second group, and the ruled guard reserves. Same 2^22 window (seed 7,000,001, production cap): identical ops 32,190,785, kept count and claw set; reserve stamp shifts 0..27,547, charged at the 27,991 worst case in the claim row.",
+      "role": "score-critical",
+      "scope": "Window execution of experiments/r39joint_k4.py.",
+      "extrapolation": "From one checked window and the stated diffs to every window of the panel.",
+      "evidence_ids": [
+        "experiment:r39-transplant-claw",
+        "experiment:r39k4-window-small",
+        "proof:1496"
+      ],
+      "limitations": "Participant-run equivalence check."
+    }
+  ],
+  "submission_state": "ready",
+  "lane": "exploratory"
 }
