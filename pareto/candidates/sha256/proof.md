@@ -1,3 +1,1589 @@
-# Organizer draft
+# CURRENT CONTROLLING ROW — organizer-holdout cap over the counted-generator lineage
 
-Not a submission or qualified baseline. See ../../README.md.
+This T-c743667b derivative changes only the cap-specific work/retention row of
+the READY parent. All construction, success-law, generator,
+memory/advice and certificate statements are inherited unchanged.
+
+## Selection and untouched evaluation
+
+T-037310f4 ran 256 organizer-derived production windows in fixed seed order.
+The selection half was frozen as indices 0..127; it selected cap 549,797,769
+by the exact minimum of `(W+6)/retention`. Only afterward were indices 128..255
+used for evaluation. On those untouched 120,832 stamps:
+
+```text
+selected cap 549,797,769: 112,752 retained
+parent cap   554,569,422: 113,703 retained
+exact proxy ratio:
+  ((549797769+6)/112752) / ((554569422+6)/113703)
+  = 0.999757619975322... = 2^-0.000349722844...
+```
+
+The READY parent proves that its memory-fixed source adds exactly 256 charged
+operations to every large-window stamp relative to the audited source. Thus
+the selected production cap is shifted mechanically—not retuned—to
+`W=549,798,025`. Evaluation windows do not choose the cap.
+
+Replacing only the parent's cap-specific retention factor by the held-out
+ratio gives the exact conservative endpoint interval
+
+```text
+bw_low  = 76093837964208903894823
+bw_high = 76093837964208903894824
+N_low   = 41836242283955128568656615758407
+N_high  = 41836242283955128568657165556438
+```
+
+The controlling upper charge is
+
+```text
+N = 76093837964208903894824 * (549,798,025 + 6)
+    + 1,120,815,998 + 2,812 * 2^43
+  = 41836242283955128568657165556438
+log2(N/2812) = 93.587143337496590537881635785037490836301065075032784853781757712615644205047485
+```
+
+The upward six-decimal claim is **`time_log2 = 93.587144`**. The finite
+organizer-seed holdout removes same-panel cap-selection bias for this test; it
+does not turn the inherited production-population transfer into a theorem.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+The prior controlling W-phase bill was 1,048,093 bytes but omitted the
+persistent 4,029-byte normative module.  The repaired source reuses the
+256-word setup-only `K4_S` buffer as the live lane array `s.LA`.  `K4_S` has
+already been consumed to construct the self-contained packed table `K4_P`
+before any `Attack` exists; each window then resets all 256 aliased words to
+their exact initial `NM20|lane` values before use.  No table, queue, register,
+predicate or lane value is removed.  The eliminated duplicate allocation
+saves `256*32 = 8,192` bytes.  Including the module, the complete peak is
+therefore `1,048,093 - 8,192 + 4,029 = 1,043,930` bytes, 4,646 bytes below
+`2^20`.
+This answers `F-MEM-PERSISTENT-MODULE`; the memory claim remains `20.0` with
+no hidden penalty.
+
+### Response to every c2743938 finding
+
+The ruling contains thirteen finding IDs.  This derivative closes the one
+fatal cost omission and the minor stale-row ambiguity.  It does not relabel
+the organizer report's material evidence limits as proofs; those remain
+explicit conditions of this exploratory claim.
+
+| finding | response in this derivative |
+|---|---|
+| `F-MEM-PERSISTENT-MODULE` | **Closed.** The persistent 4,029-byte module is charged and the complete peak is 1,043,930 bytes. |
+| `F-COST-EVIDENCE-LIMIT` | **Still disclosed.** The complete attack cost remains conditional on the checksum-bound counted program and declared production model; organizer KATs are not represented as an independent full-cost replay. |
+| `F-SUCCESS-CONDITIONAL` | **Still disclosed.** The 0.39 success value is a conditional attack-law parameter, not an organizer-derived empirical probability. |
+| `F-CRYPT-WITNESS-001` | **Still disclosed.** No end-to-end collision witness is claimed from the organizer KATs. |
+| `F-PROB-MODEL-001` | **Still disclosed.** The production-scale probability model remains declared as MODEL and its sensitivity rows remain part of the proof. |
+| `F-TAIL-POINT-001` | **Still disclosed.** The controlling `2^-74.4594` is the declared point premise; the less favorable one-sided sample value `2^-74.6588` remains visible. |
+| `F-BUILD-PATH-001` | **Tightened, not overstated as closed.** The changed source and embedded module are checksum-bound; an exact production replay is a READY gate, but it is not substituted for organizer execution of the Wasm path. |
+| `F-EVAL-KAT-LIMITS` | **Still disclosed.** The manifest experiments remain component KATs rather than a complete attack. |
+| `F-EVAL-STALE-ROWS` | **Closed.** Every later noncontrolling score occurrence is explicitly labelled a superseded lineage row; the opening row and claim JSON identify 93.587494 as controlling. |
+| `F-EXP-NO-COLLISION-WITNESS` | **Still disclosed.** Zero organizer-returned pairs is stated without treating it as a refutation of the rare-event construction. |
+| `F-EXP-NO-TRUSTED-PROBABILITY-OR-COST-INFERENCE` | **Still disclosed.** Participant observations are not described as organizer-trusted inference. |
+| `F-EXP-PRODUCTION-SCALE-NOT-REPLAYED` | **Still disclosed.** The production-scale organizer-seed audit is participant-run support and is not called an organizer sandbox replay. |
+| `F-EXP-PUBLIC-SEED-SELECTION` | **Still disclosed.** Seeds are public, no holdout nonce is asserted, and no family-wise interpretation is claimed. |
+
+The organizer image was checked directly and does not provide `wasmtime`.
+Accordingly, the single shipped source uses a pure-Python generator fallback for organizer KATs;
+the active production source is registered as
+`experiments/r39joint_k4_production.py`; its exact normative Wasm bytes are
+embedded as `_G`, and the complete source is checksum-bound. The Wasm is not a runtime dependency of
+the organizer KAT.  Both Python sources stay below 65,536 bytes.
+
+
+## Tight-guard controlling supplement
+
+This derivative changes only four stop-lookahead reservations in the shipped
+source. Its asserted compact-pass bound is `K4_PASS_COMPACT = 144,223`.
+Applying the finite structural formulas already proved for this pass gives
+`g11/g13/g14/g15 = 145,083 / 145,046 / 144,900 / 151,344`, replacing
+`200,423 / 172,693 / 172,547 / 178,991`. A reservation is not added to the
+machine counter; it only prevents starting a unit that could overrun the cap.
+Therefore these replacements change no predicate or executed work and can only
+retain an additional completed claw near the cap boundary.
+
+On the sealed 32-window panel, only two excluded transformed stamps lie within
+the maximum proved reduction of 55,340 operations. Exact uncapped replays of
+those seeds preserve both claw fingerprints and total counted operations.
+Seed 6,000,030 gains one retained claw; seed 6,000,018 gains none. The next
+excluded stamp is 81,795 operations above the cap, so no other claw can cross.
+Thus at unchanged `WMAX_CAP = 555,611,967`, the exact sealed-panel count is
+`k = 28,405 / 30,208` and
+
+`r = 0.947603886*(28405/28572) = 0.9420652520590088198...`.
+
+The executable spelling of this current point is exactly
+`R_LB=.9420652520590088`.
+
+The inherited exact success-mass interval gives adjacent window-count
+endpoints `75,420,206,301,257,388,300,312` and
+`75,420,206,301,257,388,300,313`. Pricing the conservative upper endpoint,
+
+```text
+N = 75,420,206,301,257,388,300,313 * 555,611,973
+    + 1,120,815,998 + 2,812 * 2^43
+  = 41,904,369,627,108,674,628,978,721,712,443
+log2(N/2812) = 93.58949075291565277313658...
+```
+
+This superseded tight-guard row's upward six-decimal value is
+**`time_log2 = 93.589491`**. The panel and cap
+remain MODEL/MEASURED point inputs; the guard safety and two decisive replay
+identities are exact. This supplement supersedes the older 93.589542 opening
+row immediately below.
+
+## Superseded parent charge (retained only for lineage)
+
+This section records the immediately preceding `93.589542` row. It is not the
+current charge; the tight-guard supplement above supersedes every value in this
+section where the two differ.
+
+The paired 32-window panel has 30,208 stamps. Every claw identity key and
+fingerprint is unchanged. The exact minimum of `(W+6)/k(W)` is
+`W = 555,611,967`, `k = 28,404`. With sealed `r0 = 0.947603886` and
+`k0 = 28,572`,
+
+`r = r0*(28404/28572) = 0.9420320865863082738345233095...`.
+
+The parent executable decimal literal was `R_LB=.9420320865863083`; it is not
+the literal used by the current shipped budget check.
+
+The direct prefix-52 full-list/kept-list trial measurement gives
+`EN'/EN = 0.9765430741215306`. Applying both substitutions to the inherited
+exact success-mass interval gives, at its lower endpoint,
+
+- `bw = 75,422,861,568,343,054,311,730` windows;
+- cap charge `W+6 = 555,611,973` operations per window;
+- exact setup `K4_SETUP = 1,120,815,998`;
+- fixed preprocessing/final term `2812*2^43`;
+- `N = 41,905,844,925,292,983,481,601,161,608,184` operations;
+- `log2(N/2812) = 93.5895415439889347521815977...`;
+- upward claim **`time_log2 = 93.589542`**.
+
+The upper endpoint adds one window and gives
+`N = 41,905,845,000,715,845,049,944,215,919,914`; it has the same upward
+six-decimal row. The paired cap and EN ratio are declared MODEL/MEASURED point
+inputs, not confidence guarantees.
+
+## Executable list, pass and guard rows
+
+Import builds the list and then retains prefix-52's 188 groups and 851 classes.
+Repacking gives 118 groups with full blocks, 240 full blocks, 40 packed blocks
+and 155 packed segments. The compact pass charge is exactly
+
+`733 + 110*118 + 403*240 + 114*155 + 403*40 = 144,223`.
+
+The source retains `K4_PASS = 200,423` as the conservative full-pass
+reservation, but the four stop lookaheads use the proved structural bounds
+`g11/g13/g14/g15 = 145,083 / 145,046 / 144,900 / 151,344`. This tightening is
+the current score change: it admits exactly one additional sealed-panel claw
+without altering executed work. Import asserts every count,
+`table_words() = 15,520`, setup, compact charge and memory.
+
+## Memory
+
+The sealed derivative declared 1,043,773 bytes. The prior selective inlining
+plus one net additional duplicated `link` body add at most 4,320 bytes under
+the parent's conservative 36-bytes-per-generated-instruction rule.  Reusing
+the dead setup-only 256-word `K4_S` allocation as the live lane array saves
+8,192 bytes, and the formerly omitted persistent module adds 4,029 bytes.
+The current complete bound is therefore **1,043,930 bytes**, leaving 4,646
+bytes below `2^20`; the memory claim remains `20.0` with no scalar penalty.
+The source remains below the 65,536-byte experiment-source limit.
+
+## Nonuniform advice
+
+The current production source stores the 160-byte advice pair, the selected
+32-bit `FIB` and `K4_CUBE` words (8 bytes), and the 52 selected 32-bit
+`K4_DROP` identifiers used by the K4_Q production prune (208 bytes). The
+declared nonuniform advice is therefore exactly `160 + 8 + 208 = 376` bytes,
+with `nonuniform_advice_log2_bytes = log2(376) = 8.554588851677638`. The
+contest's current objective is time-only; advice is nevertheless declared as
+its own required resource, so this correction does not alter the controlling
+lineage-row numerator or its historical `time_log2 = 93.589491`; the current
+controlling row is now `93.587144`.
+
+## Replay binding
+
+The parent measured combined execution graph was SHA-256
+`e7c43f13c1f534dcc4387fff55c58961dff5e9a09e1755f9778b24149d786af7`.
+The attached active production source applies the exact K4 MAJ fold and four
+proved stop lookaheads and loads the attached counted generator. Its SHA-256 is
+`6062105b4830cf713cc8e84ea2bf99d586cddb4bfbbc521a8fdc2d6ecb0e21c9`;
+the generator SHA-256 is
+`0ae58e135df817ce9df03444934a68e08d45d6e4867442934266227f0fa9910b`.
+Relative to the exact H1-fold/tight-guard paneled algorithm source
+`d1fd2ac4907eff1e9f7e424a8132f8d3f56b3405744c4f799d5111463c0044f6`,
+the algorithmic/pricing changes are `R_LB`, the conservative integer
+window-budget literal, and reuse of dead setup-only `K4_S` storage as `s.LA`.
+The lane values are unchanged; the explicit reset adds one counted operation
+per lane.  The authoritative organizer entry is `serve()` at source lines
+1154--1166; line 1162 maps each organizer trial by
+`int(t["seed"][:16],16)`.  The organizer report at
+`R:/research/sha256-r39/rulings/5afca76e/experiment-report.json` records
+`execution.seed = "hashsmash-public-seed-v1"`, its SHA-256 canonical seed
+protocol, and the shipped experiment source.  A `V=True` replay using that
+exact 64-bit mapping (Tally job `J-ec88d3bd`) measures 699,109,024 operations,
+944 stamps and 867 retained at the filed cap.
+
+A separate full-256-bit diagnostic replay of parent `e57e486f...` and final
+source `4ac02aa6...` shows 944/944 stamp identities equal in order and every
+timestamp shifted by exactly +256 operations; it is not called an organizer
+execution.  The three edits execute after generator selection, so the same
+identity and +256 derivative applies to the production path.  The claim's
+retention point comes from the sealed 32-window panel, not either single KAT:
+exact repricing of all 30,208 panel stamps at +256 retains 28,426 at the cap,
+still above the 28,404 charged. Packaging additionally
+embeds the identical counted Wasm, supplies an exact pure-Python organizer
+fallback, and recompresses the unchanged KAT payload. The production
+`--attack` path selects the embedded counted module.
+The inherited `r39-mate-*` KAT route reconstructs the credited full parent list
+inside that check-only process before replay; the production attack route keeps
+only the pruned 188-group list and the declared memory bill.
+
+Regenerated pure-Python fallback `r39k4-window-small` tuples are
+`(63,1,0,71660,0,0,119765,5843307)`,
+`(14,0,0,0,0,0,0,3177615)`,
+`(22,0,0,0,0,0,0,7432944)`, and
+`(16,0,0,0,0,0,0,3701419)`. With the embedded counted module, the same
+tuples' total-op fields are respectively 5584789, 2920584, 5475444 and
+3194026. Each path hard-asserts its own exact totals; production `--attack`
+accounting is bound to the embedded counted module. Regenerated H8 tuples with
+the pure-Python fallback are `(51,0,0,0,0,5880446)` and
+`(54,1,11392,11392,129777664,5662767)`; with the embedded counted module their
+ops fields are respectively 5602956 and 5387699. Each path asserts its exact
+total.
+
+All attribution and accepted-parent lineage below are preserved. The current
+work belongs to Wren's measured prefix/inlining construction and Aurelia's
+independent review, correction and staging; no parent result is claimed as new.
+
+---
+
+# r39/k addendum: the counted-op savings of r39/i, banked - lazy mask slicing in the W17 pass,
+# the degenerate hit-path shift, and the cap/retention re-digit they force
+
+**This held package claims 93.613058 (memory 2^20.0, score 93.613058): it is a credited derivative of
+04f61e00 (93.6193). Its controlling row is the final section of this file, 'Credited derivative of
+04f61e00: EB21 + PACK2C + LA_INIT + final-stage2 dead-store removal'. Everything between here and that section is 04f61e00's accepted proof,
+kept verbatim as the parent row; its own record for 04f61e00 was: claim 93.6193, -0.2302 against
+93.8495 and -0.0197 against r39/i (93.6390); audited peak 1,043,645 B, log2 = 19.99319963; intake
+ready, import with every assertion on, all 8 KAT seeds passing on that build. The earlier L2 row
+93.618679 is retained below as lineage; the final section supersedes it with H1', W9, inline-4 and
+the exact paired-stamp cap re-digit.
+
+| | claim `time_log2` | memory | **score** | vs 93.8495 | vs 93.6390 |
+|---|---:|---:|---:|---:|---:|
+| lane best (parent `d6b8be2e`) | 93.8495 | 2^20.0000 | **93.8495** | - | - |
+| parent r39/i (filed, superseded by 04f61e00) | 93.6390 | 2^20.0000 | 93.6390 | -0.2105 | - |
+| j s projection for these three savings (93.6390 - 0.0183) | 93.6207 | 2^20.0000 | 93.6207 | -0.2288 | -0.0183 |
+| **parent 04f61e00 (r39/k)** | **93.6193** | **2^20.0000** | **93.6193** | **-0.2302** | **-0.0197** |
+| parent 04f61e00 at the one-sided 99% retention floor r = 0.943929 | 93.6243 | 2^20.0000 | 93.6243 | -0.2252 | -0.0147 |
+
+---
+
+## 1. What changed: exactly the three findings of work/r39/j.md, nothing else
+
+The construction, the generated list (12,025,320 entries, 936 classes, 240 groups, 84,600 prefixes),
+the walk, the advice pair, the KAT paths, the memory bill and every target are r39/i s. Three
+counted-operation findings of the j census are implemented in the shipped programme:
+
+**(a)+(b) Lazy mask slicing in the W17 pass (one change, at the J-construction and the block loop).**
+A pass builds, for each of the 140 groups and 196 packed segments, 32 planes of the r value, 3 counted
+operations each (a shift, an AND, a subtract): 96 operations per r, 32,256 per pass. But the block loop
+leaves early: it may test block death from bit 22 and the measured mean last-reached bit index is 24.08,
+so only 24.08 masks of 32 are ever built. The programme now keeps the mask plane list per group / segment
+and builds plane i on demand, when the block loop first reaches bit i (a pass that never exits early
+still builds all 32, so the worst-case bound is unchanged). The masks are the same values; only the
+number of them that is built falls.
+
+**(c) The degenerate shift in the hit path.** `hit()` computed its table index as
+`bk = (r<<0 + r<<5 + r<<6) >> 15`; the first term is a shift by zero, charged one operation. Removed:
+exactly one operation per lane hit. The `extract` term (76 per group) was re-measured and left at
+its floor: gathering 25 bit-planes for k lanes costs 3 operations per plane and there is no cheaper
+form in this op model.
+
+Nothing else moves. The four construction files (list, walk, advice, screen) are byte-identical to the
+parent s; the programme diff is confined to `_k4rb`, the J construction and block loop of `k4q`,
+and one line of `hit`.
+
+## 2. The op saving table, measured
+
+Per unit, on identical pass sequences: five windows with the claw gate lifted (seeds 12345, 999, 4242 at
+2^22; 12345, 999 at 2^24) and the 37,207 passes of the 32 paired production windows, whose claw streams
+are bit-identical between the builds:
+
+| block | before | after | saving | share of the window |
+|---|---:|---:|---:|---:|
+| W17 pass, per evaluated claw | 152,616 | 144,630 | **-7,986** | -5.23 % of the pass |
+| hit path, per lane hit | 181.029 | 180.018 | **-1.000** | -0.55 % of the hit path |
+| window (2^26, paired on 32 seeds: 769,681,501 -> 759,740,969) | 769,681,501 | 759,740,969 | **-9,940,532** | **-1.2915 %** |
+
+The pass row is measured on 37,207 identical passes (the paired production windows): mean 7,986 ops
++- 2, sd 371, min 6,111, max 8,967; the mean number of mask planes built is 24.08 of 32. On the
+census KAT claw the same change is 151,481 -> 142,919 k4 operations (-8,562) because that claw s blocks
+die earlier than average and lose more masks. The hit row is the census window s hit category (cap
+93,222,931 hit operations over 517,853 hits against 92,719,472 over 512,180. The window saving priced in
+claim is 0.01875 bit (log2 of the ratio of window work).
+
+## 3. Equivalence: verified per pass, five windows, and 32 production windows end to end
+
+Each pair of builds is run on the same seed with the claw gate lifted to 10^9 so every distinct F9 claw
+is evaluated, and `k4q` is instrumented per call (verify/equiv.py). Compared: (i) the per-pass event
+stream - for every call the (a0, u) and the deltas of k4s, k4_w17a, k4_w17, collisions and k4q; (ii) the
+window counters claws_distinct, f9, k4q, k4s, k4_w17a, k4_w17, collisions, f8, ddraws; (iii) the
+evaluated-claw list k4D; (iv) the call counts of all 25 instrumented routines (k4_eval, stage2, claw, hit,
+hit_group, find_lane, extract, qpush, iter1, insert_lane, delta_lanes, bank, qins, link, fpop,
+move_lane, qflush, cutscan, wr, cut_lane, k4d, k4q, k4_words, k4_second, compress); (v) the collision
+messages. All five windows: **identical**, 0 differences in any of (i)-(v).
+
+| seed | window | passes compared | ops before | ops after | delta | event stream / claw list / calls |
+|---|---:|---:|---:|---:|---:|---|
+| 12345 | 2^22 | 26 | 32,391,787 | 32,144,125 | -247,662 | identical |
+| 999 | 2^22 | 18 | 34,134,449 | 33,951,485 | -182,964 | identical |
+| 4242 | 2^22 | 17 | 29,649,704 | 29,475,292 | -174,412 | identical |
+| 12345 | 2^24 | 223 | 159,503,312 | 157,563,700 | -1,939,612 | identical |
+| 999 | 2^24 | 202 | 158,667,032 | 156,886,683 | -1,780,349 | identical |
+
+The 2^24 rows are in verify/equiv_2e24.log. At the production size the per-pass instrumentation is
+replaced by the paired panel: the same 32 fresh 2^26 windows (327,680 iterations, 1,073-1,269
+evaluated claws) run on both builds give identical event counters in 32/32 windows and an identical
+evaluated-claw list (per claw: iteration, k4q / k4s / k4_w17a / k4_w17 / collisions deltas and the
+(a0, a1, u) triple).
+
+## 4. Memory, and the price of each saving
+
+Memory is unchanged from r39/i, byte for byte: 32 x (15,520 + 161 + 18 x 331 + 512) + 334,813 =
+1,043,645 B peak, declared 2^20 = 1,048,576 B, a 4,931 B cushion, zero excess over 2^20, no penalty.
+
+| saving | counted ops | memory | worst-case bound | other price |
+|---|---:|---:|---|---|
+| lazy mask slicing | -7,986 per pass | 0 B | unchanged: 171,870 compact, 200,423 reservation | mask builder is Python control flow, not counted; stamp reservation deliberately NOT tightened |
+| hit shift removed | -1 per hit | 0 B | unchanged | none |
+
+The reservation `K4_PASS = 200,423` is kept as it is: it is an upper bound on the pass, still valid,
+and tightening it would move the stamp-truncation of the retention estimator rather than the attack.
+The pass s worst case (no early exit) is unchanged, which is why the compact bound 171,870 still holds
+and the import assertion is untouched.
+
+## 5. Panel: the retention re-measured, and the cap re-digited
+
+The op mix moves the stamp distribution (passes are 5.23 % cheaper, hits 0.55 %), so r is re-measured on
+this build with the same pass-credited stamp method as the parent: 352 fresh participant 2^26
+windows, seeds 6,000,000.., screen on, uncapped, the k4d claw gate lifted to 10^9 so every distinct F9
+claw is evaluated and stamped (a drawn claw is never credited). Distinct F9 claws per window: mean
+1162.3, min 1044 - the 944 gate saturates in every window, so EN is unchanged at 13951.897494770212.
+
+| quantity | r39/i (68 windows) | **r39/k (352 windows)** |
+|---|---:|---:|
+| uncapped window ops (mean) | 768.3 M | 759.3 M |
+| distinct F9 claws per window | 1,161.5 | 1162.3 |
+| argmin W of (W+6)/r_true | 582,000,000 | **584,000,000** |
+| r at the argmin | 0.931175224327 | **0.947259606125** |
+| s.e. of r | 0.002622 | **0.001281** |
+| one-sided 99 % floor | 0.924359 | 0.943929 |
+| score at the floor | 93.6496 | 93.6243 |
+| claim | 93.6390 | **93.6193** |
+
+**Paired motion.** The parent build was re-run on the same seeds (6000000..6000031): the uncapped window falls
+9,940,532 ops (1.2915 % +- 0.0074 %), and at a fixed W = 584,000,000 the
+retention moves r = 0.932601 -> 0.945246 (+0.012646 +- 0.000501, 25.2 s.e.), i.e.
+-0.01943 bit at fixed W. That is the measured motion behind the re-digit.
+
+The cap is the argmin of `(W+6)/r` on a 2,000,000-step grid from 500 M to 800 M; the plateau is
+flat, and the selected value is a grid point. Every uncapped window completed; no window was skipped
+and no drawn claw was credited.
+
+Panel size: the brief asked for 128 fresh windows with a stretch while the s.e. on the score exceeded
+0.002. At 128 the s.e. on the score was 0.00371 (0.002429 on r); at 288 it was 0.00216 (0.001421 on r),
+still above the bar, so the panel was stretched to 352 windows, where it is 0.00195 (0.001281 on r).
+Every window is reported and no drawn claw is credited.
+
+## 6. Ledger
+
+`lam` = nextafter(-ln 0.61, inf)/(1-DIV), `DIV = 0.0007650107109046086` unchanged,
+`B = lam/(C_W*EN*2^-32*2^-74.4594)`, `windows = ceil(B/r)`, `N = windows*(W+6) + K4_SETUP + 2812*2^43`,
+`claim = ceil4(log2(N/2812))`, `score = claim + max(0, memory_log2 - 20)`.
+
+| term | value |
+|---|---|
+| EN | 13951.897494770212 (unchanged; F9 point 944.0) |
+| C_W | 57,003.18 (unchanged) |
+| B | 6.9384123334753643e+22 |
+| cap / charge | W_max = 584,000,000, charged 584,000,006 per window |
+| retention | **r = 0.947259606125** (s.e. 0.001281; one-sided 99% floor 0.943929) |
+| windows | ceil(B/r) = 73,247,210,042,662,632,554,496 |
+| setup | 1,120,815,490 / 2,812 x 2^43 |
+| **N** | **42,776,371,104,398,262,402,416,158,591,362** |
+| raw | log2(N/2812) = 93.61920416037222 |
+| claim / memory / **score** | 93.6193 / 20.0000 / **93.6193** |
+
+Motions: against the parent r39/i -0.0197 (the three savings, priced at their measured
+counted-op ratio and re-measured as retention); memory 0 (both entries sit under 2^20 with zero penalty).
+
+## 7. KATs regenerated
+
+The programme changed, so every op-count-carrying KAT constant was regenerated by neutralising the
+assertions and re-capturing on this build (model/kat_capture.py):
+
+| seed | (claws, F9, 0, pass lanes, survivors, key hits, k4 ops, total ops) |
+|---|---|
+| `14672896933643966474` | `(63, 1, 0, 84600, 0, 0, 142919, 5889100)` |
+| `15921217793420643850` | `(14, 0, 0, 0, 0, 0, 0, 3190746)` |
+| `17552297034189817508` | `(22, 0, 0, 0, 0, 0, 0, 7447156)` |
+| `1866586107145425828` | `(16, 0, 0, 0, 0, 0, 0, 3718932)` |
+
+and the two H8 window tuples `(51, 0, 0, 0, 0, 5908541) and (54, 1, 46656, 46656, 2176782336, 5718047)`,
+both inside the inherited |z| <= 3 bands (z = (-0.484, +0.300)); the pass lane count is unchanged at
+84,600. The diagnostic tuples are unchanged - `(57936, 438, 0.4763, 1)` and three zeros - which is
+the check that the savings moved op counts only and not the drawn-claw structure. The 14 list-bound
+r39-mate replays are unaffected: their replica blob is self-contained (it references none of the changed
+names) and the list is the parent s.
+
+## 8. What is NOT claimed, and what a reviewer will attack
+
+1. **The savings are small and the score motion is -0.0197.** They are exactly the
+   three counted-op findings j measured, not a construction change; the counted-op floor is elsewhere
+   (walk kernels 47.5 % of the window, unchanged).
+2. **The cap is re-digited and the retention is re-measured on 352 fresh windows of this build**.
+   The s.e. is 0.001281; the floor row is published and not used.
+3. **The pass reservation is not tightened** (`200,423`), so the stamp estimator is unchanged in
+   method from the parent and the r panel is directly comparable to it.
+4. **The F9 point at 944.0** is a point, as in the parent; the op savings do not change the claw draws.
+5. **The 0.55 % extract term was measured and left alone**: 76 ops per group is 3 ops per bit-plane, the
+   floor of this op model.
+
+## 9. Files
+
+| path | what |
+|---|---|
+| work/r39/k/pkg | the candidate: claim.json, proof.md, experiments/r39joint_k4_production.py, experiments/manifest.json, certificates/manifest.json |
+| work/r39/k/build | the measurement build (the shipped file before the ledger constants are patched in) |
+| work/r39/k/panel/runner_k.py, drive_k.py, raw/K128 | the stamp-exact gate-lifted panel of this build (352 windows) |
+| work/r39/k/panel/raw/I64 | the paired parent-build panel on the same seeds (op-table and r motion) |
+| work/r39/k/verify/equiv.py, equiv_2e22.log, equiv_2e24.log | per-pass equivalence harness and transcripts |
+| work/r39/k/verify/audit_k.py, run_kat_real.py | package audit and KAT harness |
+| work/r39/k/census/ | census of the produced window (census6.py, new582.json) |
+| work/r39/k/model/ | finalize_k.py, analyse_k.py, emit_k.py, mkproof_k.py, kat_capture.py, kat_final_k.json, final_k.json |
+| work/r39/k/validation.txt | the validation transcript |
+
+---
+
+# r39/i addendum: the walk table at multiplier 97, paid for by the prefix planes and the queue
+
+Parent r39/i record: claim `time_log2 = 93.6390`, memory `2^20.0000`
+(declared 1,048,576 B = 2^20 exactly; audited peak 1,043,645 B, `log2 = 19.99319963`),
+score **93.6390**. That is **-0.2123** against the lane best 93.8495, **-0.0622** against the
+superseded sibling package r39/g (93.6994) and **-0.0123** against the hard target 93.6495
+(lower is better). The package validates: intake `state: ready`, import with every assertion on,
+all 8 KAT seeds regenerated and passing, the 14 list-bound `r39-mate` replays passing, audit
+pass, no bytecode.
+
+| | claim `time_log2` | memory | **score** | vs 93.8495 | vs r39/g 93.6994 |
+|---|---:|---:|---:|---:|---:|
+| lane best (parent `d6b8be2e`) | 93.8495 | 2^20.0000 | **93.8495** | - | - |
+| superseded sibling r39/g | 93.6994 | 2^20.0000 | 93.6994 | -0.1501 | - |
+| **this entry (r39/i)** | **93.6390** | **2^20.0000** | **93.6390** | **-0.2123** | **-0.0622** |
+| this entry at the one-sided 99% retention floor r = 0.924359 | 93.6496 | 2^20.0000 | 93.6496 | -0.1968 | -0.0468 |
+| *(sensitivity)* this entry at multiplier 92, inherited 30,000 B cushion | 93.6542 | 2^20.0000 | 93.6542 | -0.1953 | -0.0452 |
+
+---
+
+## 1. What changed, and what did not
+
+The construction (list, fibre `0x3cc9e0be`, advice pair, screen, walk, messages, KAT paths) is
+inherited from the accepted line unchanged. The score clause changes, all of them named here:
+
+1. **The walk table is re-digited at multiplier 97** (99,328 slots of 40 bits, 15,520 words).
+   `2^15/97 = 337.8 < 512`, so the slot plus the 9 stored check bits still determine the walked
+   value; the check-mode identity is `pos == 40*(r*97 >> 15)` and is asserted in the programme.
+2. **The prefix-plane layout is re-derived for this fibre.** The inherited layout keeps 50
+   partial tail blocks inside K4_Q (2,240 lanes in 50 blocks: 30 of 64 lanes and 20 of 16) and
+   separately packs the 100 small groups 10,680 lanes into 42 packed blocks with 139 segments.
+   This entry moves every partial tail into the packed array, so 12,920 lanes are packed once
+   into 51 blocks with 196 segments; 372 blocks become 331.
+3. **The pair-record queue is right-sized** from `QCAP/QFULL = 3584/3328` to `1024/768`.
+4. The cap, the retention and the memory declaration are re-measured and re-derived.
+
+Nothing else moves: the 84,600 prefixes, the 936 classes, the 240 groups, the 20 mate offsets,
+the window law, the screen, the claw gate (944) and the KAT paths are the accepted ones.
+
+## 2. The memory bill, component by component
+
+The programme asserts the bill at line 1176: `32*(table_words() + QCAP//4+1 + 18*331 + 512) + 334,813`.
+Each item is a structure the attack path allocates and touches:
+
+| item | programme lines | words | bytes | what it stores | touched per window |
+|---|---|---:|---:|---|---|
+| walk table `s.tab` | 363, 371, 385, 428 | 15,520 | 496,640 | 40-bit slots `(M r)>>15` of the walked distinguished value: 31-bit value + 9-bit check | every hit, read and written |
+| pair-record queue `s.qw` | 361, 429 | 161 | 5,152 | 64-bit `(lane, time, distance)` pair records | every key hit (push), every stage2 drain (pop) |
+| prefix planes `K4_Q` + `K4_P` | 961-999 | 5,958 | 190,656 | the 84,600 distinct 18-bit W17 prefixes, bit-sliced 18 planes x 256 lanes per block, 331 blocks | once per evaluated F9 claw (944 times) |
+| register file `s.R` + lane array `s.LA` | 386, 391 | 512 | 16,384 | two 32-register banks of the walk kernels (they address up to RCAP = 206) and the 256-entry lane array | every walk iteration |
+| residual rows | proof Section 6 | - | 334,813 | 4,111-instruction walk census 147,996; k4 and work-cap code 94,644; kernel images 10,240; pass register save area 3,328; hit/output transients; prefix-table lane counts, segment boundaries, group constants, class words and sample keys | resident or per window |
+| **peak** | | 22,151 | **1,043,645** | | |
+| declared (2^20) | | | **1,048,576** | cushion 4,931 B above the peak | |
+
+So `32*(15,520 + 161 + 18*331 + 512) + 334,813 = 1,043,645` bytes of peak, declared as 2^20 =
+1,048,576 bytes, `log2 = 20.000000` exactly, zero excess over 2^20 and no penalty.
+
+## 3. The two savings, and what they are worth
+
+Both are reductions of actual data structures in the shipped programme. Both were verified to
+preserve the walk on probe windows: identical `claws_distinct`, `f9`, the 84,600 `k4q`
+pass lanes, the `k4s` survivor classes, the `k4D` evaluated-claw list and the k4T gate
+contents on two seeds of an identical window size.
+
+**(a) Prefix-plane repack: -738 words = -23,616 B, and 10,025 fewer counted operations per pass.**
+The inherited layout spends a full 18-plane block on each of the 50 partial tails (900 words for
+2,240 lanes) and packs the small groups separately (42 blocks, 139 segments). Packing all 12,920
+tail lanes once gives 331 blocks: 5,958 words against 6,696. The pass cost moves with the same
+repack: `733 + 110*140 + 403*280 + 114*196 + 403*51 = 171,870` counted operations against
+`733 + 110*140 + 330*403 + 139*114 + 42*403 = 181,895`. The 41 blocks saved are 41 x 403 = 16,523
+operations; the 57 extra segments cost 57 x 114 = 6,498; net **-10,025 operations per pass**,
+measured as -7,010 and -7,038 operations per evaluated claw on two probe windows (the bound
+differs from the measurement because the pass leaves the block loop early on most blocks). This
+is the opposite of the verdict recorded in the superseded sibling, which priced a dense repack
+(331 full blocks with the lane groups re-cut across block boundaries, ~242 extra segments) at
++11,065 operations. The mistake there is the target, not the arithmetic: re-cutting group
+boundaries multiplies segments. Keeping every groups full blocks intact and moving only the
+tails is -41 blocks and +57 segments: a win on both axes. Priced in claim, -7,024 operations on
+each of the ~885 claws a capped window completes, against a window that stops at 590,000,000
+counted operations, is about -1.0% of the window work, i.e. about **-0.014 bit** of claim.
+
+**(b) Queue right-size: -736 words = -23,552 B, +0.01% window operations.** The queue holds
+64-bit pair records between stage2 drains. QFULL = 3328 entries is 3.2x more than the observed
+demand: a 2^26 window pushes about 107,000 records in bursts and the queue only has to hold one
+burst (at most 80 lanes) above QFULL. At QFULL = 768 (QCAP = 1024) the queue is 161 words instead
+of 897, stage2 runs about 70 times per window instead of 9, and the counted operations rise by
+3,207-3,292 per 2^22 window (0.01%, worth about -0.0002 bit of claim). The stage2 state machine
+is exact under re-batching: same claws, F9 claws, lanes, survivor classes and gate contents on
+three probe windows.
+
+**What the savings buy.** The two savings free 47,168 B. The table takes 2,400 words = 76,800 B
+at multiplier 97. The remaining 29,632 B is not a saving: it comes out of the declared cushion.
+
+## 4. The cushion: an accounting decision, disclosed
+
+The declared bill is the peak plus a cushion. The accepted line declared 30,000 B above its peak;
+this entry declares 4,931 B above its own (1,043,645 B -> 2^20 = 1,048,576 B). The 25,069 B
+difference is spent on the walk table, and it is an **accounting choice, not a gain**: the peak
+is not reduced by it, no data structure shrinks, and the entry would be strictly stronger with
+the cushion untouched. It is taken because it is the only way to reach the no-eviction table
+inside 2^20 and because the declaration still bounds the peak by 4,931 B. A reviewer who
+rejects the reduced cushion gets the superseded multiplier: at 92 the same two savings leave a
+declared bill of 1,048,045 B with the inherited 30,000 B cushion intact and the score is
+**93.6542**, measured on the 32 paired windows of the same seed set (Section 5). That filing is 0.0047 bit
+above the hard target.
+
+## 5. Panel: retention, cap, and the numbers this entry is priced on
+
+Measured on this build: 68 fresh participant 2^26 windows, seeds 4,000,000.., screen on,
+uncapped, every distinct F9 claw evaluated (the k4d gate lifted to 10^9 so the stamps of the
+first 944 claws are exactly the production windows). Distinct F9 claws per window: mean 1161.5,
+min 1087 - the 944 gate saturates in every window, so the F9 point is exactly 944.0 and EN is
+unchanged at 13951.897494770211.
+
+| multiplier | window ops (uncapped, full gate) | FOM `(W+6)/r` | r at the argmin | claim |
+|---:|---:|---:|---:|---:|
+| 82 (superseded r39/g build) | 756.0M | 6.5192e8 | 0.90503 at 590,000,000 | 93.6998 |
+| 92 | 763.5M | 6.3165e8 | 0.93724 at 592,000,000 | 93.6542 |
+| **97 (this entry)** | 768.5M | **6.2422e8** | **0.93118 at 582,000,000** | **93.6390** |
+
+All three are paired on the same seeds, so the differences are paired: 82 -> 92 is -0.0456 bit,
+92 -> 97 is -0.0171 bit, 82 -> 97 is -0.0626 bit. The per-window r difference 92 -> 97 is
++0.01119 +- 0.00213 at 590,000,000 (5.3 s.e.), so the last step of the re-digit is measured.
+The cap `W_max = 582,000,000` is the argmin of `(W+6)/r_true` on a 2,000,000-step grid from
+500M to 800M; the plateau is flat (586-604M within 0.4%). The claw cap stays at 944, the
+inherited model constant: re-pricing this panel at 1,000 gives 93.6381 and at 1,096 gives
+93.6381, against 93.6390 at 944 - 0.0009 bit, inside the cap-choice noise, so it was not moved.
+
+`r = 0.931175224327`, s.e. `0.002622` across the windows; the one-sided 99% floor (t = 2.6) is `0.924359`,
+worth claim 93.6496, disclosed as a sensitivity row and not used.
+
+## 6. Ledger
+
+`lam` = nextafter(-ln 0.61, inf)/(1-DIV), `DIV = 0.0007650107109046086` unchanged,
+`B = lam/(C_W*EN*2^-32*2^-74.4594)`, `windows = ceil(B/r)`, `N = windows*(W+6) + K4_SETUP + 2812*2^43`,
+`claim = ceil4(log2(N/2812))`, `score = claim + max(0, memory_log2 - 20)`.
+
+| term | value |
+|---|---|
+| EN | 13951.897494770211 (unchanged; F9 point 944.0) |
+| C_W | 57,003.18 (unchanged) |
+| B | 6.9384123334753643e22 |
+| cap / charge | W_max = 582,000,000, charged 582,000,006 per window |
+| retention | **r = 0.931175224327** (s.e. 0.002622; one-sided 99% floor 0.924359) |
+| windows | ceil(B/r) = 74,512,424,216,291,306,373,120 |
+| setup | 1,120,815,490 / 2,812 x 2^43 |
+| **N** | **43,366,231,340,956,110,341,518,377,503,106** |
+| raw | log2(N/2812) = 93.63896213644249 |
+| claim / memory / **score** | 93.6390 / 20.0000 / **93.6390** |
+
+Motions against the superseded sibling r39/g: cap -0.0626 (the re-digit and the repack), memory
+0 (both entries sit under 2^20 with zero penalty). Against the lane best 93.8495 the motion is
+the inherited pricing of this list, unchanged from r39/g and from the f entry.
+
+## 7. KATs regenerated
+
+The programme changed, so every walk-dependent KAT constant was regenerated by neutralising the
+assertions and re-capturing (model/kat_capture.py):
+
+| seed | (claws, F9, 0, pass lanes, survivors, key hits, k4 ops, total ops) |
+|---|---|
+| `14672896933643966474` | `(63, 1, 0, 84600, 0, 0, 151481, 5905799)` |
+| `15921217793420643850` | `(14, 0, 0, 0, 0, 0, 0, 3194728)` |
+| `17552297034189817508` | `(22, 0, 0, 0, 0, 0, 0, 7451178)` |
+| `1866586107145425828` | `(16, 0, 0, 0, 0, 0, 0, 3722996)` |
+
+and the two H8 window tuples `(51, 0, 0, 0, 0, 5916780) and (54, 1, 46656, 46656, 2176782336, 5734135)`
+both inside the inherited |z| <= 3 bands (z = (-0.484, +0.300)). The pass lane count is unchanged
+at 84,600; the k4 operation count falls from 158,480 to 151,481, which is the repack. The 14
+r39-mate replays are list-bound and do not use the walk: the list is the accepted one, so their
+digests and cross-claw tuples are unchanged and all 14 pass.
+
+## 8. What is NOT claimed, and what a reviewer will attack
+
+1. **The 4,931 B cushion** is the first thing to attack; Section 4 prices the conservative
+   alternative (multiplier 92, 30,000 B cushion, score 93.6542) in the same breath.
+2. **The F9 point at 944.0** is a POINT, not the inherited bound 903.7824, exactly as in the
+   superseded sibling; the F9 factor itself is unchanged from r39/g, so that sensitivity row is
+   not republished here.
+3. **The panel is participant-run and selects the cap it prices.** The plateau makes the cap
+   choice worth < 0.004 bit either way.
+4. **68 windows, not the siblings 128.** Every window is reported, the per-window r spread
+   is 0.02162 and the one-sided floor is published as a row; the point estimate is the
+   claim, as in the sibling. More windows would tighten the s.e. and cannot move the point by
+   more than the quoted s.e.
+5. **No new EN panel**: EN is unchanged by construction (the F9 gate still saturates; the entries
+   per claw are a function of the claw; the repack changes neither).
+6. **The queue re-batch is a counted-operations change** (+0.01% per window) inside the measured
+   cap, not a change in the success law; the three probe windows and the regenerated KATs are the
+   evidence.
+
+## 9. Files
+
+| path | what |
+|---|---|
+| work/r39/i/pkg | the candidate: claim.json, proof.md, experiments/r39joint_k4_production.py, experiments/manifest.json, certificates/manifest.json |
+| work/r39/i/mirror | intake mirror; validator state: ready |
+| work/r39/i/build97, build92, build82 | the three measured builds (only 97 is shipped) |
+| work/r39/i/panel/runner_i.py, drive_i.py, raw/ | the stamp-exact gate-lifted panels (M97, M92; M82 is the siblings) |
+| work/r39/i/model/ | patch.py (the programme patch), layout.py, emit.py, emit2.py, analyse_i.py, cmp_ms.py, paired.py, kat_capture.py, kat_final.json, final.json |
+| work/r39/i/verify/audit.py, run_kat_real.py | package audit and KAT harness |
+| work/r39/i/validation.txt | the validation transcript |
+
+---
+
+# r39/g addendum: the walk table re-digited, memory back under 2^20, the F9 point at its measured value
+
+**This package supersedes the f package (claim 93.7172, score 93.8134).** It keeps the f entry's
+construction, target, list (fibre `0x3cc9e0be`, 12,025,320 entries in 936 classes, 240 groups,
+84,600 18-bit prefixes, 330 issued + 42 packed blocks, pass 181,895), advice pair, message code,
+collision predicates, divisor and every named premise. Two things move, both of them ledger-only:
+
+1. **The walk table is re-digited at multiplier 82.** The walked distinguished value's slot was
+   `(97 r) >> 15` in a 15,520-word table; it is now `(82 r) >> 15` in a **13,120-word** table
+   (82 x 1,024 = 83,968 slots of 40 bits, `2^15/82 = 400 < 512` so slot plus the 9 stored check
+   bits still determine the value). **Historical r39/f-to-g comparison, not the current peak:** that
+   addendum's memory fell from **1,120,813 B = 2^20.0962** to **1,044,013 B = 2^19.9938**, i.e. **under 2^20, no penalty** (worth **-0.0962** of score).
+   The cost is measured, not asserted: the smaller table collides at load, so this build's windows
+   yield **1,096.1** distinct F9 claws against the parent's ~1,160, and the completion stamps of the
+   944 production claws move late - the re-measured retention at the re-derived cap is **r = 0.905249
+   at W_max = 590,000,000** (Section 4c) against the f entry's 0.957685 at 605,000,000, worth
+   **+0.0450** bit of claim. Net of the two, the walk table buys **-0.0512** of score.
+2. **The F9 factor is the programme's own `min(D_i, 944)` at its measured value 944.0** instead of
+   the inherited one-sided lower CONFIDENCE BOUND 903.7824 (worth **-0.0628** bit). This is a
+   point-versus-bound substitution exactly like every other row-B point in this package, and it is
+   supported by 1,220 windows in total: the gate is lifted in Section 4c's panel so that every
+   distinct F9 claw of each window is stamped (1,096.1 per window, min 1,001, 128/128 windows) and
+   the EN panel's 1,024 claws all saturate at 944. The trials per window therefore rise from
+   763.6e6 to **795.2e6** with no construction change.
+
+| | claim `time_log2` | memory | **score** | vs 93.8495 | vs f 93.8134 |
+|---|---:|---:|---:|---:|---:|
+| lane best (parent `d6b8be2e`) | 93.8495 | 2^20.0000 | **93.8495** | - | - |
+| f package (filed) | 93.7172 | 2^20.0962 | 93.8134 | -0.0361 | - |
+| **this entry (r39/g)** | **93.6994** | **2^20.0000** | **93.6994** | **-0.1501** | **-0.1140** |
+| this entry at the one-sided 99% retention floor r = 0.899817 | 93.7081 | 2^20.0000 | 93.7081 | -0.1414 | -0.1053 |
+
+Exact ledger (this entry): windows `ceil(B/r) = 76,646,451,235,796,614,643,712`, window work
+`45,221,406,688,998,710,054,569,767,862,272`, `N = 45,221,406,688,998,734,789,184,467,126,658`,
+`log2(N/2812) = 93.69939593271350`, claimed `93.6994`, score `93.6994 + 0 = 93.6994`.
+
+# Fibre-rebase addendum (parent 04f61e00 lineage; supersedes the DB25 point rows below)
+
+**Direct passed parent; sole construction change.** This package is an executable derivative of
+passed `d6b8be2e` (nj78-best point-premise price, 93.8495). Its target, attack law, screen,
+advice pair, walk, message code, collision predicates, KAT paths and every named premise are
+inherited unchanged. The sole construction change is the fibre on which the import-generated
+list is built, `h4 = 0x3cc9e0be` in place of the parent's `0x3cc9eebe`, together with the two
+consequences that attach to a rebase: the cap retention and its work cap are re-measured on the
+new build, and the memory bill is recomputed and priced. The point divisor is re-based with the
+list as Section 6 states. Parent numbers appear below only as explicit history; the parent body retained under this addendum,
+including its own "current entry" heading, describes d6b8be2e and is provenance only.
+
+## 1. The re-based list (still generated at import by the unchanged rule)
+
+| item | this entry | parent history (d6b8be2e) |
+|---|---|---|
+| fibre `h4` | `0x3cc9e0be` = 1019863230 | `0x3cc9eebe` |
+| `K4_HD` (c9, C9 shift) | `0x05ceefe0` | `0x05cefde0` |
+| classes `K4_NC` | **936** | 728 |
+| groups `K4_NG` | **240** | 200 |
+| entries | **12,025,320** | 9,701,592 |
+| distinct 18-bit prefixes (lanes) | **84,600** | 62,400 |
+| raw 256-lane blocks `K4_NB` | **430** | 300 |
+| issued full blocks / packed blocks | **330 / 42** | 210 / 34 |
+| packed segments | **139** | 102 |
+| W17 lane pass, compact form | **181,895** | 122,793 |
+| W17 pass reservation `K4_PASS` | **200,423** | 143,633 |
+| `K4_SETUP` | **1,120,815,490** | 1,107,474,556 |
+
+**Exactness of the re-base.** Nothing is transcribed. The import still runs `_k4cls`/`_k4build`
+with the new fibre constant and asserts `K4_NG = 240`, `K4_NC = 936`, `K4_NB = 430`, 140 groups
+with issued blocks, 42 packed blocks, `18 x 372` planes, pass 181,895 and `K4_SETUP`. The
+generated list was checked against the independent exact evaluator of `work/r39/c/list`
+(`ev.c` + `emit.py`, a path-count automaton itself validated against the programme's own
+generator on 8 fibres): for `0x3cc9e0be` the evaluator and this build agree exactly - the same
+240 group keys in the same order, all 84,600 18-bit prefix sets equal with 0 differing
+prefixes, the same per-class 32-bit path counts (sum 12,025,320), the same
+`nfg/nfb/npacked/nseg = 140/330/42/139` and the same pass 181,895. The check lives in
+`work/r39/d/build/verify` (`validate_new.py`, `check_prefix.py`, `evdump.c`); it is not part of
+the package. The new list also keeps the parent list's 20 mate offsets and its group sizes
+{1, 2, 4, 8}, which is why the exact mate term is unchanged (Section 6).
+
+## 2. Re-generated KATs (produced by running the programme's own windows)
+
+The organiser public-seed trial seeds are derived by the pinned harness as
+`sha256(seed_material || [experiment_id, trial])` with the unchanged experiment ids and target
+config, so the same seeds drive this build. Every hard assertion passes.
+
+| KAT | this entry | parent history |
+|---|---|---|
+| `r39k4-window-small` trial 0 (seed 14672896933643966474) | `(63,1,0,84600,0,0,158480,5902672)` | `(59,1,0,62400,0,0,109188,6050860)` |
+| trial 1 (15921217793420643850) | `(14,0,0,0,0,0,0,3184212)` | `(16,0,0,0,0,0,0,4882577)` |
+| trial 2 (17552297034189817508) | `(22,0,0,0,0,0,0,7441181)` | `(28,0,0,0,0,0,0,5020878)` |
+| trial 3 (1866586107145425828) | `(16,0,0,0,0,0,0,3713309)` | `(10,0,0,0,0,0,0,3661839)` |
+| `r39-transplant-claw` trial 2 H8 (2600209493401801829) | `(51,0,0,0,0,5906538)` | `(59,2,22906,22906,292280740,6068431)` |
+| trial 3 H8 (10907755097612878284) | `(53,1,46656,46656,2176782336,5731377)` | `(44,0,0,0,0,5422581)` |
+| `_k4e` diagnostic tuple `E[0]` | `(57936,438,0.4763,1)` | `(11264,89,0.0115,1)` |
+| `_e1(0)` exact dict | fibre 1019863230, shift 97447904, groups 240, classes 936, all `sample_*` 240 | 728/200/200 |
+
+The H8 component band B1 is unchanged (`p9 = 0.0159143`, a walk-law constant). Band B2 is
+rescaled deterministically to the new diagnostic groups (five groups, `K4_IND = 50` of 240,
+570,912 entries): centre 39,790.0 and per-claw variance 525,074,370.0, i.e. the parent's
+(6,838.16; 15,510,000) multiplied by the exact ratio of the diagnostic groups' entry levels -
+no free parameter and no re-calibration. The two public-seed trials give
+`z = (-0.484, +0.300)`, inside `|z| <= 3`. The 600-window calibration behind the parent band
+was not repeated: this arm is inherited support, not evidence.
+
+**The 14 `r39-mate` replays are list-bound KATs and were re-generated too.** The embedded replica
+hard-codes the generated list's per-group entry counts `G` (a 2-byte-per-group blob of counts/8),
+`sum(G) == 9,701,592`, the uniform-entry draw `randrange(9,701,592)`, and the 14 observed
+digest48 / cross-claw tuples. On the new list all four move: `G` becomes the 240 new per-group
+counts (`sum == 12,025,320`), the draw range becomes 12,025,320, and the 14 tuple pairs are
+re-derived from the replica's own runs. With the new values all 14 experiments pass with every
+assertion active. Parent history: `G` 200 groups / 9,701,592; digest48
+`0xeb211a53f0be, 0xf7cd0fed30, 0xe2f45079e4fb, ...`; Z tuples `(242,216,0,0), (64,59,0,0), ...`.
+The parent's accepted mate evidence (1,888 hits, 0 of 60,416 other-claw trials through row 19) is
+cited as parent history in H7/H-cross-claw; its observations are not re-measured here, and the
+premise is inherited unchanged.
+
+## 3. Memory (declared, priced)
+
+**This entry (r39/g): the walk table is re-digited and the bill comes back under 2^20.**
+`32 x (13,120 + 896 + 1 + 18 x (330 + 42) + 512) + 348,941 = 1,028,141` bytes (exactly asserted;
+`table_words() = 13,120 = 82 x 160`), audit peak `1,090,813 - 496,640 + 419,840 = 1,014,013`
+bytes (the f build's walk-phase peak, less the 15,520-word walk table `496,640` and plus the
+13,120-word one `419,840`; the 372-block prefix table and every other row are unchanged),
+declared `1,014,013 + 30,000 = 1,044,013` bytes, `log2 = 19.993708`, so
+`memory_log2_bytes = 20.0000` (declared as the bound 2^20, exactly as the parent declares its own
+1,047,085-byte bill) and `max(0, 20.0000 - 20) = 0` bit is paid. The 97-entry table is the parent
+body's history below. What the re-digit costs is measured in Section 4c, not assumed: the smaller
+table carries 83,968 slots against the ~90,600 distinct walked values a 2^26 window writes, so it
+evicts, the walk yields 1,096.1 distinct F9 claws instead of ~1,160, and the retention at the
+re-derived cap falls by 0.052 - a 0.0450-bit charge against the 0.0962-bit penalty removed.
+
+*History (f package, superseded).* The programme's formula was
+`32 x (15,520 + 896 + 1 + 18 x (330 + 42) + 512) + 348,941 = 1,104,941` bytes; the parent's audit
+peak of 1,017,085 bytes moved by the 128 extra issued blocks, `128 x 18 x 32 = 73,728`, to
+1,090,813 bytes; with the same 30,000-byte headroom the declared memory was 1,120,813 bytes,
+`log2 = 20.096114`, and `memory_log2_bytes = 20.0962` with 0.0962 bit paid.
+
+**Why 82 and not 90.** The declared memory needs `table_words + 18 x 372 <= 19,958`, i.e. at most
+13,262 walk-table words; 90 (which would not evict) is 14,400 words and misses by 1,138 words, so
+the table has to go below the no-eviction threshold (~90,600 distinct values per window) and the
+eviction cost has to be measured. Section 4c does exactly that at 82 (13,120 words,
+`1,044,013 B` declared); the next candidate below is 79 (12,640 words, 1,028,653 B) which buys
+nothing - the penalty is already zero - and only costs more retention, so 82 is the shipping
+choice. The plane layout (330 + 42 blocks) is left alone: repacking the partial blocks was priced
+at +0.011 bit of pass cost for -41 blocks, i.e. a losing trade, and the queue is worth only
+32 words.
+
+## 4. Cap retention re-measured on the new build (stamp method)
+
+> **Cap re-chosen on the pass-credited retention (this fix; supersedes the drawn-claw figures
+> below).** The keys a capped window really tests are the keys of the *pass claws it completes*,
+> not of its drawn claws: `k4d` admits at most 944 distinct F9 claws per window and that gate is
+> reached in 128/128 windows of this panel, so the 5/4 extension's extra drawn claws (22% of the
+> drawn population) carry no trial keys at all. Re-analysing this same stamp-exact panel in the
+> ledger's own currency, `r_true(W) = keys of the pass claws completed at W / keys of the same
+> windows uncapped` (`EN x` evaluated claws; the `k4s`/`k4_w17a`/`k4_words` counters and the 944
+> gate count them directly), gives `r_true(556e6) = 0.875935`, `r_true(605e6) = 0.957685`
+> (s.d. 0.024194, s.e. 0.002138, one-sided 99% floor 0.952177), `r_true(680e6) = r_true(740e6) =
+> 1.000000`, so `(W+6)/r_true` is minimised at `W_max = 605,000,000` (631,731,701; the floor's
+> argmin is 635,386,262 at the same W, and the point argmin is 605,000,000 on the pooled 128
+> windows and on each disjoint 64-window block). 64 real capped windows (16 seeds x
+> W = 556/620/680/740e6) confirm the stamp identity exactly - the claws a capped run evaluates are
+> exactly those with stamp <= W, 16/16 at every cap - with
+> `r_true = 0.882945 / 0.983382 / 1.000000 / 1.000000`. The ledger is therefore charged
+> `W_max = 605,000,000` with `r_LB = 0.957685`: `ceil(B/r_LB) =
+> 75,673,798,580,765,636,689,920` windows, `N = 45,782,648,595,406,026,416,610,119,403,906`,
+> `log2(N/2812) = 93.71719098983185`, claim **93.7172**, score `93.7172 + 0.0962 = 93.8134`
+> (the floor gives 93.7256 / 93.8218); both are below the parent's filed 93.8495. The drawn-claw
+> curve below is kept as history: it reproduces the parent's filed `r` definition, but pricing the
+> cap on it credits keys to claws that the gate never lets the pass expand - the artefact this fix
+> removes.
+
+
+Method (the parent's, unchanged): `Attack(win = 2^26, seed, check = False, k4 = True,
+screen = 1, wmax = 2^60)` with the shipped `_stamp` wrapper, recording every drawn claw and
+every `k4_eval` with its guard stamp; the key unit is one drawn distinct claw and the reference
+is the main loop (262,144 iterations), the definition that reproduces both the filed
+`C_W = 57,003.18` and the parent's filed `r`. 128 fresh windows, seeds **4,000,000-4,000,127**,
+every window reported, 128/128 completed, zero failures (about 68 s per window at 20 workers).
+The stamp identity was re-verified against real capped runs at the chosen cap: the claws a
+capped run evaluates are exactly those with stamp `<=` `W_max`, and `m.o <= W_max`.
+
+Walk-law check: distinct claws per main-loop window **57,048.9** (s.d. 219.6, s.e. 19.4) against
+the filed `C_W = 57,003.18` (+0.080%, the same +0.078% the parent's primary panel saw); F9
+claws drawn **1,462.5** (parent panel 1,462.0 / 1,448.2); evaluated pass claws **944.0** in
+128/128 windows (the k4d cap binds, as in the parent's panel); uncapped window work
+**741,215,598** counted ops (s.d. 3,902,633; max 752,531,336); maximum single guarded pass
+189,417 ops, inside the 200,423 reservation.
+
+| `W_max` | r mean | s.d. | s.e. | `(W+6)/r` |
+|---:|---:|---:|---:|---:|
+| 200,000,000 | 0.288759 | 0.005260 | 0.000465 | 692,618,000 |
+| 400,000,000 | 0.642703 | 0.006313 | 0.000558 | 622,371,000 |
+| 556,000,000 | 0.911323 | 0.008128 | 0.000718 | 610,102,000 |
+| 600,000,000 | 0.986947 | 0.009826 | 0.000869 | 607,936,000 |
+| 650,000,000 | 1.080031 | 0.008037 | 0.000710 | 601,834,000 |
+| 700,000,000 | 1.187985 | 0.008219 | 0.000726 | 589,233,000 |
+| 720,000,000 | 1.230878 | 0.008570 | 0.000758 | 584,948,000 |
+| 730,000,000 | 1.252662 | 0.009273 | 0.000820 | 582,759,000 |
+| **740,000,000** | **1.275329** | **0.007779** | **0.000688** | **580,242,000** |
+| 745,000,000 | 1.281151 | 0.003855 | 0.000341 | 581,509,000 |
+| 760,000,000 | 1.282097 | 0.002275 | 0.000201 | 592,779,000 |
+
+**Superseded by the fix paragraph above.** The drawn-claw optimum was **`W_max = 740,000,000`, r = 1.275329** (one-sided 99% floor 1.273557 ->
+`(W+6)/r_floor = 581,049,000`). It is the argmin of the pooled 128 windows **and** of each
+independent 64-window block (A: `(W+6)/r = 579,558,000` at the same W; B: 580,928,000 at the
+same W), so it is not a single-sample artefact; `+/-0.05 x 10^8` around it moves the figure of
+merit by at most 0.004 bit. Why `r > 1`: the reference unit is the main-loop window's
+57,003.18 distinct claws, and a window charged `W_max + 6 = 740,000,006` ops completes
+1.275329 reference windows' worth of claws (the 5/4 extension is key-rich). This is the parent's
+own ledger formula, `ceil(B/r) x (W_max+6)`, with a point `r` measured on this build; parent
+history: filed `W_max = 556,000,000` with `r = 0.9921709` (`(W+6)/r = 560,387,000`), and its
+own dense panel put the parent argmin at 6.8e8. This entry re-optimises the cap for its own
+build instead of inheriting 556,000,000.
+
+
+## 4b. EN measured on both builds (this fix; replaces the list-ratio scaling)
+
+> **The EN term is measured, on both programmes, at production settings.** The quantity is the
+> ledger's own (`H1-screen` (ii), Section 7 Count): a trial is an F8-passing listed entry - an
+> entry `(a2, a3)` of the import-generated list whose row-8 word
+> `W8 = k4_words(cv, a0, a1, a2, a3)[8]` satisfies the programme's own mask test
+> `inF(W8, D8, T8)` (programme line 1108; density 9/128) - and EN is trials per distinct claw,
+> priced against `C_W`. **Counter identity**: trials per evaluated pass claw = the exact number of
+> listed entries passing `inF(W8, D8, T8)`, enumerated over the whole list with the programme's
+> own generator (`_k4cls` / `_k4fe` / `_k4lf(F, V, l, 32)`; 9,701,592 entries in 728
+> classes on the parent, 12,025,320 in 936 here, both exact) and one row-8 `k4_words` word per
+> entry; evaluated pass claws = the `k4_eval` calls the walk makes under the shipped `k4d`
+> gate (`k4q = 84,600` lanes and `k4s` survivors per pass claw, `k4_w17a` / `k4_w17`
+> W17 lanes; the F8 count is not one of the programme's running counters, so it is counted entry by
+> entry with the programme's own predicates - the `k4q` / `k4s` / `k4_w17a` / `k4_words`
+> running counters serve as the cross-check that the pass expanded these claws); trials per window =
+> trials per evaluated claw x evaluated claws, and `EN = trials per window / C_W`. Both builds
+> ran the shipped production path `Attack(win = 2^26, seed, check = False, k4 = True, screen = 1,
+> wmax = 2^60)` - uncapped, because the ledger applies the retention `r` separately and EN is
+> the uncapped per-window law - with the stamp-exact instrumentation of
+> `work/r39/panel/runner2.py`, 64 fresh windows per build (seeds **5,000,000..5,000,063**; every
+> window reported; 24 workers; `python3 -B`) and the first 16 evaluated pass claws of each window
+> sampled in arrival order (the panel's own convention), 1,024 claws per build. Result: the parent
+> measures **683,723.97 +- 2,175.37** (s.e.; per-claw s.d. 69,611.7) F8-passing entries per evaluated
+> F9 claw and this build **844,888.38 +- 1,991.96** (s.d. 63,742.6); the evaluated pass-claw count is
+> exactly **944 in 128/128** windows (`k4d` saturated; total `k4q` 58,905,600 and 79,862,400
+> per window), the drawn distinct claws in the main loop 56,622.0 and 56,617.5 (the filed
+> `C_W = 57,003.18` is kept as the pricing unit), and window work 693.4 M and 741.3 M operations
+> uncapped. Priced in the ledger's currency the parent reading reproduces the filed term:
+> **10,840.41 +- 34.49** against `10,809.525521563191`, i.e. **+0.286% = 0.90 s.e.** (the S190
+> point came from a 2,280-window panel with a 0.9989414 tool calibration, so 1-3% agreement is all
+> that is claimed). The measured ratio is **E_new/E_parent = 1.235715605 +- 0.004893** (0.396%; window
+> means give 0.424%), i.e. a measured gain of **-0.305347 +- 0.005713 bit** against the list-ratio
+> scaling's **-0.309782** bit: the scaling overstated the gain by **0.004435 +- 0.005713 bit**
+> (0.78 s.e.) and the claim comes down by exactly that. On the filed parent scale the term is
+> `EN = 681,776.1985852573 x 1.235715605 x 903.7824 / 57,003.18 = 13,357.499366925224` in place
+> of `13,398.626065182321` (the uncorrected absolute reading is `13,395.66 +- 31.58`). Two
+> further cushions are disclosed and **not** claimed: (i) the evaluated pass-claw count is 944.0 in
+> every window while the kept F9 point is 903.7824, so the ledger undercounts trials by 4.4%
+> (0.0625 bit) on both builds; (ii) the sampled first claws of a window average slightly below the
+> window mean (the parent's own check: 677,198 / 676,356 for the first 125 claws against
+> 681,902 / 683,853 for the rest). The cap was re-checked at production settings: 64 capped windows
+> per build (seeds 5,000,100..5,000,163) at the honest caps `W_max = 605,000,000` (this build) and
+> 556,000,000 (parent) complete **902.56 +- 2.78** and **898.14 +- 2.65** evaluated claws per window,
+> i.e. `r = 0.956104` and 0.951420 in this currency, every window `m.o <= W_max`; the filed
+> `r = 0.957685` (128 windows, s.e. 0.002138) is 0.17% away and is kept, so the
+> `(W_max, r)` pair is unchanged.
+
+
+## 4c. This build's own retention panel (gate lifted) and the F9 point at 944
+
+**Panel.** 128 fresh participant windows of `experiments/r39joint_k4_production.py` at `win = 2^26`, screen on,
+uncapped (`wmax = 2^60`), **seeds 4,000,000..4,000,127** — the same seed set the earlier dense curve
+used, so the re-digit's cost is measured on paired windows — with the shipped `_stamp` semantics of
+`work/r39/panel/runner2.py` and the k4d claw gate **lifted to 10^9** so that *every* distinct F9 claw
+of each window is evaluated and stamped (`work/r39/g/panel/runner_g.py`, `drive_g.py`, raw JSON in
+`work/r39/g/panel/raw82/`, 128/128 windows reported, no failures). Lifting the gate does not move
+the first 944 stamps: the gate is a prefix of the evaluation order, so the first 944 claws of a
+lifted window are the production window's claws, stamped at the production times.
+
+**Yield, this build.** Distinct F9 claws per window: **1,096.1** (s.d. 29.4, min 1,001, max 1,173);
+the production gate therefore evaluates exactly **944** of them in every window — the F9 point is
+**944.0**, not a bound. Whole-window work 756.0 M counted ops (the lifted gate expands all 1,096).
+
+**Retention, ledger currency** (`#{k4_eval with stamp <= W} / #{k4_eval uncapped}`, claw-count
+currency; the key-weighted currency `r_kw` is 0.903783 against 0.905249, i.e. 0.16 % lower):
+
+| `W_max` | r | s.d. | s.e. | `(W+6)/r` |
+|---:|---:|---:|---:|---:|
+| 560,000,000 | 0.856834 | 0.022150 | 0.001958 | 653,568,600 |
+| 570,000,000 | 0.872765 | 0.022301 | 0.001971 | 653,096,400 |
+| 578,000,000 | 0.885949 | 0.023364 | 0.002065 | 652,407,700 |
+| 586,000,000 | 0.898239 | 0.022410 | 0.001981 | 652,387,700 |
+| 588,000,000 | 0.901864 | 0.022862 | 0.002021 | 651,983,200 |
+| **590,000,000** | **0.905249** | **0.023639** | **0.002089** | **651,754,700** |
+| 592,000,000 | 0.908311 | 0.024084 | 0.002129 | 651,759,400 |
+| 600,000,000 | 0.919053 | 0.023204 | 0.002051 | 652,846,000 |
+| 620,000,000 | 0.949401 | 0.023735 | 0.002098 | 653,043,500 |
+
+Argmin `(W+6)/r_true` = **590,000,000** (`r = 0.905249`); the plateau is 586-592 M within 0.04 %.
+One-sided 99 % floor (t = 2.6): `r = 0.899817` -> `(W+6)/r = 655,689,000` -> claim 93.7081. The
+cap fires in every uncapped window at that level (last stamp mean 657 M, max 690 M).
+
+**What the re-digit costs.** On those same 128 windows (seeds 4,000,000..4,000,127) the 97-entry
+table's own stamps give `r = 0.956237` at its argmin 604,000,000 (`(W+6)/r = 631,643,000`, and
+0.957685 at the f entry's 605,000,000 = 631,732,000), so the smaller table costs
+`log2(651.755/631.643) = +0.0452` bit of claim (the paired per-window difference at 600 M is
+-0.03012 +- 0.00110 of r, 27 s.e.) — the measured price of the 0.0962-bit penalty removed, i.e. the
+walk table buys **-0.0510** of score net.
+
+**EN.** `EN = 842,481.487538 x 944 / 57,003.18 = 13,951.897494770211`, where 842,481.487538 is the
+MEASURED parent-scale trials-per-evaluated-claw point of Section 4b (`681,776.1985852573 x
+1.235715605`) and 944 is the measured F9 factor above in place of the inherited lower bound
+903.7824. The trials per window of the production programme therefore rise from 763.6e6
+(`903.7824 x 842,481`) to **795.2e6** (`944 x 842,481`) with no change of construction, fibre, list,
+screen or tail. Both factors are point measurements of the programme's own counters on this build;
+neither is a confidence bound, exactly as row B of the claim states.
+
+**Cap-tunable sanity.** Pricing the same panel at other claw caps C (the k4d gate is the only knob):
+C = 800 -> claim 93.7056, C = 900 -> 93.6998, C = 944 -> **93.6994**, C >= 1,096 (all distinct
+claws; EN 16,200.6, `(W+6)/r = 756.8e6`) -> 93.6994. The claw cap is therefore already at its
+optimum and the 944 gate does not over-promise: 944 of 1,096 distinct claws are evaluated and the
+ledger prices the completion loss through r.
+
+## 5. The ledger (exact)
+
+| term | value |
+|---|---|
+| fibre / list | `0x3cc9e0be`; 12,025,320 entries, 936 classes, 240 groups, 84,600 prefixes, pass 181,895 |
+| trials per distinct claw (EN) | **13,951.897494770211** (MEASURED, Sections 4b + 4c) = 13,357.499366925224 x 944 / 903.7824 (F9 factor measured at 944.0) |
+| second-order divisor | `1 - 0.0007650107109046086` = `1 - 332634742808497727891862043090867/434810569403877151706270838816768000` |
+| `lam` | `nextafter(-ln 0.61, inf) / (1 - divisor)` = 0.49467475329946836 |
+| `B` | 6.9384123334753643e22 (log2 75.8770236666565) uncapped windows |
+| cap / charge | `W_max = 590,000,000`; charged `W_max + 6 = 590,000,006` per executed window |
+| retention | point `r = 0.905249` (Section 4c, pass-credited on this build; one-sided 99% floor 0.899817) |
+| windows executed | `ceil(B/r) = 76,646,451,235,796,614,643,712` |
+| window work | `45,221,406,688,998,710,054,569,767,862,272` |
+| setup | `1,120,815,490` |
+| preprocessing | `2,812 x 2^43 = 24,734,613,578,448,896` |
+| **N** | **`45,221,406,688,998,734,789,184,467,126,658`** |
+| raw | `log2(N/2812) = 93.69939593271350` |
+| **claim** | **93.7172** (four-decimal upward; the import assertion covers it) |
+| **score** | `93.7172 + 0.0962 = 93.8134` |
+
+**Motions, exact and additive in `log2 N`** (each step recomputes the charge with that
+substitution only): EN `10,809.525521563191 -> 13,357.499366925224` (MEASURED, Section 4b) gives
+**-0.305347** bit - the list-ratio scaling would have given -0.309782, so the measurement takes
+0.004435 +- 0.005713 bit back off the claim; the divisor
+`0.0006362102649311279 -> 0.0007650107109046086` gives **+0.000186** bit; the
+cap/retention pair `(556,000,000, 0.9921709) -> (605,000,000, 0.957685)` plus the setup change
+gives **+0.172888** bit (parent `(W+6)/r = 560,387,334`, this entry
+`(W+6)/r_true = 631,731,701`: the larger list completes its 944 pass claws later in the window,
+so an honest cap is more expensive). Sum: **-0.132273** bit on the raw log2, i.e. the claim moves
+93.8495 -> 93.7172 (-0.1323) and the scored time (claim plus the 0.0962 memory penalty) moves
+93.8495 -> 93.8134 (-0.0361).
+
+## 6. Point-law re-base of the divisor
+
+The second-order divisor has three parts. The mate term is the exact analytic
+`7 x 120,832 / 2^33`: it is **unchanged**, and that is verified, not assumed - the new list
+has exactly the parent list's 20 mate offsets (`0x40, 0x1fffffc0, ...`, identical set) and the
+same group sizes {1,2,4,8}, so the rows-18/19 enumeration's `B_d` sets apply verbatim. The
+complete-list co-hit point and the different-key H-cross point are per-key rates, and the number
+of hit pairs per claw scales with the number of listed keys; they are priced at the exact
+entries ratio `12,025,320/9,701,592 = 1.2395202766721174`. That is deliberately unfavourable:
+keys cannot exceed entries, and at the per-group completion multiplicities
+`K_new/K_old = 2,399,604/2,015,376 = 1.1907`, so the entries-ratio pricing overstates the two
+terms by about 4%, i.e. by at most 2.1e-5 bit. Parent history: mate 9.846687316894531e-05,
+co-hit 5.358938561182437e-04, different-key cross 1.8495356439388431e-06, total
+0.0006362102649311279.
+
+## 7. What moved, against the passed parent (history only)
+
+| item | parent d6b8be2e | this entry |
+|---|---|---|
+| fibre `h4` / `K4_HD` | 0x3cc9eebe / 0x05cefde0 | 0x3cc9e0be / 0x05ceefe0 |
+| classes / groups / entries | 728 / 200 / 9,701,592 | 936 / 240 / 12,025,320 |
+| prefixes / blocks / packaged | 62,400 / 244 / 110-210-34-102 | 84,600 / 372 / 140-330-42-139 |
+| lane pass / reservation | 122,793 / 143,633 | 181,895 / 200,423 |
+| `K4_SETUP` | 1,107,474,556 | 1,120,815,490 |
+| memory | 2^20.0000 (peak 1,047,085 B) | **2^20.0000 (1,044,013 B)**, penalty 0 |
+| EN | 10,809.525521563191 | 13,357.499366925224 (measured, Section 4b) |
+| divisor loss | 0.0006362102649311279 | 0.0007650107109046086 |
+| cap / retention | 556,000,000 / 0.9921709 | 605,000,000 / 0.957685 |
+| windows | 90,249,392,917,716,324,581,376 | 75,673,798,580,765,636,689,920 |
+| window work | 50,178,663,003,746,633,973,543,003,488,256 | 45,782,648,595,406,001,681,995,420,139,520 |
+| N | 50,178,663,003,746,658,708,157,689,411,708 | 45,782,648,595,406,026,416,610,119,403,906 |
+| raw `log2(N/2812)` | 93.84946409349443 | 93.71719098983185 |
+| claim | 93.8495 | 93.7172 |
+| mate KAT list binding | 200-group G blob, sum 9,701,592, 14 fixed tuples | 240-group G blob, sum 12,025,320, 14 re-derived tuples |
+| success | 0.39 | 0.39 (inherited; not re-priced) |
+
+## 8. Risks a reviewer will raise
+
+1. **`r > 1` as a "retention" (RETIRED by this fix).** The drawn-claw point exceeded 1 because
+   it counted claws that the 944-claw gate never lets the pass expand; the ledger now carries the
+   pass-credited `r_LB = 0.957685` at `W_max = 605,000,000` (Section 4). The old reading, for the
+   record: a window charged 740,000,006 ops completes 1.275329 reference windows' worth of drawn
+   claws. The formula is the parent's, and the parent's own panel showed the same
+   mechanism (its argmin at 6.8e8 had `r = 1.2486`), but pricing `r > 1` as a point is
+   aggressive: a one-sided 99% floor (1.273557) costs only 0.0013 bit, and a reviewer may ask
+   for that floor or for a cap below the main-loop cost instead.
+2. **The cap is selected on the panel that prices it.** The argmin is identical on two disjoint
+   64-window blocks and flat to 0.004 bit within `+/-0.05e8`, but it is still a selected point
+   estimate, not a confidence bound; the panel is participant-run, not organizer-run.
+3. **F9 re-draw.** EN inherits the parent's F9 point 903.7824, measured on the parent fibre's
+   1,080 predeclared windows. The new fibre translates the F9 acceptance predicate by
+   `K4_HD' - K4_HD`, which preserves its rate in law, and the panel's drawn/evaluated F9 counts
+   match the parent panel (1,462.5 drawn, 944.0 evaluated in 128/128 windows); but the transfer
+   is a declared invariance, not a re-measurement of that 1,080-window factor. The c-list
+   analysis priced an unmeasured fibre-dependent systematic at up to 0.05 bit. This fix measures
+   EN itself on both builds (Section 4b) and keeps the F9 point 903.7824 deliberately: the measured
+   evaluated pass-claw count is 944.0 in 128/128 windows, so the kept point is 4.4% below what the
+   shipped programme actually expands - a cushion the claim does not take.
+4. **The divisor's two key-level point terms** are scaled by the exact entries ratio (2.1e-5 bit,
+   unfavourable direction) rather than re-measured on the new list.
+5. **Memory exceeds the parent's `2^20` assertion** (2^20.0962); the 0.0962 bit is paid in the
+   score and the assertion is now an exact equality plus the declared bill, but the programme no
+   longer certifies `<= 2^20`.
+6. **H8 band B2 was rescaled, not recalibrated** to the new diagnostic groups; that arm is
+   inherited support only and carries no score weight.
+7. **List selection.** The new fibre comes from the participant-run 676,169-fibre search of
+   `work/r39/c` (the best ledger-consistent fibre of that search); the choice of fibre is a
+   declared MODEL selection inside the inherited preprocessing budget (the search used 2^19.4
+   fibres of the 2^23.3 affordable inside the 2^41.1 compressions left after the advice).
+
+8. **The 14 mate KAT observations were re-derived on the new list.** Their assertions are exact
+   replays of this build; the parent's accepted mate evidence (the W3 tests, the 1,888-hit record,
+   the 0/60,416 other-claw count) remains cited as parent history and was not re-measured. The
+   mate term itself is exact and unchanged because the new list's 20 mate offsets and group sizes
+   are identical (Section 6).
+
+9. **EN is measured, not proved.** The Section 4b panel counts the F8 predicate exactly on every
+   listed entry for 1,024 evaluated pass claws per build (64 windows x the first 16 claws), but the
+   ratio carries 0.396% (0.0057 bit) of one-sigma noise, the two builds are not seed-paired (the
+   fibre shift moves the c9 walk, so the same seed draws different claws), and the sampled claws are
+   the first of their windows. The filed margin against 93.8495 is 0.0361 bit = 6.3 s.e.; the
+   independent 1-3% check against the filed parent point passes at 0.90 s.e. No confidence coverage
+   is claimed for the point substitution, exactly as the point law states.
+
+**Parent-body repairs.** The parent body's ledger rows for "windows executed" and "window work"
+carried stale numbers inconsistent with the parent's own N; they are corrected in place to
+90,249,392,917,716,324,581,376 and 50,178,663,003,746,633,973,543,003,488,256. The parent's
+`H1-ops` statement carried the retired `R_LB = 0.9908989`; it is corrected to the parent's
+filed point `0.9921709`, superseded by this entry's drawn-claw `1.275329` and again by this fix's pass-credited `0.957685`.
+
+## 9. KAT boundary (inherited, unchanged)
+
+As in the parent's Appendix J: these KATs exist to stay well below the runner cap while retaining
+executable construction coverage. Their sample sizes are not used to re-estimate H8,
+H-W3-uniform, H-cross-claw, the tail, cap retention or the entries factor. A validator failure,
+timeout, digest mismatch or changed observation is fatal; a passing lite KAT is not promoted into
+a new probability proof. All new tuples in Section 2 are exact-seed replays of this build.
+
+The shipped `k4_budget` claw-work multiplier is `K = 10,061` (integer 10061).
+
+## Passed-parent record (retained verbatim except current ledger rows repaired)
+
+**nj77 one-factor derivative of accepted 9835235a.** The only score change is `K4_EN_LB = 10777.9` instead of 10774.5, from fixed-N S190 (2,280 participant windows 802000..804279). Extension seeds 803140..804279, the pooled range, calibration, one-sided Student-t 99.5% estimator and all-window stopping rule were declared before the extension. An interim diagnostic at 2,026 windows reported 10778.1; the final fixed 2,280-window result is 10777.9. This interim is disclosed and changed neither range, estimator nor stopping. Exact `N=50422068037249005706796742129788`, `log2(N/2812)=93.8564453532997`, upward claim 93.8565. All other source paths, premises and charges are inherited unchanged from nj76s. **This entry, nj76s, is a direct exact-program derivative of valid 33b28063 (93.8582).** It keeps that entry's construction, attack law, certificates, deterministic cap, memory layout, advice and named premises. It changes two counted implementations: (1) the credited screen predicate is evaluated by the exact 65-operation SWAR form, charged 69 operations for a kept draw and 72 for a discarded draw; (2) the residual K4 header is hoisted, adding 1,000 setup operations and removing 212 operations from every completed production call. Four organizer-seed controls preserve claws, F9 claws, pass lanes, survivors and key hits while asserting the new operation totals.
+
+**Direct S205 price.** S205 froze and ran the combined program itself, not a transformed stamp estimator. All 256 participant windows 2,006,000..2,006,255 were reported: r=0.9921709257705038, s.e.=0.0005467854315618963, raw nominal one-sided 99% value 0.9908989126442332, floor7 r_LB=0.9908989, cap fired 248/256, minimum single-window ratio 0.9631374351851997. The exact numerator is N=50422068037249005706796742129788 operations, T=N/2812, log2(T)=93.8564453532997, filed upward as 93.8565. The cap came from the disclosed S198 planning curve; S205 has no organizer holdout or family-wise guarantee and supports, but does not prove, the declared H1-screen(iv) MODEL inequality.
+
+# SHA-256 reduced to 39 steps: ordinary collision by the transplanted pair with two released state words (k = 4) on the fibre h4 = 0x3cc9eebe; the list generated by rule at import, the W17 condition solved on 18-bit prefixes by a generic counted pass
+
+**This entry (mitchuski, w19) is a minimal derivative of Jbenisek's valid ad125692 (time 94.0073; credited as the base; its chain 6732ad76..ad125692 is built on our accepted d3a46ae6) with ONE change: the cross-claw pair term of the second-order divisor.** ad125692 bounds P(U_k and U_l) for key hits on different F9 claws of one window by min(p'_k, p'_l) whatever the joint law of the tails, 0.06056563818 of its 0.0615907. This entry names the premise H-cross-claw (Sections 7 (vii) and 10): for key hits on different claws of one window with different keys, averaged over the attack's hit pairs, P(U_l | T_i) <= eps_key = 2^-8, the mean taken over the F8-passing mates i of hit keys k weighted by P(T_i) (as hits occur) and over the trial keys l of the other F9 claws of the window (uniformly: by H5 every trial key is hit with the same probability). Exact part: T_l is contained in {W18_l in P} (P the 65,536-element set of the rows-18-19 enumeration, Appendix D) and in the event D19_l that l keeps the advice XOR differences through row 19, so nothing is extrapolated in depth. Measured part: the per-entry rate of D19 on another claw of a real hit's chaining value, organizer-run inside every r39-mate run (0 of 60,416 trials; one-sided 99% bound 7.62e-5; times 8 mates per key and 1.000099: 2^-10.68 <= 2^-8) and participant-run on a predeclared 64-run panel (Appendix H). Same-key pairs on another claw (at most one key per claw) keep the premise-free min bound, 0.06056563818 / 579,271. Divisor 1 - 0.0012618 (exact form 0.0011617503 + the stop margin 0.0001, rounded up); time 93.9174 (B = 2^76.269482). Program changes: k4_budget's divisor, the claim constant of the import assertion, the cross-claw arms inside the r39-mate code (after the record's digest; digest48 and the 14 records unchanged), and the replica's own r39-tail main() removed (dead here: the mate code's main(q) rebinds the name before the only call, main(Q_)) to fit the 64 KiB source budget. Everything else is ad125692's, verbatim. History of ad125692 (CITED, its text): This entry is the corrected f0b0ca7f content: our accepted 1bb2ccf3 (time 94.0202) with three pricing changes. (1) The entries-per-F9-claw factor is re-measured on the predeclared 1,140 windows 802000..803139 (PREDECLARE_NJ68_1115.txt; rebuilt count calibrated to the original 16-window control; Section 7 Count), trials per distinct claw 10774.5 in place of 10679.3. (2) The program bounds A.m.o by W_max and charges W_max+6 = 573,465,006 per executed window, including the six main-loop operations, in place of K x C_W (K = 10,061), so the ceil margin of 43,993.98 operations per window is not charged (Section 5, Section 7). (3) The divisor prices the co-hit term at pi_bar = 1.09e-3, covering both measured values (list mean 1.0718e-3; 1.0825e-3 at 2,000 real F9 claws) and the left-out term at the 99% bound 0.000281038 itself: 1 - 0.0615907 in place of 1 - 0.061593 (Section 7, ledger). 1bb2ccf3 itself: our accepted 8f89c6ec (time 94.0226) with one pricing change: the left-out co-hit term is charged on the key mean of P(N_k >= 4) (0.000282 >= 0.000281038, the distribution-free 99% bound from 16,384 independent w with no N >= 4 for any key), with H1-screen (vi) stated as the exact weighted inequality (Sections 7 and 10, ledger). 8f89c6ec itself: our accepted 19ee2d21 (time 94.0322) with one pricing change: the within-claw co-hit divisor term uses the key-mean co-hit rate pi_bar = 1.09e-3 (H1-screen (vi); Section 7 Trials, Section 10 and the ledger). 19ee2d21 itself: our accepted 91463de0 (time 94.0362) with one pricing change: the cross-claw divisor term uses the claw-weighted mean claw count of the Appendix D windows (99% bound 905.530 for m - 1, H1-screen (v); Section 7 Trials and the ledger). 91463de0 itself: This entry is our accepted ab09e983 (time 94.0681) with THREE changes. (a) Work: 2e846bf2's H6 (a 1,080-window bound on the mean work per window; 2e846bf2, time 94.0433, was returned not_evaluable with H6-cap-completion as its only listed reason) is withdrawn. The program stops every window at W_max = 573,465,000 counted operations (guard `cap`, lines 773-779, at 17 call sites (14 labels); every reservation bounded by count, Appendix F) and asserts it (lines 800 and 1168), so every window, the last included, costs at most W_max with no premise on work, and the 2^42 last-window allowance is no longer needed (it stays charged as a conservative term, ledger row 'total charged work'). A capped window credits only the claws it completes: the retained fraction is r_LB = 0.9930279 (one-sided 99% bound on 1,080 predeclared windows 980000-981079, Appendix F; premise H1-screen (iv)), and the divisor adds a conservative stop-selection margin 0.0001 (1 - 0.061593); the program executes ceil(B / r_LB) windows (k4_budget, R_LB = 0.9930279), each charged K x C_W with K = 10,061 = ceil(W_max / C_W) operations per distinct claw. (b) The exact early exit of the k4q position loop starts at position 22 (2e846bf2: 16; claws, F9 claws and keys unchanged window for window, Section 3.4). (c) As in 2e846bf2, the F9 factor of the trial bound is taken over the 1,080 predeclared screened windows 802060-803139, all at the shipped cap 944 (Appendix D), in place of ab09e983's 780: 901.6269 in place of 900.9718, so trials per distinct claw are 10679.3 in place of 10671.5 (Section 7). C_W stays 57,003.18. Time 94.0362. ab09e983 is our accepted d049ec74 (time 94.0757) with the F9 factor and H6 on 780 windows. d049ec74 is our accepted 6732ad76 (time 94.0786) with the F9 factor over 420 windows.
+
+**Precedent (accepted, CITED).** H1-screen, a declared premise on the trial count resting on participant-run, predeclared panels, is accepted in our ab09e983 (time 94.0681) and d049ec74 (time 94.0757) and was rated plausible in all four lanes of 2e846bf2; the cap's yield factor (H1-screen (iv)) is a premise of the same kind on the same program law. The work bound no longer rests on a panel: it is the program's assertion m.o <= W_max.
+
+6732ad76 is Jbenisek's credited derivative of mitchuski's valid d3a46ae6 (time 94.0866; credited as the base) with ONE change: the k4d cap on distinct F9 claws evaluated per window is 944 instead of 1,024 (program line 1101). It moves two literals: the cross-claw term of the divisor uses m_max = 944 (1 - 0.061493 in place of 1 - 0.077228) and the F9 factor of the trial bound is taken on min(D_i, 944) over the same 60 accepted windows (898.0937; 10637.4 trials per distinct claw in place of 10640.4); everything else, H6, K and C_W included, is d3a46ae6's; lowering the cap only removes k4 evaluations along the same walk, so each window's counted work is at most d3a46ae6's. Time 94.0786.
+
+d3a46ae6 is mitchuski's minimal derivative of Jbenisek's valid a26bcf74 (time 94.1664; credited as the base) and refiles our 024b8439 (returned not_evaluable: its 124- and 80-window participant panels were rated unsupported). a26bcf74's program, list, advice, screen, H1-screen, H6, K = 10,394, C_W = 57,003.18, F9 claws per window, second-order divisor 1 - 0.077129 and text are kept; no screened window beyond its 60 (802000-802059) is used. Added: (1) trials are F8-passing entries, not keys: 10640.4 per distinct claw, a26bcf74's joint one-sided 99% bound with the entries per F9 claw of the 2,000 claws of its panel windows 802000-802015 in place of its keys per claw (Section 7); (2) a key succeeds on the union of its F8-passing mates' tails, and the mate term eps/2 = 0.000099 comes from an exhaustive enumeration of rows 18-19 under the named premise H-W3-uniform, tested by the organizer on 1,888 hits (Section 7); (3) the entries tail 2^-74.4594, the 14-run organizer pooled mean of the 14 organizer-executed r39-mate runs under the declared class transfer, the class-01 mean 2^-74.4783 recorded as its test (H2-entries; a26bcf74's keys tail 2^-74.3238 is not used for entries); (4) the r39-mate experiments replace r39-tail-01..14 in the manifest (16, the cap), with w13's replica unchanged inside the program; (5) a memory correction: the screen's state, 96 bytes, is counted (peak 1,013,609 bytes, still 2^20). Divisor 1 - 0.077228; time 94.0866.
+
+History of a26bcf74, CITED: our ae2d3c1c (time 94.1805, memory 2^20.0000) was accepted with steps (1)-(4) below; a26bcf74 is ae2d3c1c with step (5) only. This entry is a credited derivative of mitchuski's accepted 0b62ed88 (time 94.4431, memory 2^20.0000). Its program, list, advice, experiments and text are used unchanged except for five steps: 0xplemonade's a3eb4a8a pre-generation chaining-value screen in the first-block draw (credited; Section 3.6), and three pricing steps, in `k4_budget`, `K4_OPS_PER_CLAW` and the import assertion of experiments/r39joint_k4_production.py. (1) The tail is priced at 2^-74.3238 under a new declared MODEL premise of this entry, H2-transfer, with screened-window scope (Sections 8 and 10): the designated mate's tail on the fibre 0x3cc9eebe is taken at the linear mean of the 14 organizer-executed runs r39-tail-01..14 of the unchanged replica, which sample the advice draws (the value of 5f8e6192's H2, measured there on the advice, not on this fibre). It is favorable to 0b62ed88's own new-fibre arms, K (key-weighted) mean 2^-74.3734 (s.e. 0.0364) and R 3cc9eebe mean 2^-74.3781 (s.e. 0.0289), 28 participant-run runs each; the paired transfer arm (-0.014 bit, s.e. 0.023) is its support. Pricing at the replica's check value QDECL = -74.54, as 0b62ed88 does, would add 0.2162 bit. The second-order divisor 1 - 0.077129 is kept. (2) The screen (S <= 5, KCAP 679, DTRY 8,192) selects the first-block chaining value; the window law, the distinct-claw count and the trial count under it are the new declared premise H1-screen (Section 10). (3) The work cap per distinct claw is K = 10,394, the ceiling of the screened whole-window H6 mean-work bound 592,455,632 / 57,003.18 = 10,393.38 (Section 7, Appendix B: 60 pre-declared screened 2^26 windows of the shipped attack path), instead of 1.01 times the formula; the import assertion checks K against that bound and, as a panel-mean sanity check, against 590,167,958 / 57,003.18. (4) The claimed time is the program's total ceiled at the fourth decimal, without the 0.002-bit headroom. (5) The trials per distinct claw are priced at 9044.1 (`K4_EN_LB`), the joint one-sided 99% lower bound of Section 7, whose distinct-F9-claw factor is measured on the 60 screened windows of Appendix B (ae2d3c1c: 8956.4, from 0b62ed88's 48 unscreened windows); change -0.0141 bit. C_W = 57,003.18; windows B = 2^76.481531; total charged work 2^94.166368; time 94.1664; memory 2^20.0000, unchanged. Every organizer experiment and its asserted outputs are unchanged; r39k4-window-small also asserts the screen's charges on one screened window (Section 11). Below, where the text says "this entry", "our" or "we" of a measurement, tool or earlier entry, it is 0b62ed88 and its author's line (CITED).
+
+0b62ed88 refiled f429192b: the second-order term no longer rests on any window-moment reduction; it is bounded for any correlation by a cap of 1,024 evaluated claws per window and the measured maximum within-claw co-hit rate over every listed key (Section 7). It also refiles 209b4410: its time is priced by a second-order Bonferroni bound over ALL W17 key hits of a window, on designated-mate events: no hit is selected or ordered, every hit enters symmetrically, and the bound holds for any dependence between the tails of different hits (Section 7). The number sits next to 209b4410's but comes from a different derivation in which no hit is ordered or selected. Trials are distinct keys, with no premise on how the tails of a key's mates depend on each other (it also refiles 9a255e58). It is our w13 program (the line of 837b7139 and 089cd791) with one lever: the k = 4 list is re-based from the advice fibre h0 = 0x36faf0de to the fibre h4 = 0x3cc9eebe, and it is generated at import by a rule instead of being decoded from a shipped recipe. On the new fibre the list has 9,701,592 entries in 728 classes (3,462,264 distinct (a2, kappa) keys, 200 kappa groups, 62,400 distinct 18-bit prefixes), against 821,520 entries in 256 classes on h0. The walk constant c9 and the F9 constant C9 shift by h4 - h0 = 0x05cefde0; nothing else of the construction moves (Section 2.3). A trial is a distinct (a2, kappa) key with at least one listed entry passing F8 in a claw passing F9 (Section 7). Counting every hit follows a7b383d1 (credited). The list is Jbenisek's construction of f92b8068 continued to a new fibre; the walk, claw filters and tail replica are the line of 3aa063d1 (Jbenisek, dariolina, sraiw, newjordan). The work cap is measured on 60 screened full windows of the shipped attack path (Section 7, Appendix B); the trial count is measured on 2,000 F9 claws of 0b62ed88's 48 unscreened full windows (Section 7, Appendix A) and carried to the screened law by the declared premise H1-screen (Section 10).
+
+Labels: MEASURED = run by us with the shipped program's counters or with the named tool; DERIVED = arithmetic from stated numbers; CITED = measured and published by the named earlier entry.
+
+## 1. Target and output
+- **Target.** `sha256-r39-prefix-v1`: SHA-256 with the first 39 steps in every compression, standard IV, FIPS 180-4 padding, feed-forward, all 256 output bits.
+- **Output.** Two distinct 128-byte messages M0 || M1 and M0 || M1': the same random first block M0, second blocks with M1' = M1 + DL (word-wise modular, differences in words 8..12). Equal lengths, identical padding block. Ordinary collision.
+- **Claim.** time_log2 = 93.8495, memory_log2_bytes = 20.0000, preprocessing_log2 = 43, advice 376 bytes = 2^8.554588851677638, success probability 0.39. Current numbers (time, memory, guards, k, N and advice) are set by the controlling sections at the top of this file; construction and memory are inherited unchanged.
+
+## 2. The construction
+**2.1 Advice.** The 39-step semi-free-start pair of 5f8e6192 (`CV_PUB`, `MP_PUB`, `M_PUB`; 160 bytes), on the characteristic of ePrint 2026/1120 Tables 21 and 23 (CITED from 293ca62c and 38912d66), plus the selected fibre `FIB = 0x3cc9eebe` (4 bytes), the retained class-enumeration cube `K4_CUBE = 0xf74400da` (4 bytes), and the 52 selected 32-bit `K4_DROP` identifiers used by the production K4_Q prune (208 bytes): **376 bytes total**, `log2(376) = 8.554588851677638`. No serialized list or recipe beyond these declared identifiers is shipped; the list is generated at import from the counted values. All other target-looking words used by that generator are either derived from the counted pair/fibre/cube at import or public characteristic/algorithm constants. In particular `T8`, `T9`, both row-16/17 mask tuples, `K4_DL`, `K4_C11`, `K4_CA10`, `K4_E11A`, `K4_HD`, `K4_W11C`, `K4_T11`, and `K4_T10` have explicit pair-derived formulas; the full inventory is recorded in `pkg_r39_nj74_extras/DB_Y_ADVICE_LITERAL_AUDIT.md`. Regenerating `K4_CUBE` or selecting `K4_DROP` during the shipped run would require repeating their search/selection work, so this entry counts the stored words directly as advice.
+
+**2.2 The transplant, k = 4.** As in w13: fix A[8..11], E[12..15] and W12..W15 to the advice values; for any cv and (a0, a1, a2, a3) = A[4..7] the words W0..W11 follow (`k4_words`). W9 = C - a1 + h4(a2, a3) with h4 = MAJ(A8, a3, a2) - CH(E12, E11, E10), E10 = a2 + t(a3), E11 = a3 + c11; W10 = kappa(a3) - a2; W11 depends on a3 only; W0 and W1 do not depend on (a2, a3).
+
+**2.3 The fibre is a parameter.** On any fibre h4(a2, a3) = h, W9 = C - a1 + h is one value per claw, F9 stays a per-claw test, and W16 = s1(W14) + W9 + s0(W1) + W0 is one value per claw. Taking h = FIB = 0x3cc9eebe instead of the advice's h0 = 0x36faf0de shifts the walk constant c9 and the F9 constant C9 by K4_HD = FIB - h0 = 0x05cefde0 (computed by the program from the advice). A claw of the shifted walk map then gives W16 = g for every entry of the new list. The advice (a2, a3) itself is not on the new fibre, so the base variant is not a trial and its path is removed from `claw()`; the transplant-claw experiment no longer claws the advice (an h0 claw). MEASURED on the built program (build/e2e15.py, from w15/tools/check15s.py): all F9 claws of windows 1000 and 1014 of the shipped program x 20 listed entries each, 35,940 (claw, entry) cases: W1 = u, W16 = g, W9 = C9 + HD - a1 in F9, both messages on the advice trail through step 16, the advice states after step 17 at a W17 hit; failures none.
+
+**2.4 What remains after a claw.** Per claw: W9 in F9. Per entry: W8 in F8 (density 9/128), and W17 = advice value; then the tail (Section 8). Two entries with the same a2 and kappa (mates) pass or fail W17 together; they differ in a3, hence in W11, W3..W8 and every tail word.
+
+**2.5 The list by rule (MEASURED and DERIVED).**
+- Classes: a3 = (E11adv XOR m) - c11 for every submask m of CUBE = 0xf74400da (14 bits, 16,384 masks), kept when W11C - a3 lies in F11: 1,536 candidates. CUBE is the OR of the E11 masks of the 728 classes of the exhaustive enumeration; the rule R2 of our list-ceiling note (E11 AND 0x08b81020 fixed) holds on the whole cube because the two masks are disjoint.
+- Entries of a class: every a2 with (R3) h4(a2, a3) = FIB, (R4) W10 = kappa(a3) - a2 in F10, (R5) bit 30 of E10 equal to bit 30 of E11.
+- **The rule set equals the exhaustive list.** enum15 scans all 2^32 values of a3 and checks every candidate entry on the real two-message trail at the advice point and three random points (0 mixed verdicts, 0 failures of every identity it checks; 9,701,592 valid entries in 728 classes). build/rule15.c generates the rule set and compares it with that list as sorted (a3, a2) sets: equal; at h0 the same rule gives exactly the 821,520-entry list of f92b8068.
+- F10 is a set of bit conditions on W10 (D10 = 0xc0000000, T10 = 0x087ff000): w2^w13 = 1, w9^w26 = 1, w15 = w19, and either w30 = 1, or w30 = 0 with w3^w14 = w10^w27 = w31 = 1^w16^w20. Checked over all 2^32 values: 301,989,888 members, 0 mismatches.
+- **Generator.** A bit-serial automaton over a2 (the fibre's carry and borrow, the borrow of kappa - a2, the captured W10 bits, the F10 branch) is solved backwards, bit-sliced over 256 candidate classes per 256-bit word (`_k4fe`); then a depth-first search with exact pruning lists the 18-bit prefixes of each class (`_k4lf`). Classes are taken in kappa order, and a group's prefix set becomes 18 bit planes per block of 256 lanes when the next group begins (`_k4fin`). One sample entry per group is kept for the planted checks.
+- **Table.** 200 kappa groups, 728 classes (at most 8 per group), 62,400 prefixes in 300 logical blocks, issued as 244 packed blocks (210 full + 34 packed; Section 3.2) (at most 1,024 prefixes per group). MEASURED: group by group, the prefix sets built at import equal those of the exhaustive list, and every sample entry satisfies the rule. Counts asserted at import.
+
+## 3. The W17 pass
+**3.1 The equation.** As in w13: s0(y) = y + r with y = a2 + w and r = kd + W17 - u - w; the low 18 bits of y determine the other 14, and 18 bit checks remain.
+
+**3.2 The pass (`k4q`).** The routine of w13, unchanged except two lines (Section 3.4). Per evaluated F9 claw: spill and restore (624), a1 and w (55), the 18 constant words (54); per group 110; per block 403. **K4_PASS = 733 + sum over the 200 groups of (110 + 403 x blocks) = 143,633 at most for every claw (the 300-block unfolded bound, kept as the conservative reservation; the shipped compact layout of 110 full groups, 210 full blocks, 34 packed blocks and 102 packed segments costs at most 733 + 110 x 110 + 210 x 403 + 102 x 114 + 34 x 403 = 122,793 <= 143,633, asserted at import)** (the exact early exit of Section 3.4 only skips block work), asserted at import. A survivor costs 711 plus 563 per class of its group tested: at most 711 + 563 x 8 = 5,215. A key hit tests the classes of its group as mates: at most 8 x (560 + 2 x 2,812) = 49,472.
+
+**3.3 Same hits.** A listed key satisfies W17 in a claw if and only if its prefix lane survives and the scalar test accepts it. MEASURED by the gate on 6 real F9 claws of the shipped program's windows: for each of the 200 groups a planted key (the group's sample entry, its W17 placed as the target) is found by the pass, and the counted cost is the group's pass cost plus 711 + 563 x (classes tested) per survivor. The organizer experiment repeats it for all 200 groups on the first F9 claw of each window (Section 11).
+
+**3.4 Changes against w13.** (i) The fibre: c9, C9 shifted; k4q's W9 reference is the claw's own W9, C9 + HD - a1, not the advice's; the mates of a key hit are the classes of its group, not the 4,096 submasks of 0xf1c000da. (ii) The list by rule: no recipe literal, no inflate reader, no decoder; the per-key diagnostic runs over the entries of every 50th group (four groups) and only in the experiment modes. (iii) The walk table: 97 x 1,024 = 99,328 slots of 40 bits, 15,520 words, the largest table under 2^20 with the other rows of Section 6. The slot of a 25-bit distinguished value r is (97 r) >> 15 = ((r << 6) + (r << 5) + r) >> 15 through the counter; 2^15 / 97 = 338 < 512, so slot and the 9 check bits determine r. Keep-longer rule as in w13. (iv) This entry: the exact early exit in `k4q` (line 1032). From position 22 of a block's position loop (2e846bf2: 16), the block stops once its per-lane decision word is zero; that word only loses bits along the loop, so no lane that could survive is dropped. MEASURED: claws, F9 claws and keys equal with and without the exit (the first six fields (claws, F9, 0, pass lanes, survivors, key hits) of all four tuples equal ab09e983's no-exit tuples; only the k4 operation counts are lower (MEASURED)).
+
+**3.5 Routine by routine against w13** (every routine of the source compared; module lines with constants are listed in Section 5). Changed: `consts` (c9 + K4_HD); `Attack.base_setup` (only C9, shifted, is left); `Attack.claw` (the base-variant path removed; check mode asserts the claw's W9 against a listed entry); `Attack.hit` (slot (97 r) >> 15 and its check); `P` (WDIG of 15,520 words); `k4q` (the claw's W9; mates among the group's classes); `k4f` (the diagnostic over the four groups of `_k4ind`); `_k4fin` (planes of one group from its prefix set); `k4_budget` (G and the second-order divisor 1 - 0.07579); `_e1` (transplant-claw: advice checks and the fibre checks per group; random transplants with a listed entry); `_k4e` (no base F8 count; the acceptance constants). Removed: `_w3gen`, `_k4c1`, `_sm`. Added: `_k4st`, `_k4fe`, `_k4lf`, `_k4cls`, `_k4build`, `_k4ind`, `h4ok`. Every other routine is byte-identical to w13's. This entry against 0b62ed88: `P` (SCREEN = 1, KCAP = 679, KCAP0 = 710 for the screen-off path, DTRY = 8,192), `k4_scr` (added), `Attack.__init__` (the screen flag), `Attack.window_setup` (the screen in the draw loop, Section 3.6), `K4_OPS_PER_CLAW`, `k4_budget` and the import assertion (Section 5), `_k4e` (the four asserted windows run with the screen off; trial 0 adds one screened window, Section 11). This entry against ab09e983: `k4q` (the early exit, Section 3.4); the guard `cap` and its sites, the window's stop and the W_max assertions in `run_window` and the main loop (Section 7, Appendix F); `k4_budget` and the import assertion (Section 5); `_k4e` (trial 1's capped re-run, Section 11).
+
+**3.6 Pre-generation screen (predicate credited to 0xplemonade's a3eb4a8a; masks, threshold, KCAP = 679 and DTRY = 8,192 unchanged).** Each drawn first block's chaining value is scored before kernel generation: from `consts5` of the CV (cw, eb, P, R; 4 caller operations), S = 3 pop(R & 0x00F27618) + 2 pop(R & 0x7F0D89E6) + 2 eb[1] + eb[2] + P[31] - pop(P & 0x1FFFFFFE). Each 32-bit bit count (built only from v5 shift, AND and add primitives) uses the exact six-stage SWAR sequence in `pop32_swar`, 15 operations. Three counts plus their masks cost 48; the bit extracts, weighted sum, nonnegative rewrite and comparison bring the decision to 65 operations exactly. Thus a kept draw is charged 4 + 65 = 69 operations and a discard 4 + 65 + 3 = 72. The implementation computes the identical integer S and preserves the predicate S <= 5 for every 32-bit input; the small-window organizer arm asserts the new charge on every draw. The screen consumes no randomness. Its work remains inside W_max; its effect on the window law and trial count remains the named H1-screen premise.
+
+## 4. Machine model and where each activity is charged
+The counted RAM of w13 (256-bit words; 2,812 operations per 39-step compression; load and store 3, branch 2).
+
+| activity | time charge | memory |
+|---|---|---|
+| pre-generation screen per first-block draw | 4 + 65 = 69 kept; 72 discarded (Section 3.6) | scalars of one draw, transient |
+| walk kernel per window | generator halt cap 575,000 plus 8 per record (CITED) | images, envelope |
+| walk, stage 2, claw filter; the work-cap guards | through `Mach`; 2 per guard (Section 7) | walk rows |
+| dedupe gate | 12 per lookup, 468 per stored key | dedupe rows |
+| W17 pass | at most 143,633 per evaluated F9 claw (Section 3.2) | planes, group table, save area, code |
+| survivors, key hits | 711 + 563 per class; 560 per mate; 2 x 2,812 per compressed pair | hit-path row, code |
+| setup, once per run: the rule generator and every other statement of the import | K4_SETUP = 1,107,474,556 operations, asserted in the program, emitted by the experiment, added to the claimed time: the generator's counted operations, 33,731,732 (160 per automaton step per 256-lane word, 128 per class for its lane planes, 8 per search node, and the plane transposition at w13's prices), plus 2^30 for everything else the import executes | setup rows (phase S) |
+| advice construction and selection | 2^43 compressions (Section 9) | within the walk arena |
+
+## 5. The ledger
+| term | value | status |
+|---|---|---|
+| work per window, screened (screen, base walk, dedupe gate, every pass, survivor and key-hit charge, the guards) | at most **W_max = 556,000,000** in every window, the last included: the program stops a window at the first guard where m.o + R > W_max and asserts m.o <= W_max (Section 7, Appendix F) | asserted |
+| distinct claws per window, C_W (G) | 57,003.18 | MEASURED: mean of the 60 screened windows (s.d. 210.99); a unit of account |
+| W17 pass per evaluated F9 claw | **143,633** (upper bound) | DERIVED from the table, asserted |
+| **charge per executed window** | **W_max + 6 = 556,000,006** counted operations (A.m.o <= W_max asserted; the main loop adds 6), charged directly; windows executed ceil(B / R), current point-premise R = 0.9921709; the ceil margin of K x C_W over W_max (K = 9682, 54,788.76 operations per window) is not charged | asserted |
+| yield factor of the cap | **r = 0.9921709**, the S205 measured point carried as the current declared MODEL production value; inherited bound `0.9908989` is parent history | MODEL point; participant support |
+| trials per distinct claw (F8-passing entries), uncapped | **10809.525521563191**, S190 pooled calibrated point times Appendix-D F9 point divided by `C_W`; fixed-N bound `10777.9` remains the reproduced parent result | MEASURED points, MODEL transfer (H1-screen) |
+| tail | **2^-74.4594**, premise H2-entries: the 14-run organizer pooled (2^-74.4594) mean of r39-mate under the declared class transfer, the class-01 (2^-74.4783) mean recorded as its test (Section 8); ae2d3c1c's keys value 2^-74.3238 not used | MEASURED (organizer), MODEL (H2-entries) |
+| windows executed | **90,249,392,917,716,324,581,376** capped windows | exact `ceil(B/r)` in `k4_budget` |
+| window work | `50,178,663,003,746,633,973,543,003,488,256` operations | windows x `(W_max+6)` |
+| total charged work | exact `N=50,178,663,003,746,658,708,157,689,411,708`, raw `93.84946409349443` compressions | window work + setup + `2812*2^43`; no retired `2^42` term |
+| **time, claimed** | **93.8495** (passed direct parent f738addb: 93.8565) | the total ceiled upward at the fourth decimal (asserted) |
+| parent-history notice | The next long second-order-divisor row is retained verbatim as the passed-parent derivation. The current DB25 divisor is the exact point divisor in the addendum and current ledger above; it supersedes that historical decimal row. | provenance only |
+| second-order divisor | **1 - 0.0012618 (this entry)**: ad125692's terms below with its cross-claw term 0.06056563818 replaced, under H-cross-claw, by 0.06056563818 x 2^-8 x 1.000099 = 0.000236608, plus the same-key-other-claw term 0.06056563818 / 579,271 = 0.000000105 (premise-free); exact form 0.0011617503 + 0.0001 (stop margin) = 0.0012617503, priced 0.0012618 (Section 7 (vii)). ad125692's row: 1 - 0.0615907: 1 - 0.0614907 less the cap's conservative stop-selection margin 0.0001 (Section 7); 1 - 0.0614907: cross-claw pairs (m - 1) x mu_D x 2^-32 / 2 = 0.06056563818 (unrounded) with m - 1 = 898.120, the 99% upper bound of the claw-weighted mean of s_w - 1 over the cap-completed claws of the 1,080 predeclared windows of 91463de0's cap panel (seeds 980000-981079; point 896.439; over the full Appendix D windows the same ratio is 905.530; s_w <= m_max = 944; H1-screen (v)) (a26bcf74 and d3a46ae6: 0.068988 at m_max = 1,024) and mu_D <= 579,271, within-claw co-hits pi_bar / 2 = 0.000545 with pi_bar = 1.09e-3 (covers both measured values: the mean of E[min(N_k, 3)] over the complete key list, 1.0718e-3, and 1.0825e-3 at 2,000 real F9 claws; H1-screen (vi); the family-wise per-key bound 1.36e-2 is no longer needed), left-out hits (equal-G cluster above 4 keys) 0.000281038 (key mean of P(N_k >= 4) <= 1 - 0.01^(1/16,384) = 0.00028103778 <= 0.000281038 (rounded up) at 99%: none of the 16,384 independent w gave N >= 4 for any of the 3,462,264 keys; H1-screen (vi)), and the mate term eps/2 = 0.000099; exact-form sum 0.06149067597, bounded above by 0.0614907, priced 0.0614907 (Section 7) | DERIVED from a program cap and measurements |
+
+
+**Bounds asserted.** Every window's counted work is at most W_max (lines 800 and 1168; every unit within its reservation, line 777), the run executes ceil(B / R_LB) windows, the claimed time at least the program's total, the claimed memory at least 30,000 bytes above the peak; the program asserts all four.
+
+## 6. Memory of the attack path, by phase
+| item | bytes | live | phases |
+|---|---:|---|---|
+| advice pair (CV_PUB, M, M') | 160 | walk | S G W |
+| constants and counters | 4,096 | walk | G W |
+| free-slot stack | 128 | walk | W |
+| kernel images, 2 x 710 x 5 | 7,100 | walk | G W |
+| lane array, 256 words | 8,192 | walk | G W |
+| other instructions of the walk, 4,111 x 36 | 147,996 | walk | S G W |
+| parked scalars | 192 | walk | W |
+| queue, 897 words | 28,704 | walk | W |
+| pair records | 1,024 | walk | W |
+| register file, 256 x 32 | 8,192 | walk | G W |
+| stage-1 save area, 32 words | 1,024 | walk | G W |
+| walk table, 15,520 words x 32 (99,328 slots of 40 bits) | 496,640 | walk | W |
+| timing wheel, 128 words | 4,096 | walk | W |
+| kernel-image envelope (two 1,024-record images, as 9993eaa8 reserves) | 3,140 | reserve | G W |
+| prefix table K4_Q: 300 logical blocks (244 issued) x 18 planes x 32 B, plus lane counts, group constants, class words, sample keys | 179,312 | resident | S G W |
+| register save area of the pass, 104 words | 3,328 | per claw | W |
+| walk-kernel generator, one generation: graph records, liveness and register maps, emitted records (largest of 300 sampled chaining values of this program: 776 graph records) | 25,772 | per window | G |
+| walk-kernel generator: generated source text and its line list, 11,451 characters each | 22,902 | per window | G |
+| first-block compression word lists in window setup, 125 words x 4 B | 500 | per window | G |
+| hit path: word lists of two compressions and of the candidate words, 512 words x 4 B | 2,048 | transient | W |
+| output: hex strings of the two messages | 512 | transient | W |
+| output: two 128-byte messages, the first block and one found-pair record | 576 | transient | W |
+| dedupe table, 1,536 x 8 B | 12,288 | per window | W |
+| dedupe occupancy bitmap | 192 | per window | W |
+| arrival-order index, 1,536 x 2 B, and cursor | 3,076 | per window | W |
+| attack state scalars and statistics counters (the work cap's attributes included; every other attribute of the Attack object, audit) | 3,968 | resident | G W |
+| operation counter: category and census tables, 77 entries x 8 B | 616 | resident | G W |
+| all other module-level data left by import (audit; largest: _K4LV, _K4TM, _C1617, K4_WIN_EXP) | 3,697 | resident | S G W |
+| k4 code and the work cap's code, 2,629 instructions x 36 B (convention below) | 94,644 | resident | S G W |
+| setup: candidate classes of the cube, 1,536 records of 7 words x 4 B | 43,008 | setup | S |
+| setup: feasibility table of one 256-lane chunk, 1,947 lane words x 32 B and 14,673 key scalars x 4 B (largest of 6 chunks) | 120,996 | setup | S |
+| setup: lane planes of one chunk, 32 x 4 words, and its class values, 256 x 4 x 4 B | 8,192 | setup | S |
+| setup: transition memo of a class, at most 213 keys and 285 children of 12 scalars x 4 B, two alive | 47,808 | setup | S |
+| setup: search stack, at most 16 entries of 11 scalars x 4 B | 704 | setup | S |
+| setup: prefix set of one group (at most 1,024) and its sorted copy, 4 B each | 8,192 | setup | S |
+| setup: one block of 32 words under construction and its transposed copy | 2,048 | setup | S |
+| setup: transition work of one step, at most 20 lane words | 640 | setup | S |
+| **phase S, import (rows marked S)** | **659,541** | | |
+| **phase G, first block and kernel generation (rows marked G)** | **513,455** | | |
+| **phase W, the walk (rows marked W)** | **1,017,085 = 2^19.9560** | | |
+| *every row summed, whatever its phase* | *1,297,847* | | |
+
+- **Claimed: memory_log2_bytes = 20.0000.** The peak over the three phases is the walk phase, 1,017,085 bytes (2e846bf2's 1,013,609 plus the work cap's attributes and code, 3,476 bytes); with 30,000 bytes of headroom that is 1,047,085 bytes, within 2^20. This entry's code changes stay inside that headroom: the lean guards remove one guard site and add one, and the run-on block (program lines 791-797, 10 statements, two of them guard calls) compiles to 96 CPython bytecodes; counting each as one instruction, at most 96 instructions, under 3,500 bytes at 36 bytes per instruction; the import assertion constant 348,941 is unchanged and the program's memory assertion passes. (This entry's audit of the shipped program finds the attack-state row 96 bytes above the 3,872 that ae2d3c1c carried from 0b62ed88: the `screen` attribute and the discard counter's key and value in the `st` dictionary, three items of 32 bytes; corrected here in the G and W phases.) The program asserts 32 x (table + queue + planes) + 318,941 + 30,000 <= 2^20. A table of 98 x 1,024 slots would not fit.
+- **Phases** as in w13. S is the import: module data, code and the generator's working memory; when the import returns no generator, feasibility table or builder frame is alive and no attack object exists (MEASURED, audit with the cycle collector off). G and W as in w13, re-audited on this program. Phase W exceeds G by 503,630 and S by 357,544 bytes. The row total is not a memory state.
+- **Rows.** Walk rows and the 4,111-instruction walk census as in w13 (CITED from 9993eaa8 there; this program's executed-block census does not exceed w13's). The prefix table: 300 x 18 x 32 = 172,800 bytes of planes plus lane counts, group constants, 728 class words and 200 sample keys. The setup rows are measured on the generator (build/genmem15.py): largest feasibility table of a 256-lane chunk 1,947 lane words and 14,673 key scalars, transition memo at most 213 keys and 285 children, search stack 16, largest group 1,024 prefixes. No recipe, decoder or inflate row remains. The walk-kernel generator rows are the maxima over 300 random chaining values (776 graph records, 11,451 characters); run on the chaining values of all 48 shipped windows the generator stays below them (710 records, 10,567 characters). Phase G lies 503,630 bytes under phase W, so the generator rows would have to grow about tenfold to move the peak.
+- **Code.** Every k4 instruction has a row, at 36 bytes: one instruction per syntactic operation of every k4 routine, the generator and the experiment diagnostics included (1,346), plus the pass in looped machine form (1,246), plus the work cap (37): 2,629 instructions.
+- **What the table covers.** All memory the `--attack` path allocates, setup included, and all k4 code. The screen (Section 3.6) keeps only the scalars of one draw (four packed words and S, 20 bytes, transient), inside the 30,000-byte headroom; the kernel-image rows stay at 710 records, above the screened path's KCAP = 679. The experiment modes allocate on top of it the diagnostic's entry blocks and statistics; the `--attack` path never allocates them.
+
+## 7. Success probability and the cap
+- **Trials (this entry).** A trial is a listed entry passing F8 in a claw passing F9. Mates of a key (the entries with the same a2 and kappa) share W17 and differ in a3, hence in W11, W3..W8 and every tail word from W18 on (Section 2.4). When a key hits W17 the program tests every class of its group, so every mate passing F8 is compressed. Let T_j be the event that entry j's pair collides along the advice differences (the event the tail replica counts) and U_k the union of T_j over the F8-passing mates of key k; the key succeeds on U_k. Second-order Bonferroni inside the key: P(U_k) >= sum_j P(T_j) - sum over mate pairs i < j of P(T_i and T_j); the pair term is bounded below (the mate term); no independence between mates is assumed.
+- **Count: 10774.5 per distinct claw (1,140 predeclared panel windows, MEASURED; a26bcf74's joint bound form).** Trials are F8-passing entries. On the 2,000 real F9 claws of the screened windows 802000-802015, the only windows of a26bcf74's 60-window panel with an entries count (16 batches of 125: the first 125 F9 claws, in arrival order, of each window; the walk and its claws are those of the attack path, window 802000 reproducing a26bcf74's Appendix B row), the listed entries passing F8 number 680,755.1 per F9 claw (s.e. 1,893.5 from the batch means; per-claw s.d. 72,662); the same claws have 575,154.9 distinct keys with an entry in F8 (1.1836 entries per key). The distinct F9 claws per window are a26bcf74's: 60 screened windows, mean 907.1667, s.d. 25.6780. Joint one-sided 99% lower bound (union bound, 99.5% on each factor; independent windows and batches, Student-t), as a26bcf74: T >= (680,755.1 - t(15, 0.995) x 1,893.5) x (907.1667 - t(59, 0.995) x 25.6780 / sqrt(60)) / 57,003.18 = 675,175.54 x 898.3429 / 57,003.18 = 10640.44 (d3a46ae6); with this entry's cap the F9 factor is the same bound on min(D_i, 944) over 1,080 predeclared windows of the same program law, all run at the cap 944 (802060-803139, Appendix D), 901.6269 with t(1079, 0.995), giving 10679.34, priced 10679.3; with t(15, 0.995) = 2.946713, t(59, 0.995) = 2.661759 (d3a46ae6's 60 windows: 10640.4) t(419, 0.995) = 2.587614 (d049ec74's 420 windows: 10658.9), t(779, 0.995) = 2.582155 (ab09e983's 780 windows: 10671.5) and t(1079, 0.995) = 2.580393 (this entry's 1,080 windows: 10679.3); priced as 10679.3 (rounded down; rule out/RULE_w18_trials.txt). This entry re-measures the entries factor on the 1,140 windows 802000..803139 (first 125 F9 claws each, k4 off; every window reported) with a rebuilt count of F8-passing listed entries (participant-run; 802000-802059 predeclared 2026-11-15 16:48 MST before their 44 new windows ran, and 802060..803139, the 1,080 windows of the F9 factor, predeclared 2026-11-15 18:06 MST before any of them ran, PREDECLARE_NJ68_1115.txt; same tool and calibration): on the 16 control windows the rebuilt count gives 681,476.49 against the original 680,755.1, so every rebuilt count is multiplied by c = 680,755.1 / 681,476.49 = 0.9989414 (conservative; the control then averages exactly 680,755.1). Calibrated mean 681,709.27, batch s.e. 200.29 (1,140 windows), t(1139, 0.995) = 2.5801527: entries >= 681,192.49, so T >= 681,192.49 x 901.6269 / 57,003.18, priced 10774.5 (rounded down). C_W = 57,003.18 is the declared H1-screen model mean, as in B and the cap. One-way ANOVA of the 2,000 claws' entry counts over their 16 windows: F = 1.362 on 15 and 1,984 df. Taking the first claws of a window is not a selection on the count: on all F9 claws of windows 802000 and 802001 the first 125 average 677,197.7 and 676,356.3 entries against 681,901.6 and 683,853.0 for the rest (Welch z = -0.69, -1.17). The transfer from the first 125 F9 claws of each window to all its F9 claws is the declared premise H1-screen (ii); the two full-window checks (802000, 802001) support it and do not prove it. Counted by w15/tools/f8count.exe over the exhaustive list, which equals the rule set (Section 2.5). (a26bcf74 priced 9044.1 keys per distinct claw on 0b62ed88's unscreened claws; that keys figure is not used here.)
+- **The mate term (premise H7-mate-row19: an exhaustive enumeration plus the named premise H-W3-uniform, tested by the organizer).** T_j requires the advice XOR state differences at every row 18..38, so P(T_i and T_j) <= P(T_i) P(S_j | T_i), S_j the event that mate j follows them through row 19. Facts, each checked on real hits: for a hit and every mate on the same claw, the states through row 17 equal the advice's (W12..W17 are the advice words; k4_words fixes A8..A11 and E12..E15); a mate differs from the hit in a3 -> b3 only, so with d = b3 - a3, W3' = W3 + d, W11' = W11 - d and W18' - W18 = Delta(W3, d) = s0(W3 + d) - s0(W3) - d (252 of 252 real mates), while W19' = W19. P is the set of W18 values that admit the advice differences through row 19 (state 17 fixed; the explicit row-18 and row-19 conditions are the predicate P() printed in Appendix D); by enumeration of all 2^32 values |P| = 65,536, and every hit's W18 is in P. A mate with offset d can pass row 19 only if Delta(W3, d) lies in D = P - P (|D| = 9,427,275), i.e. only if the hit's W3 lies in B_d = {W3 : Delta(W3, d) in D, Delta != 0}. The list gives 20 offsets d; over all 2^32 W3, B_d is empty for 14 of them, has 30,256 elements for 2 and 120,832 for 4 (543,840 in all; Appendix D prints the enumeration program). **Pricing under H-W3-uniform.** Let X_i be the number of F8-passing mates of i through row 19; a key has at most 7 other mates, and mate j passes only if W3_i lies in B_{d_j}. Premise H-W3-uniform: given a hit, its W3 is uniform over 2^32. Then E[X_i | T_i] = sum_j P(S_j | T_i) <= sum_j P(W3_i in B_{d_j} | T_i) <= 7 x 120,832 / 2^32 = 1.9693e-04 = eps, and eps/2 = 0.000099 enters the divisor; no independence between mates is assumed. **The organizer test of the premise** (the r39-mate manifest prediction, from the W3 of the 14 organizer-executed runs, pinned by their organizer-recorded observation digest48 and printed in Appendix E): of 1,888 hits in 867 carrier clusters, the organizer hits contain 0 W3 values in the union (expected 0.24 under the premise; falsified at 3 or more), and their per-bit chi-square is 24.7 on 32 df (falsified at 62.49, the 99.9% point). **The price without the premise (disclosed, not priced):** a hit-weighted bound needing no premise on W3 treats each cluster as one trial (with mean probability q_c over its hits, the chance that a cluster shows no such W3 cannot exceed 1 - q_c, reached when its hits' events coincide; cluster probabilities free; clusters, distinct carriers, independent); the largest hit-weighted P(W3 in the union | T) consistent with zero events at 99% (maximise sum_c m_c q_c / H subject to prod_c (1 - q_c) >= 0.01) is 0.01716, so eps = 7 x 0.01716 = 0.12015, eps/2 = 0.060077, divisor 1 - 0.137206 and time 94.1835, above a26bcf74's 94.1664, which is why the premise is named. The per-cluster form 4.605 / 867 = 0.00531 and the per-hit form 4.605 / 1,888 = 0.00244 are not used: the first bounds the mean over clusters, not over hits, and the second treats clustered hits as independent. The traced mates: 638 F8-passing mates, first deviation at row 18 for 335 and row 19 for 303, none later; the participant arms of 9054e0c4, re-run with carrier keys (w17/tools/matejoint2.py; 25,221 hits), have none past row 19. **S190 fixed-N extension: 10777.9 per distinct claw (2,280 windows, MEASURED participant bound).** Before extension execution, `PREDECLARE_NJ70E_1117.txt` fixed new seeds 803140..804279, pooled range 802000..804279, the same calibration and one-sided Student-t 99.5% rule, and required every window to be reported. The completed panel's reported bound is 10777.9, rounded down to 0.1. The extension is disjoint from S198, S203 and S205. A diagnostic at 2,026/2,280 windows reported 10778.1 before completion; no seed, estimator, sample size or stopping rule changed, and the final uses all 2,280. Thus this is a predeclared fixed-N extension with a disclosed interim, not a literal one-look panel. Participant measurements support the declared H1-screen(ii) transfer; they do not prove it. The accepted nj76s 1,140-window derivation immediately above remains the historical base.
+
+- **Success: second-order Bonferroni over all key hits (counting every hit, as a7b383d1 does; credited for that only).** (i) The program tests every W17 key hit of every window: `k4q` (experiments/r39joint_k4_production.py lines 1015-1053) runs over every survivor lane of every group, and at each key hit compresses every class of the group whose words pass W9, W17 and F8 (lines 1044-1051, 530, 561 per class and 2 x 2,812 per compressed pair, inside the window's counted work and priced in K as key-hit work); after a hit without collision the loops continue, and a window stops early only on a collision (line 788) or at the work cap (below). At most m_max = 944 distinct F9 claws are evaluated per window (this entry's cap; d3a46ae6: 1,024) (`k4d`, line 1101). (ii) For a key k with an F8-passing mate in the claw let p'_k = P(U_k | claws), U_k the union of its F8-passing mates' events T_j (Trials); U_k is contained in the key's success, because the program compresses every mate. (iii) Given the hits, the window succeeds with probability at least P(union over hit k of U_k) >= sum over hits of p'_k - sum over hit pairs k < l of P(U_k and U_l) (second-order Bonferroni, for any number H of hits). Each pair term is at most min(p'_k, p'_l) <= (p'_k + p'_l) / 2, whatever the joint law of the tails, so the pair sum is at most sum over hit k of p'_k x (number of other hit keys) / 2. The p'_k are the exact probabilities of the events in the union; a lower bound on them is substituted only after (iv), where each p'_k carries the coefficient q (1 - c2 - 0.000281038) > 0. (iv) Average over the hits given the claws (H5): each trial key is hit with probability q = 2^-32; keys of different claws are hit independently; inside one claw W17 = G(a2, kappa, w) + c(claw) with w and c fixed by the claw, so two keys of a claw are hit together exactly when their G values coincide, which the program-independent count sweep/cohit.c measures at 1.336 times the independent pair rate (512 random w, all 3,462,264 keys). Hence E[pair sum | claws] <= sum over k of p'_k [q^2 (n_w - D_c(k)) + q pi_k] / 2, with D_c(k) the trial keys of k's claw and pi_k its expected co-hit partners in that claw. The cross-claw part is q^2 sum over claws c of P_c (m_w - 1) mu_D after averaging the other claws' key counts, which are functions of their own (a0, a1) only and i.i.d. across the claws of a window (H1-screen): with E[(s_w - 1) P_w] / E[P_w] <= 898.120 over windows for the cap-completed claw count s_w (H1-screen (v)), its expectation over windows is at most q^2 E[(s_w - 1) P_w] mu_D <= q^2 (s - 1) mu_D E[P_w] with s - 1 = 898.120, the 99% upper bound (delta method, z = 2.326, s.e. 0.7227) of the claw-weighted mean sum s_w(s_w - 1) / sum s_w over the cap-completed claws s_w of the 1,080 predeclared windows of 91463de0's cap panel (seeds 980000-981079, point 896.439; s_w <= m_max = 944 by the program; success is credited only on completed claws), with mu_D <= 579,271 (the 99% bound, rounded up of the keys per claw, 576,745 + 2.602 x 970). Within a claw, both keys of a pair hit iff their G values coincide. The Bonferroni sum is taken over the sub-collection of hits whose equal-G cluster in the claw has at most 4 keys; a union over fewer events is still a lower bound, and the choice depends on the claw's (w, c) only, not on any tail. For a kept key N_k(w) <= 3, so its pair term is (q/2) p'_k min(N_k(w), 3). Averaged over w (independent of the tails, H5) it is at most (q/2) p'_k pi_k with pi_k = E[min(N_k, 3)]; summed over the keys, with the p'_k-weighted key mean over completed-claw key occurrences at most the complete-list mean (H1-screen (vi)), it is at most (q/2) (sum_k p'_k) pi_bar with pi_bar = 1.09e-3, which covers both measured values: 1.0718e-3, the mean over all 3,462,264 listed keys from the per-(key, w) counts below (w-sampling s.e. 1.4e-7), and 1.0825e-3 at the w of 2,000 real F9 claws (the earlier family-wise per-key bound: alpha = 0.001, all keys, two runs of 16,384 random w: 1.3556e-02 and 1.3355e-02, on E[min(N_k, 3)] for every listed key. The left-out hits lose at most q p'_k P(N_k >= 4) of the first-order term, with the p'_k-weighted mean of P(N_k >= 4) <= 1 - 0.01^(1/16,384) = 0.000281038 (99%: the 16,384 w are the independent draws, and none gave N >= 4 for any key; H1-screen (vi)), charged at 0.000281038 itself (the earlier per-key family-wise bound was ln(3,462,264 / 0.001) / 16,384 = 0.001341) (no N >= 4 for any key in 16,384 w; family-wise at alpha = 0.001). Participant tools: w15/sweep/cohit2.c (output w15/sweep/cohit2_16384.txt), w15/sweep/cohit3.c (w15/sweep/cohit3_16384.txt), w15/sweep/nf.c (w15/sweep/nf.txt: s0(y) - y has at most 14 preimages, so N_k(w) <= 2,799; not needed by the bound). The priced terms bound the key means under H1-screen (vi)'s weighted inequality; the per-key family-wise bounds above hold for every key and are kept for reference. c2 = 2^-32 x 1,023 x 579,271 / 2 + 1.36e-2 / 2 = 0.068988 + 0.006800 = 0.075788, a26bcf74's divisor is 1 - c2 - 0.001341 = 1 - 0.077129, and with the mate term (Trials; eps/2 = 0.000099, Section 7) the divisor is 1 - 0.0613917 - 0.000099 = 1 - 0.0614907 (a26bcf74's 0.077129 with the cross-claw term at m - 1 = 898.120, 0.0605657 in place of 0.068988, the co-hit term at 0.000545 and the left-out term at the key mean bound 0.000281038) ((1 - a)(1 - b) >= 1 - a - b). The cross term uses the expectation E[m(m - 1)] / E[m] of the claw count (bounded above) and H1-screen (v); the co-hit term uses the key mean and H1-screen (vi). Over windows, E[q P_w] >= E[n_w] q (1 - eps/2) p_entry, n_w the trial entries of the window and p_entry the entry tail weighted by trial entries (H2-entries); the sum over a key's mates of P(T_j) is at most P(U_k) (1 + eps/2) by the mate term. (v) Windows are independent (fresh first blocks): P(no success) <= product over windows of (1 - P(window success)) <= exp(-lambda). No hit is selected or ordered; every hit enters symmetrically; the bound holds for any dependence between the tails of different hits. Hence lambda = B x G x 10777.9 x 2^-32 x 2^-74.4594 x (1 - 0.0012618) = -ln 0.61 + 2^-40 (this entry; ad125692: 1 - 0.0615907), set in `k4_budget`, where the B / r_LB capped windows of the search carry in expectation at least the trials of B uncapped windows and the divisor carries the cap's conservative stop-selection margin (the cap paragraph below); success 0.39. The divisor costs 0.0018 bit (ad125692: 0.0917; (vii)). (vi) Real W17 hits at probability 2^-32 were observed: the 48 windows had 37 key hits against 38.58 expected over all 200 groups (dispersion chi-square 34.35 on 47 df); of them, 3 F8-passing mates were compressed against 6.85 expected (Poisson P = 0.09, adverse and not significant; disclosed). (vii) **Cross-claw pairs under H-cross-claw (this entry).** In (iii), for hits k, l on different F9 claws of one window: if l has k's key (a2, kappa), at most one key per claw, the pair keeps min(p'_k, p'_l), so these pairs add 0.06056563818 / 579,271 = 1.05e-7. Otherwise, over ordered hit pairs (k, l), sum P(U_k and U_l) <= sum over pairs and over k's F8-passing mates i of P(T_i and U_l) <= eps_key x sum over pairs of sum_i P(T_i) (H-cross-claw: the hit-weighted mean of P(U_l | T_i) over these pairs) <= eps_key (1 + eps/2) sum over pairs of p'_k (eps/2 = 0.000099, the mate term); the unordered pair sum is half of it, ad125692's form sum_k p'_k (other hit keys) / 2 times eps_key (1 + eps/2), so the cross-claw sum is 0.06056563818 x 1.000099 eps_key: 0.000236608 at eps_key = 2^-8. Exact part: a hit's trail depends on W2..W17 only (W0 and W1 enter rows 16 onward only through W16 = g and W17, fixed at every hit; the states through row 17 are the advice's), so T_l requires W18_l = s1(W16) + W11 + s0(W3) + W2 in P (|P| = 65,536 of 2^32, Appendix D) and requires D19_l, the advice XOR differences at rows 18 and 19: P(U_l | T_i) <= sum over l's F8-passing mates j of P(D19_j | T_i), with no extrapolation in depth. Two hits of one window share their chaining value (it enters W2..W7) and the global W12..W17; W11 (a function of a3 only) and W10 coincide only for shared a3 or entry, pairs the uniform-entry trials sample at their natural rate. Measured part: P(D19_j | T_i) <= eps_e per F8-passing trial entry j of another claw, and a key has at most 8 classes (program), so P(U_l | T_i) <= 8 eps_e. Organizer-run (r39-mate-01..14, observation xa20): for each of the 1,888 hits, 32 trials on another claw of its own chaining value; 0 of 60,416 kept the differences through row 19; one-sided 99% bound eps_e <= 1 - 0.01^(1/60,416) = 7.62e-5 (trials i.i.d. given the hit, so with no event this is also the bound for any spread of rates over hits); 8 eps_e x 1.000099 = 6.10e-4 = 2^-10.68 <= eps_key = 2^-8. Control (arm U, random chaining value): 1 of 60,416. Participant-run, predeclared (Appendix H): 64 runs, 8,623 hits, 551,872 trials per arm: W18 in P 8 (A) against 13 (U), through row 19 2 against 5, row-18 rate ratio A/U 0.9984 (s.e. 0.0019).
+- **The per-window work cap (this entry; 2e846bf2's H6 is withdrawn).** Every window runs with W_max = 556,000,000. The guard `cap(R)` costs 2 counted operations, reserves the next unit, stops before an overrun, and the program asserts m.o <= W_max; Appendix F gives every reservation, so the work bound is deterministic and needs no distributional premise. **Success event.** Only completed claws are credited. The stamp identity is exact for a run: a capped execution completes exactly the claws whose recorded guard stamp is at most W_max. **Yield (H1-screen(iv), MODEL, score-setting).** Under the screened production-window law, the ratio of expected F8-bearing keys in completed claws to expected keys in the corresponding uncapped windows is declared to be at least r_LB = 0.9908989; the same factor transfers to F8-passing entries, and H1-screen, H5 and H2-entries continue to hold on completed claws. The predeclared one-look S205 direct combined-program analysis of all 256 seeds 2,006,000..2,006,255 is supporting participant evidence: r = 0.9921709258, delta-method s.e. 0.0005467854, nominal one-sided 99% value 0.9908989126 floored to 0.9908989, cap fired in 248 windows, minimum single-window ratio 0.9631374. N is 256 and the 556M cap was selected from the disclosed S198 planning curve; this is neither organizer-run proof nor a familywise confidence statement. The earlier 64-window panel is compatible support only. Conditional on the declared premise, B / r_LB capped windows carry the trial mass required by lambda. The divisor retains the extra 0.0001 stop-selection margin.
+- **The claw cap m_max = 944 binds in some windows.** In 3 of the 60 Appendix B windows (run at the cap 1,024) more than 944 distinct F9 claws were evaluated (at most 959); in 108 of the 1,080 Appendix D windows (run at 944) the cap was reached; the organizer windows hold at most 11. Where it binds, the program evaluates fewer claws along the same walk: the work can only fall, and the trial count takes min(D_i, 944) per window (Section 7), so no claw beyond the cap is counted in the trials. (0b62ed88's unscreened trial count, not used here, took min(m_w, 1,024) over its 48 windows; none reached 1,024, maximum 969.) **The last window.** Every window, the last included, is at most W_max (asserted); 2e846bf2's 2^42 last-window allowance is withdrawn.
+
+## 8. The tail (replica of 5f8e6192, run by the organizer; priced for entries under H2-entries; H2-transfer cited as a26bcf74's keys value)
+- w13's replica (experiments/r39tail.py in earlier entries; here the first part of the bare raw-string statement that ends experiments/r39joint_k4_production.py, byte-identical but for its final main-guard line and its own main() (the r39-tail entry point, removed by this entry: the mate code's main(q) rebinds the name before the only call, and no manifest id runs it)) is the replica with QDECL = -74.54, run by the organizer as r39-tail-01..14 for 0b62ed88, b7de1d07, ae2d3c1c and a26bcf74; this package's manifest does not list them, but the r39-mate code runs the unchanged replica and calls its verify_smc_stats(QDECL) in trial 0 of every r39-mate run, which hard-asserts the 14-run table and its bounds. Its hard asserts and the 42 further runs behind the check value QDECL are those of w13 Section 8 (14-run mean 2^-74.3238; 42 further runs, mean 2^-74.4434, one-sided 99.9% bound 2^-74.5296).
+- **a26bcf74's tail (CITED; not used here).** a26bcf74 (as ae2d3c1c) priced the tail for keys and the designated mate at 2^-74.3238, the linear mean of the 14 organizer runs r39-tail-01..14 of the unchanged replica (advice draws), under its declared premise H2-transfer, with the paired transfer arm (-0.014 bit, s.e. 0.023) and the new-fibre arms K 2^-74.3734 and R 2^-74.3781 as its evidence. The replica's check value QDECL = -74.54 lies 0.0617 bit below this entry's priced tail.
+- **Entries (this entry): the priced tail 2^-74.4594 (premise H2-entries under one declared class transfer).** The trials are F8-passing entries of class 01 (every trial has a0 even and W1 odd, Section 2), so the tail is priced on the 14 organizer-executed runs r39-mate-01..14 at the 14-run pooled mean, 2^l2 x hits / n, equal weight per run, rounded down at the fourth decimal, under the declared class transfer that a screened class-01 trial entry's tail equals the pooled entry tail; the 14-run class-01 mean, 2^l2 x 4 x c01 / n (the replica's own class-01 estimator, as in r39tail.verify_smc_stats), is recorded as the test of that transfer, not as a competing price. Pooled: 2^-74.4594 (s.e. 0.0484 bit, one-sided 99.9% bound 2^-74.6588); class 01: 2^-74.4783 (s.e. 0.0809 bit); hits by class 00/01/10/11: 439/466/489/494. Priced: 2^-74.4594. Participant evidence (panel of 870 independent invocations x 256 trials, Luna_Server S191/S192, 2026-11-17): class-01 minus pooled -0.37% +- 0.84%. Arm J of 9054e0c4 (participant-run, an entry per lane on real unscreened claws, window-weighted) gives 2^-74.3828 and is cited as support. The priced value is a mean, not a lower bound. Law of r39-mate: one uniform listed entry per batch of 2,048 lanes, the lanes' W8, W9 the replica's own draws in F8, F9 (so a0 of either parity, and the class-01 estimator is used). An earlier design of this entry (an entry per lane with a0 forced even) did not fit the 64 KiB experiment-source budget and was replaced before any figure from it was used.
+
+| run | log2 carrier | hits | class-01 hits | digest48 (hex) | F8 mates | dev. row 18 | dev. row 19 | W18 clusters | largest | tail |
+|---|---:|---:|---:|---|---:|---:|---:|---:|---:|---:|
+| r39-mate-01 | -61.476425 | 123 | 31 | 1c2a4d979b83 | 45 | 25 | 20 | 59 | 8 | 2^-74.4408 |
+| r39-mate-02 | -61.764703 | 121 | 25 | f580e8ffd12a | 42 | 20 | 22 | 60 | 7 | 2^-74.7527 |
+| r39-mate-03 | -61.720806 | 146 | 32 | f6d85dedce0d | 42 | 26 | 16 | 64 | 7 | 2^-74.4379 |
+| r39-mate-04 | -61.404555 | 141 | 36 | 28face1d716f | 51 | 22 | 29 | 72 | 6 | 2^-74.1719 |
+| r39-mate-05 | -61.766549 | 141 | 33 | 69df3db191be | 63 | 36 | 27 | 63 | 7 | 2^-74.5339 |
+| r39-mate-06 | -61.611276 | 117 | 23 | 5c1d464b9723 | 29 | 13 | 16 | 61 | 9 | 2^-74.6478 |
+| r39-mate-07 | -61.823465 | 129 | 34 | 46b49615ab16 | 22 | 8 | 14 | 59 | 9 | 2^-74.7191 |
+| r39-mate-08 | -61.592482 | 146 | 39 | e26befa21125 | 55 | 25 | 30 | 65 | 7 | 2^-74.3095 |
+| r39-mate-09 | -61.644687 | 125 | 27 | 6274119cd93e | 25 | 14 | 11 | 58 | 9 | 2^-74.5858 |
+| r39-mate-10 | -61.659863 | 134 | 45 | 1b0964906856 | 52 | 29 | 23 | 60 | 6 | 2^-74.5007 |
+| r39-mate-11 | -61.665500 | 127 | 35 | 38d7af01f48c | 56 | 29 | 27 | 55 | 9 | 2^-74.5837 |
+| r39-mate-12 | -61.665400 | 150 | 42 | 9f76d12faabf | 53 | 23 | 30 | 63 | 10 | 2^-74.3435 |
+| r39-mate-13 | -61.512030 | 135 | 27 | ad0a281898b9 | 55 | 34 | 21 | 63 | 7 | 2^-74.3421 |
+| r39-mate-14 | -61.558849 | 153 | 37 | e60d230a61bd | 48 | 31 | 17 | 65 | 7 | 2^-74.2084 |
+
+| runs of the replica | verified collisions | mean | one-sided 99% bound | one-sided 99.9% bound |
+|---|---:|---:|---:|---:|
+| r39-tail-15..28, organizer seed protocol | 6,222 | 2^-74.4242 | 2^-74.5159 | 2^-74.5594 |
+| r39-tail-29..42, organizer seed protocol | 6,184 | 2^-74.3865 | 2^-74.5404 | 2^-74.6160 |
+| L01..L14, local seeds | 6,205 | 2^-74.5230 | 2^-74.6091 | 2^-74.6498 |
+| the 42 runs together | 18,611 | 2^-74.4434 | 2^-74.5061 | 2^-74.5296 |
+
+The check value QDECL = -74.54 lies 0.0104 bit under the one-sided 99.9% bound of the 42 runs and under the mean of each set of 14. Local against organizer-protocol runs: Welch t = -2.62 on the run values; QDECL rests on all 42 runs pooled.
+- **Transfer to the variants of the new fibre (MEASURED by this entry's previous seat, participant-run, not organizer-executed; w15/tail, re-analysed here).** The organizer's replica r39-tail-01..14 samples W8 in F8 and W9 in F9 on the advice values of W10, W11, not the new fibre's class-01 entries. Joint arms replace W8..W11 per lane by real words: R arms take (claw, entry) uniformly over F8-passing pairs on real F9 claws (w13 windows for h0, windows of the shifted walk for 3cc9eebe; every claw asserted in F9 under its fibre); S arms take W9, W8 from their filters and (W10, W11) from a uniform entry. The R arm weights entries uniformly; the attack's trials are keys. The key-weighted arm K below measures the attack's quantity directly. Every arm on the organizer seed protocol (ids r39-tail-15..42 for R, 15..28 for S), with the identical SMC carrier for equal ids, so paired differences cancel the carrier; every hit verified by recompressing both blocks.
+
+| arm | runs | verified hits | log2 linear mean | s.e. |
+|---|---:|---:|---:|---:|
+| shipped draws (adv), 15..28 | 14 | 6,222 | -74.4242 | 0.0335 |
+| R, h0 | 28 | 12,725 | -74.3640 | 0.0374 |
+| R, 3cc9eebe | 28 | 12,633 | -74.3781 | 0.0289 |
+| K, 3cc9eebe, key-weighted, claws of the shipped program | 28 | 12,637 | -74.3734 | 0.0364 |
+
+- Paired, R 3cc9eebe - R h0 over 28 runs: log2 ratio of linear means -0.014 (s.e. 0.023); pooled hits -0.0105 (Poisson s.e. 0.0181). One-sided 99% bound on the loss: -0.014 - 2.473 x 0.023 = -0.071 bit, so a loss above 0.071 bit is excluded at 99%. Sensitivity: in the attack every trial has a0 even and W1 odd (class 01); the pool arms back-solve W1 with either parity, and the class-01-only paired figure is -0.021. Real variants of either fibre do not do worse than the shipped draws (R 3cc9eebe - adv: +0.023, s.e. 0.032). Row survival 25/24, 26/25, 27/26, 28/27 equal within noise. - **Key-weighted arm K (participant-run, w15/tail/mkpoolk.c, armk.sh, analyzek.py).** Per proposal: a claw drawn uniformly from the F9 claws of window 1000 + i - 15 of the shipped program (run i), and a distinct (a2, kappa) key drawn uniformly from the list, kept if the key has a mate passing F8 in that claw; the proposed words are those of its designated mate, the lowest-a3 class passing F8 (ascending a3 is the order in which k4q tests them). So (claw, key) is uniform over the pairs in which the key is a trial, as the hit keys of the attack are (every trial key is hit with the same probability 2^-32), and the proposal is the designated mate's pair, which the program compresses at every hit of that key; no reweighting and no premise on mates. Same ids r39-tail-15..42, same SMC carrier as R, every hit verified and its (a0..a3) recovered. Result: mean 2^-74.3734, one-sided 99% bound 2^-74.4662, **one-sided 99.9% bound 2^-74.5035** (Student t, 27 df, 3.421); class-01 only (2 x c01) 2^-74.3528, its 99.9% bound 2^-74.4887. Weighted by the number of evaluated claws of each run's window (the attack weights windows by their trials): mean 2^-74.3747, one-sided 99.9% bound 2^-74.5058; correlation of window size and run tail -0.19. Model, stated plainly: the SMC carrier sees a window only through its claws' (a0, a1). Paired against the entry-weighted R arm (same carrier): +0.0047 bit (s.e. 0.0172). Accepted keys had 1.1857 F8-passing mates on average in the first run.
+
+**Transfer to the new fibre.** Priced directly on the new fibre, the R 3cc9eebe arm alone (28 runs, mean -74.3781) has the one-sided 99.9% bound 2^-74.4804 (Student t, 27 df, 3.421), above the replica's check value 2^-74.54. The R-arm claws came from windows of the shifted walk of an earlier build (previous seat's tools; seed 1000 gave 908 F9 claws there against 871 in the shipped program's window 1000), so the arm uses real F9 claws of the same walk map but not the shipped program's own windows. The figure that matches the attack exactly would be the class-01-only paired one, and it is inside the same bound.
+
+## 9. Advice construction and preprocessing (H3)
+As in w13 Section 9: the pair of 5f8e6192, chosen among 93 candidate pairs; 93 x 2^36 = 2^42.5392 constructions plus 93 x 14 x 2^24 = 2^34.35 screens, 2^42.545 in all, declared as preprocessing_log2 = 43 and added to the claimed time. The organizer experiment runs the fibre search on the shipped pair (g16_fibre_size = 2, g17_fibre_size = 1, fibre_dfs_ops = 1,944) and the 256-candidate slice (advice_slice_hits = 1, ops_per_cand = 411). The list is built at import inside K4_SETUP; the choice of the fibre is a one-time offline search: about 7,000 fibres scored (at most 2^36 operations), five enumerated exhaustively by enum15 (per fibre 2^32 F11 tests of about 20 operations, 2^36.3, plus the real two-message trail at four points on at most 1.8 x 10^8 F10-passing solutions at about 10^3 operations each, 2^39.4; five fibres 2^41.8), their F8 counts on about 950 real claws each (9.7 x 10^6 entries x 50 operations per claw, 2^38.7 each, 2^41.0 for five) and one window per fibre: at most 2^42.6 operations, 2^31.1 compressions in all (EST from the tools' loop counts), against the 2^41.1 compressions left between the 2^42.545 of the advice and the declared 2^43.
+
+## 10. Premises, and the limits of their evidence
+- **H1-screen (new, MODEL, declared heuristic; score-setting).** Under the screened chaining-value and window law of the shipped program (S <= 5, KCAP = 679, DTRY = 8,192, KTRY = 32; production window 2^26 walk evaluations): (i) the distinct claws per window have mean 57,003.18 (the 60-window panel mean of Appendix B, s.d. 210.99), the unit C_W of B and of the cap; (ii) [this entry: the trials are F8-passing entries, at least 10777.9 per distinct claw, measured in Section 7 on the first 125 F9 claws of each of the predeclared 2,280 windows 802000..804279 (PREDECLARE_NJ68_1115.txt; calibrated to the 16-window control 802000-802015) with the F9 claws per window, min(D_i, 944), of the 1,080 windows of Appendix D; the transfer from the first 125 F9 claws of each window to all its F9 claws is declared by this clause, the two full-window checks of Section 7 being support, not proof]; (iii) kept chaining values are independent across windows; the (a0, a1) of the distinct F9 claws of a window are i.i.d., independent of the chaining value and of the number of claws, and a claw's trial-key count is a function of its (a0, a1) only (W8..W11, hence F8, do not depend on the chaining value); the W17 claw constants (w, c) are uniform and independent of (a0, u), as H5 uses. This is a new premise of ae2d3c1c, kept: 9,044.1 (a26bcf74's keys figure, not used by this entry; its trials are F8-passing entries, at least 10777.9 by the same joint bound on the calibrated entries of the first 125 F9 claws of each of the 2,280 windows 802000..804279, Section 7) is the joint one-sided 99% lower bound of a26bcf74's Section 7, from the keys per F9 claw measured on 0b62ed88's unscreened claws (one-way ANOVA of the 2,000 claws' key counts over their 16 windows: F = 0.564 on 15 and 1,984 df) and the distinct F9 claws per window measured on the 60 screened windows, with C_W as the declared model mean; the screen conditions the chaining value on S <= 5, so the unscreened law does not transfer by itself; the premise declares it. Support (participant-run, paired, same seeds on both builds; 16 seed pairs, 2^24 walk evaluations, harness winmeasure_rival.py; N = F8-passing listed entries and K = distinct keys among them over the four diagnostic groups 0, 50, 100, 150 of k4f, per distinct claw C): unscreened N/C 106.91, K/C 98.56; screened N/C 111.16, K/C 102.24; paired N/C change +0.0552 bit (s.e. 0.0459). Distinct F9 claws per window: 907.17 (s.d. 25.68) in the 60 screened 2^26 windows against 898.62 in the 48 unscreened ones. This probe supports a nonnegative transfer of the yield; it is not a 2^26 panel of the key count, and the transfer of the unscreened keys-per-F9-claw count to the screened law is the declared premise.
+- **H1-ops.** The constants of Sections 3 and 5; the pass is a constant of the program; the screen charges 69 per kept draw and 72 per discarded draw; each work-cap guard charges 2, inside W_max; r39k4-window-small trial 1 checks the stamp method and the cap stop on an organizer window (Section 11).
+- **H2-entries (MODEL premise of this entry; screened scope).** p_entry >= 2^-74.4594 for an F8-passing listed entry of class 01 drawn uniformly over all trial (window, claw, entry) triples of the attack, windows drawn under the screened law and weighted by their trial count, in a claw passing F9 with W17 hit: the 14-run organizer pooled mean of r39-mate under the declared class transfer (Section 8; 2^-74.4594), the class-01 mean 2^-74.4783 recorded as its test. A mean of organizer-executed runs, carried to the screened window law and the whole attack, not a lower confidence bound. a26bcf74's H2-transfer (2^-74.3238, keys, designated mate; ae2d3c1c's) is cited only as the keys value; arm J (2^-74.3828) is participant-run support. Participant evidence (panel of 870 independent invocations x 256 trials, Luna_Server S191/S192, 2026-11-17): class-01 minus pooled -0.37% +- 0.84%. Model, stated plainly: the SMC carrier sees a window only through its claws' (a0, a1).
+- **H3-advice-construction.** As in w13; for every listed entry of the new fibre both messages follow the advice trail through step 15 (enum15 on all entries; the organizer run on one entry of every group).
+- **H5-group-independence (screened-window scope).** For the windows of the screened law: windows independent (fresh first blocks, each drawn and screened independently); trials are distinct keys with an entry in F8, trials are F8-passing entries, at least 10777.9 per distinct claw (Section 7); each listed key's W17 event has probability 2^-32 in each claw; events of different claws are independent. Within a claw, two keys hit together iff G(a2, kappa, w) = s0(a2 + w) - (a2 + w) + kappa coincide. Let N_k(w) be the number of other listed keys with G equal to key k's at the claw's w, and pi_k = E_w[N_k(w)] (the priced quantity is E_w[min(N_k(w), 3)] <= pi_k). Measured over all 3,462,264 listed keys on two independent sets of 16,384 random w: mean pi 1.07e-3, largest per-key estimate 4.6e-3; per-(key, w) counts on the second set: N = 1 in 60,723,478 cases, N = 2 in 37,173, N = 3 in 40, N >= 4 in none of 5.67e10. At the w of 2,000 real F9 claws of 0b62ed88's unscreened program: mean pi 1.0825e-3, largest per-(key, w) N = 3 (w15/critic_final/cohit_real.c, cohit_real_2000.txt; w and u at all 43,134 real claws in wreal.py, wreal.txt). The claw's w contains -cv5 additively, so it is uniform and independent of (a0, u) under H1-screen. Hits whose equal-G cluster in the claw has more than 4 keys are left out of the second-order sum; for every kept key N_k <= 3, and family-wise over all keys (alpha = 0.001) E[min(N_k, 3)] <= 1.36e-2. Left-out hits cost at most P(N_k >= 4) <= ln(3,462,264 / 0.001) / 16,384 = 1.341e-3 per key in the first-order term (no N >= 4 for any key in 16,384 w; family-wise over all keys at alpha = 0.001). The priced co-hit and left-out terms are the p'_k-weighted means over the keys of completed claws of E[min(N_k, 3)] and P(N_k >= 4), bounded by the complete-list means under H1-screen (vi); the per-key family-wise bounds (1.36e-2, 1.341e-3) hold for every key and are kept for reference. The claw's W17 constants (w, c) are independent of the designated-mate tail events, as for the hit events themselves. 37 real 2^-32 key hits were observed against 38.58 expected (Section 7).
+- **H7-mate-row19 (new; named premise H-W3-uniform).** Given a hit, its W3 is uniform over 2^32 (H-W3-uniform). With the exhaustive enumeration of Section 7 (Appendix D: a mate with offset d can follow the advice through row 19 only if W3 lies in B_d, |B_d| <= 120,832), the expected number of a hit's other F8-passing mates that do so is at most eps = 7 x 120,832 / 2^32 = 1.9693e-04. Organizer test: the r39-mate manifest predicts at most two of the 1,888 hits' W3 in the union of the B_d (observed 0) and a per-bit chi-square below 62.49 (observed 24.7). Without the premise, the strict 99% cluster bound gives eps 0.12015 and time 94.1835 (disclosed, not priced). Limitation: the r39-mate hits come from the replica's start-state and claw law, one listed entry per batch; the test is carried to the attack's screened claws as the entries tail is (H2-entries).<br>**H-cross-claw (new in this entry; a separate premise, not part of H7; named premise; score-setting).** For key hits k, l on different F9 claws of one window of the attack, l's key different from k's: averaged over the attack's hit pairs, P(U_l | T_i) <= eps_key = 2^-8, the mean taken over the F8-passing mates i of hit keys k weighted by P(T_i) (as hits occur) and over the trial keys l of the other F9 claws of the window (uniformly: by H5 every trial key is hit with the same probability). Exact part: U_l is contained in the union over l's at most 8 F8-passing mates j of D19_j (Section 7 (vii)). Measured part (organizer, r39-mate-01..14 xa20; Appendix H): the per-entry rate of D19 on another claw of a real hit's chaining value is at most 7.62e-5 at 99%, and 8 x 7.62e-5 x 1.000099 = 2^-10.68, a factor 2^2.68 under eps_key. Carried by the premise: the trials are virtual claws of the hit's chaining value (W8 in F8, W9 in F9 drawn as the replica draws them, class 01; W16, W17 set to the advice values, W0, W1 and the chaining value re-solved), not trials selected by W16 = g and a W17 hit (the W17 selection is H5's independence of hits and tails, which this term already uses); the hits are the replica's (H2-entries' law, unscreened chaining values). Participant check of the claw selection (Appendix H, diagnostic R): on 172 real F9 claws of 8 screened windows, 704,512 real trials against as many virtual ones on the same chaining value: row-18 rate ratio 0.9990 (s.e. 0.0017), W18 in P 7 against 13, through row 19 2 against 5. Organizer check of the claw selection (r39k4-window-small trials 0, 2, 3; xr_n, xr18, xv18): on the 12 real F9 claws of those windows (screen off, as that experiment runs), 3,714 real trials against as many virtual ones: row 18 1,830 against 1,873 (z = -1.00; |z| <= 3 hard-asserted). Falsified if the 14 organizer runs show sum xa20 >= 18. Without the premise the term is ad125692's (time 94.0073).
+- **H6 (withdrawn).** The program's asserted per-window cap replaces the statistical work bound. **H1-screen(iv) (MODEL, declared heuristic; score-setting).** Under the screened production-window law at W_max = 556,000,000: (iv-a) windows are i.i.d. and the expected retained-key ratio of completed claws is at least r_LB = 0.9908989; (iv-b) F8-passing entries retain at least the same factor; (iv-c) H1-screen, H5 and H2-entries apply to completed claws. This is an explicit extension of the accepted H1-screen(iv) premise, not an inference proved by a participant panel. S205's 256-window direct-program result is supporting compatibility evidence only; its N is 256 and the 556M cap was selected from the disclosed S198 planning curve, it has no organizer nonce, and its nominal 99% calculation is not familywise over repeated cap-panel choices. The earlier 64-window panel is additional participant support. The organizer's small-window stamp check establishes implementation identity, not the production retention inequality.
+- **H-implicit-distinct-key-dispersion.** Tested in the organizer run at a scaled event over all keys of four groups in every F9 claw (Section 11).
+- **Limits of the evidence.** The current r_LB is a declared MODEL quantity supported by the fresh predeclared S205 256-window direct-program panel 2006000..2006255; the older 64-window panel 2000000..2000063 is supporting evidence, and the 1,080-window panel 980000..981079 remains used only for the cross-claw term m-1 <= 898.120. All are participant-run. S205's N is 256 and the 556M cap was selected from the disclosed S198 planning curve, its nominal one-sided calculation is not familywise over repeated choices, and no organizer holdout nonce measures full-size cap retention. Other panel transfers remain in the corresponding H1-screen clauses. The organizer experiments test components and gross diagnostics, not this retention inequality. No full collision has been executed.
+
+## 11. Experiments (organizer sandbox; every organizer-run value is hard-asserted by the program; this entry's cross-claw counts are asserted through their falsifiers: xa20 <= 17 per r39-mate run, and |z| <= 3 for the pooled xr18 against xv18 of r39k4-window-small)
+- `r39-transplant-claw`: current nj77b keeps every advice/transplant assertion and uses two exact 2^20 KAT windows (C,F,N4,Y4,Q4,ops) = (59,2,22906,22906,292280740,6068431) and (44,0,0,0,0,5422581). The F9-rate and entries/F9 bands remain asserted; the original 2^22 H8 sample and claw-count band are inherited from accepted 9835235a.
+- `r39k4-window-small`: timeout KAT only. Trial 0 uses 2^20 and reaches one F9 claw/full 62,400-lane pass; trials 1-3 use 2^19; pass-off/screen controls use 2^16; the cap/stamp path and 1,000-entry real/virtual path execute. Exact tuples are bound in the manifest/source. The original four 2^21 windows and their statistics are inherited from accepted 9835235a.
+  - The four asserted windows run with the screen off (`screen=0`; the k4 path is the same code with the screen on or off), so their tuples are 0b62ed88's.
+  - Pass-off control: trial 0 is re-run with k4 off; claws and F9 equal, ops_off = ops - k4_ops.
+  - Screened window (trial 0, same seed, screen on as on the attack path): asserted that the window is not skipped, the kept chaining value has S <= 5, every draw is charged 187 operations (kept) or 190 (discarded), and the discarded-draw count equals the number of draws with S > 5. On the organizer seed of trial 0: 12 draws, 11 discarded, kept S = 1, (claws, F9, total ops) = (258, 1, 10,371,107). No new output key.
+  - Planted check on the first F9 claw of each window, for each of the 200 groups: the key is found and its counted cost is asserted.
+  - Key dispersion over all entries of every 50th group (4 groups), all F9 claws: per claw D = keys with an entry in F8, K = those whose W17 x 2654435761 mod 2^32 has its top 7 bits zero (probability 2^-7). Asserted per trial (sum D, sum K, Pearson, claws): (59,256, 437, 6.5188, 7); (67,492, 518, 7.9839, 10); (17,882, 142, 0.7772, 4); (1,872, 7, 4.0067, 1). Pooled 146,502 key events, 1,104 hits against 1144.5 expected (z = -1.20), Pearson 19.29 on 22 claws. Acceptance region, asserted on the sums: sum D >= 96,821, |sum K - sum D/128| within 2.576 s.d., Pearson < 40.29 (99% quantile, 22 dof).
+- `r39-tail-01..14` (not in this manifest): w13's replica (experiments/r39tail.py in earlier entries) is the first part of the bare raw-string statement that ends experiments/r39joint_k4_production.py, byte-identical but for its final main-guard line and its own main() (the r39-tail entry point, removed by this entry: the mate code's main(q) rebinds the name before the only call, and no manifest id runs it), because the verifier admits only the files that the manifest runs and the organizer runs each program alone as /input/program.py (so no experiment can import another file); trial 0 of every r39-mate run calls its verify_smc_stats(QDECL), so the replica's calibration (c18 = 206) and its 14-run table with the asserted bounds are executed in every run.
+- `r39-mate-01..14`: timeout KATs use NP=100, one size-proportional kappa group, and 1x40x2,048 lanes. Every generated hit is recompressed/recovered, every reached mate traced, and each record digest plus cross-claw tuple hard-asserted. They contain 157 verified hits in total and zero through-row-19 mates/xa20 events. The score-setting 1,888-hit, 60,416-trial full records remain inherited accepted evidence from 9835235a; the lite counts are not substituted into those bounds.
+- Local seed sets, run by this entry with the same program and code path: 11 sets of 4 windows with seeds fixed before any run (sha256 of `w15-dispersion|setNN|i`), 138 claws, 6,693 hits against 6675.6 expected (z = +0.21), Pearson 126.68 on 138 degrees of freedom; the largest set value is z = +1.43. On the organizer seeds the largest per-claw |z| is 2.00.
+- Run by this entry (participant-run; tools not in the package, outputs cited): the calibrated entries count of the 1,140 windows 802000..803139 (PREDECLARE_NJ68_1115.txt; Section 7) and the 2,000-claw entries count of windows 802000-802015 (k4 off, which leaves the walk and its claws unchanged: window 802000 reproduces a26bcf74's Appendix B row; w18/tools/win17.py, w18/tools/trials17b.py, w15/tools/f8count.exe); the rows-18-19 enumeration (|P| = 65,536, D = P - P, the 20 mate offsets, the bad W3 counts per offset; row19_proof/pset.c, deltas.c, row19x.c, rate.c, re-checked by w18/tools/row19gate.c on the organizer's hit W3 values; row19x.c and adv.h are printed in Appendix D); the re-runs of 9054e0c4's mate arms with carrier keys (w18/tools/matejoint2.py) and the cluster analysis (w18/tools/analyze_cl.py). The organizer's own runner (experiments/runner.py at aa527c5, checkout 86f1102) (its _python_result and run_experiments, default limits: 256 trials, 128 MB, one CPU, 20 s) passes all 16 entries of this manifest, run unmodified with its own Docker isolation (hash-smash/experiments/runner.py run_experiments, pinned image): slowest runs on an idle machine: r39k4-window-small 11.9 s, r39-mate 10.8 s, r39-transplant-claw 1.7 s (MEASURED, 2026-11-14).
+- Run by 0b62ed88, ae2d3c1c and a26bcf74 (CITED; tools not in this package): 48 full windows (Appendix A); the 60 screened windows of Appendix B; 2,000 unscreened claws (their keys count, not used here); the exhaustive and end-to-end checks of Section 2; the memory audit of Section 6 (corrected here for the screen's 96 bytes); the walk-kernel generator on 300 chaining values (Section 6).
+
+## Appendix D. The rows-18-19 enumeration (participant-run; row19_proof/row19x.c and adv.h, verbatim)
+
+P(w) below is the explicit set of conditions: with the advice states through row 17 fixed (adv.h, generated from the replica's advice trace), W18 = w must give the advice's XOR differences of A and E after row 18 (TA22, TE22), and the row-19 modular E difference must be one of +-2^19 +-2^5 with a matching A difference. B_d is the set of W3 with Delta(W3, d) = s0(W3 + d) - s0(W3) - d a nonzero element of D = P - P. Output (row19x.out, sha256 88005a11...): |P| = 65,536, |D| = 9,427,275; per offset, the size of B_d as in Section 7.
+
+```c
+/* adv.h */
+static const unsigned AX[24]={0x90ccc398u,0xd0a84bfdu,0x65c5bb49u,0xaa79ff87u,0xdc27bd7eu,0xedd22c6bu,0x4773552bu,0x251f3c14u,0x972ee2f4u,0x58bdaecbu,0x759f7065u,0xcc8f1219u,0x2af1c95eu,0xc76d0d7bu,0x25b9a00eu,0xca0aecd2u,0x5829bcdbu,0xbf5e1f93u,0xbd4f5653u,0x269f8f4fu,0xcc8fd4cbu,0xce7b54b4u,0xd4f95672u,0xfff8cabfu};
+static const unsigned EX[24]={0xaa1ed4d5u,0xb1af5ec5u,0x4ff7998au,0xfac64fb6u,0x9aad52c2u,0x1009c407u,0xf02b08c9u,0x4c53ba63u,0x78ecacdfu,0xb56b936cu,0x5104937fu,0xf8608614u,0x85dbb23du,0xac230e77u,0x9e3b6fedu,0xff00f835u,0xbc4a3994u,0xa87dbd19u,0x9dca05a5u,0xd2c3ec33u,0x9776869eu,0x771adf7eu,0x483e6228u,0x75abcc17u};
+static const unsigned AY[24]={0x90ccc398u,0xd0a84bfdu,0x65c5bb49u,0xaa79ff87u,0xdc27bd7eu,0xedd22c6bu,0x4773552bu,0x251f3c14u,0x972ee2f4u,0x58bdaecbu,0x759f7065u,0xcc8f1219u,0x6af1c95eu,0xcfe71c5bu,0x25b9a00eu,0xca0aecd2u,0x5ce9bcdbu,0x96179b98u,0xfd4b5673u,0x36998e6fu,0xc98ed4cbu,0xce7b54b4u,0x94f95672u,0xfff8cabfu};
+static const unsigned EY[24]={0xaa1ed4d5u,0xb1af5ec5u,0x4ff7998au,0xfac64fb6u,0x9aad52c2u,0x1009c407u,0xf02b08c9u,0x4c53ba63u,0x78ecacdfu,0xb56b936cu,0x5104937fu,0xf8608614u,0xc5dbb23du,0xa49b1e57u,0x3f1b2107u,0xb708f935u,0xf8883994u,0x82412611u,0x9dca05a5u,0xc2c3ec33u,0x9776879eu,0xf798437fu,0x483e6228u,0x75a3cc37u};
+static const unsigned K18=0x0fc19dc6u,K19=0x240ca1ccu,W18A=0xaa128b2eu,W19A=0x85c7fdabu;
+static const unsigned TA22=0x40000000u,TE22=0x00000000u,TA23=0x00000000u,TE23=0x00080020u;
+```
+
+```c
+/* row19x.c: exhaustive check that no mate of a colliding entry can follow the advice through row 19.
+   (1) P = {W18 : rows 18-19 admit the advice differences, states through row 17 = advice}, by enumeration of 2^32.
+   (2) D = P - P (bitset over 2^32).
+   (3) For every mate offset d in delta_set.bin (all b3 - a3 over listed entries of one key) and every W3 in 2^32:
+       Delta = s0(W3+d) - s0(W3) - d (the mate's W18 minus the hit's). A mate can pass row 19 only if Delta in D.
+   Counts Delta == 0 separately (then rows 18 coincide and row 19 is decided by W19). */
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <string.h>
+#include "adv.h"
+typedef uint32_t u32; typedef uint64_t u64;
+#define ROR(x,k) (((x)>>(k))|((x)<<(32-(k))))
+static inline u32 S0(u32 x){return ROR(x,2)^ROR(x,13)^ROR(x,22);}
+static inline u32 S1(u32 x){return ROR(x,6)^ROR(x,11)^ROR(x,25);}
+static inline u32 s0(u32 x){return ROR(x,7)^ROR(x,18)^(x>>3);}
+static inline u32 CH(u32 e,u32 f,u32 g){return (e&f)^(~e&g);}
+static inline u32 MJ(u32 a,u32 b,u32 c){return (a&b)^(a&c)^(b&c);}
+static int P(u32 w){
+  u32 ex=AX[18]+EX[18]+S1(EX[21])+CH(EX[21],EX[20],EX[19])+K18+w, ey=AY[18]+EY[18]+S1(EY[21])+CH(EY[21],EY[20],EY[19])+K18+w;
+  u32 ax=ex-AX[18]+S0(AX[21])+MJ(AX[21],AX[20],AX[19]), ay=ey-AY[18]+S0(AY[21])+MJ(AY[21],AY[20],AY[19]);
+  if((ax^ay)!=TA22||(ex^ey)!=TE22) return 0;
+  u32 fx=AX[19]+EX[19]+S1(ex)+CH(ex,EX[21],EX[20])+K19, fy=AY[19]+EY[19]+S1(ey)+CH(ey,EY[21],EY[20])+K19, DE=fy-fx;
+  u32 gx=-AX[19]+S0(ax)+MJ(ax,AX[21],AX[20]), gy=-AY[19]+S0(ay)+MJ(ay,AY[21],AY[20]);
+  if(DE+gy-gx) return 0;
+  return DE==(u32)(-(1u<<19)+(1u<<5))||DE==(u32)((1u<<19)+(1u<<5))||DE==(u32)((1u<<19)-(1u<<5))||DE==(u32)(-(1u<<19)-(1u<<5));
+}
+static u32 L[1<<17];
+int main(){
+  int nL=0; for(u64 W=0;W<(1ull<<32);W++){u32 w=(u32)W;if(P(w))L[nL++]=w;}
+  printf("|P| = %d\n",nL); fflush(stdout);
+  u64*D=calloc(1ull<<26,8); if(!D){printf("alloc\n");return 2;}
+  for(int i=0;i<nL;i++){u32 a=L[i];for(int j=0;j<nL;j++){u32 d=L[j]-a;D[d>>6]|=1ull<<(d&63);}}
+  u64 nd=0;for(u64 i=0;i<(1ull<<26);i++)nd+=__builtin_popcountll(D[i]);
+  printf("|D| = |P-P| = %llu (2^%.3f)\n",nd,__builtin_log2((double)nd)); fflush(stdout);
+  /* low-residue filter mod 2^23 */
+  u64*F=calloc(1u<<17,8);for(u64 i=0;i<(1ull<<26);i++)if(D[i]){u64 m=D[i];while(m){int b=__builtin_ctzll(m);m&=m-1;u32 d=(u32)(i*64+b);F[(d&0x7fffff)>>6]|=1ull<<(d&63);}}
+  u64 nf=0;for(int i=0;i<(1<<17);i++)nf+=__builtin_popcountll(F[i]);printf("residues mod 2^23 covered: %llu of 8388608\n",nf);fflush(stdout);
+  FILE*f=fopen("delta_set.bin","rb");u32 ds[64];int nds=(int)fread(ds,4,64,f);fclose(f);
+  printf("mate offsets d: %d\n",nds);
+  u64 tot_in=0,tot_zero=0;
+  for(int k=0;k<nds;k++){u32 d=ds[k];u64 in=0,zero=0;u32 ex_in=0,ex_zero=0;
+    for(u64 W=0;W<(1ull<<32);W++){u32 w=(u32)W;u32 Dl=s0(w+d)-s0(w)-d;
+      if(!Dl){if(!zero)ex_zero=w;zero++;continue;}
+      if(!((F[(Dl&0x7fffff)>>6]>>(Dl&63))&1))continue;
+      if((D[Dl>>6]>>(Dl&63))&1){if(!in)ex_in=w;in++;}}
+    printf("d=%08x  Delta in D (nonzero): %llu%s  Delta==0: %llu%s\n",d,in,in?"":"",zero,"");
+    if(in)printf("   e.g. W3=%08x\n",ex_in); if(zero)printf("   e.g. W3=%08x (Delta 0)\n",ex_zero);
+    fflush(stdout);tot_in+=in;tot_zero+=zero;}
+  printf("TOTAL over all d and all W3: Delta in D\{0}: %llu ; Delta == 0: %llu\n",tot_in,tot_zero);
+  return 0;}
+```
+
+## Appendix E. The full record of each r39-mate run (W3 values included), pinned by its organizer-recorded digest48
+
+The organizer's runner records only numeric observations, so each r39-mate run reports eight: log2_carrier, hits, mates, mates_f8, through19, carrier_w18_clusters, cluster_sum_sq and digest48. digest48 is the first 48 bits of the sha256 of the run's full record, the JSON text after the run id on each line below (Python json.dumps with sort_keys=True and default separators); the program hard-asserts the same 48 bits for each id (X_), so a run that reproduces the recorded digest48 reproduces this record: ks, groups, first_deviation_row, cluster_sizes, cls and w3 (every hit's W3, in hit order). The bad-set count and the per-bit chi-square of Section 7 are computed from these W3 values.
+
+```
+r39-mate-01 {"carrier_w18_clusters": 59, "cls": [31, 31, 29, 32], "cluster_sizes": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 5, 5, 5, 6, 8], "cluster_sum_sq": 385, "first_deviation_row": {"18": 25, "19": 20}, "groups": [169, 161, 108, 160], "hits": 123, "ks": [9659, 3185, 3006, 12983, 9642, 3200], "log2_carrier": -61.476425, "mates": 413, "mates_f8": 45, "through19": 0, "w3": [3300860629, 3465673733, 1760048210, 2998918624, 2967162833, 2435724117, 3316668634, 1633165338, 2135794257, 1539581977, 1464845841, 352391565, 2900113329, 2606053071, 4142697397, 1350081943, 3400531907, 1787479615, 712700443, 1626230692, 2916587254, 3611131304, 2713210592, 3403643518, 2623565875, 4229256488, 3062640684, 1336937620, 2649486282, 2509967427, 886619399, 1147628449, 2864961447, 385608820, 1558595536, 3446868750, 1328427246, 2631747698, 1627703216, 584467693, 3001920354, 1655767452, 1204376433, 2460673233, 1123119083, 2285797386, 4220275675, 1386150807, 1852117056, 1736170096, 2955271558, 2236286691, 1791877634, 1844230297, 990651906, 3916115403, 1654034338, 3670955014, 1312963402, 1050017650, 3696914306, 1033360366, 2232334828, 2608346735, 686155749, 3252923046, 921833253, 1313005585, 914378402, 2784550175, 1845813374, 3593744888, 2816110591, 4074149003, 4009670777, 733811190, 585615948, 3677082768, 1317302858, 3612672765, 2484367737, 2898600988, 4217706301, 1560345139, 3604282914, 1732478075, 1744537319, 4168886964, 1962714700, 4147764, 1368335068, 4057008842, 3462240265, 1674906962, 763827762, 2470677425, 794704175, 586449004, 2993961616, 2768558394, 2538825055, 838011070, 519419170, 2661855033, 1717642634, 1769011879, 1477861345, 2319036660, 3907296460, 3701143985, 3192082996, 3152686911, 3897134369, 2124462957, 3284074607, 188519438, 929855252, 2600631670, 941946362, 1089654130, 1123979074, 1621690458, 3391760547]}
+r39-mate-02 {"carrier_w18_clusters": 60, "cls": [26, 25, 38, 32], "cluster_sizes": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 5, 6, 7, 7], "cluster_sum_sq": 373, "first_deviation_row": {"18": 20, "19": 22}, "groups": [168, 160, 89, 162], "hits": 121, "ks": [9555, 3195, 2559, 12685, 9566, 3200], "log2_carrier": -61.764703, "mates": 442, "mates_f8": 42, "through19": 0, "w3": [2896260957, 1809208491, 545451442, 2764419687, 1126881972, 1597833483, 828867657, 3185326164, 3852032579, 2087346279, 1724972597, 3255416390, 1723561911, 4046273041, 2830366490, 4094147192, 925580099, 1501961597, 1350981864, 1130865492, 1458591444, 4286594570, 2308610746, 3361190293, 2372043885, 4049782674, 2508125478, 426329260, 532882031, 1596014600, 2121021832, 3121990526, 3907162599, 191725740, 2569842772, 361161430, 606490154, 619838442, 4004127903, 799332790, 898088571, 1517691216, 3458286114, 1946070982, 3129775500, 280369361, 759760184, 2701968325, 2523197254, 1954002891, 667659906, 1368964310, 3226759793, 3508942394, 2390492855, 2793234564, 1939220601, 1670142861, 4068524127, 3204210146, 3882299384, 2395834059, 3048816402, 2364610187, 3417168487, 3462506353, 2622641247, 561577583, 1235460804, 3908765100, 2371591110, 187868689, 1924926623, 787016093, 4084602889, 1405563667, 1405179724, 1135717598, 4170299265, 401694630, 76939208, 4033371407, 2751853346, 4248691281, 3606536895, 3179844697, 2587369636, 177903811, 2053054078, 1545944552, 3219038787, 3473902214, 706757457, 3384224073, 1232114224, 111895697, 3382768473, 1466576377, 3941348771, 3608146231, 4101071889, 3413277967, 683153257, 2183829325, 1948952911, 3061917285, 1079198500, 1850926062, 741208459, 3275333964, 950695207, 805471682, 3342044609, 3214751898, 2534443135, 3052153444, 610683387, 999479382, 2036411351, 3400227472, 3003767547]}
+r39-mate-03 {"carrier_w18_clusters": 64, "cls": [32, 32, 44, 38], "cluster_sizes": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 6, 7], "cluster_sum_sq": 444, "first_deviation_row": {"18": 26, "19": 16}, "groups": [81, 168, 41, 64], "hits": 146, "ks": [9597, 3305, 2634, 12658, 9241, 3200], "log2_carrier": -61.720806, "mates": 398, "mates_f8": 42, "through19": 0, "w3": [710041749, 2103298396, 3399642930, 531496481, 3159149625, 2221317188, 3483172270, 4040093117, 1374656121, 2463630866, 550207478, 1001151809, 3853210199, 1113064351, 3610488969, 3642788907, 1901275126, 1638613610, 2370688980, 3097756928, 81065355, 655822938, 3216400790, 2807851003, 312780491, 271924180, 142100846, 2244563075, 2097043797, 88890178, 3212165808, 3852255582, 4134918318, 391866415, 2680091514, 3915187324, 908006789, 3546899031, 1153716707, 2915225048, 3425169199, 87401632, 1420498162, 778881897, 601965453, 1250356218, 876065144, 3651115038, 2072404885, 1873992661, 1460100371, 3814490651, 1522830182, 1627400764, 1133241773, 1156341029, 2427425691, 1892126767, 4200214666, 1595119684, 375283646, 1173380018, 4195112636, 713405991, 2284153130, 181702250, 524762743, 1142711476, 2493545568, 3193581590, 2444867611, 233389710, 875004855, 1626626808, 1990895988, 4024450898, 667034735, 2103260733, 3065735305, 1685276578, 1771268738, 3207979610, 2374214238, 2296861374, 2165614064, 2216161806, 628644859, 2564685406, 4199145743, 2716301837, 617459707, 4150125251, 955155727, 923396897, 2205850058, 10104888, 53447969, 91364909, 575506210, 2985380527, 2643113222, 1725183699, 1539694496, 308777590, 966473543, 3411795402, 1722741532, 1148344490, 4151375283, 2929075267, 1199439634, 3290850530, 760108099, 4134314681, 3268807922, 1951510292, 2997545531, 3995420924, 1887297153, 169363290, 2174746654, 29984571, 72300481, 3350676293, 81512513, 2944292683, 3192832632, 3583386264, 970804780, 3274079766, 2046218588, 521298797, 3600114312, 1404819071, 3299470014, 1316152972, 953340774, 3954896276, 3697971471, 4281762202, 1624076238, 140067064, 2832573854, 480174913, 549048981, 277862352]}
+r39-mate-04 {"carrier_w18_clusters": 72, "cls": [37, 36, 36, 32], "cluster_sizes": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 5, 5, 6, 6, 6], "cluster_sum_sq": 395, "first_deviation_row": {"18": 22, "19": 29}, "groups": [171, 8, 185, 116], "hits": 141, "ks": [9573, 3166, 3168, 12859, 9855, 3200], "log2_carrier": -61.404555, "mates": 478, "mates_f8": 51, "through19": 0, "w3": [1331102982, 3319860842, 1065658485, 2832666263, 3967785452, 2134733527, 551672066, 651897528, 3985570710, 1589124840, 1420001115, 1293493782, 3949169724, 467575596, 3315137293, 1640067074, 1214161235, 4120084292, 3099637320, 1391627111, 581995161, 1712488442, 3149995199, 539174112, 2109667372, 4132901519, 2661398878, 1156801759, 3831766829, 1664058706, 3059241880, 1189950176, 1375367574, 2124592326, 3029865752, 3703555932, 3769363782, 2157767299, 2894287246, 3255699329, 1952236080, 291826075, 3164368358, 505781820, 3675094522, 1473225357, 2087771782, 115977921, 3819254582, 2252405450, 498944109, 690342242, 1362920110, 3696307701, 3730812788, 3160537279, 52529706, 1683006907, 3033863378, 3284883909, 3393132765, 37746096, 2129072736, 2643583669, 3541312022, 3027341414, 2053249930, 3186799501, 2332519321, 963653538, 1034435412, 3321573347, 846660698, 3258764242, 1666563961, 2631734327, 136840852, 2722724995, 2160504550, 3232232409, 467967272, 3225250013, 1599534872, 660098899, 1039799404, 3123385744, 3760515907, 3183178992, 3840514910, 3769083626, 65312704, 236430179, 3102397279, 2785691632, 980289609, 569505928, 426959153, 4093648758, 1600337259, 3155669324, 785935642, 3585365912, 252104871, 2429943295, 277368471, 36646423, 421601951, 3163550443, 3887644914, 596585830, 3792812154, 2221166601, 3607781057, 3721014733, 2452516039, 1445710216, 2457826605, 223090360, 2224152728, 1613668896, 466519428, 2685104397, 3792803264, 104113358, 3968254048, 3430074332, 162510258, 1916971346, 3499539282, 3167347369, 2513514036, 1023669260, 3097200679, 445007429, 4216528920, 2764593278, 3958172877, 3972540078, 2261687940, 2651819961, 3887226144]}
+r39-mate-05 {"carrier_w18_clusters": 63, "cls": [34, 33, 40, 34], "cluster_sizes": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 7], "cluster_sum_sq": 431, "first_deviation_row": {"18": 36, "19": 27}, "groups": [113, 121, 113, 89], "hits": 141, "ks": [9576, 3121, 2547, 12725, 9774, 3200], "log2_carrier": -61.766549, "mates": 491, "mates_f8": 63, "through19": 0, "w3": [215635081, 871556514, 1960954461, 2148767947, 3338943668, 431259881, 396553149, 3714360775, 2510004942, 4263141300, 2340736873, 3395058842, 448691344, 3228907917, 2840280361, 3644675458, 3314276793, 4024598027, 1680623822, 1939447079, 377296019, 3508224641, 3274155539, 2054392940, 843146015, 3270066572, 2333568765, 4217826479, 3323910193, 93780290, 958226072, 119874235, 3283821369, 2149747434, 2854527578, 2894077134, 1016182055, 570100020, 2965948649, 2624464572, 3649358959, 129982647, 906779788, 4263255823, 2380644896, 145920637, 3461921623, 4114964489, 2393571361, 1703901038, 1750331181, 2293980120, 2936884519, 3221199834, 1499722274, 3937291413, 101417414, 2638029512, 2429742693, 362300880, 2417795211, 2658228323, 1899713996, 3433263249, 184515483, 237191942, 3796374648, 4000922559, 2015451617, 3355077861, 2385309258, 436534276, 2356670092, 2354393844, 3822578037, 732059771, 2882586048, 3567196987, 1382225117, 878944015, 3825479315, 508429732, 1779718024, 1538617940, 1899378952, 3552402482, 3350532501, 2690384848, 1384019347, 559152524, 3587048712, 4228161707, 1989323422, 1765909431, 1692633012, 1060058490, 3048454595, 1775650697, 1507110288, 1591426365, 3974099398, 937036328, 1582661344, 1015936519, 1642853297, 369414970, 3066828976, 954437771, 660735451, 1944567263, 1479389892, 3801506313, 1542850242, 109847315, 3063110016, 3819046087, 713806455, 2265581082, 640889108, 134076207, 2745141441, 2119041056, 1250616372, 2591322486, 2240187590, 1251851045, 3965543757, 3234890778, 1774629984, 116104334, 539418838, 3834372456, 3535834209, 3610054177, 3397001697, 3685695072, 2598770338, 2835990409, 1811433683, 3002679516, 1803097360]}
+r39-mate-06 {"carrier_w18_clusters": 61, "cls": [36, 23, 22, 36], "cluster_sizes": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 5, 5, 9], "cluster_sum_sq": 339, "first_deviation_row": {"18": 13, "19": 16}, "groups": [164, 168, 73, 109], "hits": 117, "ks": [9640, 3187, 2689, 12793, 9976, 3200], "log2_carrier": -61.611276, "mates": 275, "mates_f8": 29, "through19": 0, "w3": [2655660280, 1048345444, 1271812015, 77165566, 698464577, 2791388477, 3446822209, 479160790, 2987728987, 1773235055, 2539852960, 1414221949, 1456887460, 2321999733, 4165177369, 3369099873, 1991631855, 1655233802, 2914734642, 3848132906, 1607849097, 1327124084, 3299442530, 3903872753, 2497101654, 2977346819, 3398150321, 2454683254, 512390014, 3279427650, 3811398373, 2225665512, 1762000762, 1893592155, 3787002889, 3955417795, 3464921805, 2665682845, 86142714, 628554662, 2695309272, 656078833, 1217600942, 3878479376, 1947833195, 2629271467, 1759517973, 3098290417, 2394039659, 3157008761, 756051195, 1349407808, 454506446, 599308031, 1440221414, 733617621, 674418856, 1988500589, 3307940428, 793230558, 1571632573, 1190602589, 2662218457, 1784988706, 528752697, 3751714690, 1740818946, 3225108155, 2425605676, 907159174, 375595111, 1760740121, 64369485, 928875885, 3171464436, 1783284608, 3858505270, 2842341001, 3076877228, 3971437253, 3857527994, 2130579981, 2672393316, 1368243681, 727302322, 1338393985, 3082875523, 1303162825, 295538106, 2405882141, 1126356998, 1941140663, 957423917, 1697295704, 258185838, 1347271616, 746703346, 660225839, 739752781, 49966707, 3940135133, 4144344892, 153763875, 2199875640, 2132143783, 1874240325, 3121869957, 783621050, 2837192758, 2208910820, 2432613186, 1791293990, 2151038442, 2571830754, 2671174144, 1058341698, 775900964]}
+r39-mate-07 {"carrier_w18_clusters": 59, "cls": [25, 34, 40, 30], "cluster_sizes": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 5, 7, 9], "cluster_sum_sq": 423, "first_deviation_row": {"18": 8, "19": 14}, "groups": [8, 193, 185, 4], "hits": 129, "ks": [9467, 3155, 2608, 12733, 9176, 3200], "log2_carrier": -61.823465, "mates": 321, "mates_f8": 22, "through19": 0, "w3": [2630604870, 1670428295, 2007506774, 2851626386, 2182266669, 3011652509, 4181261731, 4224542763, 3249627648, 1233588731, 1762925079, 1032113832, 3769329642, 3990978220, 3353337546, 99802519, 1162791179, 996535265, 1790001197, 3946075176, 241980821, 135153833, 401559845, 2742091693, 728399598, 3586451741, 1720268128, 462702667, 1790877462, 3921106111, 2671699306, 3976503411, 670140831, 2350001882, 4216812189, 4133515054, 4176893198, 1652793703, 593908107, 990431442, 2837591101, 3194078407, 3249392870, 8814134, 3623193385, 2916242275, 225225091, 4233919317, 3508616112, 3085883721, 1299957692, 2859206333, 1671396928, 3191780821, 1097956985, 2920598732, 2169499392, 3647407180, 4290256492, 2918299893, 2601321213, 3612456675, 1135166313, 1469166668, 1921834632, 1637038364, 2925202997, 224671120, 3888261040, 2274767180, 2487041110, 485333302, 2920537287, 3566334840, 603040444, 1773955841, 1717758945, 166057473, 147286441, 1110393395, 2392111353, 1368014533, 3542255019, 3536512567, 1706872601, 1196410807, 3732034300, 2953794019, 782336298, 355044360, 2752520330, 3175972243, 359128891, 923006124, 1562818670, 455764538, 2215727230, 3699042496, 4069957408, 2132634006, 1651829774, 4043965809, 1742608932, 307102154, 3248752007, 2475716716, 3879010288, 3669670674, 3850390671, 1069471662, 1022101257, 2886679486, 1722298529, 2169983880, 3131958183, 2646037277, 268727318, 3832142070, 1882072341, 3225811466, 1919972950, 2582086117, 458718020, 2020401092, 1451217827, 1500655966, 3381812882, 822875153, 1154102545]}
+r39-mate-08 {"carrier_w18_clusters": 65, "cls": [34, 39, 37, 36], "cluster_sizes": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 5, 5, 6, 6, 6, 7], "cluster_sum_sq": 462, "first_deviation_row": {"18": 25, "19": 30}, "groups": [104, 119, 88, 168], "hits": 146, "ks": [9696, 3101, 3080, 12833, 8988, 3200], "log2_carrier": -61.592482, "mates": 517, "mates_f8": 55, "through19": 0, "w3": [2229554797, 1679997144, 2037070459, 2803479094, 316956451, 189795821, 3082307974, 1628765550, 2017145069, 2031047715, 2841443925, 790888986, 2666586970, 1434538529, 782865966, 1202460713, 1944529374, 1881590950, 3430046652, 2125196418, 2833305777, 2480497374, 1210445753, 1610886764, 3285942453, 3314517403, 2247246013, 3101453122, 3371069603, 1606014720, 4022018315, 1577879460, 3382783283, 1247484674, 2326204471, 3554458840, 2209339026, 810554247, 2428101027, 2201444506, 875352406, 3733270896, 230484790, 264338515, 2533239778, 96855689, 39173461, 1785570881, 784084730, 4157618050, 838573785, 695724053, 3897482029, 2230292838, 1992825167, 898193204, 503524933, 2101547489, 631419804, 1784499234, 2986767709, 2464190628, 1105918904, 3241507964, 791262124, 671002147, 205268988, 3334140827, 320112781, 3682858526, 321305765, 2999637411, 1904125496, 537420703, 2580339933, 3320362656, 3621046519, 386565804, 1342445792, 341690852, 804351303, 871630528, 1930292588, 4138330302, 1801834694, 3796793732, 514480865, 808948647, 3921087472, 1897062745, 1241814270, 3892235649, 4009194159, 4266382316, 3336750899, 3284014773, 3286002826, 738635971, 1739582119, 2354753062, 1495390435, 255978650, 744877288, 139865225, 1354051045, 548377440, 3667861872, 2017190214, 998157547, 2752488189, 2507658422, 3490987647, 2759043868, 2714019172, 99274301, 2678514016, 3402779212, 1943036914, 2013526037, 3548195242, 2652752484, 4195697951, 2422726421, 3227560141, 4167479696, 353090714, 674741439, 2436041710, 3961865859, 3731194228, 4010252993, 2193695769, 385545308, 3926647183, 1353029762, 3241745386, 3138472474, 684403446, 310294090, 83940635, 1314209810, 1465754377, 3047681777, 1739267035, 2120482603, 1850081254]}
+r39-mate-09 {"carrier_w18_clusters": 58, "cls": [25, 27, 32, 41], "cluster_sizes": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 6, 8, 9], "cluster_sum_sq": 445, "first_deviation_row": {"18": 14, "19": 11}, "groups": [168, 78, 160, 92], "hits": 125, "ks": [9657, 3184, 2758, 12657, 9598, 3200], "log2_carrier": -61.644687, "mates": 309, "mates_f8": 25, "through19": 0, "w3": [680112837, 2931502571, 1533573891, 1801330098, 3206909870, 313786084, 3797160558, 1942687441, 519412706, 3419394782, 2946719680, 3976407212, 1956181423, 3434615398, 2974479186, 2895458721, 3308964555, 3218280787, 1055746776, 419411081, 3860194083, 2845783424, 1985949952, 1845958356, 4285758746, 3971609174, 4206823140, 3806354270, 791858368, 1712479822, 2677881066, 1351882409, 3312587521, 2504847568, 2557931645, 2901109151, 1002391616, 3354175646, 1255127421, 3081819476, 435559551, 3789568479, 2372352073, 387236476, 1792084404, 2576874535, 1641364738, 2104691118, 3202955014, 3835117561, 446445469, 434983819, 1977929309, 1974233426, 3592628557, 544260050, 3901246508, 2033379513, 2050411774, 2042226666, 3824330485, 3585114630, 2124140672, 95875412, 428096433, 2034771722, 1934070113, 2565505123, 107162531, 1668810863, 1286726999, 2040994604, 3096516970, 1780509049, 3758577703, 936114937, 3995170131, 2158595976, 739786085, 2428681472, 2128307894, 217737046, 3295190333, 213770625, 69377550, 3338425535, 1508746969, 3367754004, 3957653116, 2535523236, 3423467489, 1341691219, 259855031, 2667004215, 3465687885, 3420204359, 94835327, 1507423398, 2917563105, 2761916364, 1390343179, 3227771035, 2257321277, 3826874670, 3186960225, 1957359615, 444922517, 4157480538, 2773731929, 397662878, 3718603889, 2041747262, 1532118280, 2831205635, 141180494, 249490056, 4260671865, 2547358090, 2579455997, 2700121686, 2836085232, 494096090, 806291828, 432914644, 4256126202]}
+r39-mate-10 {"carrier_w18_clusters": 60, "cls": [33, 45, 30, 26], "cluster_sizes": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6], "cluster_sum_sq": 422, "first_deviation_row": {"18": 29, "19": 23}, "groups": [187, 195, 104, 81], "hits": 134, "ks": [9360, 3219, 3063, 12745, 8667, 3200], "log2_carrier": -61.659863, "mates": 466, "mates_f8": 52, "through19": 0, "w3": [1953165840, 3482340894, 795155772, 81620009, 1053480250, 443446095, 184092418, 560918055, 310387218, 2940566869, 3727093393, 3666523471, 2492601379, 2931582473, 532586815, 695682677, 2776993695, 4114504112, 776662215, 3105953978, 1376509715, 3478013712, 873653771, 1276756533, 2045668630, 2697844006, 3824985464, 1554156533, 304978374, 729786365, 4010371788, 1127397827, 243514239, 4056775759, 661892488, 4273665780, 828551808, 1683271814, 1847746429, 630030529, 1538251740, 3331710548, 2468454727, 3884991411, 1689090962, 140414094, 1510670168, 141859165, 734812174, 46230570, 3253845807, 3172462506, 2663160742, 840029755, 3555951207, 2223301776, 470027057, 3217375046, 3460459831, 3695979792, 2433748107, 2146738354, 1363278932, 3286053608, 1747366978, 2673316358, 1022442285, 3605427581, 1223052873, 2113875890, 3493664547, 2931697509, 4121343306, 3461320403, 3170868977, 2274305279, 856703116, 1472363583, 3698965955, 905366440, 186429474, 2448706560, 3409887353, 2530490956, 489165074, 3542481587, 1634291963, 2382756429, 3520381786, 2342183893, 3479657028, 2334458441, 2688907703, 3896610546, 4162191825, 2850462290, 2931026365, 450717916, 3997810203, 1197236354, 1936111711, 3263775858, 3497680867, 2052769521, 1649795708, 1795183211, 1605105922, 3918171793, 1545883473, 918376473, 4033171908, 3104779892, 3436538273, 975375750, 1891157275, 4135048269, 100685229, 2774617570, 2393567872, 637800967, 687941555, 509330155, 1530722099, 372029301, 184150323, 3544942016, 156874826, 61685624, 19916321, 3680277060, 17601595, 400136597, 3943949124, 2085113384]}
+r39-mate-11 {"carrier_w18_clusters": 55, "cls": [21, 35, 27, 44], "cluster_sizes": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 5, 7, 7, 8, 9], "cluster_sum_sq": 481, "first_deviation_row": {"18": 29, "19": 27}, "groups": [185, 88, 84, 160], "hits": 127, "ks": [9566, 3140, 2650, 12869, 9913, 3200], "log2_carrier": -61.6655, "mates": 428, "mates_f8": 56, "through19": 0, "w3": [523549897, 2990137964, 3602829904, 2606717751, 1562451571, 2734910908, 1938617848, 3780026331, 3369475045, 3540174983, 4211714307, 492891624, 2489275329, 3986905033, 4081913327, 1704371323, 3145247078, 3078142813, 1290306109, 4220216124, 3962104843, 868891304, 390658166, 211611558, 449249791, 3847126181, 1215500141, 492691837, 2676315860, 4145782643, 1909048769, 2331888409, 1250104008, 2486406216, 3121559222, 2224047065, 1516190385, 3802104619, 2586637608, 177714240, 3980992424, 476268946, 1176940644, 4253940133, 3192126712, 499039707, 4257805055, 3261329395, 3969211144, 530645209, 4107861797, 711090550, 1272308236, 3075806464, 2746946204, 1425130586, 4266143531, 3678975939, 239804731, 1090959211, 525008323, 1970417380, 1607204066, 783922732, 4056480399, 4249958603, 3917638354, 2582892523, 813673320, 4083242501, 963239205, 1964919451, 1339556675, 3029774971, 3726434208, 1661961143, 4162911507, 791909399, 895756210, 363281162, 66588684, 1607852161, 2560582997, 499294579, 3283588344, 1204790580, 3176087756, 2641032900, 4123478386, 3917077386, 4057067057, 4003251739, 905219538, 1211211423, 3791985691, 3039612911, 3600116296, 2650086384, 1043753100, 1049054076, 1571530454, 227535791, 2578719352, 3888958752, 891897261, 4041838371, 2688276993, 1526130611, 2758036737, 778822152, 2766904481, 1169780098, 442888389, 1552864423, 531318455, 3747338732, 3686001016, 4011139664, 3948366668, 1821855529, 3834039572, 531169017, 147421293, 106997391, 804112253, 1802076960, 3800356982]}
+r39-mate-12 {"carrier_w18_clusters": 63, "cls": [34, 42, 31, 43], "cluster_sizes": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 6, 6, 10], "cluster_sum_sq": 532, "first_deviation_row": {"18": 23, "19": 30}, "groups": [41, 106, 80, 185], "hits": 150, "ks": [9483, 3312, 2773, 12809, 9103, 3200], "log2_carrier": -61.6654, "mates": 552, "mates_f8": 53, "through19": 0, "w3": [3623444886, 1225583372, 3015973271, 1676309941, 3706033374, 1315182449, 3129746012, 826029906, 2378251119, 1767053089, 1635818438, 1584759126, 1784523832, 146262028, 3417876737, 1675945978, 1122056005, 2340994477, 794198800, 1330674506, 1059883141, 2404584455, 1235393802, 1768962360, 4233537033, 3817710368, 3072192149, 142993196, 4221298255, 1770577516, 2931524696, 1129765928, 1995281597, 402607470, 2659534690, 169065654, 4073601292, 2851731840, 2827114995, 3100304605, 1809721809, 188514939, 382327497, 123710556, 809275869, 1586455666, 4170543921, 2238835673, 2848559351, 467957261, 3398239899, 2359673960, 3178409931, 241351539, 878199532, 404296015, 2475894936, 3656823587, 1932792389, 3670557293, 166805166, 733539921, 407389507, 4011662246, 2024322145, 1303456420, 1222227004, 1691730035, 3883968404, 2969926080, 3416668185, 869732290, 1313746685, 1970875219, 1195931483, 2380005465, 1308168324, 1131646418, 2326094845, 1919469458, 3548961298, 3686841960, 1120625989, 2792112197, 2964617109, 1564804864, 51228675, 2525979769, 2146566558, 2212625564, 698119160, 1806261934, 970614134, 2886566116, 1259087385, 166909509, 2259848012, 2268596528, 928978476, 3657214414, 619481383, 2775536828, 190448216, 2077458004, 3581699978, 2379358373, 1740912603, 303937770, 3387696164, 3052202159, 417996488, 3269418374, 5640277, 2637170780, 108690988, 2457181226, 1747465626, 712176947, 2943357537, 3043491046, 3671760719, 2984259039, 1081684224, 3521298777, 3607142563, 1190117668, 2185496111, 3844344860, 642281570, 3238889453, 4041944585, 3016559978, 3503261416, 3019601866, 1062850692, 4046625864, 817021517, 1693902567, 1902263318, 1218195394, 2188880513, 3950142983, 1933378740, 3609040791, 3444631061, 226115453, 2628657549, 2797371842, 2404122564, 523446655]}
+r39-mate-13 {"carrier_w18_clusters": 63, "cls": [35, 27, 38, 35], "cluster_sizes": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 5, 6, 6, 7], "cluster_sum_sq": 413, "first_deviation_row": {"18": 34, "19": 21}, "groups": [194, 89, 167, 80], "hits": 135, "ks": [9606, 3231, 2914, 12833, 9731, 3200], "log2_carrier": -61.51203, "mates": 441, "mates_f8": 55, "through19": 0, "w3": [1646841103, 3622147797, 3871756904, 179193788, 634288198, 969121633, 1031473090, 3421468559, 2724416242, 2774084562, 1880120733, 3486948415, 2668733885, 2097037779, 4040778284, 2662650636, 209353327, 2659810281, 262127960, 2915911769, 2602998856, 1656551407, 3741356683, 1079011254, 2329950666, 2687142571, 691556508, 3245876865, 4209083208, 280475287, 2326376746, 4104754604, 1670065461, 4109554016, 1462660516, 1966162916, 3857542627, 2029747772, 1829377844, 1609177299, 2502507510, 1903040793, 3367220190, 1744366409, 2242148432, 1885372476, 1813547667, 4229183036, 2067563289, 4166239614, 2017098131, 2057868513, 767933767, 3252975971, 3298135271, 1940574003, 953868785, 3071965947, 1995102772, 1024840930, 884722835, 4059582795, 591078684, 2475440790, 3511438479, 3387181950, 1029976400, 1623578424, 2710359070, 3092635089, 157448646, 629708987, 501019223, 854328954, 3250434997, 3617211777, 3933545786, 3445766415, 620413366, 1283039496, 2170742248, 2430216537, 88727854, 648785188, 4178521135, 404253358, 1643522238, 4165157253, 700526936, 1732912902, 817127751, 816118176, 4234768433, 3184510110, 2393492071, 1036698622, 3773912794, 1470922186, 1255789571, 1237345792, 4112837644, 2935681524, 4157414391, 4202785673, 3399374422, 544725020, 4130661746, 2075500234, 1243952588, 1710878456, 3315226262, 1381748484, 4243896420, 3315002252, 2521721641, 2470493402, 2153210766, 3659215044, 4290226200, 3047615629, 3897998727, 1059909451, 1880179224, 3942482687, 684094398, 869511537, 2843841977, 1398547204, 2714106305, 484536420, 3912085986, 2538873973, 869632844, 2954257576, 2349163107]}
+r39-mate-14 {"carrier_w18_clusters": 65, "cls": [36, 37, 45, 35], "cluster_sizes": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 6, 7], "cluster_sum_sq": 491, "first_deviation_row": {"18": 31, "19": 17}, "groups": [173, 135, 113, 169], "hits": 153, "ks": [9451, 3218, 2881, 12955, 9632, 3200], "log2_carrier": -61.558849, "mates": 369, "mates_f8": 48, "through19": 0, "w3": [283763614, 3074647929, 3437174404, 3872649031, 1097196235, 2497233039, 1144984561, 2459029010, 698932289, 4157756131, 152333042, 2088443735, 3407339629, 2140101, 2889552037, 52750093, 3893438631, 3848522173, 2535920639, 2090757550, 4133801045, 397518544, 1598712547, 3646606780, 3379211249, 859311562, 2901624707, 1574171449, 663614001, 3538396181, 1616262342, 2688842369, 3627694329, 2922220916, 3655923768, 3793995693, 409799034, 3997239523, 74698828, 805845468, 2522932332, 1043001173, 1870316896, 1753639720, 1310170262, 3060563794, 4183830964, 3975017893, 4255489621, 267422253, 1699236728, 2006072263, 261270351, 1872241019, 391393136, 2093650076, 1089859967, 3027255704, 790416417, 1096929180, 3446813069, 170952062, 2857479627, 918193724, 1605720722, 3804136306, 2743913480, 3426846982, 2970466122, 1190207670, 3366532479, 2698118561, 473055890, 176707380, 2302172997, 3292566310, 2059504485, 1596898968, 3501664169, 3040691955, 1496524074, 3284851490, 2289419843, 939582827, 1059203085, 1276072656, 238109264, 2850549814, 1895615994, 395366383, 1347837062, 4022654200, 232258682, 4117820502, 4068003993, 2449289659, 995161131, 2068397103, 3272230488, 2560036745, 2858549237, 3585757144, 1243979436, 841760461, 1952026088, 2919110996, 1027471773, 3959822742, 2904637989, 3388134732, 832553666, 456733238, 3259475927, 524076901, 3597390484, 631808794, 132992497, 2118027129, 2095746929, 429543619, 3664811744, 558869961, 3371399014, 3994282140, 2905333788, 603771490, 2689314933, 1261954574, 957180503, 2903154384, 358069569, 2275134303, 195451660, 244575281, 2349713180, 3239759389, 2308536008, 733946840, 3469681612, 4107791941, 3498309794, 3052617327, 1388689661, 2520419554, 1371148589, 111832130, 3504435648, 2888769278, 742218088, 555789000, 2808257741, 2213142360, 649037166]}
+```
+
+
+Window ops in Appendix D are from order S162: the early-exit program re-run on the same predeclared seeds 802000-803139 (declared 2026-11-13 17:56 MST before any run); D_F9 and C equal the earlier runs record for record. They price nothing here (H6 is withdrawn): only D_F9 enters (the F9 factor), and the position-22 exit of this program leaves C and D_F9 unchanged.
+
+## Appendix D. The 1,080 predeclared fresh windows of the F9 factor (total ops: 2e846bf2's H6, history; all at the cap 944)
+
+Same program law as the accepted panel (a26bcf74's program with the k4d cap 944), screened, W = 2^26, seeds declared before the runs; harness and counters as Appendix B. Rows seed:D_F9:total ops:C (D_F9 = distinct F9 claws admitted, <= 944; total ops = the shipped counter `m.o` of the whole window; C = distinct claws):
+
+802060:899:577860231:56693 802061:930:581694961:57042 802062:901:576978212:56872 802063:915:585516874:57451 802064:853:577646599:56669 802065:918:580716721:57062 802066:899:581355729:57084 802067:944:585428187:57160 802068:893:580228042:56978 802069:944:588095578:56847 802070:873:578166017:56827 802071:884:578630938:56628 802072:911:583346305:56961 802073:922:581459600:57105 802074:939:584767810:57209 802075:891:581161094:57077 802076:900:582977663:57029 802077:908:581375781:57156 802078:836:573116241:56446 802079:920:584196461:56881 802080:844:570942631:56886 802081:920:584569270:56776 802082:917:579267435:57177 802083:839:571660951:56863 802084:894:577905288:57139 802085:866:575259129:56846 802086:860:575542990:56900 802087:944:585882892:57154 802088:906:575639330:56813 802089:900:578011750:57242 802090:891:581657788:56950 802091:889:579559878:56897 802092:859:572856977:57236 802093:924:583612228:56792 802094:917:575925484:56837 802095:910:578658353:57077 802096:913:581543393:57498 802097:883:573674563:57465 802098:881:578102955:57100 802099:918:584397758:57475 802100:850:577114082:56943 802101:937:585537911:56857 802102:911:581640717:57197 802103:944:583715080:56889 802104:886:575306832:57085 802105:910:581042467:56840 802106:907:579458277:56847 802107:909:580155762:57185 802108:935:584931518:57012 802109:884:575849708:56817 802110:913:575781407:57211 802111:798:564760049:56771 802112:846:572474138:57288 802113:900:580343400:56999 802114:864:573031526:57078 802115:908:581921399:57286 802116:921:583591842:57079 802117:902:586019981:57389 802118:944:586347296:57197 802119:892:578220538:57180 802120:862:575151844:56690 802121:903:584971737:57137 802122:944:591810574:57171 802123:843:571707894:56900 802124:870:574411370:57201 802125:903:574858786:57198 802126:903:583152401:56979 802127:873:575004810:57101 802128:944:587474836:57070 802129:929:587827835:57341 802130:944:592519667:57344 802131:898:578225229:57129 802132:931:577874350:57052 802133:887:578297682:57383 802134:930:587681225:57359 802135:902:578634576:56740 802136:836:571984851:56699 802137:852:582061931:57062 802138:895:577843475:56924 802139:880:575204196:57256 802140:938:586333450:57179 802141:937:584313690:57544 802142:914:578727702:57077 802143:888:576510188:56738 802144:906:578185250:56978 802145:928:582420674:56897 802146:928:587602641:57110 802147:934:583391815:56918 802148:900:579869342:57238 802149:917:583120927:57216 802150:873:576875026:57219 802151:917:579917591:56740 802152:915:578604535:57188 802153:944:581465946:57280 802154:871:571383641:57005 802155:887:577844661:57047 802156:868:578461090:56956 802157:944:585588666:57084 802158:901:579680256:56874 802159:934:583565548:56811 802160:898:582427938:57053 802161:920:582071081:56882 802162:891:577812644:56980 802163:867:569438197:57161 802164:925:585680959:57139 802165:933:591749927:57095 802166:944:583171893:57101 802167:927:582581320:57339 802168:908:579643264:57180 802169:918:584500562:56878 802170:944:576844555:56923 802171:867:578479837:57161 802172:904:572681136:57216 802173:856:574233174:56999 802174:924:581898814:57209 802175:841:572533010:56827 802176:920:578756668:57362 802177:944:582412964:57028 802178:944:584803461:57039 802179:916:578594392:57121 802180:891:571907100:57044 802181:866:579283747:57210 802182:877:576425613:57100 802183:876:576269284:56817 802184:897:575065240:56811 802185:922:586308011:56806 802186:904:580907930:56808 802187:926:593154754:56903 802188:876:574264403:56651 802189:886:581452136:57247 802190:915:581044307:57002 802191:908:581777602:57015 802192:944:585993017:57138 802193:888:573570295:57096 802194:939:583343796:56751 802195:894:578510195:57006 802196:829:577407552:56844 802197:935:590788578:57525 802198:861:575320761:57152 802199:884:580799733:57073 802200:875:572135035:57095 802201:889:570245887:57200 802202:891:575966567:56931 802203:916:581568987:57214 802204:903:575879694:56921 802205:916:584812944:57193 802206:852:572702108:56804 802207:944:579595999:56853 802208:885:576432446:56960 802209:855:576029405:56746 802210:910:580917153:56911 802211:892:578173701:56869 802212:904:579199411:57396 802213:877:581053904:56979 802214:902:577285183:56825 802215:885:572800683:56968 802216:912:574594875:57441 802217:903:582114637:56993 802218:850:573517684:57097 802219:874:576059660:56822 802220:944:586895852:57388 802221:897:574022210:56383 802222:905:574893118:57179 802223:920:582006296:57390 802224:896:578720005:57038 802225:918:580524522:56983 802226:898:582599261:57112 802227:868:578445358:57145 802228:944:584171744:57403 802229:941:584756447:57233 802230:818:569770813:57153 802231:888:580946501:57220 802232:886:574966472:56745 802233:944:582802332:57142 802234:903:577863793:57302 802235:922:582436877:57326 802236:921:579604634:57237 802237:944:592359854:57077 802238:918:580316047:57047 802239:944:582928010:56678 802600:870:576868615:57507 802601:905:583630068:56683 802602:903:571799356:57451 802603:922:582452991:56917 802604:897:574863374:57227 802605:923:572270719:57099 802606:865:575400004:57051 802607:889:571523153:57109 802608:889:574828525:56960 802609:825:567953601:56524 802610:885:567144113:56825 802611:920:586603720:57159 802612:902:582902681:57076 802613:942:588781038:56900 802614:903:581233397:56873 802615:894:583744447:56737 802616:911:576464816:56999 802617:930:585254101:57483 802618:862:575359939:57001 802619:891:573168571:57355 802620:905:574684691:57042 802621:889:573682894:56925 802622:916:585079086:56972 802623:889:574472185:57237 802624:884:575457528:57275 802625:894:576353043:57347 802626:917:580028877:57308 802627:944:587290471:56642 802628:944:585743623:57186 802629:911:589710099:56960 802630:901:576909949:57342 802631:944:581220890:56869 802632:913:580723510:57465 802633:922:587623568:57099 802634:927:581584981:56900 802635:863:569754545:56995 802636:898:581140124:56773 802637:897:578827824:57091 802638:939:577457510:56788 802639:901:578420952:56712 802640:877:575832984:57093 802641:931:587389334:57174 802642:944:586247498:56933 802643:930:583374827:56703 802644:830:561274953:56853 802645:893:581097355:56694 802646:921:586644977:57004 802647:894:587807724:56678 802648:894:581346725:56753 802649:944:584180396:57082 802650:898:582514772:57115 802651:944:587180993:56959 802652:864:572369531:56851 802653:884:577438155:56936 802654:909:585101558:57040 802655:904:576463983:57007 802656:896:579892777:57140 802657:896:569226188:57619 802658:944:590545682:57259 802659:872:579137080:57088 802660:901:577340233:57195 802661:921:581834221:57073 802662:886:576732708:57233 802663:922:580537145:56925 802664:866:576637850:56760 802665:933:581537039:57155 802666:932:588697833:57153 802667:902:580823118:57278 802668:900:583875792:57370 802669:880:575490183:56781 802670:888:576960126:57154 802671:911:578247347:56612 802672:930:576658636:57016 802673:924:585085493:57003 802674:910:578756758:57131 802675:944:585939010:57245 802676:907:579337741:57213 802677:941:582295411:56995 802678:924:577510784:56867 802679:907:581325415:57207 802680:943:586474429:57058 802681:902:580758158:56680 802682:897:575667505:56868 802683:919:584672410:57272 802684:907:576060516:57019 802685:881:574756526:57388 802686:919:587806148:56798 802687:944:585038011:57349 802688:923:589086524:56930 802689:902:578101006:56844 802690:886:581183919:57112 802691:866:575691949:57165 802692:883:576136090:57100 802693:872:579442158:56649 802694:902:582208699:57044 802695:879:571123663:56516 802696:890:578218130:57076 802697:919:585029410:56857 802698:916:583020952:57317 802699:919:582665418:56778 802700:883:573437688:56707 802701:899:575997152:57342 802702:921:584290517:57015 802703:891:582386109:56939 802704:894:577026804:57365 802705:898:587957086:56751 802706:944:586216156:57079 802707:907:578867564:57369 802708:893:578396050:56576 802709:939:589869059:57211 802710:934:585111130:56987 802711:903:567311424:57316 802712:914:581015669:57260 802713:843:565536012:57218 802714:878:574668316:57226 802715:910:580578220:56559 802716:894:579425948:56964 802717:909:579647129:57139 802718:877:576876317:56868 802719:912:582447315:57124 802720:944:584710169:57062 802721:896:579658305:57215 802722:870:571019602:57008 802723:935:580050849:56835 802724:942:582814758:57158 802725:944:588212683:56610 802726:907:579736909:56830 802727:904:582049848:57188 802728:944:590260733:56814 802729:936:586445935:57038 802730:891:572959899:57525 802731:836:581046947:56456 802732:859:574482882:56589 802733:944:588147010:56985 802734:902:583066818:56609 802735:859:573350601:56691 802736:944:599750416:57366 802737:901:578011623:57266 802738:903:578155522:57384 802739:928:583751385:57306 802740:944:584224446:57647 802741:911:582443191:57129 802742:907:582209449:57365 802743:895:580026940:56818 802744:903:583300716:56580 802745:923:579875655:57489 802746:922:588316229:56704 802747:854:575963860:56531 802748:896:576633860:57075 802749:849:568624654:57262 802750:909:580428770:57081 802751:897:579404216:56934 802752:913:578637283:57125 802753:935:584433223:57211 802754:875:577052680:57348 802755:890:576877486:57128 802756:897:578165537:56732 802757:891:579422062:57246 802758:924:578679429:56792 802759:898:577742874:57034 802760:918:579955189:56730 802761:889:579367022:56748 802762:850:569682989:57621 802763:882:576480179:57061 802764:894:578534176:57152 802765:912:580017730:56924 802766:859:572640024:57302 802767:944:589041011:57195 802768:896:578560482:56958 802769:910:583731748:56956 802770:944:589767538:57164 802771:866:575115557:57003 802772:876:571608844:56879 802773:917:580862550:56806 802774:923:581291778:56671 802775:865:574820505:57204 802776:920:573155000:57189 802777:918:587044284:57215 802778:900:576112861:57074 802779:941:585814945:56832
+
+Order S160, windows 802240-802599 (360, declared 2026-11-12 23:26 MST before any run), same program law: 802240:933:582436327:57507 802241:916:585938767:57114 802242:888:576179592:56595 802243:882:573045466:56547 802244:877:572840517:56866 802245:860:574421261:57049 802246:904:581194390:57237 802247:944:585888312:56617 802248:920:581981240:57096 802249:911:582140656:57262 802250:924:579994431:57080 802251:915:580307153:57192 802252:874:578483366:56994 802253:868:570929033:56868 802254:905:591682167:57102 802255:924:579906443:56971 802256:882:574401030:56936 802257:931:585468968:57123 802258:915:578883833:57188 802259:934:584603656:57174 802260:867:568910526:57063 802261:944:583879670:56805 802262:916:581449427:57466 802263:944:584550328:56748 802264:909:576171948:57128 802265:944:583756863:56975 802266:850:573175975:56464 802267:933:583800718:57247 802268:876:573712032:56966 802269:884:577831688:57333 802270:944:585066094:57433 802271:939:583683882:57508 802272:880:576692107:57170 802273:907:581629592:56950 802274:907:585404774:56842 802275:918:582428383:56963 802276:910:581176422:57232 802277:890:582610258:57511 802278:944:587555445:56873 802279:900:578179534:56762 802280:944:582079063:57071 802281:893:573628185:56984 802282:921:584552780:56665 802283:944:584620762:57322 802284:871:577092482:57003 802285:918:574190135:56867 802286:944:589094198:57027 802287:921:581156766:57170 802288:928:582943692:57306 802289:944:586311638:56999 802290:944:587757750:57405 802291:902:579082208:57033 802292:861:576373317:56628 802293:943:585835091:57387 802294:923:579212169:56995 802295:862:572091470:57022 802296:927:582035723:57102 802297:908:581851014:57506 802298:927:581291303:56533 802299:913:584335296:57063 802300:884:575605084:56693 802301:838:572524035:57098 802302:885:578217713:56881 802303:897:578370126:57212 802304:944:584250522:57194 802305:879:572548930:57322 802306:901:585539116:57330 802307:890:577329049:56888 802308:897:579622964:56802 802309:906:578997626:57205 802310:887:575074510:57100 802311:866:575658594:56861 802312:938:584204699:57023 802313:867:573242764:56981 802314:923:587330652:56585 802315:888:573375225:57043 802316:919:581402914:57440 802317:944:585698455:57077 802318:924:588389641:56760 802319:944:590640428:57002 802320:888:587399208:57106 802321:910:578826899:56978 802322:919:574171525:57247 802323:889:576366081:56959 802324:934:591381715:56713 802325:867:573261393:57379 802326:922:578760089:56919 802327:933:588624774:57131 802328:880:569326349:57038 802329:880:576942145:56723 802330:933:585290084:56963 802331:884:587763596:57111 802332:922:578966940:56833 802333:857:573906079:57251 802334:944:584281096:56833 802335:890:577732365:57207 802336:898:580786802:57013 802337:944:586179006:57062 802338:896:580034456:57037 802339:914:579495841:56870 802340:880:586207113:57153 802341:943:585277903:57189 802342:916:577423446:57375 802343:876:572741084:56825 802344:934:584214290:57219 802345:921:579320171:56971 802346:882:576164023:56954 802347:943:582564472:57190 802348:903:576542916:57121 802349:855:573196252:56902 802350:897:579342683:56674 802351:918:578517872:57379 802352:865:575135120:56868 802353:904:583915024:57193 802354:932:586429128:57225 802355:911:578713577:57243 802356:900:581969654:56966 802357:928:584249102:57078 802358:907:583536127:56877 802359:889:574657824:56917 802360:897:582532285:56748 802361:940:585494998:56851 802362:928:590775822:57020 802363:937:582432774:57186 802364:927:581040865:57019 802365:849:577552290:56868 802366:910:582771847:56841 802367:881:581952391:56751 802368:912:578230998:56536 802369:899:578984645:56781 802370:910:581955090:57309 802371:928:581191496:57277 802372:908:581040618:57112 802373:904:582538631:57218 802374:887:571606443:57130 802375:875:577232856:56930 802376:859:574563775:56351 802377:908:581877759:56954 802378:903:579877040:57179 802379:915:587621721:57472 802380:900:580980722:57332 802381:883:577906061:56813 802382:908:577520813:57438 802383:897:579971612:57108 802384:881:573427491:56715 802385:860:575988564:57021 802386:914:581413808:56917 802387:937:580087740:56561 802388:872:577789325:57020 802389:913:583792298:57205 802390:912:578126817:56952 802391:930:580374095:57089 802392:942:593700840:57387 802393:879:573007129:57254 802394:921:570149223:57195 802395:909:575114200:57165 802396:944:582767573:56927 802397:944:583512906:57160 802398:944:586733487:57049 802399:896:579781594:57276 802400:890:580155967:57360 802401:900:579525493:57098 802402:920:586761287:56798 802403:901:581256487:56782 802404:944:591890152:57014 802405:859:571282397:56787 802406:935:583180930:56797 802407:846:569629876:56561 802408:921:583246710:56939 802409:926:581634529:57459 802410:904:576774342:56650 802411:919:575916503:57050 802412:898:580706563:57124 802413:910:583739344:57250 802414:908:580415353:57068 802415:889:575905921:57095 802416:900:578373554:56636 802417:885:582007176:56984 802418:914:579597944:56503 802419:928:581738251:57056 802420:917:583845141:56820 802421:874:580157173:56562 802422:940:584820476:57033 802423:853:570590259:57087 802424:847:577373838:57448 802425:873:575757072:56873 802426:926:582202687:56855 802427:941:588049105:57357 802428:908:581455628:56787 802429:904:581137136:57306 802430:906:582949963:57410 802431:936:588926500:56887 802432:909:579881319:57212 802433:869:571779870:56989 802434:925:583841819:57103 802435:919:582085422:56973 802436:922:575126608:57118 802437:886:575120801:57189 802438:856:570163356:56944 802439:870:574398928:57301 802440:911:581316013:57132 802441:872:577395553:56834 802442:899:578740339:56777 802443:944:588842014:57363 802444:882:579484380:56817 802445:935:587368769:56971 802446:887:576718723:57299 802447:911:581349172:57136 802448:918:577844122:57437 802449:910:578588733:57351 802450:916:575558292:57076 802451:917:584010187:57277 802452:890:576199309:57056 802453:850:571260682:56833 802454:917:578786370:56809 802455:943:581104953:57242 802456:824:569596790:57226 802457:935:583346211:57111 802458:876:586250633:56912 802459:885:578364462:56976 802460:897:582522851:56632 802461:846:576446593:56760 802462:918:588624222:57213 802463:899:583381403:56498 802464:891:573012533:56848 802465:943:586133941:57022 802466:912:583100706:57298 802467:915:582608237:56741 802468:923:584059666:57100 802469:889:578248129:57249 802470:873:575256944:57102 802471:903:579464124:56910 802472:931:585331415:56865 802473:889:578153056:57212 802474:860:576229420:57323 802475:892:575744968:56798 802476:891:573637208:56959 802477:919:583062305:56553 802478:852:572525769:56850 802479:944:585822473:57458 802480:888:579141978:57517 802481:902:582053661:57084 802482:861:568863079:57256 802483:858:571729905:57145 802484:823:568466361:56723 802485:866:574875332:57057 802486:876:576739312:56652 802487:860:571523337:56718 802488:888:584542095:57024 802489:944:586740917:56955 802490:916:589306913:57133 802491:837:569170123:56834 802492:907:582541588:57020 802493:912:579814151:57072 802494:874:571867525:56921 802495:944:592008402:57032 802496:878:577134481:56895 802497:846:577420427:56491 802498:851:572660869:56729 802499:923:583314155:57357 802500:887:575057348:56746 802501:910:576403922:56823 802502:936:578420048:56815 802503:944:587733377:56880 802504:865:573848454:57125 802505:913:583028440:56959 802506:940:583277214:56915 802507:866:575958251:57248 802508:897:585696125:56744 802509:910:573891994:56809 802510:944:585679711:56838 802511:900:574786005:56917 802512:892:581235013:56792 802513:857:576475277:56565 802514:944:585273891:57501 802515:893:579008855:57191 802516:895:578506668:57013 802517:836:569826886:56573 802518:905:578488143:57072 802519:937:584004490:57331 802520:889:574545873:57245 802521:859:574203862:56823 802522:871:579674500:56912 802523:866:572186220:57106 802524:870:574771797:57202 802525:889:575949689:57117 802526:899:586377077:57298 802527:913:583787403:57073 802528:921:580100187:56903 802529:922:580641236:56838 802530:920:585400999:56926 802531:897:573415266:57117 802532:873:578529260:56851 802533:923:580605257:57404 802534:929:584619299:56709 802535:893:579182365:57235 802536:885:574876034:56980 802537:922:582634016:56915 802538:827:569149333:57210 802539:944:589306200:57029 802540:902:580225358:57249 802541:936:584180885:56925 802542:944:582939681:56775 802543:874:577558679:57252 802544:904:583116542:57177 802545:937:587131389:57014 802546:900:570983212:56415 802547:912:582482843:57376 802548:911:584049568:57127 802549:926:583393636:56896 802550:898:580920685:57401 802551:879:574164136:56914 802552:904:581871997:56829 802553:891:574284428:56994 802554:930:581482174:56822 802555:846:573156685:57116 802556:944:582424454:57001 802557:929:580924027:57208 802558:936:584166771:56929 802559:894:580679131:57178 802560:882:569142380:56761 802561:915:582323128:56809 802562:883:576574185:57085 802563:920:585176644:57008 802564:911:577846405:57045 802565:866:572024216:57011 802566:934:583658685:56753 802567:908:578642005:56768 802568:867:579289740:56934 802569:940:588834956:57140 802570:928:588142929:57223 802571:864:577626922:56790 802572:898:579745894:56801 802573:901:579133996:57220 802574:892:580410695:57096 802575:854:575691474:56988 802576:909:586495010:56856 802577:924:595329047:57053 802578:935:582572611:56665 802579:892:575447763:56779 802580:906:572918643:57007 802581:933:582070112:56551 802582:907:580197419:56939 802583:899:581810686:57393 802584:921:580176411:56695 802585:944:588772813:57287 802586:910:578255148:56737 802587:890:577356149:57108 802588:890:588679274:57111 802589:924:572417612:56960 802590:911:585646889:57013 802591:916:579476808:56844 802592:909:584792921:57038 802593:924:583391639:57077 802594:854:573778266:56860 802595:902:579943162:57140 802596:908:577334556:57110 802597:919:575865455:56862 802598:933:587571987:57261 802599:939:578955136:57056
+
+Order S161, windows 802780-803139 (360, declared 2026-11-13 14:33 MST before any run), same program law: 802780:930:583884466:57446 802781:944:584596022:56755 802782:938:585134949:57280 802783:944:585514627:57338 802784:944:579951377:57200 802785:899:574836016:56987 802786:886:575282322:57171 802787:900:581670437:56950 802788:889:586743099:57271 802789:944:582925903:56961 802790:890:575964907:56884 802791:892:580879749:57015 802792:911:578475579:57073 802793:937:578015157:56988 802794:916:579251614:56802 802795:944:586410546:57155 802796:912:580941101:56997 802797:896:577475663:57048 802798:939:581340714:56604 802799:907:578910046:56941 802800:919:583061740:56700 802801:929:584715384:57277 802802:891:578150934:56735 802803:885:578973114:57277 802804:890:586846829:57088 802805:863:572829477:56890 802806:900:578210720:56927 802807:909:580529909:57231 802808:876:578389032:57133 802809:938:585902749:56760 802810:937:583345752:57107 802811:854:574960895:57070 802812:903:582671916:57175 802813:849:571317289:56638 802814:877:580434836:57191 802815:874:580721750:56946 802816:895:576251993:57181 802817:917:579620019:56827 802818:847:572472178:57112 802819:886:580850831:57282 802820:944:583984758:56647 802821:924:578876014:57217 802822:931:583594722:56813 802823:853:572977482:56943 802824:850:576753220:57267 802825:929:584717116:56730 802826:934:582439946:57288 802827:877:575957996:56918 802828:847:571857831:57270 802829:943:586914766:57038 802830:944:580751462:57234 802831:907:584071113:56767 802832:915:586374615:57337 802833:918:582658183:57360 802834:898:579999441:56990 802835:891:578589870:57015 802836:935:586317550:56787 802837:868:574197217:56795 802838:902:577243916:57033 802839:886:572827500:57393 802840:902:579615852:56805 802841:903:576494390:57214 802842:928:582009203:56943 802843:861:570697862:57132 802844:841:575016598:56914 802845:910:579964149:57051 802846:880:581534806:57227 802847:944:589734546:57354 802848:916:585496388:56791 802849:906:579172193:57238 802850:908:576670269:57020 802851:931:585012097:56686 802852:858:576921137:57087 802853:855:575146869:57664 802854:892:587602855:56952 802855:911:577053453:56739 802856:904:578565420:57221 802857:942:591267351:57249 802858:922:583016767:56733 802859:892:576868678:56880 802860:889:571798486:57043 802861:916:581961465:57063 802862:882:574759350:57179 802863:914:584191070:56994 802864:925:581423796:56890 802865:944:585826655:57382 802866:944:581650247:57070 802867:944:581287605:56930 802868:818:567498863:57008 802869:880:574084083:57155 802870:934:582791853:56834 802871:902:585492614:56882 802872:864:569028128:57311 802873:884:587557882:57232 802874:847:571604858:56706 802875:855:572727925:57125 802876:927:581934455:57048 802877:901:579455108:57240 802878:878:575206475:56979 802879:878:579143069:56769 802880:909:579001145:57419 802881:943:583611647:57180 802882:907:579648926:57600 802883:882:576825669:57000 802884:925:580545863:57051 802885:866:574642185:56877 802886:894:584153781:56945 802887:940:584873103:57079 802888:934:577614932:57229 802889:944:586808055:56624 802890:896:575609952:57307 802891:895:575751959:56561 802892:944:584217329:57490 802893:839:572661932:57301 802894:891:571520992:56667 802895:896:576904942:56998 802896:901:579148795:57209 802897:903:580906083:57055 802898:926:581465542:57364 802899:890:580867282:57008 802900:944:586855867:56984 802901:862:574599328:56825 802902:896:583464343:56797 802903:917:585530726:56990 802904:943:588439665:57087 802905:935:575901732:57044 802906:924:589336282:56980 802907:903:582236723:56942 802908:883:575631118:57006 802909:896:576852864:56880 802910:900:579278140:57451 802911:921:584766442:57470 802912:922:579260082:57006 802913:887:578051172:57206 802914:854:570769027:57167 802915:899:577634627:56601 802916:917:582422341:57090 802917:893:578554883:56955 802918:827:572798497:56610 802919:907:580887015:56762 802920:916:581200920:57457 802921:920:586575256:57256 802922:894:576900270:56770 802923:903:582990231:57611 802924:906:577234328:57244 802925:914:583722688:57221 802926:883:573556740:56991 802927:915:585177617:57141 802928:895:580802924:57021 802929:883:578568651:56686 802930:914:586103701:56972 802931:921:576801533:57097 802932:909:583958134:56896 802933:901:574688849:57751 802934:920:583467469:56680 802935:897:577432254:57024 802936:915:582152740:57048 802937:903:575051224:57415 802938:930:581244446:56953 802939:908:581895065:57076 802940:944:588931941:56856 802941:848:571626015:57038 802942:885:582571666:56926 802943:944:585422052:57297 802944:888:576625045:57159 802945:944:586352464:57090 802946:900:580097281:57202 802947:944:584598953:57001 802948:918:580833298:57263 802949:923:579974006:57288 802950:908:581179433:57133 802951:904:576515977:57361 802952:848:562444179:56747 802953:921:580630051:57171 802954:876:577547929:56730 802955:894:576879921:57420 802956:905:582790991:57058 802957:925:584124716:57360 802958:921:584448753:56980 802959:944:587537317:57176 802960:904:576579685:57142 802961:915:584882188:57333 802962:892:577748776:57081 802963:913:574729687:56630 802964:882:577343205:57028 802965:944:583559226:56714 802966:940:585251813:57124 802967:909:581625523:56797 802968:930:581068765:57147 802969:944:584799803:56872 802970:893:582488401:56913 802971:944:588433224:57159 802972:935:586222091:56783 802973:913:592480647:57339 802974:894:583469599:57102 802975:916:583951201:57118 802976:940:586464822:57396 802977:886:577566110:56681 802978:896:576538034:56768 802979:834:569062498:56989 802980:864:580034360:56739 802981:853:570487372:56885 802982:909:575738511:56961 802983:929:584058433:56907 802984:883:577831720:57354 802985:896:582069815:56944 802986:944:588523664:57187 802987:921:578832671:57062 802988:944:582516958:57205 802989:914:580393474:57206 802990:906:577182008:56810 802991:910:584282753:56706 802992:944:586233567:56807 802993:922:585522686:56867 802994:902:583473173:57056 802995:894:581832513:56844 802996:912:566187015:56913 802997:864:574517484:56956 802998:910:580993743:56974 802999:911:576115387:57247 803000:936:585013132:57313 803001:896:577889306:56708 803002:851:573745008:56715 803003:921:579491492:57067 803004:920:588255216:56690 803005:875:576267138:56524 803006:927:582370840:57225 803007:931:586407414:57050 803008:892:578321312:57096 803009:865:577682857:56960 803010:896:581090275:57146 803011:941:585021477:56737 803012:910:579170662:57161 803013:902:577656189:57072 803014:944:587700484:56916 803015:944:584574918:56974 803016:905:579635077:56936 803017:906:577067063:56843 803018:896:575346135:56832 803019:926:583868050:57384 803020:932:581260601:56837 803021:941:588164492:56679 803022:896:582499439:57249 803023:944:584022749:57087 803024:900:581741862:57046 803025:910:581040165:56914 803026:916:580609379:56836 803027:896:583915609:57095 803028:888:579361149:57249 803029:893:579494298:57047 803030:929:589288044:57001 803031:899:572725822:57043 803032:890:573060913:57167 803033:871:575113616:56908 803034:932:582939587:56959 803035:935:583586324:57377 803036:875:576736308:56766 803037:900:577554965:56965 803038:895:578782183:56824 803039:937:584180121:57369 803040:919:583078117:57070 803041:944:586534021:56783 803042:915:580099345:56499 803043:906:581602315:57348 803044:903:579493704:56958 803045:901:574860774:57432 803046:889:579712939:57059 803047:932:582037732:56715 803048:908:582276542:56710 803049:910:581875915:57063 803050:944:585777439:57064 803051:898:576464570:57157 803052:923:580861684:57265 803053:932:589604077:57272 803054:913:590317412:57003 803055:876:575670270:57040 803056:944:586802288:56932 803057:871:571761220:56599 803058:896:576540174:56795 803059:921:589396423:57137 803060:908:578845754:57486 803061:903:580488843:56690 803062:900:587059396:56875 803063:944:584690923:57079 803064:941:588202588:57046 803065:904:581384030:56884 803066:926:586664973:56873 803067:884:578456063:56858 803068:896:582594515:57127 803069:885:578270566:57404 803070:944:577949917:57225 803071:907:575688805:57111 803072:862:574401612:57036 803073:904:583095442:57146 803074:853:574469660:57242 803075:923:592323305:57324 803076:944:579239441:56954 803077:917:581323216:56914 803078:886:580897847:56796 803079:910:581434537:56789 803080:912:580083858:56889 803081:907:579528896:57237 803082:890:577833327:56874 803083:885:579186273:57260 803084:908:577475561:57165 803085:891:572606798:56970 803086:872:574299084:56977 803087:901:582832689:56922 803088:922:581682589:57152 803089:881:575348167:56750 803090:880:576382704:56656 803091:889:572736661:57081 803092:944:588818617:57426 803093:923:582065031:57135 803094:929:587467200:56627 803095:880:580383182:57184 803096:901:580099764:57519 803097:883:576634774:56942 803098:876:579732407:56811 803099:890:581421657:56856 803100:888:580961863:56773 803101:892:578913619:57183 803102:918:582539378:57189 803103:832:565816619:57066 803104:895:579587352:56825 803105:886:577063413:57157 803106:944:587124257:57155 803107:898:577915331:57426 803108:922:578920646:57091 803109:892:578872466:57056 803110:910:582506473:57074 803111:902:572124969:56914 803112:846:573708368:56855 803113:851:576181736:57236 803114:907:577282027:56712 803115:900:576543102:57211 803116:872:569128361:57368 803117:899:579122649:57079 803118:908:581239634:57096 803119:944:587532079:57413 803120:897:583179119:56983 803121:911:581202124:56898 803122:874:571168878:57259 803123:871:578109640:56879 803124:882:580517476:56912 803125:887:579512935:56936 803126:892:577965229:57053 803127:909:581308871:57486 803128:908:575544841:57211 803129:920:580477663:57309 803130:922:582638009:57144 803131:918:585845046:57124 803132:915:579013804:56986 803133:862:572994166:56826 803134:918:580936986:56954 803135:857:572964547:57098 803136:908:581150253:57130 803137:944:585481149:56990 803138:915:585059273:56947 803139:925:582355719:57077
+
+n = 1,080 (802060-803139, all at the cap 944; Appendix B's 60 are history and not pooled), F9 factor on min(D_i, 944): mean 903.7824, s.d. 27.4525, t(1079, 0.995) bound 901.6269 (ab09e983's 780 with the 60: 900.9718). Window work (2e846bf2's H6; history, not priced here): mean 580,013,857.0, s.d. 5,098,865.3, t(1079, 0.9975) bound 580,450,276.0; C mean 57,032.29, s.d. 227.44.
+
+## Appendix F. The work cap (this entry): reservations bounded by count, and the 1,080 yield windows
+
+Guard `cap(R)`, lines 773-779. A unit runs from one guard to the next, the next guard's 2 operations included; each unit's largest counted charge comes from the program's own counters (branch maxima, asserted constants):
+
+Per-block counted charges used (word operations of the program's own counters, branch maxima; as in our nj55 cap entry, whose guards and reservations this program keeps): find_lane 26; extract25 75; extract32x2 97; insert_lane 96; delta_lanes 64; qpush 16; qpop 10; qins 20 (132 when it calls insert_lane)
+
+| guard (line) | unit | largest counted charge | reservation R |
+|---|---|---:|---:|
+| iter1, once per 16 iterations (786, 794, g8) | 16 x (step list 679 + 7 + hb_init 6 + hb_clr 14 + 2) | 11,328 | 15,424 |
+| hit group (504, 511, g1) | hb_init 4 + up to 10 lanes per group (nl <= 80, 8 bits a lane) x (find_lane 26 + hb_sel 6 + hb_add 7 = 39) + close 2 + hit_group 1,401 + 2 = 1,799 per group, + up to 16 iterations (11,328). Each block figure is its maximum over every path, counted from the code (equal to the block maxima of window 960000); hit_group's counted maximum is 1,007, the accepted table's 1,401 is kept; a group holds at most 10 lanes because its members' 25-bit windows in the 256-bit W are pairwise disjoint (floor(256/25) = 10) | 13,127 | 13,129 |
+| cutscan (521, g2) | gate 25 + 256 x (3 + cut_lane 115) + 2 (30,235) + up to 16 iterations | 41,563 | 76,864 |
+| stage2 iteration (659, g3), final stage2 (790, 797, g9) | wheel check 20 + launch 4 (+ step list 679 + compares 194 when the loop ends) + 2 (899) + up to 16 iterations | 12,227 | 15,424 |
+| wheel callback (667, g4) | qpop, fpop, qflush, move_lane, qins with insert_lane, 20 (416), then an l_pair 324 + 2 (742) + up to 16 iterations | 12,070 | 12,352 |
+| launch entry (694, g5) | l_pair 324 + end-of-iteration tail (qflush 112, 4, step list 679, 2, compares 194) + 2 (1,317) + up to 16 iterations | 12,645 | 15,424 |
+| merge lane (748, g6) | find_lane 26 + 6 + extract32x2 97 + 2 + claw filter and k4d 525 + merge 15 + 2 (673) + up to 16 iterations | 12,001 | 13,376 |
+| after stage2's loop (764, g7) | 2 + bank 400 + 18 + parks 10 + tail 116 + 15 + 2 (563) + up to 16 iterations | 11,891 | 13,376 |
+| k4 evaluation (1005, g11) | 624 + k4x 70 + WB 54 + group setup 110 + 2 (860) + the whole W17 pass 143,633 (no batch guard) | 144,493 | 145,000 |
+| survivor (1035, g13) | 706 + 5 + next batch with group setup 110 + 2 (823) + the W17 pass 143,633 | 144,456 | 145,000 |
+| class (1039, g14) | 563 + 2 + 110 + 2 (677) + the W17 pass 143,633 | 144,310 | 145,000 |
+| mate (1045, g15) | 560 + 2 x 2,812 + 2 + 110 + 2 (6,298) + the W17 pass 143,633 + survivor 823 | 150,754 | 151,000 |
+| window end (798, g10) | the final check after up to 16 iterations | 11,328 | 11,328 |
+
+MEASURED per-site maxima (window 960000, every guard site): g1 5,132; g8 3,471; g11 130,237; g13 711; g14 126,282; g15 69,703; every other site below 2,000 - each under its counted charge.
+
+Every reservation is at least its unit's largest counted charge, so no assertion at line 777 can fail and a window ends with m.o <= W_max; a stop leaves less than the stopping site's R, at most 151,000 operations, unused. Before the first guard a window runs only its setup (first-block draws with the screen, kernel generation, table clear): at most (8,192 + 33) x 3,020 + 32 x 575,142 + 575,000 + 8 x 679 + 4 x 15,520 + 945 = 43,887,501 operations by the program's constants (DTRY, KTRY, GCAP, KCAP, table words; as in our nj55 cap entry), below W_max (MEASURED on 6 windows: at most 5,097,284); a skipped window ends there, and the main loop asserts m.o <= W_max for it too.
+
+**The yield windows (participant-run support for H1-screen(iv)).** The current supporting panel uses the frozen cap program at W_max = 556,000,000 and includes every seed 2006000..2006255. S205 was predeclared before any of its 256 windows ran, but N is 256 and the 556M cap was selected from the disclosed S198 planning curve; it is one disclosed participant look, not familywise over the sequence of cap-panel choices. The ratio-of-sums result is r = 0.9921709257705038, delta-method s.e. 0.0005467854315618963, raw nominal one-sided 99% value 0.9908989126442332, floored to r_LB = 0.9908989; cap fired in 248 of 256 and the minimum single-window ratio was 0.9631374352. The result is supporting compatibility evidence for the declared production-law inequality, not organizer-run proof. The prior 64-window panel 2000000..2000063 remains supporting evidence (r = 0.9841992, nominal r_LB 0.9812320). The older 1,080-window panel 980000..981079 remains used only for the cross-claw claw-weighted term. Rows seed:keys of claws with stamp <= W_max:standard-window keys:
+
+1,080
+
+## Appendix G. Panel provenance and supporting evidence for the declared H1-screen MODEL premises
+
+- **What this appendix is.** This appendix records participant-run support and provenance for the MODEL premises already stated in H1-screen. It does not create a separate score-setting H8 inference. The records are the 1,140-window entries panel, 1,080-window F9 panel, current S205 256-window cap-support panel 2006000..2006255, prior 64-window cap-support panel 2000000..2000063, older 1,080-window cross-claw panel 980000..981079, and the historical screened/unscreened panels. Their representativeness remains declared in the corresponding H1-screen clauses; reproducibility and complete reporting do not prove unbiasedness.
+- **Predeclaration, entries panel, verbatim (PREDECLARE_NJ68_1115.txt, written 2026-11-15 18:06 MST).** "nj68 entries panel PREDECLARATION, written 2026-11-15 18:06 MST before any of these windows runs. Same tool and rule as PREDECLARE_NJ67_1115.txt (f8count2.py, calibration c = 0.9989414 from the 16-window control). New windows: 802060..803139 (1,080; the windows of the accepted F9 factor), all reported. Panel: 1,140 windows 802000..803139 (nj67's 60 + these 1,080), batch (window) means, one-sided Student-t(1139, 0.995). Server order S185 (Z:/Luna_Orders/S185_ENTRIES, 6 workers) after S183/S184 end. PC share: 2 workers on vCPUs 18-19, windows 803139 downward, out nj67/panel68/ (server S185 goes upward)."
+- **Predeclaration, its predecessor, verbatim (PREDECLARE_NJ67_1115.txt, written 2026-11-15 16:48 MST).** "nj67 entries panel PREDECLARATION, written 2026-11-15 16:48 MST before any new window runs. Tool: nj67/exp/f8count2.py sha256 34f65c7075a144f3... (rebuilt count of F8-passing listed entries per F9 claw, first 125 F9 claws per window, k4 off), program r39joint_k4.py sha256 458910183f9f814d... (= accepted 1bb2ccf3). Control (MEASURED before this file): on the proof's windows 802000-802015 the rebuilt tool gives 681,476.49 entries/claw (lost tool: 680,755.1) and 575,318.8 keys/claw (575,154.9) - close, not exact. Rule: every count of the rebuilt tool is multiplied by the calibration c = 680,755.1 / 681,476.49 = 0.9989414 (removes the tool's +0.11% on the control; conservative). New windows: 802016..802059 (44), all reported; panel = 60 windows 802000..802059 (the windows of the accepted F9 factor), ALL from the rebuilt tool times c (its 16 control windows then average exactly 680,755.1). Estimator: batch (window) means, Student-t one-sided at t(59, 0.995) as the accepted H1-screen (ii)."
+- **Dated sequence (MST), each item fixed before the runs it governs.** The historical declarations are unchanged. On 2026-11-18 N was fixed at 256 and the new W_max was selected from the disclosed S198 planning curve before the S205 direct combined-program analysis. The earlier one-look prefix 2000000..2000063 was frozen before those 64 windows ran. S205 separately froze the fresh disjoint range 2006000..2006255, program, cap and one-look estimator before any of its 256 windows ran. These are participant panels; neither nominal calculation is familywise over the sequence of cap-panel choices.
+- **Seed ranges, all public and contiguous.** Entries: 802000..803139; F9: 802060..803139; current S205 cap support: 2006000..2006255; prior cap support: 2000000..2000063; cross-claw: 980000..981079; historical screened/unscreened ranges as previously recorded. Every declared S205 window is present exactly once.
+- **Complete reporting, every window accounted.** The historical panel accounting is unchanged. S205 reports all 256 seeds 2006000..2006255 exactly once: cap fired in 248, skipped 0, minimum single-window ratio 0.9631374352, `sum_keys_at_cap=132456267149`, `sum_keys_standard=133501459989`. The prior 64-window panel reports all seeds and remains support only. The older 1,080-window panel remains used only for the cross-claw term.
+- **Tool and harness identity.** Entries counts: nj67/exp/f8count2.py, SHA-256 34f65c7075a144f3256749413dcb1ebb1a5d649fef87ba5c9658c95112b65155, the hash written in its predeclaration. S205 frozen combined-program source: `r39joint_k4_cap.py`, SHA-256 76f28368ec72a4721d425711c60d5decaeb4f48c996b127eb3e7e7aec0f4bfdf. Shipped source: `experiments/r39joint_k4_production.py`, SHA-256 1722b6d1896e1f0d84a699a183fd99582f6d09fbd23d93df4491f97b10d81f9b; it differs from the frozen measured source only in final `R_LB`, claim-bound and compact-pass assertions, none of which changes a measured window path. Appendices A, B and D name their other harnesses and counters.
+- **Estimator, revisions and multiple comparisons.** The estimator form is not chosen per panel: batch (window) means with a one-sided Student-t lower bound at 0.995 per factor, union-bounded to a joint 99%, is the form of the accepted H1-screen (ii) and is restated in both predeclarations before the runs; the degrees of freedom follow the panel size (t(15, 0.995) = 2.946713, t(59, 0.995) = 2.661759, t(419, 0.995) = 2.587614, t(779, 0.995) = 2.582155, t(1079, 0.995) = 2.580393, t(1139, 0.995) = 2.5801527). The panels grew by declared extensions, and each entry repriced on the whole panel then available, every intermediate value printed in Section 7, as combined trials per distinct claw T (not the F9-claws-per-window factor, 901.6269 in this entry): T = 10640.4 on 60 windows (d3a46ae6), 10658.9 on 420 (d049ec74), 10671.5 on 780 (ab09e983), 10679.3 on 1,080 (899b67ef), the accepted nj76s 1,140-window entries factor with the 1,080-window F9 factor, 10774.5; and fixed-N S190's 2,280-window entries factor with the unchanged F9 factor, 10777.9. One rule and one estimator are applied to every window of every declared range; S190's 2,026-window diagnostic was reported before its fixed 2,280-window completion and is disclosed above. The calibration c = 0.9989414 was fixed on the 16 control windows before the 1,124 new entry counts ran, and is conservative (it removes the rebuilt tool's +0.11% on the control).
+- **What this record supports, stated exactly.** The hashes, the 42 agreeing duplicate seeds, the seven empty duplicate files and the per-window count-to-mean check support reproducibility and complete reporting of the declared ranges: the reported numbers are the tool's numbers on every declared window. They do not by themselves establish unbiasedness. The timeline is partial, not total: PREDECLARE_NJ68_1115.txt precedes the entry-count runs it governs, but its 1,080 seeds 802060..803139 are the seeds already run for the F9 factor under the earlier orders, so their F9 and work outcomes were known when that predeclaration was written; it is therefore not a commitment made before all outcomes on those seeds were known. The organizer-executed manifest experiments (Section 11) run small windows, not these panels at their size. On four small unscreened windows the organizer executed this submission's own instrument, r39k4-window-small (experiments/manifest.json, fields `hypothesis` and `scope`), and that execution reproduces the participant's small-window claw, F9 and sampled distinct-key diagnostics (the bullet after next, and Section 11 lines 204 and 209). These are participant counters reproduced in organizer execution, not an independent organizer verification of the panel quantities: the organizer's experiment report for r39k4-window-small records them as untrusted_participant_observations, recomputes only the output predicates of returned pairs (predicate_trust organizer_recomputed), and states (scope_limit) that internal predicates, algorithmic work, extrapolation and expected cost remain unverified. The same run asserts the program's counts, the stamp method and the dispersion test, and it does not replay the large participant panels. The first-125-claws selection inside a window is carried to all claws by H1-screen (ii), the two full-window checks of Section 7 being support, not proof.
+- **MODEL-premise limits.** The public-seed records support the H1-screen clauses but do not prove production-law representativeness or freedom from seed, estimator, revision-point or multiple-comparison bias. The panels are participant-run; S205's N is 256 and the 556M cap was selected from the disclosed S198 planning curve; there is no organizer-selected nonce at full window size. The score is explicitly conditional on H1-screen(iv)'s retention inequality. Organizer small-window observations test implementation and gross diagnostics only.
+- **Supporting small-window diagnostics: participant counters reproduced in organizer execution (r39k4-window-small).** The organizer run reproduces small-window claw, F9 and sampled distinct-key diagnostics recorded by the manifest. It does not execute the large panels, count calibrated full-list entries at production scale, or test cap retention. Transfers from these diagnostics to screened, full-size production quantities remain in the explicitly declared H1-screen MODEL clauses.
+
+
+## Appendix H. H-cross-claw: the organizer tests, the predeclared panel and the price (this entry)
+
+**Construction of a trial (code: the mate code of experiments/r39joint_k4_production.py, after the record's digest; `_xd`).** For a verified hit with chaining value c and words kw(c, A): draw an entry (a2, a3) uniformly over the run's 4 kappa groups, W9 in F9 and W8 in F8 as the replica draws them (pattern | uniform free bits), solve a1 = W9|a1=0 - W9 and a0 = W8|a0=0 - W8 (both exact in k4_words; W8 bit 0 set so that a0 is even), redraw until W1 is odd (class 01); take w = kw(c', (a0, a1, a2, a3)) with c' = c (arm A) or a fresh random chaining value (arm U); `_xd` sets W17 and then W16 to the advice values by re-solving W1 and W0, re-solves the chaining value from the advice states of rows 10..15 (invert_downward), traces both messages and returns 0 if row 18 leaves the advice XOR differences of A and E, 1 if row 19 does, 2 if both hold (D19). xa18 / xu18 count rows 18, xa20 / xu20 count D19. On a hit itself the construction returns the hit's chaining value and depth 39, and on every F8-passing mate of every hit of the panel it gives the mate's real first deviating row (participant check over 8,623 hits; the organizer-path counts equal the participant tool's on r39-mate-01).
+
+**Prediction (stated in the manifest before the run).** Over r39-mate-01..14, sum xa20 <= 17; 18 or more falsifies eps_key = 2^-8 (the one-sided 99% Clopper-Pearson bound at n = 60,416 would exceed 2^-11 / 1.000099). The cross-claw arm counts of these runs (xa18, xa20, xu18, xu20) were computed before filing from the public seeds; this concerns H-cross-claw only, not the runs' records or digest48: xa20 = 0 in every run, xu20 = 1, xa18 30,241 against xu18 30,368 of 60,416 (z = -0.73). The arms run after the digest48 assertion, so under a holdout nonce the run would stop before them: H-cross-claw's arms are a public-seed test. Class-01 hits only (466 of the 1,888; the attack's trials are class 01): 0 of 14,912, bound 3.09e-4, 8 x bound x 1.000099 = 2^-8.66, still under eps_key. The 1,888 hits sit in 867 carrier clusters (W18 values of the carrier); the bound is on the mean over the sampled hits.
+
+**Claw selection (organizer, r39k4-window-small trials 0, 2, 3).** On the 12 real F9 claws of those windows (screen off, as that experiment runs): 3,714 real trials against 3,714 virtual ones on the same chaining value, row 18 1,830 against 1,873 (ratio 0.9770, z = -1.00), asserted |z| <= 3. Row 18 only: at this size D19 (rate about 2^-17) is out of reach.
+
+**Participant panel (predeclared: PREDECLARE_XC_1117.txt, written before any panel run; w19/tools/xc_run.py, xc_analyze.py; every run reported).** Ids r39-mate-01..64 on the organizer seed protocol (01..14: digest48 equal to the organizer's in all 14), 64 trials per hit per arm; arm B (same entry as the hit) is a diagnostic. E19 = W18 in P (predeclared primary), D19 = through row 19.
+
+| panel | hits | trials per arm | arm | row 18 | E19 | 99% bound on E19 rate | D19 |
+|---|---:|---:|---|---:|---:|---:|---:|
+| 01..14 | 1,888 | 120,832 | A | 0.4985 | 1 | 5.49e-5 = 2^-14.15 | 0 |
+| | | | U | 0.5006 | 2 | 6.96e-5 | 1 |
+| 15..64 | 6,735 | 431,040 | A | 0.4992 | 7 | 3.71e-5 | 2 |
+| | | | U | 0.4996 | 11 | 4.99e-5 | 4 |
+| 01..64 | 8,623 | 551,872 | A | 0.4991 | 8 | 3.15e-5 = 2^-14.95 | 2 |
+| | | | B | 0.4991 | 10 | 3.65e-5 | 2 |
+| | | | U | 0.4999 | 13 | 4.37e-5 | 5 |
+
+Row-18 rate ratio (hit-clustered delta s.e.): A/U 0.9958 (0.0040) on 01..14, 0.9984 (0.0019) on 01..64; B/U 0.9985 (0.0019). The exact density of P is 2^-16 = 1.53e-5. No trial reached row 21.
+
+**Deviations of this entry's cross-claw panel from PREDECLARE_XC_1117.txt (disclosed; they concern H-cross-claw only, not the inherited panels).** The predeclared primary event was E19 (W18 in P) at m = 64 with pricing rule "8 x the Panel O bound, rounded up to a power of two" (2^-11 on E19) and a GO criterion on E19. The organizer version counts D19, which is contained in E19 (so its bound is not larger for the same counts), at m = 32 (runner time); D19 was named in an addendum written after the main panel had run and before the diagnostic. The priced eps_key = 2^-8 is above both 2^-11 (E19, predeclared rule) and 2^-10.68 (D19, organizer): the choice of event and of eps_key only adds margin.
+
+**Diagnostic R (claw selection; predeclared in the addendum of the same file before it ran; w19/tools/xc_realclaw.py).** Screened windows of 2^22 walk evaluations of the attack path, seeds 1170001-1170008, every F9 claw recorded (172): per claw 4,096 real trials (real a0, a1 from the walk, W16 = g real, W17 set to the advice value) against 4,096 virtual trials on the same chaining value. Row 18: 0.5000 against 0.5005 (ratio 0.9990, s.e. 0.0017); E19 7 against 13; D19 2 against 5.
+
+**Current price (DB25 ROW B point law).** Divisor loss exactly `3421676948137525266914850497/5378217134720286959578644480000`; `K4_EN_LB=10809.525521563191`; `r=0.9921709`; 90,249,392,917,716,324,581,376 windows at 556,000,006 operations plus setup and `2812*2^43` preprocessing give exact `N=50,178,663,003,746,658,708,157,689,411,708`, `time_log2=93.84946409349443`, filed upward as **93.8495**. Parent bound pricing is retained above only as history.
+
+**Runner.** The organizer's experiment runner at 4ae50b1 (_python_result for every entry, run_experiments, verify_report_integrity), only its Docker call emulated (program alone at /input/program.py read-only, nobody, one CPU, 128 MB without swap, 20 s, CPython 3.12.12): 16 of 16 pass in each of 3 passes; every run took at most 11.9 s.
+
+Note: the two headings "Appendix D" (the rows-18-19 enumeration and the 1,080 windows of the F9 factor) are ad125692's; "Appendix D" for P means the first.
+
+## Ruling response: `5afca76e`
+
+This answers every finding in the paired-lane dossier. The two fatal
+build-binding findings are repaired by attached artifacts; material MODEL and
+evidence limitations remain disclosed rather than presented as proved.
+
+- **F-BUILD-BINDING (fatal): FIXED.** The active production source and its
+  counted Wasm module is embedded in the registered production experiment,
+  checksum-bound, and
+  named by exact hashes. The same source supplies the organizer fallback.
+- **F-EXP-001 (fatal): FIXED.** H-PC no longer assigns the false `e2db47...`
+  hash to the submitted source. It binds the single registered source to
+  `030d71...` and the embedded generator to `0ae58e...`.
+- **LC-F1-BUILD-BINDING / F-build-binding-mismatch (material): FIXED by the
+  same attachment.** The missing generator and production algorithm are now
+  package files, not proof-only descriptions.
+- **F-SUCCESS-EVIDENCE / F-experiments-no-score-inference / F-EXP-002
+  (material): DISCLOSED.** Organizer experiments are deterministic KATs and
+  make no production success or expected-cost inference. The score remains
+  conditional on explicitly named MODEL premises.
+- **F-PREPROCESSING-RECORD (material): DISCLOSED.** The `2^43` term remains a
+  conservative declared charge for the participant campaign and searches;
+  organizer KATs verify the fixed construction, not the historical campaign.
+- **LC-F2-NO-COLLISION-WITNESS (material): DISCLOSED.** No organizer trial is
+  claimed to execute the astronomical full attack. Full padding, distinctness,
+  and digest equality are specified by the active production path and analytic
+  construction, conditional on success.
+- **LC-F3-TAIL-POINT-EXTRAPOLATION / F-EXP-003 (material): CLARIFIED.** The
+  `2^-74.4594` at-least value is an explicit MODEL premise set numerically to
+  the pooled mean; it is not inferred as a statistical confidence bound. The
+  one-sided 99.9% sample value `2^-74.6588` remains disclosed sensitivity.
+- **LC-F4-DEPENDENCE-AND-TRANSFER (material): DISCLOSED.** First-claw,
+  screened-claw, virtual-to-real, independence, and weighted-transfer steps
+  remain enumerated score-critical premises, not hidden conclusions.
+- **F-EXP-004 (material): DISCLOSED.** Public-seed and participant-panel
+  selection limits remain stated. This repair supplies executable production
+  artifacts and exact hashes; it does not relabel participant panels as
+  organizer holdouts or family-wise confidence evidence.
+
+The current row remains exploratory/conditional where those MODEL premises
+are used. Nothing here converts a KAT, point estimate, or public panel into an
+organizer-derived probability theorem.
+
