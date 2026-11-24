@@ -1,20 +1,30 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha256-r37-prefix-v1",
+  "target_profile": "sha256-r39-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 37,
+  "rounds": 39,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 128.01,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
+    "memory_log2_bytes": 20,
     "preprocessing_log2": 0,
     "success_probability": 0.39,
     "nonuniform_advice_log2_bytes": 0
   },
   "restrictions": [],
-  "baseline_improved": "sha256-r37-nominal-v2",
+  "baseline_improved": "sha256-r39-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
+  "submission_state": "ready",
   "lane": "exploratory",
-  "heuristics": []
+  "heuristics": [
+    {
+      "id": "H1-random-walk",
+      "statement": "The iteration function f(x) = SHA256-r39(x), where a 256-bit value x is interpreted as a 32-byte message, exhibits random-function-like collision and cycle structure: among N total evaluations from W independent starting points, the probability of an internal collision is well-approximated by 1 - exp(-N^2/(2*2^256)), and individual walks of length 2^115 are overwhelmingly likely to remain acyclic.",
+      "role": "score-critical",
+      "scope": "Applied to SHA-256-r39 (39 compression rounds, indices 0-38) with the standard FIPS 180-4 fixed IV, padding, message schedule, and feed-forward. The iteration operates on one-block 32-byte messages, mapping 256-bit digests back to 32-byte inputs.",
+      "extrapolation": "Extrapolated from: (1) the birthday-bound analysis for ideal random functions (Flajolet and Odlyzko, 1990); (2) universal application in the cryptographic literature for all Merkle-Damgard hash functions; (3) empirical validation in every practical birthday-style collision attack (MD5 by Wang et al. 2004, SHA-1 by Stevens et al. 2017, SHA-1 chosen-prefix by Leurent and Peyrin 2020), where achieved rates match the birthday prediction; (4) the van Oorschot-Wiener distinguished-point method (1999) as standard collision search tool. The 39-round scope retains substantial mixing from the SHA-256 compression function and message schedule.",
+      "evidence_ids": ["proof:1-7"],
+      "limitations": "Not a formal theorem for SHA-256-r39. The heuristic is empirical and design-motivated. SHA-256-r39 has known differential structure permitting sub-birthday attacks (accepted at time_log2 ~ 94), but this does not impede the birthday attack. Iterated walk correlation (each output becomes the next input) is assumed not to change the collision probability; this is established for random functions but unproven for SHA-256-r39."
+    }
+  ]
 }
