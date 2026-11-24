@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "rho-reduced-16",
+      "kind": "python-message-pairs-v1",
+      "scope": "Birthday collision search on 16-bit truncation of SHA-256-r39. Demonstrates that the iterated hash function exhibits random-function-like collision structure at reduced width, supporting extrapolation to full 256-bit width.",
+      "hypothesis": "The birthday collision search finds partial collisions (matching low 16 bits) on SHA-256-r39 at the expected birthday rate, confirming random-function-like behavior of the iteration function.",
+      "program": "experiments/rho_reduced.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "000000000000000000000000000000000000000000000000000000000000ffff",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    }
+  ]
+}
