@@ -1,20 +1,38 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha256-r37-prefix-v1",
+  "target_profile": "sha256-r40-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 37,
+  "rounds": 40,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 123.9061,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 20,
+    "preprocessing_log2": 17.66066,
     "success_probability": 0.39,
     "nonuniform_advice_log2_bytes": 0
   },
-  "restrictions": [],
-  "baseline_improved": "sha256-r37-nominal-v2",
+  "restrictions": [
+    "Generic distinguished-point birthday collision search on the 64-byte two-block W[0..7]-prefix message family; no cryptanalytic weakness in 40-round SHA-256 is claimed and no full-width 256-bit collision is produced.",
+    "Full-width success probability (>= 0.390000001) relies on H1-random-function-walk under the declared collision-frontier-v5 256-bit word-RAM model."
+  ],
+  "baseline_improved": "sha256-r40-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
+  "experiment_manifest": "experiments/manifest.json",
+  "submission_state": "ready",
   "lane": "exploratory",
-  "heuristics": []
+  "heuristics": [
+    {
+      "id": "H1-random-function-walk",
+      "statement": "The iterated 256-bit Walk-B transition F(Y) = B(Y) XOR PD on the 64-byte two-block W[0..7]-prefix message family of 40-round SHA-256 behaves like a uniform random function on {0,1}^256 with respect to birthday collision hazard, distinguished-point hitting times (p = 2704 / 2^122), trail-length tails, and 37-bit key independence.",
+      "role": "score-critical",
+      "scope": "Complete 40-round SHA-256 (steps 0..39 on every padded block, standard FIPS 180-4 IV, padding, message schedule, and feed-forward) restricted to 64-byte messages with fixed 8-word prefix W[0..7] and affine offsets W[8+k] = Y_k - K[8+k] (k=2..7).",
+      "extrapolation": "Extrapolated from the van Oorschot-Wiener (1999) and Flajolet-Odlyzko (1990) random-function birthday theory together with two organizer-executed reduced-width experiments on the exact 64-byte W[0..7]-prefix family at w=16 (bounded DP collision recovery) and w=14 (fixed-budget M=127 collision rate near P=0.39).",
+      "evidence_ids": [
+        "proof:1-6",
+        "experiment:sha256-r40-walkb-bounded-w16-v1",
+        "experiment:sha256-r40-walkb-projection-w14-v1"
+      ],
+      "limitations": "Empirical reduced-width experiments at w=16 and w=14 cannot prove the absence of structural correlations or non-random cycle behavior at full 256-bit width. If 40-round SHA-256 deviated significantly from a random function under F, the achieved success probability could fall below 0.39."
+    }
+  ]
 }

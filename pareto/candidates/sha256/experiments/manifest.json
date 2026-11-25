@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "sha256-r40-walkb-bounded-w16-v1",
+      "kind": "python-message-pairs-v1",
+      "scope": "Complete 40-round SHA-256 on the 64-byte two-block W[0..7]-prefix message family; bounded distinguished-point birthday search targeting the low 16 bits of the final digest (256 organizer trials, max 160 evaluations/trial, dp_bits=1), plus deterministic self-test of the 43,548-gate Walk-B bit-sliced kernel, 860-register Reverse-DAG zero-move allocator, 1,249-op 2-lane SIMD RecProg, and 80-digit Lemma 2 + Gamma(2F+3) ledger.",
+      "hypothesis": "The bounded distinguished-point birthday search on the 64-byte W[0..7]-prefix family recovers distinct message pairs colliding on the low 16 bits of complete 40-round SHA-256 at the random-function DP birthday rate, while the bit-sliced Walk-B kernel matches complete 40-round SHA-256 on all 256 lanes.",
+      "program": "experiments/sha256_r40_search.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "000000000000000000000000000000000000000000000000000000000000ffff",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "sha256-r40-walkb-projection-w14-v1",
+      "kind": "python-message-pairs-v1",
+      "scope": "Complete 40-round SHA-256 on the 64-byte two-block W[0..7]-prefix message family; fixed-budget birthday collision projection at width w=14 bits (256 organizer trials, budget M=127 evaluations/trial, random-function model prediction P = 1 - exp(-127^2 / (2 * 2^14)) = 0.3887).",
+      "hypothesis": "Under H1, the empirical collision frequency on the low 14 bits of complete 40-round SHA-256 across 256 independent trials at budget M=127 matches the random-function birthday prediction of approximately 0.39.",
+      "program": "experiments/sha256_r40_search.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "0000000000000000000000000000000000000000000000000000000000003fff",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    }
+  ]
+}
