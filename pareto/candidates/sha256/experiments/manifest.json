@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "sha256-r40-walkb-bounded-w16-v1",
+      "kind": "python-message-pairs-v1",
+      "scope": "Complete 40-round SHA-256 on the 64-byte two-block W[0..7]-prefix message family; bounded merging distinguished-point birthday walk embedded on the low 16 bits of the final 2-block digest (256 organizer trials, strict total budget max 285 evaluations/trial including both Pass-1 search and Pass-2 recovery, dp_bits=2), plus deterministic self-test verifying exact 256/256 single-step equivalence of the 43,548-gate Walk-B kernel + walk_b_inverse_to_digest and 1,249-op 2-lane SIMD RecProg against complete 40-round SHA-256 and a direct 64-trial w=12 iterated Walk-B F(Y) birthday check.",
+      "hypothesis": "The bounded merging distinguished-point birthday search on the 64-byte W[0..7]-prefix 2-block digest map recovers distinct message pairs colliding on the low 16 bits of complete 40-round SHA-256 at the random-function DP birthday rate (~37-40%) within the strict 285-evaluation total budget, while selftest() verifies both single-step Walk-B equivalence (256/256) and direct iterated Walk-B F(Y) birthday behavior at w=12.",
+      "program": "experiments/sha256_r40_search.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "000000000000000000000000000000000000000000000000000000000000ffff",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "sha256-r40-walkb-projection-w14-v1",
+      "kind": "python-message-pairs-v1",
+      "scope": "Complete 40-round SHA-256 on the 64-byte two-block W[0..7]-prefix message family; fixed-budget birthday collision projection at width w=14 bits (256 organizer trials, budget M=127 evaluations/trial, random-function model prediction P = 1 - exp(-127^2 / (2 * 2^14)) = 0.3887).",
+      "hypothesis": "Under H1, the empirical collision frequency on the low 14 bits of complete 40-round SHA-256 across 256 independent trials at budget M=127 matches the random-function birthday prediction of approximately 0.39.",
+      "program": "experiments/sha256_r40_search.py",
+      "event": {
+        "kind": "digest-xor-mask",
+        "mask_hex": "0000000000000000000000000000000000000000000000000000000000003fff",
+        "expected_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    }
+  ]
+}
