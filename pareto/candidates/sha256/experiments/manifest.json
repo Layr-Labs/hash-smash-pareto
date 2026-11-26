@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "r39-transplant-claw",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39joint_k8.py",
+      "event": {"kind": "full-collision"},
+      "scope": "Deterministic algebraic, import-builder, 4-family prefix-equality, 16-step two-message transplant, and 48/48 planted-key verification for Tuple 124 (k=8, all 48 kappa groups, 1,088 active classes, 62,955,816 exact entries, 52 bit-sliced prefix blocks), plus 255 organizer-seeded random (cv, a0, u) transplant/claw checks.",
+      "hypothesis": "Trial 0 asserts the published 39-round SFS collision, exact Tuple-124 import invariants (48 groups, 1,088 classes, 52 prefix blocks, 12,928 unique 18-bit prefixes, bit-identical prefix sets within each 12-group family, K4_MEM=883,201 B <= 2^20, deterministic worst-case pass bound K4_PASS_WC=48,364 < guard reserves), exact 16-step two-message transplant on all 48 group samples, and 48/48 planted W17 hits through the 3-stage shared-prefix k4q pass. Trials 1..255 assert exact W1, W9, W16-claw equivalence, and 16-step transplant on random (cv, a0, u)."
+    },
+    {
+      "id": "r39k4-window-small",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39joint_k8.py",
+      "event": {"kind": "full-collision"},
+      "scope": "Executable production-path check of the shipped Attack(win, k4=True) walk, 944-claw k4d dedupe gate, 4-family 52-block k4q pass, g1..g15 deterministic guard assertions (g8 interval 16, g6=17,000), full 2^20 k4-off invariance, cv screening, 48/48 planted-key recovery on a real walk cv, and _stamp/wmax capped prefix-identity replay (trial 0 at 2^20 walk evaluations, trials 1..3 at 2^19).",
+      "hypothesis": "All 14 guard invariants (m.o - gl <= gR), full 2^20 k4-off operation invariance, k4_scr <= 5 screening charge (69 + 3*(S>5)), 48/48 planted hits on a walk cv, and exact capped replay prefix identity (m.o <= W and evaluated claw prefix match) hold with zero failures across trials 0..3."
+    },
+    {
+      "id": "r39-mate-01",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39joint_k8.py",
+      "event": {"kind": "full-collision"},
+      "scope": "Organizer-seeded paired SMC tail, mate, and cross-claw check (NP=100, 1x40x2,048=81,920 trials/arm on one shared SMC carrier): row 0 draws a size-proportional group from all 48 Tuple-124 groups (62,955,816 entries) via exact DP uniform sampling, verifies every 39-round collision, traces all F8-passing mates through row 19, and runs 32 cross-claw virtual trials/hit drawn from a fresh size-proportional group gi2; row 1 runs the paired PUB control on the identical SMC carrier.",
+      "hypothesis": "Every Tuple-124 and PUB hit is a verified full 39-round SHA-256 semi-free-start collision matching exact kw/fd_tail=39, both arms share identical carrier log2 weight l2, and every F8-passing mate deviates at row >= 18 with zero Delta==0 collisions (consistent with the exhaustive 2^32 W3 theorem and 28-seed ALL-48 panel)."
+    },
+    {
+      "id": "r39-mate-02",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39joint_k8.py",
+      "event": {"kind": "full-collision"},
+      "scope": "Organizer-seeded paired SMC tail, mate, and cross-claw check #02 (NP=100, 1x40x2,048 trials/arm, Tuple-124 ALL-48 DP sampler vs paired PUB control on identical SMC carrier).",
+      "hypothesis": "Every hit verifies as a full 39-round collision with identical carrier l2 across arms and mate/cross-claw behavior consistent with the 28-seed ALL-48 panel and exhaustive 2^32 W3 theorem."
+    },
+    {
+      "id": "r39-mate-03",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39joint_k8.py",
+      "event": {"kind": "full-collision"},
+      "scope": "Organizer-seeded paired SMC tail, mate, and cross-claw check #03 (NP=100, 1x40x2,048 trials/arm, Tuple-124 ALL-48 DP sampler vs paired PUB control on identical SMC carrier).",
+      "hypothesis": "Every hit verifies as a full 39-round collision with identical carrier l2 across arms and mate/cross-claw behavior consistent with the 28-seed ALL-48 panel and exhaustive 2^32 W3 theorem."
+    },
+    {
+      "id": "r39-mate-04",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39joint_k8.py",
+      "event": {"kind": "full-collision"},
+      "scope": "Organizer-seeded paired SMC tail, mate, and cross-claw check #04 (NP=100, 1x40x2,048 trials/arm, Tuple-124 ALL-48 DP sampler vs paired PUB control on identical SMC carrier).",
+      "hypothesis": "Every hit verifies as a full 39-round collision with identical carrier l2 across arms and mate/cross-claw behavior consistent with the 28-seed ALL-48 panel and exhaustive 2^32 W3 theorem."
+    },
+    {
+      "id": "r39-mate-05",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39joint_k8.py",
+      "event": {"kind": "full-collision"},
+      "scope": "Organizer-seeded paired SMC tail, mate, and cross-claw check #05 (NP=100, 1x40x2,048 trials/arm, Tuple-124 ALL-48 DP sampler vs paired PUB control on identical SMC carrier).",
+      "hypothesis": "Every hit verifies as a full 39-round collision with identical carrier l2 across arms and mate/cross-claw behavior consistent with the 28-seed ALL-48 panel and exhaustive 2^32 W3 theorem."
+    },
+    {
+      "id": "r39-mate-06",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39joint_k8.py",
+      "event": {"kind": "full-collision"},
+      "scope": "Organizer-seeded paired SMC tail, mate, and cross-claw check #06 (NP=100, 1x40x2,048 trials/arm, Tuple-124 ALL-48 DP sampler vs paired PUB control on identical SMC carrier).",
+      "hypothesis": "Every hit verifies as a full 39-round collision with identical carrier l2 across arms and mate/cross-claw behavior consistent with the 28-seed ALL-48 panel and exhaustive 2^32 W3 theorem."
+    },
+    {
+      "id": "r39-mate-07",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39joint_k8.py",
+      "event": {"kind": "full-collision"},
+      "scope": "Organizer-seeded paired SMC tail, mate, and cross-claw check #07 (NP=100, 1x40x2,048 trials/arm, Tuple-124 ALL-48 DP sampler vs paired PUB control on identical SMC carrier).",
+      "hypothesis": "Every hit verifies as a full 39-round collision with identical carrier l2 across arms and mate/cross-claw behavior consistent with the 28-seed ALL-48 panel and exhaustive 2^32 W3 theorem."
+    },
+    {
+      "id": "r39-mate-08",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39joint_k8.py",
+      "event": {"kind": "full-collision"},
+      "scope": "Organizer-seeded paired SMC tail, mate, and cross-claw check #08 (NP=100, 1x40x2,048 trials/arm, Tuple-124 ALL-48 DP sampler vs paired PUB control on identical SMC carrier).",
+      "hypothesis": "Every hit verifies as a full 39-round collision with identical carrier l2 across arms and mate/cross-claw behavior consistent with the 28-seed ALL-48 panel and exhaustive 2^32 W3 theorem."
+    },
+    {
+      "id": "r39-mate-09",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39joint_k8.py",
+      "event": {"kind": "full-collision"},
+      "scope": "Organizer-seeded paired SMC tail, mate, and cross-claw check #09 (NP=100, 1x40x2,048 trials/arm, Tuple-124 ALL-48 DP sampler vs paired PUB control on identical SMC carrier).",
+      "hypothesis": "Every hit verifies as a full 39-round collision with identical carrier l2 across arms and mate/cross-claw behavior consistent with the 28-seed ALL-48 panel and exhaustive 2^32 W3 theorem."
+    },
+    {
+      "id": "r39-mate-10",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39joint_k8.py",
+      "event": {"kind": "full-collision"},
+      "scope": "Organizer-seeded paired SMC tail, mate, and cross-claw check #10 (NP=100, 1x40x2,048 trials/arm, Tuple-124 ALL-48 DP sampler vs paired PUB control on identical SMC carrier).",
+      "hypothesis": "Every hit verifies as a full 39-round collision with identical carrier l2 across arms and mate/cross-claw behavior consistent with the 28-seed ALL-48 panel and exhaustive 2^32 W3 theorem."
+    },
+    {
+      "id": "r39-mate-11",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39joint_k8.py",
+      "event": {"kind": "full-collision"},
+      "scope": "Organizer-seeded paired SMC tail, mate, and cross-claw check #11 (NP=100, 1x40x2,048 trials/arm, Tuple-124 ALL-48 DP sampler vs paired PUB control on identical SMC carrier).",
+      "hypothesis": "Every hit verifies as a full 39-round collision with identical carrier l2 across arms and mate/cross-claw behavior consistent with the 28-seed ALL-48 panel and exhaustive 2^32 W3 theorem."
+    },
+    {
+      "id": "r39-mate-12",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39joint_k8.py",
+      "event": {"kind": "full-collision"},
+      "scope": "Organizer-seeded paired SMC tail, mate, and cross-claw check #12 (NP=100, 1x40x2,048 trials/arm, Tuple-124 ALL-48 DP sampler vs paired PUB control on identical SMC carrier).",
+      "hypothesis": "Every hit verifies as a full 39-round collision with identical carrier l2 across arms and mate/cross-claw behavior consistent with the 28-seed ALL-48 panel and exhaustive 2^32 W3 theorem."
+    },
+    {
+      "id": "r39-mate-13",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39joint_k8.py",
+      "event": {"kind": "full-collision"},
+      "scope": "Organizer-seeded paired SMC tail, mate, and cross-claw check #13 (NP=100, 1x40x2,048 trials/arm, Tuple-124 ALL-48 DP sampler vs paired PUB control on identical SMC carrier).",
+      "hypothesis": "Every hit verifies as a full 39-round collision with identical carrier l2 across arms and mate/cross-claw behavior consistent with the 28-seed ALL-48 panel and exhaustive 2^32 W3 theorem."
+    },
+    {
+      "id": "r39-mate-14",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39joint_k8.py",
+      "event": {"kind": "full-collision"},
+      "scope": "Organizer-seeded paired SMC tail, mate, and cross-claw check #14 (NP=100, 1x40x2,048 trials/arm, Tuple-124 ALL-48 DP sampler vs paired PUB control on identical SMC carrier).",
+      "hypothesis": "Every hit verifies as a full 39-round collision with identical carrier l2 across arms and mate/cross-claw behavior consistent with the 28-seed ALL-48 panel and exhaustive 2^32 W3 theorem."
+    }
+  ]
+}
