@@ -1,20 +1,135 @@
 {
   "schema_version": 3,
-  "submission_state": "draft",
-  "target_profile": "sha256-r37-prefix-v1",
+  "target_profile": "sha256-r39-prefix-v1",
   "attack_class": "ordinary-collision",
-  "rounds": 37,
+  "rounds": 39,
   "claim": {
-    "time_log2": 128.0,
+    "time_log2": 91.106120,
     "time_unit": "target-compressions",
-    "memory_log2_bytes": 0,
-    "preprocessing_log2": 0,
+    "memory_log2_bytes": 20.0,
+    "preprocessing_log2": 43,
     "success_probability": 0.39,
-    "nonuniform_advice_log2_bytes": 0
+    "nonuniform_advice_log2_bytes": 7.78135971352466
   },
-  "restrictions": [],
-  "baseline_improved": "sha256-r37-nominal-v2",
+  "restrictions": [
+    "Tuple-124 (k=8) transplant on the published 39-round SFS collision pair (ePrint 2026/1120 Table 23; 220 B total nonuniform advice) covering all 48 kappa groups (1,088 active classes, 62,955,816 exact valid entries, 9,906,695 distinct keys) with zero ad-hoc group pruning.",
+    "Exact 4-family 22/29-bit shared-prefix factorization (12,928 unique 18-bit prefixes packed into 52 256-lane blocks = 29,952 B prefix RAM; average k4q pass 22,090 ops/claw; deterministic worst-case survivor-free pass 48,364 ops; all 14 guards g1..g15 including g8 interval 16 and g6=17,000 unconditionally bounded, W9C prefilter charged 20 ops/class).",
+    "Exact deterministic cap-completion theorem with D_stop=0 identically: exhaustive 2^32 enumeration of s0(y)-y proves max_single_r=14 and M_48=107 across all 48 groups, bounding any kept colliding claw (N_k<=3) unconditionally by B_CLAW=2,919,873 < 3,000,000 ops; restricting the first-order union to claws with pre-k4q peak guard stamp M_pre(i) <= W_SAFE = WMAX_CAP - 3,000,000 = 467,000,000 yields an exact pointwise set inclusion under WMAX_CAP=470,000,000 with zero stop-position heuristic.",
+    "Exact integer ledger backed by strict 99% conservative bounds on every measured quantity (WMAX_CAP=470,000,000 frozen from 128-window Discovery; 256-window Frozen Holdout R_SAFE_LB=0.933146 at W_SAFE=467,000,000 with 0/241,664 monotonicity violations, ESW1_UB=895; 3,776-claw Holdout EN_LB=4,407,641, MU_D=3,194,360; 28-seed paired ALL-48 SMC p_tail=2^-74.62; DIV=236151998337473/53687091200000000; BW=15,943,814,860,889,987,686,481; N_TOTAL=7,493,593,080,281,208,112,600,674,567,782; raw log2(N/2812)=91.10611960561042 rounded up to 91.106120).",
+    "Self-contained itemized peak walk-phase memory K4_MEM=883,201 B <= 2^20 (165,375 B headroom below 1 MiB on top of 32,768 B embedded reserve; 4-family chunked Phase-S setup peak 584,292 B); declared memory_log2_bytes=20.0 (zero memory penalty). Shipped experiments/r39joint_k8.py is 65,497 B plain stdlib UTF-8 Python (SHA-256 5dc91a8f2b5ca2609ae3c500816f318917c1ba6b090b2d2cbe3b077fe8a5964e) with zero compressed blobs; local Docker was unavailable so organizer execution runs remotely at intake."
+  ],
+  "baseline_improved": "sha256-r39-nominal-v2",
   "certificate_manifest": "certificates/manifest.json",
-  "lane": "exploratory",
-  "heuristics": []
+  "experiment_manifest": "experiments/manifest.json",
+  "heuristics": [
+    {
+      "id": "H1-screen",
+      "statement": "Under the screened chaining-value and capped window law of experiments/r39joint_k8.py (k4_scr(cv)<=5, KCAP=679, DTRY=8,192, KTRY=32, 944-claw k4d gate, WMAX_CAP=470,000,000, g8 interval 16, g6=17,000, W9C=20 ops): (i) windows draw independent fresh first blocks M0; (ii) each evaluated F9 claw yields at least EN_LB=4,407,641 F8-passing listed entries and at most MU_D=3,194,360 F8-active distinct keys, uncorrelated with safe claw count s_safe and pre-k4q stamp M_pre(i); (iii) at least R_SAFE_LB=0.933146 of the 944 F9 claws per window satisfy M_pre(i) <= W_SAFE = WMAX_CAP - 3,000,000 = 467,000,000 (which is determined strictly before k4_eval(claw_i), is independent of claw i's W[17] hit and rounds 18..38 tail under H5-w17-uniform and H2-entries, and deterministically guarantees completion under WMAX_CAP with D_stop=0 via the exhaustive 2^32 M_48=107 bound B_CLAW=2,919,873 < 3,000,000), while claw-weighted E[s_w - 1] <= 895; (iv) the p'_k-weighted equal-G co-hit cluster rates over completed-claw keys are bounded by the list-uniform rates PI_BAR=2.31e-3 (for E[min(N_k,3)]) and Q4_UB=2.8104e-4 (for P(N_k>=4)).",
+      "role": "score-critical",
+      "scope": "The fixed target sha256-r39-prefix-v1 and the production Attack(win=2^26, k4=True, screen=1, wmax=470000000) path of experiments/r39joint_k8.py.",
+      "extrapolation": "Predeclared 128-window Discovery Panel (seeds 8,000,000..8,000,127) froze WMAX_CAP=470,000,000; exhaustive 2^32 enumeration of s0(y)-y proved M_48=107 and deterministic B_CLAW=2,919,873 < 3,000,000 (W_SAFE=467,000,000, D_stop=0); disjoint 256-window Frozen Holdout (seeds 8,500,000..8,500,255, 241,664 claws, 944 saturated 256/256, 0 guard violations, 0/241,664 monotonicity violations, max(stamp-M_pre)=106,062) measured r_safe=0.93756621 (99% LCB 0.93314643 -> R_SAFE_LB=0.933146), claw-weighted E[s_w-1]=890.7352 (99% UCB 894.8557 -> 895), and on 3,776 real screened F9 claws (first 32 holdout windows x 118 claws/window, stride 8) measured 4,427,108.32 F8-entries/claw (99% LCB 4,407,641.94 -> EN_LB=4,407,641; zero arrival-rank drift: ranks 1..125=4,430,840 vs 126..944=4,426,523) and 3,183,547.15 F8-keys/claw (99% UCB 3,194,359.21 -> MU_D=3,194,360); direct capped replay passed 8/8 holdout seeds with m.o<=470,000,000 and exact claw-prefix identity; cohit_all48 measured E[min(N_k,3)]=2.2578e-3 (below uniform 2.3066e-3 < PI_BAR=2.31e-3) and 0/16,384 w-values (0/1.623e11 key-trials) with N_k>=4 (99% CP 2.81038e-4 -> Q4_UB=2.8104e-4). Organizer-executable r39k4-window-small verifies all 14 guards, full 2^20 k4-off invariance, screening charges, 48/48 planted recovery, and _stamp/M_pre/wmax replay.",
+      "evidence_ids": [
+        "experiment:r39k4-window-small",
+        "experiment:r39-transplant-claw",
+        "proof:122-179",
+        "proof:183-216",
+        "proof:232-281"
+      ],
+      "limitations": "The full 2^26 Discovery/Holdout and 16,384-w co-hit panels are participant-run; organizer r39k4-window-small runs bounded 2^20/2^19 windows for mechanical and guard/cap/M_pre replay verification rather than full-scale statistical estimation. Local Docker was unavailable, so organizer experiments await remote intake execution. Extrapolating from 256 holdout windows to ~2^73.76 windows assumes i.i.d. fresh M0 draws and independence of M_pre, s_safe, and equal-G structure from rounds 18..38 tails."
+    },
+    {
+      "id": "H2-entries",
+      "statement": "Conditioned on a W[17]==W17PUB hit of a valid Tuple-124 entry (a2, a3) in F8 x F9 x F10 x F11 (class 01: a0 even, W[1] odd), the full 39-round SHA-256 collision tail probability across rounds 18..38 is at least p_tail = 2^-74.62.",
+      "role": "score-critical",
+      "scope": "Rounds 18..38 collision tail of all 62,955,816 valid entries across all 48 kappa groups of Tuple 124 after exact 16-step two-message reconvergence.",
+      "extrapolation": "28-seed paired ALL-48 SMC panel (NP=100, 4x40x2,048=327,680 trials/seed/arm, 9,175,040 trials/arm) sampling uniformly across all 62,955,816 entries via exact DP vs PUB control on identical SMC carriers (bit-identical l2 on 28/28 seeds): T124-ALL48 yielded 1,246 verified full 39-round collisions (pooled mean 2^-74.37763, 99% LCB 2^-74.58334; class-01 mean 2^-74.32531, 99% LCB 2^-74.61369; paired diff vs PUB +0.01666 bits, seed-mean +0.02237 +- 0.0591 bits). Priced p_tail=2^-74.62 lies strictly below even the 28-seed class-01 99% LCB. Organizer-executable r39-mate-01..14 repeats paired SMC (1x40x2,048 trials/arm) on a single shared SMC carrier across 14 organizer seeds.",
+      "evidence_ids": [
+        "experiment:r39-mate-01",
+        "experiment:r39-mate-02",
+        "experiment:r39-mate-03",
+        "experiment:r39-mate-04",
+        "experiment:r39-mate-05",
+        "experiment:r39-mate-06",
+        "experiment:r39-mate-07",
+        "experiment:r39-mate-08",
+        "experiment:r39-mate-09",
+        "experiment:r39-mate-10",
+        "experiment:r39-mate-11",
+        "experiment:r39-mate-12",
+        "experiment:r39-mate-13",
+        "experiment:r39-mate-14",
+        "proof:55-90",
+        "proof:217-228"
+      ],
+      "limitations": "SMC samples rounds 18..23 from the exact step-16/17 pinned state with uniform F8 x F9 draws for W[8], W[9] and random recovered cv rather than real screened walk claws (a0 even, u odd, k4_scr(cv)<=5). Rounds 18..38 depend on W[2..7] (which enter W[18..23]), and cv enters W[0..5] nonlinearly; k4_scr(cv)<=5 removes ~7.5 bits from 192-bit cv[0..5] while (a0, a1, a2, a3) randomize W[2..7]. Invariance of the tail under cv screening and walk claw selection is therefore a genuine heuristic premise of H2-entries rather than an algebraic identity. Organizer r39-mate-01..14 awaits remote Docker execution."
+    },
+    {
+      "id": "H5-w17-uniform",
+      "statement": "Across screened F9 claws, the claw-dependent offset (u, w2b) causes each listed key (a2, kappa) to hit W[17]==W17PUB with probability 2^-32, independently of F8 membership, rounds 18..38 tail outcomes, and W[17] hits on other claws.",
+      "role": "score-critical",
+      "scope": "W[17] hit probability in k4q for all 9,906,695 distinct keys of Tuple 124 and cross-claw product in the second-order Bonferroni bound.",
+      "extrapolation": "Algebraic decoupling W[17] = u + s0(a2 + w2b) - a2 - kappa (Section 2.3), 48/48 planted-key recovery + 100-claw random equivalence check (46 survivors observed vs ~45.5 expected, 0 mismatches vs linear scan), and organizer-executable r39-transplant-claw / r39k4-window-small.",
+      "evidence_ids": [
+        "experiment:r39-transplant-claw",
+        "experiment:r39k4-window-small",
+        "proof:63-118",
+        "proof:234-260"
+      ],
+      "limitations": "Exact 2^-32 W[17] hit probability and independence from rounds 18..38 tails are modeled heuristically; rare ~2^-10 per-claw hits cannot be tested jointly with 2^-74.6 full collisions at scale."
+    },
+    {
+      "id": "H7-mate-row19",
+      "statement": "Conditioned on a colliding Tuple-124 entry (a2, a3), its W[3] word is approximately uniform mod 2^32, so the exhaustive 2^32 bad-set sum max_{a3} sum_{b3!=a3 in group} |B_{b3-a3}| = 3,113,266 bounds within-key mate collision overlap pointwise by eps_mate/2 = 3,113,266 / 2^33 = 3.624319e-4.",
+      "role": "score-critical",
+      "scope": "Within-key mate Bonferroni deduction over all 62,955,816 entries (1,088 classes, 48 groups, 230 distinct mate offsets).",
+      "extrapolation": "Exhaustive 2^32 W[3] enumeration over all 230 distinct mate offsets of Tuple 124 proved 0 zero-Delta occurrences across all 230 offsets and exact pointwise worst-case sum 3,113,266/2^32; 28-seed ALL-48 SMC panel verified W[3] per-bit chi^2(32)=28.72 across 1,246 real hits (99.9% cutoff 62.49) and 0/972 F8-passing mates surviving row 19 (337 at row 18, 635 at row 19); organizer-executable r39-mate-01..14 traces every reached F8-passing mate live.",
+      "evidence_ids": [
+        "experiment:r39-mate-01",
+        "experiment:r39-mate-02",
+        "experiment:r39-mate-03",
+        "experiment:r39-mate-04",
+        "experiment:r39-mate-05",
+        "experiment:r39-mate-06",
+        "experiment:r39-mate-07",
+        "experiment:r39-mate-08",
+        "experiment:r39-mate-09",
+        "experiment:r39-mate-10",
+        "experiment:r39-mate-11",
+        "experiment:r39-mate-12",
+        "experiment:r39-mate-13",
+        "experiment:r39-mate-14",
+        "proof:201-228",
+        "proof:234-260"
+      ],
+      "limitations": "Exhaustive enumeration proves |B_d| and 0 zero-Delta unconditionally; mapping |B_d|/2^32 to conditional overlap probability relies on W[3] uniformity conditioned on a full collision, tested via 32 marginal bit counts on 1,246 SMC hits rather than proved cryptographically."
+    },
+    {
+      "id": "H-cross-claw",
+      "statement": "Conditioned on a collision at one claw of a window, another claw's key hit on the same chaining value cv follows the rounds 18..19 trail (and hence collides) with probability at most EPS_KEY = 2^-7.",
+      "role": "score-critical",
+      "scope": "Cross-claw pair term D_cross = (895 * 3,194,360 * 2^-7) / 2^33 = 2.600202e-3 inside the window second-order Bonferroni divisor DIV.",
+      "extrapolation": "28-seed paired ALL-48 panel tested 1,246 colliding cv clusters (64 virtual other-claw trials per hit -> 79,744 clustered trials per arm, real hit cv vs uniform random cv): xa18=40,152 vs xu18=40,046 (ratio 1.00265) and xa20=0, xu20=0. Because blocks of 64 trials share a single hit cv, we do not claim an i.i.d. n=79,744 Clopper-Pearson bound; EPS_KEY=2^-7 is a declared heuristic ceiling supported by exact parity with the random-cv row-19 survival baseline (~2^-18..2^-22, leaving >8 bits of heuristic headroom even after a 32-mate union bound). Organizer-executable r39-mate-01..14 repeats 32 cross-claw virtual trials/hit drawn from a fresh size-proportional group gi2 across 14 organizer-seeded runs.",
+      "evidence_ids": [
+        "experiment:r39-mate-01",
+        "experiment:r39-mate-02",
+        "experiment:r39-mate-03",
+        "experiment:r39-mate-04",
+        "experiment:r39-mate-05",
+        "experiment:r39-mate-06",
+        "experiment:r39-mate-07",
+        "experiment:r39-mate-08",
+        "experiment:r39-mate-09",
+        "experiment:r39-mate-10",
+        "experiment:r39-mate-11",
+        "experiment:r39-mate-12",
+        "experiment:r39-mate-13",
+        "experiment:r39-mate-14",
+        "proof:217-228",
+        "proof:234-260"
+      ],
+      "limitations": "Measured on clustered virtual other-claw trials (_xd pins W[17] by solving w[1] without parity restriction) using SMC-generated colliding chaining values rather than real screened-window claw pairs; deeper rows 20..38 are covered by event inclusion. Organizer r39-mate-01..14 awaits remote Docker execution."
+    }
+  ],
+  "submission_state": "ready",
+  "lane": "exploratory"
 }

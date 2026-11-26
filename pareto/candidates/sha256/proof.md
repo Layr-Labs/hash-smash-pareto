@@ -1,3 +1,308 @@
-# Organizer draft
+# 39-Round SHA-256 Ordinary Collision via `k = 8` Transplant (`Tuple 124`) and 4-Family Shared-Prefix Tree
 
-Not a submission or qualified baseline. See ../../README.md.
+**Track:** `sha256-r39-prefix-v1` (39-round SHA-256, ordinary full-256-bit collision, classical model, exploratory lane).
+**Claimed resources:** `time_log2 = 91.106120` target compressions (`C(39) = 2,812` word ops/compression), `memory_log2_bytes = 20.0` (itemized peak walk-phase `K4_MEM = 883,201 B <= 2^20`, headroom `165,375 B` on top of `32,768 B` reserve; peak setup-phase `584,292 B`), `preprocessing_log2 = 43`, `nonuniform_advice_log2_bytes = 7.78135971352466` (`220 B`), `success_probability >= 0.39`.
+**Normalized score:** `time_log2 + max(0, memory_log2_bytes - 20) = 91.106120` (**2.450944 bits** below the current best in-review 39-round submission `820db8f6` at `93.557064`, and **2.980480 bits** below human-accepted `d3a46ae6` at `94.0866`).
+
+Evidence labels used throughout:
+- **PROVED / EXHAUSTIVE:** exact algebraic derivation or exhaustive enumeration over the full stated finite domain.
+- **MEASURED (PARTICIPANT):** full-scale or large-sample measurement run with standalone C/Python verification tools on the exact shipped algorithm and `Mach` operation model, with predeclared discovery/holdout separation and strict 99% conservative bounds on every measured input.
+- **ORGANIZER-EXECUTABLE:** declared in `experiments/manifest.json` (`experiments/r39joint_k8.py`, plain stdlib-only UTF-8 Python, no compressed/obfuscated blobs) for bounded isolated Docker execution at remote intake. Local Docker was unavailable on the authoring machine, so organizer execution has not been run locally; all 16 declared organizer experiments remain to be executed by Yukon intake.
+
+---
+
+## 1. Exact Target, Message Construction, and Summary of Breakthroughs
+
+### 1.1 Exact target contract
+The target `sha256-r39-prefix-v1` is standard SHA-256 (FIPS 180-4) restricted to the first `r = 39` rounds in every compression call:
+- Standard fixed initial value `IV = [0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19]`.
+- Standard SHA-256 message schedule `W[t] = W[t-16] + s0(W[t-15]) + W[t-7] + s1(W[t-2]) mod 2^32` for `16 <= t < 39`, round constants `K[0..38]`, round functions `S0, S1, CH, MAJ`, and Davies-Meyer feed-forward `CV_out[i] = (CV_in[i] + state[i]) mod 2^32`.
+- Standard FIPS 180-4 big-endian bit-length padding (`0x80`, zero bytes, 64-bit bit length) applied to every message, with all 256 output bits required to agree.
+- Cost normalization for `r = 39`: `1` target compression equals `C(39) = 2,812` word operations (as fixed by the track profile).
+
+### 1.2 Full ordinary-collision output (`M0 || M1` vs `M0 || M1'`)
+Every window draws a fresh random 512-bit first message block `M0` (64 bytes) and computes `cv = Compress_39(IV, M0)` (`2,812` word ops charged per draw, including screened-out draws). Whenever the second-block search finds a 16-word block `M1` such that `Compress_39(cv, M1) == Compress_39(cv, M1')` with `M1' = (M1 + K4_DL) mod 2^32` (nonzero modular differences `K4_DL[8..12]`), the algorithm outputs the two distinct 128-byte (1,024-bit) messages:
+- `Msg_A = M0 || M1`, `Msg_B = M0 || M1'`.
+Because `Msg_A` and `Msg_B` have identical byte length (128 bytes `< 2^64` bits), FIPS 180-4 appends the identical 64-byte padding block `P_pad = 0x80 || 0x00^55 || 0x0000000000000400` to both. Since `Compress_39(IV, M0) = cv` and `Compress_39(cv, M1) == Compress_39(cv, M1')`, feeding `P_pad` into the final compression yields identical 256-bit hashes `SHA256_39(Msg_A) == SHA256_39(Msg_B)` with `Msg_A != Msg_B`. Thus every second-block collision directly produces a valid fixed-IV, padded, full-256-bit ordinary collision.
+
+### 1.3 Two synergistic breakthroughs over prior 39-round art
+Prior 39-round Pareto entries (`d3a46ae6` at `94.0866` through `820db8f6` at `93.557064`) all used a `k = 4` transplant that froze all eight state words `(A[8..11], E[12..15])` and message words `W[12..15]` to the published semi-free-start (SFS) collision (`CV_PUB, _mpx, M_PUB`), reaching at most `12,107,808`–`12,574,440` valid `(a2, a3)` entries across `240`–`294` `kappa` groups (`285`–`300` bit-sliced prefix blocks, `152,850` worst-case pass ops/claw, `1,025,697 B` RAM).
+
+We introduce two algebraic discoveries that compound multiplicatively:
+1. **`k = 8` Transplant (`Tuple 124`, Section 2):** Instead of locking `(A[8..11], E[12..15], W[12..15])` to the published SFS trace, we release `E[12..15]` while constraining `(A[8..11], E[12..15], W[12..15])` so that **both** messages reconverge bit-for-bit to the exact published 256-bit states `(BA[16..19], BE[16..19])` and `(CA[16..19], CE[16..19])` after step 15 with identical `W[16] = G16` and `W[17] = W17PUB`. Across all 307 valid `k = 8` tuples and full exact `F10`-DFA beam search over fibre values, **`Tuple 124`** at fibre `FIB = 0x28b7f117` yields **62,955,816 exact valid entries** (a **5.01x–5.20x expansion** over `k = 4`!), organized into only **48 `kappa` groups** (`1,088` active classes, `9,906,695` distinct `(a2, kappa)` keys) with a tighter 13-bit `E[11]` cube (`8,192` points vs `131,072`).
+2. **4-Family 22/29-Bit Prefix-Factorized `k4q` Tree (Section 3):** Exhaustive inspection of all 48 `kappa` groups of `Tuple 124` proves an exact algebraic factorization:
+   `kappa = FAM_LO22[f] + MID_D1[d1] + TOP_D2[d2]` (`f in 0..3`, `d1 in 0..2`, `d2 in 0..3`),
+   where all 12 groups inside each family `f` have **bit-for-bit identical 18-bit `a2` prefix sets** (sizes `1,312; 4,704; 1,536; 5,376`, totaling only **12,928 unique prefixes = 52 256-lane prefix blocks = 29,952 B of prefix RAM**, `11.6x` smaller than linear storage!) AND identical low 22 bits of `kappa`. Evaluating Stage 0 (bits `0..21`) once per family block, branching 3 ways on `MID_D1` (bits `22..28`) only for surviving blocks, and branching 4 ways on `TOP_D2` (bits `29..31`) only for Stage-1 survivors cuts average `k4q` pass cost from `127,123` ops/claw (`820db8f6`) down to **22,090 ops/claw** (deterministic worst-case survivor-free pass **48,364 ops**), requires **zero ad-hoc group pruning**, keeps **100% of all 62,955,816 entries**, and drops peak walk memory to **883,201 B** (`165,375 B` below `1 MiB`).
+
+---
+
+## 2. Algebraic Derivation of the `k = 8` Transplant (`Tuple 124`)
+
+### 2.1 Published SFS anchor and advice (`220 B` total)
+From ePrint 2026/1120 Table 23 (and `d3a46ae6` Section 2.1), the 160-byte published 39-round SFS collision pair `(CV_PUB, _mpx, M_PUB)` is:
+- `CV_PUB`: `aa79ff87 65c5bb49 d0a84bfd 90ccc398 fac64fb6 4ff7998a b1af5ec5 aa1ed4d5`
+- `M_PUB`:  `8334d670 3813877e f19d46d5 77556fc4 902f98c7 0500282c a4235533 9100e365 e76f5fe2 5633326d 9d603088 06a64487 a94ae11e b06304ad 43660038 d80d950f`
+- `_mpx` agrees with `M_PUB` on words `0..7, 13..15` and satisfies `M_PUB[i] = (_mpx[i] + K4_DL[i]) mod 2^32`, where `K4_DL[8..12] = [0x40000000, 0xf7801000, 0xc0000000, 0x0601dcd4, 0xffefe800]`, with `G16 = expand(_mpx)[16] = 0xbca1c321` and `W17PUB = expand(_mpx)[17] = 0x71e9ba98`.
+- The four modular-difference `s0` filters for rounds `23..26` are `inF(w, D_i, T_i) := ((s0((w + D_i) mod 2^32) - s0(w)) mod 2^32 == T_i)` for `(D8, T8) = (0x40000000, 0x087ff000)` (density `9/128`), `(D9, T9) = (0xf7801000, 0x03010000)` (density `1/64`), `(D10, T10) = (0xc0000000, 0x087ff000)` (exact `|F10| = 301,989,888`), and `(D11, T11) = (0x0601dcd4, 0x1fff41a0)` (exact `|F11| = 200,960`).
+
+Our `k = 8` transplant adds **60 bytes** (15 32-bit words) of nonuniform advice, for **220 bytes total** (`log2(220) = 7.78135971352466`):
+- `T124_A = A[8..11] = (0x203c1b5a, 0x58bd2ecb, 0xf5a01075, 0xcc8ef209)` (16 B)
+- `T124_E = E[12..15] = (0x95dbb2a8, 0x2c210e77, 0x1e3b4ffd, 0xff00d825)` (16 B)
+- `T124_W = W[12..15] = (0x576d201f, 0x306524bd, 0xc3662028, 0xd80db51f)` (16 B)
+- `FIB = 0x28b7f117`, `E11_BASE = 0x08226d10`, `K4_CUBE = 0xf74400ca` (12 B).
+`FAM_LO22`, `MID_D1`, `TOP_D2`, `T124_C9`, `K4_C11`, `K4_CA10`, `K4_W11C`, `R2_MASK`, and `W9C` are computed deterministically from these 220 B at import time (verified in `experiments/r39joint_k8.py`).
+
+### 2.2 Exact `k = 8` reconvergence theorem (PROVED)
+Let `(BA, BE)` and `(CA, CE)` denote the 39-round state trajectories of `(CV_PUB, _mpx)` and `(CV_PUB, M_PUB)` (`A[0..3] = cv[3..0]`, `A[r+4], E[r+4]` after round `r`). In rounds `r = 12..15`:
+- **Message 1 (`W`):** `A[16..19]` and `E[16..19]` depend ONLY on `(A[12..15], E[12..15], W[12..15])`. Setting `E[12..15] = T124_E`, `W[12..15] = T124_W`, and `A[8..11] = T124_A` uniquely fixes `A[12..15]` via `A[r+4] = E[r+4] - A[r] + S0(A[r+3]) + MAJ(A[r+3], A[r+2], A[r+1])` for `r = 8..11` (independent of `cv` and `(a0, a1, a2, a3)`), propagating to exact `A1[16..19] == BA[16..19]` and `E1[16..19] == BE[16..19]`.
+- **Message 2 (`V = W + K4_DL`), round 8 -> 9 (condition R5):** Round 8 injects `D8 = 0x40000000` into `E[12]`; since bit 30 of `T124_E[0] = 0x95dbb2a8` is `0`, `E2[12] = T124_E[0] ^ 0x40000000 = 0xd5dbb2a8`. In round 9, `CH(E2[12], E[11], E[10]) - CH(E1[12], E[11], E[10]) = 0` iff **bit 30 of `E[10] ^ E[11]` is `0`** (condition R5). Under R5, `t1_2(9) - t1_1(9) = S1(E2[12]) - S1(E1[12]) + D9 = 0x00f7ffe0 + 0xf7801000 = 0xf8780fe0`, fixing `E2[13] = (0x2c210e77 + 0xf8780fe0) mod 2^32 = 0x24991e57` and `A2[13]` completely.
+- **Message 2, round 10 (condition R2):** Since `E1[13] ^ E2[13] = 0x2c210e77 ^ 0x24991e57 = 0x08b81020 =: R2_MASK` (7 active bits `{5, 12, 19, 20, 21, 23, 27}`), and bit 30 of both `E1[13]` and `E2[13]` is `0`, `CH(E2[13], E2[12], E[11]) - CH(E1[13], E1[12], E[11])` cancels `E[11]` on all bits outside `R2_MASK` and is completely fixed iff **`(E[11] & R2_MASK) == (E11_BASE & R2_MASK)` (`= 0x08200000`)** (condition R2). Notice `R2_MASK & K4_CUBE == 0x08b81020 & 0xf74400ca == 0`, so every `E[11] = E11_BASE | m` (`m submask K4_CUBE`) automatically satisfies R2 (and `h4ok(a2, a3)` checks R2 explicitly).
+- **Rounds 11..15:** Under R5 and R2, `E2[12..15]` and `A2[12..15]` are fixed constants independent of `cv` and `(a0, a1, a2, a3)`, which under `T124_W + K4_DL[12..15]` propagate through rounds `12..15` to **exact equality** `A1[16..19] == BA[16..19]`, `E1[16..19] == BE[16..19]`, `A2[16..19] == CA[16..19]`, `E2[16..19] == CE[16..19]` for **every** chaining value `cv` and **every** `(a0, a1, a2, a3)` satisfying R2 and R5!
+- In particular, once `W[16] = G16`, `W[17] = W17PUB`, and `W[8..11] in F8 x F9 x F10 x F11`, the two-message state entering round 16 is bit-for-bit identical to the published SFS pair on both messages, with `(Vx[16] - Wx[16]) = D9`, `(Vx[17] - Wx[17]) = D10`, and `(s0(V[i]) - s0(W[i])) = T_i` for `i = 8..11`.
+
+### 2.3 Message-word equations, claw factorization, and `W[17]` decoupling (PROVED)
+Given any `cv` and `(a0, a1, a2, a3) = A[4..7]`, `kw(cv, a0, a1, a2, a3)` uniquely recovers `W[0..11]` while `W[12..15] = T124_W`:
+- `W[0]` depends only on `(cv, a0)`; `W[1] = u` determines `a1 = recover_a1(cv, a0, u)` independently of `(a2, a3)`.
+- `E[11] = a3 + K4_C11` and `W[11] = K4_W11C - a3` depend ONLY on `a3`.
+- `E[10] = a2 + t16(a3)` where `t16(a3) = K4_CA10 - MAJ(T124_A[1], T124_A[0], a3)`, and `W[10] = C17K(a3) - s1(T124_W[3]) - t16(a3) - a2`.
+- `W[9] = W9C[6] - W9C[1] + h4(a2, a3) - a1`, where `h4(a2, a3) := (MAJ(T124_A[0], a3, a2) - CH(T124_E[0], E[11], E[10])) mod 2^32`.
+Restricting `(a2, a3)` to the fixed fibre `h4(a2, a3) == FIB = 0x28b7f117` collapses `W[9]` to a per-claw constant:
+`W[9] = T124_C9 - a1` (`T124_C9 = 0x18f234b7`),
+so BOTH `W[9] in F9` and `W[16] = W[0] + s0(W[1]) + W[9] + s1(T124_W[2]) == G16` depend ONLY on `(cv, a0, u)` and are shared across all `62,955,816` entries of `Tuple 124`. Writing `fstep(a0, c) == fstep(u, c)` (even `a0`, odd `u`) yields `W[16] == G16` iff `(a0, u)` is a claw of the walk map `fstep`.
+- Defining `kappa(a3) := (t16(a3) - C17K(a3)) mod 2^32`, round 17 expands to:
+  `W[17] = W[1] + s0(W[2]) + W[10] + s1(W[15]) = u + s0(a2 + w2b) - a2 - kappa(a3)`,
+  where `w2b = W[2] - a2` depends ONLY on `(cv, a0, a1)`. Setting `y = (a2 + w2b) mod 2^32` gives the exact `W[17] == W17PUB` equation:
+  `s0(y) == (y + kappa + W17PUB - u - w2b) mod 2^32`.
+Every valid `(a2, a3)` is therefore characterized by the 5 exact conditions (`h4ok(a2, a3)`):
+1. `(E[11] & R2_MASK) == (E11_BASE & R2_MASK)` (R2);
+2. `W[11](a3) in F11` (`a3` from the 13-bit cube `E[11] = E11_BASE | m`, `m submask K4_CUBE`, giving `2,048` valid `a3` values out of `8,192` cube points);
+3. `bit 30(E[10] ^ E[11]) == 0` (R5);
+4. `h4(a2, a3) == FIB`;
+5. `W[10](a2, a3) in F10`.
+
+### 2.4 Exact list census (EXHAUSTIVE)
+Running the exact bit-serial `F10`/fibre DFA over all `2,048` valid `a3` values of `Tuple 124` (verified independently in C (`cohit_all48.c`, `prod_panel_t124_48.c`) and Python (`experiments/r39joint_k8.py`)):
+- **Active `kappa` groups:** `48` (all non-empty, zero groups dropped).
+- **Active `a3` classes:** `1,088` (at most `32` classes per group).
+- **Exact valid `(a2, a3)` entries:** **`62,955,816`** (5.01x larger than `k = 4`'s maximal `12,574,440`).
+- **Exact distinct `(a2, kappa)` keys:** **`9,906,695`**.
+- Verified on `5,000/5,000` random `(cv, a0, u)` trials (`verify_t124_all_identities.c`) and `255` organizer trials (`r39-transplant-claw`) with 0 mismatches on `W[1]`, `W[9]`, `W[16]`, `W9C`, `w2b`, and 16-step two-message reconvergence.
+
+---
+
+## 3. Exact 4-Family 22/29-Bit Prefix Factorization and 52-Block `k4q` Tree
+
+### 3.1 Exact 4-family structural theorem (EXHAUSTIVE, asserted at import)
+Sorting the 48 active `kappa` values of `Tuple 124` reveals a complete Cartesian factorization into `4 x 3 x 4 = 48` groups:
+- Low 22 bits (`bits 0..21`, 4 families): `FAM_LO22 = (0x00271f63, 0x00271f6b, 0x002b1f63, 0x002b1f6b)`.
+- Mid 7 bits (`bits 22..28`, 3 branches): `MID_D1 = (0x0a000000, 0x0e400000, 0x0f000000)` (all bits `0..21` are `0`).
+- Top 3 bits (`bits 29..31`, 4 branches): `TOP_D2 = (0x00000000, 0x60000000, 0x80000000, 0xe0000000)` (all bits `0..28` are `0`).
+Every one of the 48 groups satisfies `kappa = (FAM_LO22[f] + MID_D1[d1] + TOP_D2[d2]) mod 2^32`.
+
+Furthermore, exhaustive DFA traversal over each family's 512 candidate classes proves (and `experiments/r39joint_k8.py` hard-asserts at import on every single 18-bit prefix leaf) that **all 12 active groups inside each family `f` share the exact same set of valid 18-bit `a2` prefixes**:
+- Family 0 (`0x00271f63`): `1,312` unique 18-bit prefixes -> `6` 256-lane blocks.
+- Family 1 (`0x00271f6b`): `4,704` unique 18-bit prefixes -> `19` 256-lane blocks.
+- Family 2 (`0x002b1f63`): `1,536` unique 18-bit prefixes -> `6` 256-lane blocks.
+- Family 3 (`0x002b1f6b`): `5,376` unique 18-bit prefixes -> `21` 256-lane blocks.
+- **Total across all 48 groups:** **`12,928` unique 18-bit prefixes packed into ONLY `52` bit-sliced blocks** (`52 x 18 x 32 B = 29,952 B` of prefix RAM, vs `164,160 B` for 285 blocks in `820db8f6`).
+
+### 3.2 Exact 3-stage bit-sliced `k4q` pass
+In `s0(y) == (y + r) mod 2^32` with `r = (kappa + W17PUB - u - w2b) mod 2^32`:
+- Because `MID_D1[d1]` has bits `0..21` identically zero and `TOP_D2[d2]` has bits `0..28` identically zero, modular addition `r = r0 + MID_D1[d1] + TOP_D2[d2]` (where `r0 = (FAM_LO22[f] + W17PUB - u - w2b) mod 2^32`) **cannot affect bits `0..21` of `r`**, and adding `TOP_D2[d2]` to `r1 = r0 + MID_D1[d1]` **cannot affect bits `0..28` of `r`**.
+- Consequently, for each of the `52` family blocks (256 parallel lanes):
+  - **Stage 0 (shared across all 12 groups in family `f`):** Add the 18-bit prefix planes `P[0..17]` to `WB[0..17]` (`y[0..17]`), propagate `i = 0..13` to reconstruct upper bits `y[18..31]`, and check the 8 filter bits `i = 14..21` using `r0[0..21]`. Any block with zero surviving lanes (`36.8%` of blocks) exits immediately (`308 + 4 = 312` ops/dead block; `308` ops entering Stage 1).
+  - **Stage 1 (3 branches `d1 in 0..2`):** Only for blocks surviving Stage 0, lazily broadcast `r1[d1][22..28]` (once per family) and check bits `i = 22..28` with early exits at `i = 25` and `i = 28` (`<= 71` ops/branch).
+  - **Stage 2 (4 branches `d2 in 0..3`):** Only for `(block, d1)` pairs surviving Stage 1 (`~1.2` times per claw), lazily broadcast `r2[d1][d2][29..31]` and check bits `i = 29..31` (`31` ops/branch).
+  - **Scalar survivor & mate verification:** Each surviving lane extracts `x = y`, sets `a2 = (x - w2b) mod 2^32`, screens all `a3` classes in group `gidx[d1][d2]` with the `W9C` prefilter (charged `20` ops/class to cover `ld`, arithmetic, mask/branch, and loop), checks full `kw` + `W[17] == W17PUB` + `W[10] in F10` (`563` ops), and on a key hit evaluates all `F8`-passing mates `b3` in that group (`560` ops + `2 x 2,812` ops for two 39-round compressions).
+
+**Bit-exact equivalence (PROVED & MEASURED):** `prod_panel_t124_48.c` verified `atk_k4q_tree` against a brute-force linear 48-group scan on 48/48 planted group hits (one per group) plus 100 random claws (`46` random survivors) with **0 mismatches**. `experiments/r39joint_k8.py` repeats the 48/48 planted `k4_w17a >= 1` check on both `CV_PUB` (`r39-transplant-claw`) and a real walk `cv` (`r39k4-window-small`).
+
+---
+
+## 4. Complete Attack Specification, Guard Reservations, and Memory Audit
+
+### 4.1 Walk, screening, stage-2, and 944-claw gate
+The base walk and `Mach` 256-bit word-operation model match accepted `d3a46ae6` / `04f61e00` exactly:
+- **Screening (`screen = 1`):** Draw a fresh 512-bit block `M0`, compute `cv = Compress_39(IV, M0)` (`2,812` ops), compute `S = k4_scr(cv)` (`69` ops; `+3` if `S > 5`; a 3-lane SWAR `Mach` implementation requires `~56 <= 69` ops), accept iff `S <= 5` (up to `DTRY = 8,192` draws), then build folded bit-sliced kernels (`DPB = 7`, `KCAP = 679` gates, `RCAP = 206` regs, `GCAP = 575,000` ops, up to `KTRY = 32` attempts).
+- **Stage 1 & Stage 2:** 256 parallel lanes, `15,520`-word distinguished-point table (`99,328` 40-bit slots), `640`-entry pair queue (`QFULL = 384`), `2,048`-slot timing wheel, `cutscan` every `512` steps, `2^26` primary walk evaluations plus `1/4` extension (`327,680` total `iter1` steps uncapped).
+- **944-claw dedupe gate (`k4d`):** Open-addressed `1,536`-slot table (`6,172` ops init on first F9 claw) admitting at most **944 distinct F9 claws per window** to `k4_eval`.
+- **Per-window hard work cap (`WMAX_CAP = 470,000,000`):** Every window enforces `m.o <= WMAX_CAP` via `cap(R)` guards (`+2` ops per check) with hard assertion `m.o - gl <= gR` between consecutive guards.
+
+### 4.2 Deterministic worst-case guard table (PROVED, `g8` interval 16, `g6 = 17,000`)
+We keep `d3a46ae6`'s `it % 16 == 0` interval for `g8` (`16 x 708 = 11,328` ops max across 16 hit-free `iter1` steps) and raise `g6` to `17,000` (strictly exceeding worst-case adversarial `k4d` linear probing across all 944 occupied slots + wrap + `stage2` tail: `16,246 < 17,000`, and `159 + 6,202 + 2 = 6,363 < 17,000` on first-call table init; inside `stage2`, `g6` always hits `g11`, `g6`, `g3`, or `g7` next, never `iter1`). Thus **every single guard `g1..g15` is an unconditional deterministic worst-case upper bound**:
+- **Worst-case survivor-free `k4q` pass (`K4_PASS_WC`):** Entry + `w2b` + `WB` (`748`; exact hand count `721`) + 4 families' lazy setups (`4 x (79 + 72 + 144) = 1,180`) + 52 blocks x (Stage 0 `308` + 3 Stage-1 branches `213` + 12 Stage-2 branches `372` = `893`) = **`48,364` ops**.
+
+| Guard | Location | Deterministic worst-case ops to next guard | Reserve `R` | Max observed (384 windows) |
+|---|---|---:|---:|---:|
+| `g1` | `iter1` hit group | `1,799 + 11,328 = 13,127` | `13,129` | `7,170` |
+| `g2` | `iter1` `cutscan` | `35,328 + 11,328 = 46,656` (256 lanes cut) | `76,864` | `299` |
+| `g3`, `g9` | `stage2` iter / entry | `899 + 11,328 = 12,227` | `15,424` | `509` |
+| `g4` | `stage2` wheel callback | `742 + 11,328 = 12,070` | `12,352` | `272` |
+| `g5` | `stage2` launch | `1,317 + 11,328 = 12,645` | `15,424` | `907` |
+| `g6` | `stage2` merge + `k4d` | `16,246` (adversarial 944-slot probe) or `6,363` (init) | `17,000` | `6,363` |
+| `g7` | `stage2` exit | `563 + 11,328 = 11,891` | `13,376` | `5,393` |
+| `g8` | `run_window` (`it % 16 == 0`) | `16 x 708 = 11,328` | `15,424` | `6,911` |
+| `g10` | `run_window` end | `11,328` | `11,328` | `0` |
+| `g11` | `k4_eval` entry | `K4_PASS_WC + 62 = 48,426` | `55,000` | `23,474` |
+| `g13` | `k4q` survivor | `<= 200` (all 48 groups nonempty -> hits `g14`) | `55,000` | `136` |
+| `g14` | `k4q` class test | `20 + 563 + 48,426 = 49,009` | `55,000` | `22,036` |
+| `g15` | `k4q` mate check | `560 + 5,624 + 48,426 = 54,610` | `62,000` | `20,924` |
+
+### 4.3 Self-contained itemized memory audit across all phases (`memory_log2_bytes = 20.0`)
+The run executes in three disjoint phases: **Phase S** (one-time import/setup building `K4_Q` and `K4_FAM` one family at a time, then freeing all builder structures), **Phase G** (per-window `M0` compression and folded kernel generation, freeing generator graphs before walking), and **Phase W** (walk + stage-2 + `k4q`). Every single buffer is itemized explicitly below (no opaque inherited constants):
+
+**Phase W (peak phase, `K4_MEM = 883,201 B = 2^19.7524 <= 2^20`, headroom `165,375 B` below `1 MiB` on top of the `32,768 B` reserve):**
+
+| Resident / Walk-Phase Component | Size (bytes) |
+|---|---:|
+| Walk distinguished-point table (`15,520 x 32 B`; `99,328` 40-bit slots) | `496,640` |
+| Stage-2 pair queue (`161 x 32 B`; `640` 64-bit entries + tail word) | `5,152` |
+| 4-family prefix table `K4_FAM` (`52` blocks x `18` planes x `32 B`) | `29,952` |
+| Register file (`256 x 32 B`) + lane array `LA` (`256 x 32 B`) | `16,384` |
+| Timing wheel (`128`), pair records (`32`), stage-1 save (`32`), free stack (`4`) (`196 x 32 B`) | `6,272` |
+| Folded kernel images (`2 x 679 x 5 B = 6,790 B`, reserved to `2 x 1,024 x 5 B` envelope) | `10,240` |
+| Walk instruction code census (`4,111 x 36 B`) | `147,996` |
+| `k4` code census (`2,592 x 36 B = 93,312 B`) + inlined constants (`4,448 B`) | `97,760` |
+| `k4q` 256-bit scratch planes (`WB[18]+buf0[22]+buf1[21]+buf2[36]+y[32] = 129 x 32 B`) + reg save (`104 x 32 B`) | `7,456` |
+| `Tuple 124` `K4_Q` metadata (`48 x 16 B` + `1,088 x 4 B` `a3` words + `296 B` family/branch/advice consts) | `5,416` |
+| 944-claw dedupe table (`1,536 x 8 B` keys + `192 B` bitmap + `3,076 B` index/cursor) | `15,556` |
+| Attack state scalars (`3,968`), counters (`616`), transient compression/output (`3,136`), module data (`3,889`) | `11,609` |
+| Explicit walk-phase headroom reserve | `32,768` |
+| **Total Phase-W Peak RAM (`K4_MEM`, asserted in `r39joint_k8.py`)** | **`883,201`** |
+
+**Phase S (4-family chunked builder, `584,292 B < K4_MEM < 2^20`):** `_k4build_all48()` processes **one `FAM_LO22` family (`512` candidate classes = `64 B` mask) at a time**, freeing `F[0..32]` before the 18-bit DFS and freeing `trans[0..17]` before block transposition. Exact measured maxima across all 4 families (`test_4fam_build.py`): `2,048` candidate class records (`57,344 B`), family `PL`+`V` (`16,384 B`), `F[0..32]` at most `1,638` states x `68 B = 111,384 B`, `trans[0..17]` at most `1,324` edges x `68 B = 90,032 B` (during DFS after `F` is freed, `max_stack = 13` entries + `pf <= 5,376 x 4 B` use `<= 49,792 B < 111,384 B`), plus resident code/completed blocks/reserve (`309,148 B`) = **`584,292 B` peak Phase-S RAM** (`464,284 B` below `1 MiB`; CPython `tracemalloc` peak `2.30 MB << 128 MiB` Docker limit).
+**Phase G (kernel generation, `< 520 KiB`):** Identical to `d3a46ae6` (`~510 KiB`, generator graph `~49 KiB`, no walk table allocated during Phase G).
+**Declared memory coordinate:** `memory_log2_bytes = 20.0`, giving `max(0, 20.0 - 20) = 0.0` memory penalty.
+
+### 4.4 Setup and preprocessing cost (`preprocessing_log2 = 43`)
+- **One-time runtime setup (`K4_SETUP`):** `_k4build_all48()` counts `_K4_BUILD_OPS = 10,580,028` ops across `_k4st`, `PL`, DFS pop, and `_k4tr`, and adds a generous conservative `+ 2^30 + 6,512` envelope (`K4_SETUP = 1,084,328,364 <= K4_SETUP_PRICED = 1,100,000,000`) covering the `8,192` `inF` checks, class sorting, and inner DFS loop bookkeeping.
+- **Offline preprocessing (`2^43` target compressions):** Conservatively covers: (i) the published ePrint 2026/1120 Table 23 39-round SFS collision construction via dedicated local-collision / message-modification search (generously charged at `<= 2^42` compressions, matching accepted `d3a46ae6`'s `preprocessing_log2 = 43` budget), (ii) exhaustive enumeration of all `307` `k = 8` tuples and `BEAM = 256` exact `F10`-DFA search for `Tuple 124` (`< 2^32` word ops `< 2^21` compressions), (iii) the exhaustive `2^32` `W[3]` row-19 proof across `230` offsets (`230 x 2^32 x ~20 < 2^45` word ops `< 2^34` compressions), and (iv) the exhaustive `2^32` `s0(y) - y` Stage-2 survivor multiplicity proof (`48 x 2^32 < 2^38` ops `< 2^27` compressions). Total `2,812 x 2^43 = 24,734,613,578,448,896` word ops is added directly into `N_TOTAL`.
+
+---
+
+## 5. Empirical Panels (Predeclared Discovery / Frozen Holdout) and Exhaustive Proofs
+
+Every measured parameter entering the cost ledger uses a **strict 99% conservative bound** from predeclared, seed-disjoint panels run on the exact bit-exact `Tuple 124` ALL-48 4-family algorithm (with `g8` interval 16, `g6 = 17,000`, `W9C = 20` ops).
+
+### 5.1 Discovery Panel (128 windows) and Frozen Disjoint Holdout Panel (256 windows)
+1. **Discovery Panel (`prod_panel_t124_48_final`, seeds `8,000,000..8,000,127`, 128 full `2^26` screened windows, uncapped, 944-claw gate):**
+   - Saturated `944` claws in `128/128` windows; mean `total_ops = 606,803,907`, mean `k4_ops = 20,855,081` (`22,092.2` ops/claw), `max_single_pass = 66,657`.
+   - Exact pooled argmin of `(W + 6) / r(W)` occurred at `W = 469,865,014` (`kept = 114,102 / 120,832`, `r = 0.94430283`, `(W+6)/r = 497,578,746`).
+   - Rounded cleanly to the nearest `5,000,000` and **frozen before running any holdout seed**: **`WMAX_CAP = 470,000,000`** (`r = 0.944518` on Discovery).
+2. **Frozen Disjoint Holdout Panel (seeds `8,500,000..8,500,255`, 256 completely disjoint full `2^26` screened windows, `241,664` claws):**
+   - Saturated `944` claws in `256/256` windows; mean `total_ops = 606,668,204`, mean `k4_ops = 20,852,592` (`22,089.6` ops/claw), `max_single_pass = 77,232`; **0 guard violations** across all 384 windows.
+   - **Safe pre-`k4q` retention at `W_SAFE = WMAX_CAP - B_CLAW = 467,000,000` (`B_CLAW = 3,000,000`, proved deterministically in Section 6.1):** Recording `M_pre(i)` (running max of `m.o + R` over every guard strictly before `k4_eval` on claw `i`, taking `max(M_pre(i), m.o_before_g11)`): `kept_safe = 226,576 / 241,664` (vs `228,055 / 241,664` at `WMAX_CAP`, `0 / 241,664` monotonicity violations, `max(stamp - M_pre) = 106,062 << B_CLAW`), window mean `r_safe = 0.93756621` (s.d. `0.030207`, s.e. `0.001888`), one-sided 99% Student-t lower bound (`t_{255,0.99} = 2.3411`): `0.93314643`. **Priced conservatively:** **`R_SAFE_LB = 0.933146`**.
+   - **Claw-weighted `E[s_w - 1]` (upper-bounded using all `s_w` claws completed up to `WMAX_CAP`, strictly `>= s_safe`):** ratio estimator `sum s_w(s_w - 1) / sum s_w = 890.7352` (s.e. `1.7601`), 99% UCB `894.8557`. **Priced conservatively:** **`ESW1_UB = 895`**.
+   - **`F8`-passing entries & distinct keys per evaluated `F9` claw (first 32 holdout windows, every 8th claw of `944` = `118` claws/window -> `3,776` real screened `F9` claws; SE and `t_{31,0.99} = 2.4528` computed over the 32 window means):**
+     - `F8`-entries/claw: mean **`4,427,108.32`** (window s.d. `44,895.01`, s.e. `7,936.39`, **99% LCB = `4,407,641.94`**; matches `62,955,816 x 9/128 = 4,426,580.8` to `0.012%` = `0.066` s.e.). No arrival-rank drift: ranks `1..125` mean `4,430,840.4` vs ranks `126..944` mean `4,426,522.9`. **Priced conservatively:** **`EN_LB = 4,407,641`**.
+     - `F8`-keys/claw: mean `3,183,547.15` (window s.d. `24,935.69`, s.e. `4,408.05`, **99% UCB = `3,194,359.21`**). **Priced conservatively:** **`MU_D = 3,194,360`**.
+   - **Direct Capped Replay:** Passed **8/8** holdout seeds (`8,500,000..8,500,007`) verifying exact `m.o <= 470,000,000` and bit-for-bit evaluated claw prefix identity against `_stamp`.
+
+### 5.2 Exhaustive `2^32` row-19 mate proof and `16,384`-`w` `equal-G` co-hit proof
+1. **Self-contained row-19 mate exclusion theorem (`row19_t124.c` + `cohit_all48.c`, EXHAUSTIVE):**
+   - Starting from the exact step-16/17 states `(BA[16..21], BE[16..21])` and `(CA[16..21], CE[16..21])`, let `P subset Z_{2^32}` be the set of round-18 words `W[18]` such that message 1 and message 2 satisfy the exact round-18 XOR state differences `(dA[22], dE[22]) = (0x40000000, 0)` AND admit the round-19 modular differences `dA[23] = 0` and `dE[23] in {+-2^19 +- 2^5}`. Exhaustive enumeration over all `2^32` words `W[18]` gives exact `|P| = 65,536`, and exact difference set `D := (P - P) mod 2^32` has cardinality **`|D| = 9,427,275`** (`2^23.168`).
+   - Consider two mates `(a2, a3)` and `(a2, b3)` sharing the same key `(a2, kappa)` on the same claw `(cv, a0, a1, u)` with `d := (b3 - a3) mod 2^32 != 0`. Because `W[0..2]` and `W[10]` are unchanged across mates while `W[3]` shifts by `d` (from round 3: `A[7] = a3 -> b3`) and `W[11]` shifts by `-d` (`W[11] = K4_W11C - a3`), the round-18 schedule word `W[18] = W[2] + s0(W[3]) + W[11] + s1(W[16])` shifts by exactly:
+     `Delta(W[3], d) := (s0((W[3] + d) mod 2^32) - s0(W[3]) - d) mod 2^32`.
+   - For BOTH `(a2, a3)` and its mate `(a2, b3)` to stay on the differential trail through row 19, both `W[18]` and `W[18] + Delta(W[3], d)` must lie in `P`, which requires `W[3] in B_d := {w in Z_{2^32} : Delta(w, d) in D}`.
+   - Enumerating ALL `2^32` values of `W[3]` across ALL `230` distinct mate offsets `d = (b3 - a3) mod 2^32` occurring in any of the 48 groups of `Tuple 124` proves:
+     - **`Delta(W[3], d) == 0` count = `0`** across ALL `230` offsets and ALL `2^32` inputs (impossible for any mate to coincide on row 18!).
+     - Exact pointwise worst-case mate sum across ALL `62,955,816` entries (`1,088` classes, `48` groups):
+       `max_{a3} sum_{b3 != a3 in group} |B_{b3 - a3}| = 3,113,266` out of `2^32`.
+     - Thus **`eps_mate = 3,113,266 / 2^32 = 7.248637e-4`** and **`eps_mate / 2 = 3,113,266 / 2^33 = 3.624319e-4`** holds **pointwise for every entry**.
+2. **Exact `16,384`-`w` `equal-G` co-hit sweep (`cohit_all48.c`, MEASURED):**
+   - Over all `9,906,695` distinct `(a2, kappa)` keys across all 48 groups at `16,384` independent uniform `w` values (`1.623 x 10^11` key-trials):
+     - Exact measured list mean `E[N_k] = E[min(N_k, 3)] = 2.25781938e-3`, strictly **below** the uniform random baseline `9,906,694 / 2^32 = 2.30658194e-3`. **Priced conservatively:** **`PI_BAR = 2.31e-3`**.
+     - Exact count with `N_k >= 4`: **`0` out of `1.623 x 10^11` key-trials** (`0 / 16,384` `w`-values, `max N_k = 3`). Exact 99% Clopper-Pearson upper bound across the `16,384` independent `w`-draws: `1 - 0.01^(1/16384) = 2.81038e-4`. **Priced conservatively:** **`Q4_UB = 2.8104e-4`**.
+
+### 5.3 28-Seed Paired ALL-48 SMC Tail, Mate, Cross-Claw, and `W[3]` Uniformity Panel
+Running `tail_panel_all48.py` across 28 fresh independent paired seeds (`NP = 100`, `4 chunks x 40 batches x 2,048 lanes = 327,680` trials/seed/arm, **`9,175,040` total trials/arm**), sampling `(a2, a3)` uniformly over ALL `62,955,816` entries of all 48 groups via exact DP (`T124-ALL48`) vs the published SFS trace (`PUB`) on identical SMC carriers:
+- **Exact carrier identity:** `l2(PUB) == l2(T124-ALL48)` bit-for-bit on **28/28** seeds.
+- **`PUB` control:** `1,232` full verified 39-round collisions, pooled mean **`2^-74.39429`** (s.e. `0.0800` bits).
+- **`T124-ALL48` (all 48 groups):** `1,246` full verified 39-round collisions (`cls = [326, 322, 297, 301]`):
+  - Pooled mean **`2^-74.37763`** (s.e. `0.0775` bits, 99% LCB `2^-74.58334`).
+  - Class-01 (`a0` even, `W[1]` odd) mean **`2^-74.32531`** (`322/1,246 = 25.84%`, 99% LCB **`2^-74.61369`**).
+  - Paired difference `log2(T124-ALL48 / PUB) = +0.01666` bits (seed-mean `+0.02237 +- 0.0591` bits, `z = +0.38`): indistinguishable from `PUB`.
+  - **Priced conservatively:** **`p_tail = 2^-74.62`** — strictly BELOW EVEN the 28-seed class-01 99% LCB (`2^-74.61369`), strictly below the pooled 99% LCB (`2^-74.58334`), and `0.1606` bits MORE conservative than `820db8f6`'s `2^-74.4594`.
+- **Mate verification:** `11,726` mates checked across the `1,246` hits -> `972` passed `F8`, **`through19 = 0`** (`337` deviated at row 18, `635` deviated at row 19).
+- **Cross-claw empirical check:** Across the `1,246` colliding `cv` clusters (`64` virtual other-claw trials per hit -> `79,744` clustered trials/arm, real hit `cv` vs uniform random `cv`): `xa18 = 40,152` vs `xu18 = 40,046` (ratio `1.00265`), **`xa20 = 0`, `xu20 = 0`**. Because blocks of 64 trials share a single hit `cv`, we do **not** claim an i.i.d. `n = 79,744` Clopper-Pearson bound; rather, `EPS_KEY = 2^-7` is a declared heuristic ceiling (`H-cross-claw`) supported by exact empirical parity with the random-`cv` baseline (`~2^-18..2^-22` row-19 survival probability, leaving >8 bits of heuristic margin even after a 32-mate union bound).
+- **`W[3]` uniformity (`1,246` hits):** per-bit `chi^2 (32 df) = 28.72` (expected `32.0`, 99.9% cutoff `62.49`).
+
+---
+
+## 6. Success-Probability Proof (`>= 0.39`) and Exact Integer Ledger
+
+### 6.1 Second-order Bonferroni lower bound on window collision probability
+Consider one capped window `w` completing `s_w <= 944` distinct `F9` claws. Let `K_c` be the `F8`-active distinct `(a2, kappa)` keys on claw `c`, `M_{c,k}` the `F8`-passing mates of key `k`, `H_{c,k}` the event that key `k` hits `W[17] == W17PUB`, `E_{c,e}` the event that entry `e in M_{c,k}` yields a full 39-round collision, and `U_{c,k} = union_{e in M_{c,k}} E_{c,e}`.
+1. **Within-key mate Bonferroni (pointwise):** By Section 5.2 (`H7-mate-row19`), for every `e in M_{c,k}`, `sum_{e' != e} P(E_{c,e'} | E_{c,e}) <= eps_mate = 3,113,266 / 2^32`, hence:
+   `P(U_{c,k} | H_{c,k}) >= (1 - eps_mate / 2) * sum_{e in M_{c,k}} P(E_{c,e} | H_{c,k})`.
+2. **Across-key window Bonferroni (on kept cluster-size `N_k <= 3` events):** Dropping keys with equal-`G` co-hit count `N_k >= 4` lowers the first-order sum by at most `P(N_k >= 4) <= Q4_UB = 2.8104e-4` (`H1-screen(iv)`). For distinct kept key events `(c, k) != (c', k')`:
+   - Same claw `c = c'`, `G(k') != G(k)`: disjoint (`H_{c,k} cap H_{c,k'} = empty`), overlap `= 0`.
+   - Same claw `c = c'`, `G(k') == G(k)`: bounding `P(U_{c,k'} | H_{c,k}, H_{c,k'}, U_{c,k}) <= 1` trivially (requiring **zero** independence assumption between equal-`G` co-hit tails), the unordered (`1/2`) pair deduction is at most `E[min(N_k, 3)] / 2 <= PI_BAR / 2 = 1.155e-3`.
+   - Different claws `c != c'`: under `H5-w17-uniform` (`W[17]` hit prob `2^-32` independent across claws) and `H-cross-claw` (`P(U_{c',k'} | U_{c,k}) <= EPS_KEY = 2^-7`), the unordered (`1/2`) pair deduction is at most `(ESW1_UB * MU_D * EPS_KEY) / (2 * 2^32) = (895 * 3,194,360 * 2^-7) / 2^33 = 2.60020188e-3`.
+3. **Exact deterministic cap-completion theorem (`D_stop = 0`, EXHAUSTIVE `2^32`, ZERO stop-position heuristic):**
+   - On any claw `(cv, a0, a1, u)` with `r0 := (W17PUB - u - w2b) mod 2^32`, every Stage-2 survivor lane `(f, b, lane, d1, d2)` in `k4q` corresponds to a distinct pair `(y, g)` (`g in 0..47`) solving `(s0(y) - y) mod 2^32 == (r0 + kappa_g) mod 2^32` (since each family's 18-bit prefixes are distinct and `y[0..17] = (p + w2b) mod 2^18` is bijective in `p`). Exhaustive enumeration over ALL `2^32` values of `y` and ALL `2^32` values of `r0` (`max_s0_mult_fast.c`) proves unconditionally:
+     - `max_{r in Z_{2^32}} |{y : (s0(y) - y) mod 2^32 == r}| = 14` (at `r = 0x2bfbfddc`),
+     - `M_48 := max_{r0 in Z_{2^32}} sum_{g=0}^{47} |{y : (s0(y) - y) mod 2^32 == (r0 + kappa_g) mod 2^32}| = 107` (at `r0 = 0x2496e5f9`).
+   - For any kept colliding claw `i` with equal-`G` co-hit count `N_k <= 3`, because every true `W[17]`-hitting key on claw `i` shares the single value `G(a2, kappa) == (u - W17PUB) mod 2^32`, there are **deterministically at most `1 + 3 = 4` true `W[17]`-hitting keys** on claw `i`. Counting every operation inside `k4_eval` (`r39joint_k8.py:542-625`) unconditionally (without even assuming `W9C` rejects any class):
+     - `g11` cap (`2`) + survivor-free 52-block pass (`K4_PASS_WC = 48,364`) = `48,366` ops;
+     - All `<= 107` Stage-2 survivors (`1` `jnz` + `2` `g13` + `134` extract/precomp + `<= 32` classes x `(2 g14 + 20 W9C + 563 kw) = 18,857` ops each): `107 x 18,857 = 2,017,699` ops;
+     - All `<= 4` true `W[17]`-hitting keys (`<= 32` mates each x `(2 g15 + 560 kw + 2 x 2,812) = 197,952` ops each): `4 x 197,952 = 791,808` ops;
+     - Maximum guard reserve `R <= 62,000` (`g15`) at any `cap(R)` call inside `k4_eval`: `62,000` ops;
+     - **Total unconditional deterministic worst-case peak `m.o + R` increment inside `k4_eval`:** `48,366 + 2,017,699 + 791,808 + 62,000 = 2,919,873 < 3,000,000 =: B_CLAW`.
+   - Define `M_pre(i)` as the running maximum of `m.o + R` over every `cap(R)` check strictly before `k4_eval(claw_i)` begins (taking `max(M_pre(i), m.o_before_g11)`), and let `W_SAFE := WMAX_CAP - B_CLAW = 467,000,000`. Note `M_pre(i)` is non-decreasing in `i` and depends **strictly** on `(cv, walk, stage2, claws 1..i-1)` — never on claw `i`'s `W[17]` hits or rounds `18..38` tail. On any sample path where at least one safe claw `{i : M_pre(i) <= W_SAFE}` contains a kept colliding key (`N_k <= 3`), let `i*` be the first such claw: every earlier claw `j < i*` completed with `s.success == False` and `M_pre(i*) <= 467,000,000 < WMAX_CAP`, so the capped window deterministically reaches `k4_eval(claw_{i*})` and completes it with peak `m.o + R <= 467,000,000 + 2,919,873 = 469,919,873 < WMAX_CAP`, outputting a valid collision with probability `1`. Thus restricting the first-order union strictly to `{i : M_pre(i) <= W_SAFE}` gives an exact pointwise set inclusion with **`D_stop = 0` identically** (no cap-boundary or stop-position assumption anywhere).
+4. **Total divisor `DIV`:**
+   - `D_mate  = 3,113,266 / 2^33 = 1,556,633 / 4,294,967,296 = 3.62431863e-4`
+   - `D_cohit = 2.31e-3 / 2 + 2.8104e-4 = 35,901 / 25,000,000 = 1.43604000e-3`
+   - `D_cross = (895 * 3,194,360) / (256 * 2^32) = 357,369,025 / 137,438,953,472 = 2.60020188e-3`
+   - `D_stop  = 0` (exact deterministic via `W_SAFE = WMAX_CAP - B_CLAW`)
+   - **Exact rational `DIV = 236,151,998,337,473 / 53,687,091,200,000,000 = 0.004398673741845`** (costs only `0.006360` bits).
+5. **Independent windows:** Each window draws an independent first block `M0`, so conditional on the declared heuristic bounds (`H1-screen`..`H-cross-claw`), `P(no collision in BW windows) <= exp(-BW * mu_w * (1 - DIV))`, where `mu_w = 944 * R_SAFE_LB * EN_LB * 2^-32 * 2^-74.62`. Setting `lam = (-ln(0.61) + 2^-40) / (1 - DIV)` and `BW = ceil(lam / mu_w)` yields algorithmic random-coin success probability `P(success) >= 0.390000000000555 >= 0.39` for the fixed target. (The 99% Student-t / Clopper-Pearson intervals summarize finite-sample empirical support for the heuristic constants and are distinct from algorithmic random-coin success probability.)
+
+### 6.2 Exact integer cost ledger
+| Term | Exact Value | Basis |
+|---|---:|---|
+| Active list (`Tuple 124`, all 48 groups) | `62,955,816` entries (`1,088` classes, `9,906,695` keys, `52` blocks) | EXHAUSTIVE |
+| `WMAX_CAP` (per-window hard cap) | `470,000,000` ops (charged `WMAX_CAP + 6 = 470,000,006`) | Frozen from Discovery |
+| `B_CLAW` / `W_SAFE = WMAX_CAP - B_CLAW` | `3,000,000` ops (`> 2,919,873` exact worst-case) / `467,000,000` | EXHAUSTIVE `2^32` (`M_48 = 107`) |
+| `R_SAFE_LB` (safe `M_pre <= W_SAFE` fraction) | `0.933146` (99% LCB `0.93314643` on 256-window Holdout) | MEASURED (99% LCB) |
+| `EN_LB` (`F8`-entries per `F9` claw) | `4,407,641` (99% LCB `4,407,641.94` on 3,776 Holdout claws) | MEASURED (99% LCB) |
+| `p_tail` (39-round tail prob per trial) | `2^-74.62` (below 28-seed class-01 99% LCB `2^-74.61369`) | MEASURED (99% LCB) |
+| `DIV` (second-order Bonferroni divisor, `D_stop = 0`) | `236,151,998,337,473 / 53,687,091,200,000,000` (`0.00439867`) | PROVED + 99% bounds |
+| `lam` (`(-ln 0.61 + 2^-40) / (1 - DIV)`) | `0.496480176129778206` | DERIVED (exact) |
+| `mu_w` (first-order collisions/window) | `3.113935908448353369e-23` (`2^-74.765607`) | DERIVED (exact) |
+| **`BW`** (`ceil(lam / mu_w)` windows) | **`15,943,814,860,889,987,686,481`** (`2^73.755415`) | DERIVED (exact) |
+| Window work `BW x 470,000,006` | `7,493,593,080,281,183,377,985,996,118,886` | DERIVED (exact) |
+| Setup bound `K4_SETUP_PRICED` | `1,100,000,000` (`>= K4_SETUP = 1,084,328,364`) | PROVED / ASSERTED |
+| Preprocessing `2,812 x 2^43` | `24,734,613,578,448,896` | CONSERVATIVE BOUND |
+| **Total word ops `N_TOTAL`** | **`7,493,593,080,281,208,112,600,674,567,782`** | DERIVED (exact) |
+| Raw `log2(N_TOTAL / 2,812)` | `91.106119605610417666571576...` | DERIVED (exact) |
+| **Claimed `time_log2`** | **`91.106120`** (rounded UP at 6th decimal) | CLAIMED |
+| **Claimed `memory_log2_bytes`** | **`20.0`** (`K4_MEM = 883,201 B <= 2^20`, headroom `165,375 B`) | CLAIMED |
+| **Claimed `nonuniform_advice_log2_bytes`** | **`7.78135971352466`** (`220 B`) | CLAIMED |
+
+---
+
+## 7. Heuristic Register, Organizer Experiments, and Limitations
+
+Every non-proved heuristic step is declared in `claim.json` with its exact scope, supporting evidence, extrapolation, and limitations:
+1. **`H1-screen` (score-critical):** Under the screened window law (`k4_scr(cv) <= 5`, `KCAP = 679`, `WMAX_CAP = 470,000,000`, 944-claw dedupe gate, `g8` interval 16, `g6 = 17,000`), windows are i.i.d.; `F8`-entries/claw `>= 4,407,641`, `F8`-keys/claw `<= 3,194,360`; the fraction of the 944 F9 claws with pre-`k4q` peak guard stamp `M_pre(i) <= W_SAFE = 467,000,000` (`WMAX_CAP - B_CLAW`, guaranteeing deterministic completion under `WMAX_CAP` with `D_stop = 0` via the exhaustive `2^32` `M_48 = 107` bound) is at least `R_SAFE_LB = 0.933146`, with claw-weighted `E[s_w - 1] <= 895`; safe claw count `s_safe` (and `M_pre(i)`) is uncorrelated with per-claw `|E_c|` and `|K_c|` (supported by zero arrival-rank drift: `4,430,840` vs `4,426,523`) and independent of claw `i`'s `W[17]` hit and rounds `18..38` tail; and `p'_k`-weighted `equal-G` co-hit rates are bounded by the list-uniform means (`PI_BAR = 2.31e-3`, `Q4_UB = 2.8104e-4`). *Evidence:* 128-window Discovery + 256-window Frozen Holdout (`241,664` claws for `M_pre`, `0` monotonicity violations; `3,776` claws for `F8`), exhaustive `2^32` `M_48 = 107` proof, `16,384`-`w` co-hit sweep, and organizer-executable `r39k4-window-small`. *Limitations:* Full `2^26` panels are participant-run; organizer `r39k4-window-small` executes bounded `2^20`/`2^19` windows for mechanical consistency and guard/cap/`M_pre` replay verification, not full-scale `2^26` estimation; extrapolating from `256` holdout windows to `~2^73.76` windows assumes i.i.d. fresh `M0` draws.
+2. **`H2-entries` (score-critical):** Conditioned on a `W[17] == W17PUB` hit of a valid `Tuple 124` entry in `F8 x F9 x F10 x F11` (class 01: `a0` even, `W[1]` odd), the full 39-round collision tail probability across rounds `18..38` is at least `p_tail = 2^-74.62`. *Evidence:* 28-seed paired ALL-48 SMC panel (`9,175,040` trials/arm, `1,246` verified 39-round collisions, pooled mean `2^-74.37763`, class-01 mean `2^-74.32531`, class-01 99% LCB `2^-74.61369`, paired diff vs `PUB` `+0.01666` bits) plus organizer-executable `r39-mate-01..14`. *Limitations:* SMC samples rounds `18..23` from the exact step-16/17 pinned state with random `W[8], W[9]` in `F8 x F9` and random recovered `cv` rather than real screened walk claws. Rounds `18..38` depend on `W[2..7]` (which enter `W[18..23]`), and `cv` enters `W[0..5]` nonlinearly; `k4_scr(cv) <= 5` removes `~7.5` bits from `192`-bit `cv[0..5]` while `(a0, a1, a2, a3)` randomize `W[2..7]`. Invariance of the tail under screening and claw selection is therefore a genuine heuristic premise of `H2-entries`, not an algebraic identity.
+3. **`H5-w17-uniform` (score-critical):** Across screened F9 claws, the `W[17]` claw offset `(u, w2b)` makes each listed key hit `W[17] == W17PUB` with probability `2^-32`, independently of its `F8` membership, rounds `18..38` tail, and other claws' `W[17]` hits. *Evidence:* Algebraic decoupling of `W[17] = u + s0(a2 + w2b) - a2 - kappa` (Section 2.3), 48/48 planted-key recovery (`r39-transplant-claw`, `r39k4-window-small`), and 100-claw random survivor match (`46` observed vs `~45.5` expected). *Limitations:* `W[17]` hits are rare (`~2^-10` per claw), so independence from deep rounds `18..38` tails is heuristic rather than proved.
+4. **`H7-mate-row19` (score-critical):** Conditioned on a colliding entry `(a2, a3)` of `Tuple 124`, its `W[3]` word is approximately uniform mod `2^32`, so the exhaustive `2^32` bad-set cardinality `max_{a3} sum_{b3!=a3} |B_{b3-a3}| = 3,113,266` bounds the within-key mate collision overlap by `eps_mate / 2 = 3,113,266 / 2^33`. *Evidence:* Exhaustive `2^32` enumeration over all `230` offsets (`0` zero-Delta hits), `W[3]` per-bit `chi^2(32) = 28.72` across `1,246` real hits, `0/972` `F8`-passing mates surviving row 19 in the 28-seed panel, and live mate tracing in `r39-mate-01..14`. *Limitations:* `W[3]` uniformity is tested on `1,246` SMC hits (`32` marginal bit tests), not proved cryptographically.
+5. **`H-cross-claw` (score-critical):** Conditioned on a collision at one claw of a window, another claw's key hit on the same `cv` follows the rounds `18..19` trail (and hence collides) with probability at most `EPS_KEY = 2^-7`. *Evidence:* `0 / 79,744` `xa20` hits across `1,246` colliding `cv` clusters (`xa18/xu18 = 40,152 / 40,046`, random-`cv` `xu20 = 0 / 79,744`) in the 28-seed ALL-48 panel, plus organizer-executable `r39-mate-01..14` cross-claw checks across independently sampled groups. *Limitations:* Measured on clustered virtual other-claw trials (`_xd` pins `W[17]` by solving `w[1]` without parity restriction) on SMC-sampled `cv`s rather than real screened-window claw pairs; deeper rows `20..38` are covered by event inclusion.
+
+### 7.1 Organizer experiments (`experiments/manifest.json` + `experiments/r39joint_k8.py`)
+All 16 declared experiments use a single clean, plain-Python stdlib file `experiments/r39joint_k8.py` (`< 64 KiB`, zero `zlib`/`base85` blobs):
+- `r39-transplant-claw` (256 trials): Verifies the 39-round SFS collision, all import invariants (`48` groups, `1,088` classes, `52` prefix blocks, `12,928` unique prefixes, bit-identical 12-group family prefix sets, `K4_MEM = 883,201 B`, `K4_PASS_WC = 48,364`), exact 16-step two-message reconvergence on all 48 group samples, 48/48 planted `k4_w17a >= 1` hits through `k4q`, and 255 random `(cv, a0, u)` transplant/claw checks.
+- `r39k4-window-small` (trials 0..3): Runs the shipped `Attack` (`2^20` on trial 0, `2^19` on trials 1..3) with all 14 guard assertions active (`g8` interval 16, `g6 = 17,000`), verifies full `2^20` `k4`-off operation invariance (`O` vs `A`), verifies `k4_scr <= 5` screening charges, repeats 48/48 planted hits on a real walk `cv`, and verifies exact `_stamp` / `wmax` capped replay prefix identity (`C.m.o <= W`, safe `W >= ws_ops + 20,000` fallback when `SL` is empty).
+- `r39-mate-01..14` (14 organizer-seeded runs): Runs a single shared SMC carrier (`NP = 100`, `1 x 40 x 2,048 = 81,920` trials/arm) comparing an exact DP-sampled group of `Tuple 124` (row 0, with full 39-round collision verification, mate tracing through row 19, and 32 cross-claw virtual trials/hit drawn from a fresh size-proportional group `gi2`) against the paired `PUB` control on the exact same SMC carrier (row 1).
+
+---
+
+## 8. Attribution and Lineage
+
+This construction builds on:
+- The 39-round SHA-256 semi-free-start differential characteristic and published collision pair of ePrint 2026/1120 (Tables 21 and 23).
+- Prior Yukon `hashsmash-pareto/sha256` 39-round submissions: `744875ec` (initial accepted 39-round baseline), `0b62ed88` and human-accepted `d3a46ae6` (folded bit-sliced walk, `k = 4` fibre shifting, `Mach` cost model, second-order Bonferroni collision bound, and `row19x` mate exclusion), and in-review improvements `9835235a`, `04f61e00`, `6bf0e9ea`, `0bb19cb2`, and `820db8f6` (944-claw dedupe gate, `cv` screening, per-window hard cap with `_stamp`, and `H-cross-claw`).
+
+Our independent contributions are: (1) releasing `E[12..15]` via the `k = 8` transplant (`Tuple 124`, `FIB = 0x28b7f117`), expanding the exact valid entry set 5.01x to `62,955,816` entries across 48 `kappa` groups; (2) discovering and proving the exact 4-family 22/29-bit shared-prefix factorization (`52` total blocks, `29,952 B` prefix RAM, `22,090` avg ops/claw, `48,364` worst-case survivor-free pass, itemized `K4_MEM = 883,201 B` and 4-family chunked Phase-S peak `584,292 B`); (3) restoring unconditional deterministic guard bounds across all 14 guards (`g8` interval 16, `g6 = 17,000`); and (4) backing every single ledger input with fresh predeclared Discovery/Holdout, exhaustive `2^32`, `16,384`-`w`, and 28-seed paired ALL-48 measurements at strict 99% conservative confidence bounds.
