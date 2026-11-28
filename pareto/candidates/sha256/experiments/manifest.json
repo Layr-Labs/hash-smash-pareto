@@ -1,0 +1,165 @@
+{
+  "schema_version": 1,
+  "experiments": [
+    {
+      "id": "r39-transplant-claw",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39joint_k8_s6t.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "Executable consistency KAT for the 39-round SFS advice collision, 48-group / 1,088-class / 52-block Tuple-124 DFA import construction, exact 16-step two-message reconvergence across all 48 groups, 48/48 planted k4q hits, and 255 seeded random (cv, a0, u) transplant/claw checks (bounded KAT; does not substitute for full-scale panels).",
+      "hypothesis": "All internal exact assertions pass under the organizer public-seed protocol; the returned bounded observations are KAT evidence for the shipped S6t exact-tournament source (65503 bytes, SHA-256 da7d0d2466c906f71e9df91bbeb49820e1d7b2d8ab630b61b8ba5c8d62f93659)."
+    },
+    {
+      "id": "r39k4-window-small",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39joint_k8_s6t.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "Bounded executable consistency KAT of the shipped Attack walk/guard/k4q/screen/cap paths: trial 0 runs 2^20 walk evaluations (+ 2^20 k4-off invariance + 2^16 screen=1 check + 48/48 planted real-cv hits), trial 1 runs 2^19 (+ _stamp/M_pre capped prefix replay check), trials 2-3 run 2^19 with all 14 guards active (does not substitute for the 256-window 2^26 Holdout panel).",
+      "hypothesis": "All internal exact assertions pass under the organizer public-seed protocol; the returned bounded observations are KAT evidence for the shipped S6t exact-tournament source (65503 bytes, SHA-256 da7d0d2466c906f71e9df91bbeb49820e1d7b2d8ab630b61b8ba5c8d62f93659)."
+    },
+    {
+      "id": "r39-mate-01",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39joint_k8_s6t.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "Bounded organizer-seeded executable consistency KAT r39-mate-01 (NP=100, 1x40x2,048=81,920 trials/arm, Tuple-124 exact DP group vs paired PUB control on identical SMC carrier; verifies full 39-round collision recovery, F8-mate row-19 exclusion, and 32 virtual cross-claw trials/hit; does not substitute for the 28-seed ALL-48 panel).",
+      "hypothesis": "Exact deterministic KAT for r39-mate-01: row 0 (Tuple-124 group=35) hits=9, l2=-61.324885, mates=63, mates_f8=8, through19=0, digest48=218715923617767, xc_n=288, xa18=158, xu18=134, xa20=0, xu20=0; row 1 (PUB control, identical l2=-61.324885) hits=8, digest48=77810594108645. Every hit passes full 39-round compress verification."
+    },
+    {
+      "id": "r39-mate-02",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39joint_k8_s6t.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "Bounded organizer-seeded executable consistency KAT r39-mate-02 (NP=100, 1x40x2,048=81,920 trials/arm, Tuple-124 exact DP group vs paired PUB control on identical SMC carrier; verifies full 39-round collision recovery, F8-mate row-19 exclusion, and 32 virtual cross-claw trials/hit; does not substitute for the 28-seed ALL-48 panel).",
+      "hypothesis": "Exact deterministic KAT for r39-mate-02: row 0 (Tuple-124 group=37) hits=12, l2=-61.5577, mates=56, mates_f8=3, through19=0, digest48=72270206311259, xc_n=384, xa18=171, xu18=194, xa20=0, xu20=0; row 1 (PUB control, identical l2=-61.5577) hits=8, digest48=180595428735893. Every hit passes full 39-round compress verification."
+    },
+    {
+      "id": "r39-mate-03",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39joint_k8_s6t.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "Bounded organizer-seeded executable consistency KAT r39-mate-03 (NP=100, 1x40x2,048=81,920 trials/arm, Tuple-124 exact DP group vs paired PUB control on identical SMC carrier; verifies full 39-round collision recovery, F8-mate row-19 exclusion, and 32 virtual cross-claw trials/hit; does not substitute for the 28-seed ALL-48 panel).",
+      "hypothesis": "Exact deterministic KAT for r39-mate-03: row 0 (Tuple-124 group=31) hits=16, l2=-61.10407, mates=96, mates_f8=8, through19=0, digest48=149580798879843, xc_n=512, xa18=253, xu18=237, xa20=0, xu20=0; row 1 (PUB control, identical l2=-61.10407) hits=8, digest48=33746837638719. Every hit passes full 39-round compress verification."
+    },
+    {
+      "id": "r39-mate-04",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39joint_k8_s6t.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "Bounded organizer-seeded executable consistency KAT r39-mate-04 (NP=100, 1x40x2,048=81,920 trials/arm, Tuple-124 exact DP group vs paired PUB control on identical SMC carrier; verifies full 39-round collision recovery, F8-mate row-19 exclusion, and 32 virtual cross-claw trials/hit; does not substitute for the 28-seed ALL-48 panel).",
+      "hypothesis": "Exact deterministic KAT for r39-mate-04: row 0 (Tuple-124 group=42) hits=10, l2=-61.360434, mates=98, mates_f8=2, through19=0, digest48=182973190313056, xc_n=320, xa18=154, xu18=159, xa20=0, xu20=0; row 1 (PUB control, identical l2=-61.360434) hits=8, digest48=215959274812624. Every hit passes full 39-round compress verification."
+    },
+    {
+      "id": "r39-mate-05",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39joint_k8_s6t.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "Bounded organizer-seeded executable consistency KAT r39-mate-05 (NP=100, 1x40x2,048=81,920 trials/arm, Tuple-124 exact DP group vs paired PUB control on identical SMC carrier; verifies full 39-round collision recovery, F8-mate row-19 exclusion, and 32 virtual cross-claw trials/hit; does not substitute for the 28-seed ALL-48 panel).",
+      "hypothesis": "Exact deterministic KAT for r39-mate-05: row 0 (Tuple-124 group=19) hits=11, l2=-61.42389, mates=153, mates_f8=15, through19=0, digest48=145406454252623, xc_n=352, xa18=181, xu18=173, xa20=0, xu20=0; row 1 (PUB control, identical l2=-61.42389) hits=8, digest48=201819491803279. Every hit passes full 39-round compress verification."
+    },
+    {
+      "id": "r39-mate-06",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39joint_k8_s6t.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "Bounded organizer-seeded executable consistency KAT r39-mate-06 (NP=100, 1x40x2,048=81,920 trials/arm, Tuple-124 exact DP group vs paired PUB control on identical SMC carrier; verifies full 39-round collision recovery, F8-mate row-19 exclusion, and 32 virtual cross-claw trials/hit; does not substitute for the 28-seed ALL-48 panel).",
+      "hypothesis": "Exact deterministic KAT for r39-mate-06: row 0 (Tuple-124 group=17) hits=17, l2=-61.818435, mates=223, mates_f8=15, through19=0, digest48=10335494437465, xc_n=544, xa18=285, xu18=280, xa20=0, xu20=0; row 1 (PUB control, identical l2=-61.818435) hits=12, digest48=81756394189112. Every hit passes full 39-round compress verification."
+    },
+    {
+      "id": "r39-mate-07",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39joint_k8_s6t.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "Bounded organizer-seeded executable consistency KAT r39-mate-07 (NP=100, 1x40x2,048=81,920 trials/arm, Tuple-124 exact DP group vs paired PUB control on identical SMC carrier; verifies full 39-round collision recovery, F8-mate row-19 exclusion, and 32 virtual cross-claw trials/hit; does not substitute for the 28-seed ALL-48 panel).",
+      "hypothesis": "Exact deterministic KAT for r39-mate-07: row 0 (Tuple-124 group=19) hits=6, l2=-61.730488, mates=52, mates_f8=1, through19=0, digest48=89737924417384, xc_n=192, xa18=101, xu18=97, xa20=0, xu20=0; row 1 (PUB control, identical l2=-61.730488) hits=8, digest48=1594919772786. Every hit passes full 39-round compress verification."
+    },
+    {
+      "id": "r39-mate-08",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39joint_k8_s6t.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "Bounded organizer-seeded executable consistency KAT r39-mate-08 (NP=100, 1x40x2,048=81,920 trials/arm, Tuple-124 exact DP group vs paired PUB control on identical SMC carrier; verifies full 39-round collision recovery, F8-mate row-19 exclusion, and 32 virtual cross-claw trials/hit; does not substitute for the 28-seed ALL-48 panel).",
+      "hypothesis": "Exact deterministic KAT for r39-mate-08: row 0 (Tuple-124 group=41) hits=17, l2=-61.842528, mates=235, mates_f8=21, through19=0, digest48=154926688769802, xc_n=544, xa18=264, xu18=271, xa20=0, xu20=0; row 1 (PUB control, identical l2=-61.842528) hits=16, digest48=211116621463242. Every hit passes full 39-round compress verification."
+    },
+    {
+      "id": "r39-mate-09",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39joint_k8_s6t.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "Bounded organizer-seeded executable consistency KAT r39-mate-09 (NP=100, 1x40x2,048=81,920 trials/arm, Tuple-124 exact DP group vs paired PUB control on identical SMC carrier; verifies full 39-round collision recovery, F8-mate row-19 exclusion, and 32 virtual cross-claw trials/hit; does not substitute for the 28-seed ALL-48 panel).",
+      "hypothesis": "Exact deterministic KAT for r39-mate-09: row 0 (Tuple-124 group=18) hits=15, l2=-61.516907, mates=105, mates_f8=9, through19=0, digest48=176164459840711, xc_n=480, xa18=254, xu18=235, xa20=0, xu20=0; row 1 (PUB control, identical l2=-61.516907) hits=16, digest48=40966813012541. Every hit passes full 39-round compress verification."
+    },
+    {
+      "id": "r39-mate-10",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39joint_k8_s6t.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "Bounded organizer-seeded executable consistency KAT r39-mate-10 (NP=100, 1x40x2,048=81,920 trials/arm, Tuple-124 exact DP group vs paired PUB control on identical SMC carrier; verifies full 39-round collision recovery, F8-mate row-19 exclusion, and 32 virtual cross-claw trials/hit; does not substitute for the 28-seed ALL-48 panel).",
+      "hypothesis": "Exact deterministic KAT for r39-mate-10: row 0 (Tuple-124 group=43) hits=7, l2=-61.4372, mates=93, mates_f8=11, through19=0, digest48=50986841910202, xc_n=224, xa18=108, xu18=120, xa20=0, xu20=0; row 1 (PUB control, identical l2=-61.4372) hits=14, digest48=192605136961396. Every hit passes full 39-round compress verification."
+    },
+    {
+      "id": "r39-mate-11",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39joint_k8_s6t.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "Bounded organizer-seeded executable consistency KAT r39-mate-11 (NP=100, 1x40x2,048=81,920 trials/arm, Tuple-124 exact DP group vs paired PUB control on identical SMC carrier; verifies full 39-round collision recovery, F8-mate row-19 exclusion, and 32 virtual cross-claw trials/hit; does not substitute for the 28-seed ALL-48 panel).",
+      "hypothesis": "Exact deterministic KAT for r39-mate-11: row 0 (Tuple-124 group=22) hits=14, l2=-61.605328, mates=102, mates_f8=4, through19=0, digest48=42976810653094, xc_n=448, xa18=229, xu18=235, xa20=0, xu20=0; row 1 (PUB control, identical l2=-61.605328) hits=7, digest48=118185173099659. Every hit passes full 39-round compress verification."
+    },
+    {
+      "id": "r39-mate-12",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39joint_k8_s6t.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "Bounded organizer-seeded executable consistency KAT r39-mate-12 (NP=100, 1x40x2,048=81,920 trials/arm, Tuple-124 exact DP group vs paired PUB control on identical SMC carrier; verifies full 39-round collision recovery, F8-mate row-19 exclusion, and 32 virtual cross-claw trials/hit; does not substitute for the 28-seed ALL-48 panel).",
+      "hypothesis": "Exact deterministic KAT for r39-mate-12: row 0 (Tuple-124 group=43) hits=8, l2=-61.805264, mates=104, mates_f8=11, through19=0, digest48=56268985538123, xc_n=256, xa18=130, xu18=123, xa20=0, xu20=0; row 1 (PUB control, identical l2=-61.805264) hits=10, digest48=217015208376825. Every hit passes full 39-round compress verification."
+    },
+    {
+      "id": "r39-mate-13",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39joint_k8_s6t.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "Bounded organizer-seeded executable consistency KAT r39-mate-13 (NP=100, 1x40x2,048=81,920 trials/arm, Tuple-124 exact DP group vs paired PUB control on identical SMC carrier; verifies full 39-round collision recovery, F8-mate row-19 exclusion, and 32 virtual cross-claw trials/hit; does not substitute for the 28-seed ALL-48 panel).",
+      "hypothesis": "Exact deterministic KAT for r39-mate-13: row 0 (Tuple-124 group=23) hits=17, l2=-61.031839, mates=139, mates_f8=8, through19=0, digest48=196298269189283, xc_n=544, xa18=271, xu18=267, xa20=0, xu20=0; row 1 (PUB control, identical l2=-61.031839) hits=12, digest48=253167682594214. Every hit passes full 39-round compress verification."
+    },
+    {
+      "id": "r39-mate-14",
+      "kind": "python-message-pairs-v1",
+      "program": "experiments/r39joint_k8_s6t.py",
+      "event": {
+        "kind": "full-collision"
+      },
+      "scope": "Bounded organizer-seeded executable consistency KAT r39-mate-14 (NP=100, 1x40x2,048=81,920 trials/arm, Tuple-124 exact DP group vs paired PUB control on identical SMC carrier; verifies full 39-round collision recovery, F8-mate row-19 exclusion, and 32 virtual cross-claw trials/hit; does not substitute for the 28-seed ALL-48 panel).",
+      "hypothesis": "Exact deterministic KAT for r39-mate-14: row 0 (Tuple-124 group=10) hits=6, l2=-60.877662, mates=46, mates_f8=4, through19=0, digest48=52602380598273, xc_n=192, xa18=96, xu18=95, xa20=0, xu20=0; row 1 (PUB control, identical l2=-60.877662) hits=17, digest48=69735027774317. Every hit passes full 39-round compress verification."
+    }
+  ]
+}
